@@ -1,25 +1,10 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+import './src/global.css'
+import { Text, View } from 'react-native'
 
-import { NewAppScreen } from '@react-native/new-app-screen'
-import { StatusBar, StyleSheet, useColorScheme, View, Text } from 'react-native'
-
-function App() {
+export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Welcome to the React Native App!</Text>
+    <View className='flex-1 items-center justify-center bg-white'>
+      <Text className='text-xl font-bold text-red-500'>Welcome to Nativewind!</Text>
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-})
-
-export default App
