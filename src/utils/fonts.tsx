@@ -1,24 +1,27 @@
 import { StyleSheet, Text, type TextProps } from 'react-native'
 
-export const REGULAR = {
-  fontFamily: 'JosefinSans-Regular',
-}
-export const MEDIUM = {
-  fontFamily: 'JosefinSans-Medium',
-}
-export const SEMIBOLD = {
-  fontFamily: 'JosefinSans-SemiBold',
+export const BLACK = {
+  fontFamily: 'Inter-Black',
 }
 export const BOLD = {
-  fontFamily: 'JosefinSans-Bold',
+  fontFamily: 'Inter-Bold',
 }
 export const LIGHT = {
-  fontFamily: 'JosefinSans-Light',
+  fontFamily: 'Inter-Light',
+}
+export const MEDIUM = {
+  fontFamily: 'Inter-Medium',
+}
+export const REGULAR = {
+  fontFamily: 'Inter-Regular',
+}
+export const SEMIBOLD = {
+  fontFamily: 'Inter-SemiBold',
 }
 
-export function Medium({ children, style, ...props }: TextProps) {
+export function Light({ children, style, ...props }: TextProps) {
   return (
-    <Text style={[MEDIUM, style]} {...props}>
+    <Text style={[LIGHT, style]} {...props}>
       {children}
     </Text>
   )
@@ -27,6 +30,14 @@ export function Medium({ children, style, ...props }: TextProps) {
 export function Regular({ children, style, ...props }: TextProps) {
   return (
     <Text style={[REGULAR, style]} {...props}>
+      {children}
+    </Text>
+  )
+}
+
+export function Medium({ children, style, ...props }: TextProps) {
+  return (
+    <Text style={[MEDIUM, style]} {...props}>
       {children}
     </Text>
   )
@@ -48,9 +59,9 @@ export function Bold({ children, style, ...props }: TextProps) {
   )
 }
 
-export function Light({ children, style, ...props }: TextProps) {
+export function Black({ children, style, ...props }: TextProps) {
   return (
-    <Text style={[LIGHT, style]} {...props}>
+    <Text style={[BLACK, style]} {...props}>
       {children}
     </Text>
   )
