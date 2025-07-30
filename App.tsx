@@ -1,10 +1,12 @@
 import './src/global.css'
-import { Text, View } from 'react-native'
+
+import { Medium } from '@utils/fonts'
+import { View } from 'react-native'
 
 export default function App() {
   return (
-    <View className='flex-1 items-center justify-center bg-white'>
-      <Text className='text-xl font-bold text-red-500'>Welcome to Nativewind!</Text>
+    <View className='flex-1 bg-black justify-center items-center'>
+      <Medium className='text-5xl text-white'> Hello World</Medium>
     </View>
   )
 }
