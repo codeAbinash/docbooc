@@ -1,17 +1,58 @@
+import { DarkTheme, DefaultTheme } from '@/themes'
 import './src/global.css'
 
-import { Black, Bold, Light, Medium, Regular, SemiBold } from '@utils/fonts'
-import { View } from 'react-native'
+import { AutoStatusBar } from '@components/StatusBar'
+import { NavigationContainer } from '@react-navigation/native'
+import { CardStyleInterpolators, createStackNavigator, StackNavigationOptions } from '@react-navigation/stack'
+import HomeScreen from '@screens/HomeScreen'
+import WelcomeScreen from '@screens/WelcomeScreen'
+import { Dimensions, useColorScheme } from 'react-native'
+
+type RootStackParamList = {
+  Home: undefined
+  Welcome: undefined
+}
+
+const RootStack = createStackNavigator<RootStackParamList>()
+
+const { width, height } = Dimensions.get('window')
+
+const IOS_BOTTOM_STYLE: StackNavigationOptions = {
+  cardStyleInterpolator: CardStyleInterpolators.forModalPresentationIOS,
+  gestureEnabled: true,
+  gestureDirection: 'vertical',
+  gestureResponseDistance: height,
+}
+
+const NO_ANIMATION: StackNavigationOptions = {
+  cardStyleInterpolator: CardStyleInterpolators.forNoAnimation,
+}
+
+const SMOOTH_ANIMATION: StackNavigationOptions = {
+  cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter,
+  gestureEnabled: true,
+  gestureDirection: 'horizontal',
+  gestureResponseDistance: height,
+}
 
 export default function App() {
+  const scheme = useColorScheme()
+
   return (
-    <View className='flex-1 items-center justify-center bg-black'>
-      <Light className='text-2xl text-white'>Light</Light>
-      <Regular className='text-2xl text-white'>Regular</Regular>
-      <Medium className='text-2xl text-white'>Medium</Medium>
-      <SemiBold className='text-2xl text-white'>SemiBold</SemiBold>
-      <Bold className='text-2xl text-white'>Bold</Bold>
-      <Black className='text-2xl text-white'>Black</Black>
-    </View>
+    <NavigationContainer theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
+      <AutoStatusBar scheme={scheme} />
+      <RootStack.Navigator
+        screenOptions={{
+          gestureEnabled: true,
+          gestureDirection: 'horizontal',
+          gestureResponseDistance: width,
+          headerShown: false,
+          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+        }}
+      >
+        <RootStack.Screen name='Home' component={HomeScreen} />
+        <RootStack.Screen name='Welcome' component={WelcomeScreen} />
+      </RootStack.Navigator>
+    </NavigationContainer>
   )
 }

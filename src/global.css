@@ -1,3 +1,27 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.d {
+  @apply border border-red-500;
+}
+
+.text {
+  @apply text-text dark:text-text-dark;
+}
+
+.gray {
+  @apply text-gray dark:text-gray-dark;
+}
+
+.bg {
+  @apply bg-bg dark:bg-bg-dark;
+}
+
+.card {
+  @apply bg-card dark:bg-card-dark;
+}
+
+.line {
+  @apply border-line dark:border-line-dark border;
+}
