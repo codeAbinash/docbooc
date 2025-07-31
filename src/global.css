@@ -23,5 +23,5 @@
 }
 
 .line {
-  @apply border-line dark:border-line-dark border;
+  @apply border border-line dark:border-line-dark;
 }

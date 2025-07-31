@@ -5,7 +5,9 @@ export default function HomeScreen({ navigation }: { navigation: any }) {
   return (
     <View className='bg flex-1 items-center justify-center gap-10 p-10'>
       <View className='gap-5'>
-        <Black className='text text-center text-4xl'>Heading</Black>
+        <Black className='text text-center' style={{ fontSize: 32, lineHeight: 40 }}>
+          Heading
+        </Black>
         <Medium className='gray text-center text-sm'>
           This is a sample Home Screen. Press the button to navigate to the Welcome Screen.
         </Medium>
@@ -18,7 +20,7 @@ export default function HomeScreen({ navigation }: { navigation: any }) {
         <Bold className='text text-xl'>Bold</Bold>
         <Black className='text text-xl'>Black</Black>
         <TouchableOpacity
-          className='bg-accent mt-10 rounded-full px-10 py-3'
+          className='mt-10 rounded-full bg-accent px-10 py-3'
           activeOpacity={0.7}
           onPress={() => navigation.navigate('Welcome')}
         >
