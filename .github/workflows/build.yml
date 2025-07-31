@@ -45,6 +45,13 @@ jobs:
       - name: Grant execute permission for gradlew
         run: cd android && chmod +x gradlew
 
+      - name: Generate React Native Android codegen artifacts
+        working-directory: android
+        run: |
+          ./gradlew \
+            :app:generateCodegenArtifactsFromSchemaDebug \
+            :app:generateCodegenArtifactsFromSchemaRelease
+
       - name: Build Android Release
         run: cd android && ./gradlew assembleRelease
 
