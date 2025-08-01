@@ -1,3 +1,4 @@
+import { Add01Icon } from '@hugeicons/Add01Icon'
 import { Black, Bold, Light, Medium, Regular, SemiBold } from '@utils/fonts'
 import { TouchableOpacity, View } from 'react-native'
 
@@ -20,11 +21,12 @@ export default function HomeScreen({ navigation }: { navigation: any }) {
         <Bold className='text text-xl'>Bold</Bold>
         <Black className='text text-xl'>Black</Black>
         <TouchableOpacity
-          className='mt-10 rounded-full bg-accent px-10 py-3'
+          className='mt-10 flex-row items-center gap-2 rounded-full bg-accent px-10 py-3 pr-7'
           activeOpacity={0.7}
           onPress={() => navigation.navigate('Welcome')}
         >
           <SemiBold className='text-sm text-white'>Welcome</SemiBold>
+          <Add01Icon strokeWidth={2} color='white' size={20} />
         </TouchableOpacity>
       </View>
       <View className='card line rounded-2xl p-8'>
