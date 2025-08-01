@@ -1,3 +1,5 @@
+import Animations from '@assets/animations/animations'
+import { Lottie } from '@components/Lottie'
 import { Add01Icon } from '@hugeicons/Add01Icon'
 import { Black, Bold, Light, Medium, Regular, SemiBold } from '@utils/fonts'
 import { TouchableOpacity, View } from 'react-native'
@@ -6,9 +8,12 @@ export default function HomeScreen({ navigation }: { navigation: any }) {
   return (
     <View className='bg flex-1 items-center justify-center gap-10 p-10'>
       <View className='gap-5'>
-        <Black className='text text-center' style={{ fontSize: 32, lineHeight: 40 }}>
-          Heading
-        </Black>
+        <View className='mr-10 flex flex-row items-center justify-center gap-3'>
+          <Lottie source={Animations.welcome} style={{ width: 60, height: 60, marginHorizontal: 0 }} />
+          <Black className='text text-center' style={{ fontSize: 32, lineHeight: 40 }}>
+            Heading
+          </Black>
+        </View>
         <Medium className='gray text-center text-sm'>
           This is a sample Home Screen. Press the button to navigate to the Welcome Screen.
         </Medium>
