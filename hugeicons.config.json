@@ -4,5 +4,6 @@
   "defaultStrokeWidth": 1.5,
   "defaultColor": "currentColor",
   "defaultSize": 24,
-  "defaultVariant": "stroke-rounded"
+  "defaultVariant": "stroke-rounded",
+  "variants": ["stroke-rounded", "solid-rounded"]
 }
