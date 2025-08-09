@@ -1,10 +1,8 @@
 import Animations from '@assets/animations/animations'
-import Btn from '@components/Button'
 import { Lottie } from '@components/Lottie'
 import Add01Icon from '@hugeicons/Add01Icon'
 import { Black, Bold, Light, Medium, Regular, SemiBold } from '@utils/fonts'
 import { TouchableOpacity, View } from 'react-native'
-import Slider from '../components/Slider/Slider'
 
 export default function HomeScreen({ navigation }: { navigation: any }) {
   return (
@@ -13,7 +11,7 @@ export default function HomeScreen({ navigation }: { navigation: any }) {
         <View className='mr-10 flex flex-row items-center justify-center gap-3'>
           <Lottie source={Animations.welcome} style={{ width: 60, height: 60, marginHorizontal: 0 }} />
           <Black className='text text-center' style={{ fontSize: 32, lineHeight: 40 }}>
-            Heading
+            Welcome
           </Black>
         </View>
         <Medium className='gray text-center text-sm'>
@@ -39,13 +37,6 @@ export default function HomeScreen({ navigation }: { navigation: any }) {
       <View className='card line rounded-2xl p-8'>
         <SemiBold className='text text-sm'>This is a card component</SemiBold>
         <Regular className='text text-xs'>You can add more content here.</Regular>
-      </View>
-      <View className='w-full gap-1.5'>
-        <Btn title='Book Appointment' onPress={() => navigation.navigate('Slide')} />
-      </View>
-      <View className='w-full gap-1.5'>
-        <Slider onComplete={() => navigation.navigate('Welcome')} />
-        <Medium className='gray text-center text-xs'>The text below the button is a sample text.</Medium>
       </View>
     </View>
   )

@@ -4,9 +4,9 @@ import './src/global.css'
 import { AutoStatusBar } from '@components/StatusBar'
 import { NavigationContainer } from '@react-navigation/native'
 import { CardStyleInterpolators, createStackNavigator, StackNavigationOptions } from '@react-navigation/stack'
-import HomeScreen from '@screens/HomeScreen'
 import WelcomeScreen from '@screens/WelcomeScreen'
 import { Dimensions, useColorScheme } from 'react-native'
+import Home from './src/screens'
 
 export type RootStackParamList = {
   Home: undefined
@@ -51,7 +51,7 @@ export default function App() {
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
         }}
       >
-        <RootStack.Screen name='Home' component={HomeScreen} />
+        <RootStack.Screen name='Home' component={Home} />
         <RootStack.Screen name='Welcome' component={WelcomeScreen} />
       </RootStack.Navigator>
     </NavigationContainer>
