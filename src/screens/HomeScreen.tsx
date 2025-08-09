@@ -4,6 +4,7 @@ import { Lottie } from '@components/Lottie'
 import Add01Icon from '@hugeicons/Add01Icon'
 import { Black, Bold, Light, Medium, Regular, SemiBold } from '@utils/fonts'
 import { TouchableOpacity, View } from 'react-native'
+import Slider from '../components/Slider/Slider'
 
 export default function HomeScreen({ navigation }: { navigation: any }) {
   return (
@@ -41,6 +42,9 @@ export default function HomeScreen({ navigation }: { navigation: any }) {
       </View>
       <View className='w-full gap-1.5'>
         <Btn title='Book Appointment' onPress={() => navigation.navigate('Slide')} />
+      </View>
+      <View className='w-full gap-1.5'>
+        <Slider onComplete={() => navigation.navigate('Welcome')} />
         <Medium className='gray text-center text-xs'>The text below the button is a sample text.</Medium>
       </View>
     </View>

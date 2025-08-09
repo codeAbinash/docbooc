@@ -7,9 +7,8 @@ import { CardStyleInterpolators, createStackNavigator, StackNavigationOptions } 
 import HomeScreen from '@screens/HomeScreen'
 import WelcomeScreen from '@screens/WelcomeScreen'
 import { Dimensions, useColorScheme } from 'react-native'
-import Slide from '@screens/Slide'
 
-type RootStackParamList = {
+export type RootStackParamList = {
   Home: undefined
   Welcome: undefined
   Slide: undefined
@@ -54,7 +53,6 @@ export default function App() {
       >
         <RootStack.Screen name='Home' component={HomeScreen} />
         <RootStack.Screen name='Welcome' component={WelcomeScreen} />
-        <RootStack.Screen name='Slide' component={Slide} />
       </RootStack.Navigator>
     </NavigationContainer>
   )
