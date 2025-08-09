@@ -40,7 +40,7 @@ export default function HomeScreen({ navigation }: { navigation: any }) {
         <Regular className='text text-xs'>You can add more content here.</Regular>
       </View>
       <View className='w-full gap-1.5'>
-        <Btn />
+        <Btn title='Book Appointment' onPress={() => navigation.navigate('Slide')} />
         <Medium className='gray text-center text-xs'>The text below the button is a sample text.</Medium>
       </View>
     </View>
