@@ -6,3 +6,5 @@
   `iconName` is from the hugeicons website.
 
 - No need to fix formatting related issues.
+
+- No need to run the development server. Or build the project. You can just check for type errors. Using `bun ts` command.
