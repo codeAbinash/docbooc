@@ -1,7 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 
 // const accent = '#3377ee'
-const accent = '#3b82f6'
+export const accent = '#3b82f6'
 
 module.exports = {
   content: ['./App.tsx', './src/**/*.{js,jsx,ts,tsx}'],
