@@ -1,10 +1,12 @@
 import Animations from '@assets/animations/animations'
 import { Lottie } from '@components/Lottie'
+import Slider from '@components/Slider/Slider'
 import Add01Icon from '@hugeicons/Add01Icon'
 import { Black, Bold, Light, Medium, Regular, SemiBold } from '@utils/fonts'
+import { NavProp } from '@utils/types'
 import { TouchableOpacity, View } from 'react-native'
 
-export default function HomeScreen({ navigation }: { navigation: any }) {
+export default function HomeScreen({ navigation }: NavProp) {
   return (
     <View className='bg flex-1 items-center justify-center gap-10 p-6'>
       <View className='gap-5'>
@@ -34,9 +36,12 @@ export default function HomeScreen({ navigation }: { navigation: any }) {
           <SemiBold className='text-sm text-white'>Welcome</SemiBold>
         </TouchableOpacity>
       </View>
-      <View className='card line rounded-2xl p-8'>
-        <SemiBold className='text text-sm'>This is a card component</SemiBold>
-        <Regular className='text text-xs'>You can add more content here.</Regular>
+      <View className='w-full'>
+        <Slider
+          onComplete={() => {
+            navigation.navigate('Welcome')
+          }}
+        />
       </View>
     </View>
   )

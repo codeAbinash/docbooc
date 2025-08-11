@@ -46,7 +46,7 @@ export default function App() {
         screenOptions={{
           gestureEnabled: true,
           gestureDirection: 'horizontal',
-          gestureResponseDistance: width,
+          gestureResponseDistance: width / 5,
           headerShown: false,
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
         }}

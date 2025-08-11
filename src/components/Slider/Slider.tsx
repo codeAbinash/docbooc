@@ -1,11 +1,8 @@
-import { PaddingBottom, PaddingTop } from '@components/SafePadding'
 import Colors from '@utils/colors'
-import { Medium } from '@utils/fonts'
-import { NavProp } from '@utils/types'
 import { useColorScheme } from 'nativewind'
 import { useCallback } from 'react'
-import { LayoutChangeEvent, StyleSheet, View } from 'react-native'
-import { Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler'
+import { LayoutChangeEvent, StyleSheet, Vibration } from 'react-native'
+import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import Animated, {
   interpolateColor,
   useAnimatedStyle,
@@ -31,6 +28,11 @@ function Slider({ onComplete, circleSize = 50, mainColor = Colors.accent }: Slid
     return containerWidth.value > 0 ? offset.value / (containerWidth.value - circleSize) : 0
   })
 
+  const handleComplete = () => {
+    Vibration.vibrate(100)
+    onComplete()
+  }
+
   const pan = Gesture.Pan()
     .onBegin(() => {
       pressed.value = true
@@ -39,11 +41,9 @@ function Slider({ onComplete, circleSize = 50, mainColor = Colors.accent }: Slid
       if (event.translationX < 0) return
       if (event.translationX > containerWidth.value - circleSize) return
       offset.value = event.translationX
+      if (progress.value > 0.95) runOnJS(handleComplete)()
     })
     .onFinalize(() => {
-      if (progress.value > 0.95) {
-        runOnJS(onComplete)()
-      }
       offset.value = withTiming(0)
       pressed.value = false
     })
