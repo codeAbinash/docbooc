@@ -3,12 +3,12 @@ import React from 'react'
 import Svg, { Circle, ClipPath, Defs, Ellipse, G, Line, LinearGradient, Mask, Path, Polygon, Polyline, RadialGradient, Rect, Stop } from 'react-native-svg'
 import { Variant, HugeIconProps, defaultStrokeWidth, defaultVariant, defaultColor, defaultSize } from './constants'
 
-const iconMap: Partial<Record<Variant, React.FC<HugeIconProps>>> = {
-  'stroke-rounded': StrokeRounded,
-  'solid-rounded': SolidRounded,
+const iconMap: Partial<Record<Variant, React.FC<HugeIconProps>>> = { 
+	'stroke-rounded': StrokeRounded,
+	'solid-rounded': SolidRounded,
 }
 
-export default function Add01Icon({ variant, ...rest }: HugeIconProps) {
+export default function Search01Icon({ variant, ...rest }: HugeIconProps) {
   const selectedVariant = variant || defaultVariant
   const Component = iconMap[selectedVariant] || iconMap[defaultVariant] || StrokeRounded
   return <Component {...rest} />
@@ -16,15 +16,15 @@ export default function Add01Icon({ variant, ...rest }: HugeIconProps) {
 
 function StrokeRounded({ size = defaultSize, color = defaultColor, strokeWidth = defaultStrokeWidth, className, style }: HugeIconProps) {
   return (<Svg className={className} style={style} width={size} height={size} viewBox="0 0 24 24" fill="none">
-<Path d="M12.001 5.00003V19.002" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round"/>
-<Path d="M19.002 12.002L4.99998 12.002" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round"/>
+<Path d="M17 17L21 21" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round"/>
+<Path d="M19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19C15.4183 19 19 15.4183 19 11Z" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round"/>
 </Svg>
 )
 }
 
 function SolidRounded({ size = defaultSize, color = defaultColor, strokeWidth = defaultStrokeWidth, className, style }: HugeIconProps) {
   return (<Svg className={className} style={style} width={size} height={size} viewBox="0 0 24 24" fill="none">
-<Path d="M11.001 19.002V13.002H5C4.44772 13.002 4 12.5543 4 12.002C4 11.4498 4.44772 11.002 5 11.002H11.001V5.00009C11.001 4.44781 11.4487 4.00009 12.001 4.00009C12.5533 4.0001 13.001 4.44781 13.001 5.00009V11.002H19.002L19.1045 11.0069C19.6086 11.0583 20.002 11.4844 20.002 12.002C20.002 12.5197 19.6086 12.9458 19.1045 12.9972L19.002 13.002H13.001V19.002C13.001 19.5543 12.5533 20.002 12.001 20.002C11.4487 20.002 11.001 19.5543 11.001 19.002Z" fill={color}/>
+<Path fillRule="evenodd" clipRule="evenodd" d="M11 2C6.02944 2 2 6.02944 2 11C2 15.9706 6.02944 20 11 20C13.125 20 15.078 19.2635 16.6177 18.0319L20.2929 21.7071C20.6834 22.0976 21.3166 22.0976 21.7071 21.7071C22.0976 21.3166 22.0976 20.6834 21.7071 20.2929L18.0319 16.6177C19.2635 15.078 20 13.125 20 11C20 6.02944 15.9706 2 11 2ZM4 11C4 7.13401 7.13401 4 11 4C14.866 4 18 7.13401 18 11C18 14.866 14.866 18 11 18C7.13401 18 4 14.866 4 11Z" fill={color}/>
 </Svg>
 )
 }

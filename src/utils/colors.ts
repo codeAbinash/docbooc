@@ -10,8 +10,8 @@ const Colors = {
     dark: '#94a3b8',
   },
   bg: {
-    DEFAULT: '#f8fafc',
-    dark: '#090b10',
+    DEFAULT: '#f0f2f5',
+    dark: '#000000',
   },
   card: {
     DEFAULT: '#e2e8f0',

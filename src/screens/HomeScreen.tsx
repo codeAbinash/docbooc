@@ -1,48 +1,69 @@
-import Animations from '@assets/animations/animations'
-import { Lottie } from '@components/Lottie'
-import Slider from '@components/Slider/Slider'
-import Add01Icon from '@hugeicons/Add01Icon'
-import { Black, Bold, Light, Medium, Regular, SemiBold } from '@utils/fonts'
+import Press from '@components/Press'
+import { PaddingTop } from '@components/SafePadding'
+import Calendar03Icon from '@hugeicons/Calendar03Icon'
+import NotificationSquareIcon from '@hugeicons/NotificationSquareIcon'
+import Search01Icon from '@hugeicons/Search01Icon'
+import { Bold, Medium, Regular, SemiBold } from '@utils/fonts'
 import { NavProp } from '@utils/types'
-import { TouchableOpacity, View } from 'react-native'
+import { ScrollView, useColorScheme, View } from 'react-native'
+import UpcomingScheduleCard from './UpcomingScheduleCard'
 
 export default function HomeScreen({ navigation }: NavProp) {
   return (
-    <View className='bg flex-1 items-center justify-center gap-10 p-6'>
-      <View className='gap-5'>
-        <View className='mr-10 flex flex-row items-center justify-center gap-3'>
-          <Lottie source={Animations.welcome} style={{ width: 60, height: 60, marginHorizontal: 0 }} />
-          <Black className='text text-center' style={{ fontSize: 32, lineHeight: 40 }}>
-            Welcome
-          </Black>
+    <ScrollView className='bg flex-1'>
+      <Header />
+      <UpcomingSchedule />
+    </ScrollView>
+  )
+}
+
+function Header() {
+  const scheme = useColorScheme()
+
+  return (
+    <>
+      <View className=''>
+        <PaddingTop />
+        <View className='flex-1 flex-row px-6 dark:border-card-dark/20'>
+          <View className='flex-1 justify-between pt-4'>
+            <SemiBold className='text text-2xl'>DocBook</SemiBold>
+            <View>
+              <View className='flex-row gap-2'>
+                <Regular className='text text-4xl opacity-50'>Find</Regular>
+                <Medium className='text text-4xl'>Your</Medium>
+              </View>
+              <View className='mt-2 flex-row gap-2'>
+                <Medium className='text text-4xl'>Specialist</Medium>
+                <Regular className='text text-4xl opacity-50'>Doctor</Regular>
+              </View>
+            </View>
+          </View>
+
+          <View className='gap-2 pt-2'>
+            <Press className='rounded-full bg-white p-3 dark:bg-zinc-900'>
+              <NotificationSquareIcon color={scheme === 'dark' ? 'white' : 'black'} size={20} strokeWidth={1.7} />
+            </Press>
+            <Press className='rounded-full bg-white p-3 dark:bg-zinc-900'>
+              <Calendar03Icon color={scheme === 'dark' ? 'white' : 'black'} size={20} strokeWidth={1.7} />
+            </Press>
+            <Press className='rounded-full bg-white p-3 dark:bg-zinc-900'>
+              <Search01Icon color={scheme === 'dark' ? 'white' : 'black'} size={20} strokeWidth={1.9} />
+            </Press>
+          </View>
         </View>
-        <Medium className='gray text-center text-sm'>
-          This is a sample Home Screen. Press the button to navigate to the Welcome Screen.
-        </Medium>
       </View>
-      <View>
-        <Light className='text text-xl'>Light</Light>
-        <Regular className='text text-xl'>Regular</Regular>
-        <Medium className='text text-xl'>Medium</Medium>
-        <SemiBold className='text text-xl'>SemiBold</SemiBold>
-        <Bold className='text text-xl'>Bold</Bold>
-        <Black className='text text-xl'>Black</Black>
-        <TouchableOpacity
-          className='mt-10 flex-row items-center gap-2 rounded-full bg-accent px-7 py-3 pl-5'
-          activeOpacity={0.7}
-          onPress={() => navigation.navigate('Welcome')}
-        >
-          <Add01Icon strokeWidth={2} color='white' size={20} />
-          <SemiBold className='text-sm text-white'>Welcome</SemiBold>
-        </TouchableOpacity>
+    </>
+  )
+}
+
+function UpcomingSchedule() {
+  return (
+    <View className='gap-5 p-5'>
+      <View className='mt-5 flex-row items-center justify-between'>
+        <Bold className='text text-md'>Upcoming</Bold>
+        <SemiBold className='text-sm text-accent'>Sell All</SemiBold>
       </View>
-      <View className='w-full'>
-        <Slider
-          onComplete={() => {
-            navigation.navigate('Welcome')
-          }}
-        />
-      </View>
+      <UpcomingScheduleCard />
     </View>
   )
 }

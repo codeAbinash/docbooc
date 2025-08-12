@@ -1,4 +1,5 @@
 {
   "cSpell.words": ["nativewind"],
   "typescript.preferences.autoImportFileExcludePatterns": ["react-native-reanimated/lib/typescript/*"],
+  "typescript.experimental.useTsgo": false
 }
