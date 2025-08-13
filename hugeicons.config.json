@@ -5,5 +5,5 @@
   "defaultColor": "currentColor",
   "defaultSize": 24,
   "defaultVariant": "stroke-rounded",
-  "variants": ["stroke-rounded", "solid-rounded"]
+  "variants": ["stroke-rounded", "solid-rounded", "twotone-rounded", "duotone-rounded"]
 }

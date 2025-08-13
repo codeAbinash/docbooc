@@ -1,19 +1,48 @@
+import Gradient from '@components/Gradient'
 import Press from '@components/Press'
 import { PaddingTop } from '@components/SafePadding'
+import Bone02Icon from '@hugeicons/Bone02Icon'
+import Brain01Icon from '@hugeicons/Brain01Icon'
 import Calendar03Icon from '@hugeicons/Calendar03Icon'
+import Cardiogram02Icon from '@hugeicons/Cardiogram02Icon'
+import DigestionIcon from '@hugeicons/DigestionIcon'
+import DoNotTouch01Icon from '@hugeicons/DoNotTouch01Icon'
+import FemaleSymbolIcon from '@hugeicons/FemaleSymbolIcon'
+import Medicine02Icon from '@hugeicons/Medicine02Icon'
 import NotificationSquareIcon from '@hugeicons/NotificationSquareIcon'
+import PatientIcon from '@hugeicons/PatientIcon'
+import PlusSignIcon from '@hugeicons/PlusSignIcon'
 import Search01Icon from '@hugeicons/Search01Icon'
-import { Bold, Medium, Regular, SemiBold } from '@utils/fonts'
+import Colors from '@utils/colors'
+import { Black, Bold, Medium, Regular, SemiBold } from '@utils/fonts'
 import { NavProp } from '@utils/types'
-import { ScrollView, useColorScheme, View } from 'react-native'
+import { ScrollView, TouchableOpacity, useColorScheme, View } from 'react-native'
 import UpcomingScheduleCard from './UpcomingScheduleCard'
 
 export default function HomeScreen({ navigation }: NavProp) {
   return (
-    <ScrollView className='bg flex-1'>
+    <ScrollView className='bg flex-1' contentContainerClassName='pb-10'>
       <Header />
       <UpcomingSchedule />
+      <DoctorSpecialties />
+      <TopGeneralPhysician />
+      <TopGeneralPhysician />
+      <TopGeneralPhysician />
+      <TopGeneralPhysician />
+      <Footer />
     </ScrollView>
+  )
+}
+
+function Footer() {
+  return (
+    <View className='px-6 pb-5 pt-20'>
+      <Black className='text text-6xl opacity-40'>{'Doc\nBook'}</Black>
+      <SemiBold className='text mt-2 text-sm opacity-50'>Your health, our priority! </SemiBold>
+      <SemiBold className='text opacity-50'>
+        Crafted with ❤️ in <Bold>India</Bold>
+      </SemiBold>
+    </View>
   )
 }
 
@@ -58,12 +87,143 @@ function Header() {
 
 function UpcomingSchedule() {
   return (
-    <View className='gap-5 p-5'>
+    <View className='gap-5 p-5 pb-0'>
       <View className='mt-5 flex-row items-center justify-between'>
         <Bold className='text text-md'>Upcoming</Bold>
         <SemiBold className='text-sm text-accent'>See All</SemiBold>
       </View>
       <UpcomingScheduleCard />
+    </View>
+  )
+}
+
+const specialties = [
+  {
+    id: 1,
+    name: 'General Physician',
+    icon: Medicine02Icon,
+  },
+  {
+    id: 2,
+    name: 'Cardiologist',
+    icon: Cardiogram02Icon,
+  },
+  {
+    id: 3,
+    name: 'Orthopedist',
+    icon: Bone02Icon,
+  },
+  {
+    id: 4,
+    name: 'Gastroenterologist',
+    icon: DigestionIcon,
+  },
+  {
+    id: 5,
+    name: 'Neurologist',
+    icon: Brain01Icon,
+  },
+  {
+    id: 6,
+    name: 'Psychiatrist',
+    icon: PatientIcon,
+  },
+  {
+    id: 7,
+    name: 'Gynecologist',
+    icon: FemaleSymbolIcon,
+  },
+  {
+    id: 8,
+    name: 'Dermatologist',
+    icon: DoNotTouch01Icon,
+  },
+]
+
+const DoctorSpecialties = () => {
+  return (
+    <View className='gap-5 px-5 pb-5 pt-2'>
+      <View className='mt-5 flex-row items-center justify-between'>
+        <Bold className='text text-md'>Specialties</Bold>
+        <TouchableOpacity>
+          <Medium className='text-sm font-semibold text-blue-600'>See All</Medium>
+        </TouchableOpacity>
+      </View>
+
+      <View className='flex-row flex-wrap justify-between gap-y-5'>
+        {specialties.map((specialty) => {
+          const IconComponent = specialty.icon || Medicine02Icon
+          return (
+            <TouchableOpacity
+              key={specialty.id}
+              className='items-center gap-3 px-1'
+              style={{ width: '25%' }} // 4 items per row with some spacing
+              activeOpacity={0.7}
+            >
+              <View
+                className='items-center justify-center rounded-full border border-accent/20 bg-accent/20 shadow-sm'
+                style={{ width: 63, height: 63 }}
+              >
+                <IconComponent size={28} color={Colors.accent} variant='duotone-rounded' />
+              </View>
+              <SemiBold
+                className='text text-center text-xs font-medium leading-5 opacity-80'
+                numberOfLines={1}
+                style={{ lineHeight: 12.5 }}
+              >
+                {specialty.name}
+              </SemiBold>
+            </TouchableOpacity>
+          )
+        })}
+      </View>
+    </View>
+  )
+}
+
+function TopGeneralPhysician() {
+  return (
+    <View className='gap-5 pb-0 pt-2'>
+      <View className='mt-5 flex-row items-center justify-between px-5'>
+        <Bold className='text text-md'>Top General Physicians</Bold>
+        <TouchableOpacity>
+          <Medium className='text-sm font-semibold text-blue-600'>See All</Medium>
+        </TouchableOpacity>
+      </View>
+
+      <ScrollView
+        horizontal
+        contentContainerClassName='flex-row flex-wrap justify-between gap-x-4 px-5'
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+      >
+        <DoctorList />
+        <DoctorList />
+        <DoctorList />
+        <DoctorList />
+      </ScrollView>
+    </View>
+  )
+}
+
+function DoctorList() {
+  return (
+    <View className='gap-3.5 rounded-3xl bg-white px-4 py-5 dark:bg-zinc-900' style={{ width: 180 }}>
+      <View className='gap-2 px-2'>
+        <SemiBold className='text text-lg'>Dr. A. Barik Hossain</SemiBold>
+        <Medium className='gray text-xs' numberOfLines={2}>
+          MBBS, MD (General Medicine)
+        </Medium>
+        <Medium className='rounded-full text-xs text-accent' style={{ fontSize: 9.5 }}>
+          Diabetes Specialist
+        </Medium>
+      </View>
+      <TouchableOpacity className='overflow-hidden rounded-xl' activeOpacity={0.7}>
+        <Gradient className='flex-row items-center justify-center gap-1.5 px-4 py-3'>
+          <PlusSignIcon color='white' size={16} strokeWidth={2.5} />
+          <Medium className='text-center text-xs text-white'>Book Appointment</Medium>
+        </Gradient>
+      </TouchableOpacity>
     </View>
   )
 }
