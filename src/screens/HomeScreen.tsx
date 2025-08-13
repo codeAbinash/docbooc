@@ -61,7 +61,7 @@ function UpcomingSchedule() {
     <View className='gap-5 p-5'>
       <View className='mt-5 flex-row items-center justify-between'>
         <Bold className='text text-md'>Upcoming</Bold>
-        <SemiBold className='text-sm text-accent'>Sell All</SemiBold>
+        <SemiBold className='text-sm text-accent'>See All</SemiBold>
       </View>
       <UpcomingScheduleCard />
     </View>

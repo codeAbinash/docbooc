@@ -9,7 +9,7 @@ import { Image, View } from 'react-native'
 
 export default function UpcomingScheduleCard() {
   return (
-    <Gradient className='overflow-hidden rounded-3xl bg-accent p-4'>
+    <Gradient className='overflow-hidden rounded-3xl bg-accent p-5'>
       <View className='flex-row items-center justify-between'>
         <View className='flex-row items-center gap-4'>
           <View className='h-14 w-14 items-center justify-center rounded-full bg-white/20'>

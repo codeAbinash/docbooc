@@ -152,9 +152,15 @@ type TabIconT = {
 
 function TabIcon({ focused, color, size, focusedIcon: FocusedIcon, defaultIcon: DefaultIcon }: TabIconT) {
   return focused ? (
-    <FocusedIcon size={size} color={color} variant='solid-rounded' />
+    <FocusedIcon size={size} color={color} variant='duotone-rounded' />
   ) : (
-    <DefaultIcon size={size} color={color} strokeWidth={1.6} />
+    <DefaultIcon
+      size={size}
+      color={colors.zinc[500]}
+      strokeWidth={1.6}
+      variant='duotone-rounded'
+      style={{ opacity: 0.9 }}
+    />
   )
 }
 
