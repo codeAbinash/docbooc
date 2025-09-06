@@ -1,0 +1,46 @@
+
+import React from 'react'
+import Svg, { Circle, ClipPath, Defs, Ellipse, G, Line, LinearGradient, Mask, Path, Polygon, Polyline, RadialGradient, Rect, Stop } from 'react-native-svg'
+import { Variant, HugeIconProps, defaultStrokeWidth, defaultVariant, defaultColor, defaultSize } from './constants'
+
+const iconMap: Partial<Record<Variant, React.FC<HugeIconProps>>> = { 
+	'stroke-rounded': StrokeRounded,
+	'solid-rounded': SolidRounded,
+	'twotone-rounded': TwotoneRounded,
+	'duotone-rounded': DuotoneRounded,
+}
+
+export default function ArrowLeft01Icon({ variant, ...rest }: HugeIconProps) {
+  const selectedVariant = variant || defaultVariant
+  const Component = iconMap[selectedVariant] || iconMap[defaultVariant] || StrokeRounded
+  return <Component {...rest} />
+}
+
+function StrokeRounded({ size = defaultSize, color = defaultColor, strokeWidth = defaultStrokeWidth, className, style }: HugeIconProps) {
+  return (<Svg className={className} style={style} width={size} height={size} viewBox="0 0 24 24" fill="none">
+<Path d="M15 6C15 6 9.00001 10.4189 9 12C8.99999 13.5812 15 18 15 18" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round"/>
+</Svg>
+)
+}
+
+function SolidRounded({ size = defaultSize, color = defaultColor, strokeWidth = defaultStrokeWidth, className, style }: HugeIconProps) {
+  return (<Svg className={className} style={style} width={size} height={size} viewBox="0 0 24 24" fill="none">
+<Path d="M15.8051 5.40705C15.4776 4.96235 14.8516 4.86736 14.4069 5.19488C14.0615 5.44927 13.7332 5.70372 13.4472 5.92689C12.8764 6.3724 12.1118 6.98572 11.3444 7.65208C10.5819 8.31412 9.79361 9.04815 9.18811 9.73344C8.88637 10.0749 8.60888 10.4279 8.4014 10.7721C8.21046 11.0888 8 11.524 8 12.0001C8 12.4762 8.21046 12.9115 8.4014 13.2282C8.60888 13.5724 8.88637 13.9253 9.18811 14.2668C9.79361 14.9521 10.5819 15.6861 11.3444 16.3482C12.1118 17.0145 12.8764 17.6278 13.4472 18.0734C13.7332 18.2965 14.0615 18.551 14.4069 18.8054C14.8516 19.1329 15.4776 19.0379 15.8051 18.5932C15.9368 18.4144 16.0002 18.2064 16 18.0002V12.0001V6.00007C16.0002 5.79387 15.9368 5.58581 15.8051 5.40705Z" fill={color}/>
+</Svg>
+)
+}
+
+function TwotoneRounded({ size = defaultSize, color = defaultColor, strokeWidth = defaultStrokeWidth, className, style }: HugeIconProps) {
+  return (<Svg className={className} style={style} width={size} height={size} viewBox="0 0 24 24" fill="none">
+<Path opacity="0.4" d="M15 6C15 6 9.00001 10.4189 9 12C8.99999 13.5812 15 18 15 18" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round"/>
+<Path d="M9 12C9.00001 10.4189 15 6 15 6" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round"/>
+</Svg>
+)
+}
+
+function DuotoneRounded({ size = defaultSize, color = defaultColor, strokeWidth = defaultStrokeWidth, className, style }: HugeIconProps) {
+  return (<Svg className={className} style={style} width={size} height={size} viewBox="0 0 24 24" fill="none">
+<Path opacity="0.4" d="M15 6C15 6 9.00001 10.4189 9 12C8.99999 13.5812 15 18 15 18" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round"/>
+</Svg>
+)
+}

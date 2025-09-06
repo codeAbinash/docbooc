@@ -13,9 +13,10 @@ import NotificationSquareIcon from '@hugeicons/NotificationSquareIcon'
 import PatientIcon from '@hugeicons/PatientIcon'
 import PlusSignIcon from '@hugeicons/PlusSignIcon'
 import Search01Icon from '@hugeicons/Search01Icon'
+import { useNavigation } from '@react-navigation/native'
 import Colors from '@utils/colors'
 import { Black, Bold, Medium, Regular, SemiBold } from '@utils/fonts'
-import { NavProp } from '@utils/types'
+import { NavProp, StackNav } from '@utils/types'
 import { ScrollView, TouchableOpacity, useColorScheme, View } from 'react-native'
 import UpcomingScheduleCard from './UpcomingScheduleCard'
 
@@ -207,8 +208,9 @@ function TopGeneralPhysician() {
 }
 
 function DoctorList() {
+  const navigation = useNavigation<StackNav>()
   return (
-    <View className='gap-3.5 rounded-3xl bg-white px-4 py-5 dark:bg-zinc-900' style={{ width: 180 }}>
+    <View className='gap-3.5 rounded-3xl bg-white px-4 py-5 dark:bg-zinc-900' style={{ width: 170 }}>
       <View className='gap-2 px-2'>
         <SemiBold className='text text-lg'>Dr. A. Barik Hossain</SemiBold>
         <Medium className='gray text-xs' numberOfLines={2}>
@@ -218,7 +220,11 @@ function DoctorList() {
           Diabetes Specialist
         </Medium>
       </View>
-      <TouchableOpacity className='overflow-hidden rounded-xl' activeOpacity={0.7}>
+      <TouchableOpacity
+        className='overflow-hidden rounded-xl'
+        activeOpacity={0.7}
+        onPress={() => navigation.navigate('BookAppointment')}
+      >
         <Gradient className='flex-row items-center justify-center gap-1.5 px-4 py-3'>
           <PlusSignIcon color='white' size={16} strokeWidth={2.5} />
           <Medium className='text-center text-xs text-white'>Book Appointment</Medium>

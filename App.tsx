@@ -4,15 +4,11 @@ import './src/global.css'
 import { AutoStatusBar } from '@components/StatusBar'
 import { NavigationContainer } from '@react-navigation/native'
 import { CardStyleInterpolators, createStackNavigator, StackNavigationOptions } from '@react-navigation/stack'
+import BookAppointment from '@screens/BookAppointment/BookAppointment'
+import PatientInfo from '@screens/PatientInfo/PatientInfo'
 import WelcomeScreen from '@screens/WelcomeScreen'
 import { Dimensions, useColorScheme } from 'react-native'
 import Home from './src/screens'
-
-export type RootStackParamList = {
-  Home: undefined
-  Welcome: undefined
-  Slide: undefined
-}
 
 const RootStack = createStackNavigator<RootStackParamList>()
 
@@ -52,8 +48,18 @@ export default function App() {
         }}
       >
         <RootStack.Screen name='Home' component={Home} />
+        <RootStack.Screen name='BookAppointment' component={BookAppointment} />
+        <RootStack.Screen name='PatientInfo' component={PatientInfo} />
         <RootStack.Screen name='Welcome' component={WelcomeScreen} />
       </RootStack.Navigator>
     </NavigationContainer>
   )
+}
+
+export type RootStackParamList = {
+  Home: undefined
+  Welcome: undefined
+  Slide: undefined
+  BookAppointment: undefined
+  PatientInfo: undefined
 }

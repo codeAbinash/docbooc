@@ -23,4 +23,6 @@ const Colors = {
   },
 }
 
+export const gradientColors = ['#3b82f6', '#2563eb']
+
 export default Colors

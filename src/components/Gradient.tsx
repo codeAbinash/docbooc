@@ -1,9 +1,19 @@
+import { gradientColors } from '@utils/colors'
 import { ViewProps } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-export default function Gradient({ children, ...props }: ViewProps) {
+type GradientProps = Omit<LinearGradient['props'], 'colors'> & {
+  colors?: string[]
+}
+
+export default function Gradient({ children, colors, start, end, ...props }: GradientProps) {
   return (
-    <LinearGradient colors={['#3b82f6', '#2563eb']} end={{ x: 1, y: 1 }} start={{ x: 0, y: 0 }} {...props}>
+    <LinearGradient
+      colors={colors || gradientColors}
+      end={end || { x: 1, y: 1 }}
+      start={start || { x: 0, y: 0 }}
+      {...props}
+    >
       {children}
     </LinearGradient>
   )
