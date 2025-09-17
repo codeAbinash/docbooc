@@ -16,7 +16,7 @@
         "react-native": "0.80.2",
         "react-native-gesture-handler": "2.27.2",
         "react-native-linear-gradient": "2.8.3",
-        "react-native-mmkv": "3.3.0",
+        "react-native-mmkv": "3.3.1",
         "react-native-reanimated": "4.0.2",
         "react-native-safe-area-context": "5.5.2",
         "react-native-screens": "4.13.1",
@@ -1501,7 +1501,7 @@
 
     "react-native-linear-gradient": ["react-native-linear-gradient@2.8.3", "", { "peerDependencies": { "react": "*", "react-native": "*" } }, "sha512-KflAXZcEg54PXkLyflaSZQ3PJp4uC4whM7nT/Uot9m0e/qxFV3p6uor1983D1YOBJbJN7rrWdqIjq0T42jOJyA=="],
 
-    "react-native-mmkv": ["react-native-mmkv@3.3.0", "", { "peerDependencies": { "react": "*", "react-native": "*" } }, "sha512-2iPjIJ+IAODXN35wm53EN6nv+hR/0NXLLiLWOdPA/0gXDB2dYVrr6MqvoiFpxhLhdj0B8fkf5ARNVavJaSvuuQ=="],
+    "react-native-mmkv": ["react-native-mmkv@3.3.1", "", { "peerDependencies": { "react": "*", "react-native": "*" } }, "sha512-LYamDWQirPTUJZ9Re+BkCD+zLRGNr+EVJDeIeblvoJXGatWy9PXnChtajDSLqwjX3EXVeUyjgrembs7wlBw9ug=="],
 
     "react-native-reanimated": ["react-native-reanimated@4.0.2", "", { "dependencies": { "react-native-is-edge-to-edge": "^1.2.1", "semver": "7.7.2" }, "peerDependencies": { "@babel/core": "^7.0.0-0", "react": "*", "react-native": "*", "react-native-worklets": ">=0.4.0" } }, "sha512-RVD/jeTWrkloRVJmTAEtgXtihEnfA7aO6SgoaTBy3jbU1zblE3Oztq0ktVO5q/rxl96l9w2+6LLcuZ6N8D7aKQ=="],
 
