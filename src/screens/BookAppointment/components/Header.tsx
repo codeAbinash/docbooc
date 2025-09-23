@@ -10,7 +10,7 @@ export function Header({ title }: { title: string }) {
   const { colorScheme } = useColorScheme()
   const navigation = useNavigation<StackNav>()
   return (
-    <View className='w-full flex-row items-center justify-between gap-5 p-5 py-3'>
+    <View className='w-full flex-row items-center justify-between gap-5 p-5 py-3 pt-1'>
       <View>
         <Press
           className='size-12 items-center justify-center rounded-full bg-white dark:bg-zinc-900'

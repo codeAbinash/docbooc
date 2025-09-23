@@ -46,38 +46,38 @@ const demoLocations = [
     distance: '8.1 km',
     isSelected: false,
   },
-  {
-    id: 5,
-    mainText: 'Apollo Specialty Hospital',
-    secondaryText: '567 Innovation Drive, Tech Park',
-    image: 'https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=400&h=300&fit=crop',
-    distance: '5.3 km',
-    isSelected: false,
-  },
-  {
-    id: 6,
-    mainText: 'Fortis Healthcare Center',
-    secondaryText: '890 Heritage Street, Old City',
-    image: 'https://images.unsplash.com/photo-1538108149393-fbbd81895907?w=400&h=300&fit=crop',
-    distance: '7.9 km',
-    isSelected: false,
-  },
-  {
-    id: 7,
-    mainText: 'Max Super Speciality Hospital',
-    secondaryText: '432 Lotus Road, Garden District',
-    image: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=300&fit=crop',
-    distance: '3.7 km',
-    isSelected: false,
-  },
-  {
-    id: 8,
-    mainText: 'Medanta Emergency Clinic',
-    secondaryText: '678 Express Highway, Business Hub',
-    image: 'https://images.unsplash.com/photo-1512678080530-7760d81faba6?w=400&h=300&fit=crop',
-    distance: '9.2 km',
-    isSelected: false,
-  },
+  // {
+  //   id: 5,
+  //   mainText: 'Apollo Specialty Hospital',
+  //   secondaryText: '567 Innovation Drive, Tech Park',
+  //   image: 'https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=400&h=300&fit=crop',
+  //   distance: '5.3 km',
+  //   isSelected: false,
+  // },
+  // {
+  //   id: 6,
+  //   mainText: 'Fortis Healthcare Center',
+  //   secondaryText: '890 Heritage Street, Old City',
+  //   image: 'https://images.unsplash.com/photo-1538108149393-fbbd81895907?w=400&h=300&fit=crop',
+  //   distance: '7.9 km',
+  //   isSelected: false,
+  // },
+  // {
+  //   id: 7,
+  //   mainText: 'Max Super Speciality Hospital',
+  //   secondaryText: '432 Lotus Road, Garden District',
+  //   image: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=300&fit=crop',
+  //   distance: '3.7 km',
+  //   isSelected: false,
+  // },
+  // {
+  //   id: 8,
+  //   mainText: 'Medanta Emergency Clinic',
+  //   secondaryText: '678 Express Highway, Business Hub',
+  //   image: 'https://images.unsplash.com/photo-1512678080530-7760d81faba6?w=400&h=300&fit=crop',
+  //   distance: '9.2 km',
+  //   isSelected: false,
+  // },
 ]
 
 const BookAppointment = () => {
@@ -97,14 +97,16 @@ const BookAppointment = () => {
     <View className='bg flex-1'>
       <PaddingTop />
       <Header title='Book Appointment' />
-      <View className='gap-6 pt-2'>
-        <View className='px-5'>
-          <DoctorCard />
+      <ScrollView contentContainerClassName='pb-10'>
+        <View className='gap-6 pt-2'>
+          <View className='px-5'>
+            <DoctorCard />
+          </View>
+          <DateCardContainer />
         </View>
-        <DateCardContainer />
-      </View>
 
-      <LocationCardContainer locations={locations} onLocationSelect={handleLocationSelect} />
+        <LocationCardContainer locations={locations} onLocationSelect={handleLocationSelect} />
+      </ScrollView>
 
       <View className='px-6 pb-2 pt-2'>
         <Button title='Next' onPress={() => navigation.navigate('PatientInfo')} />
@@ -126,13 +128,13 @@ export function LocationCardContainer({ locations, onLocationSelect }: LocationC
         <Bold className='text text-base'>Select Location</Bold>
         <Medium className='text-xs text-gray'>Choose your preferred medical facility</Medium>
       </View>
-      <ScrollView className='flex-1' contentContainerStyle={{ paddingBottom: 10 }} contentContainerClassName='gap-5'>
-        <View className='flex-1 gap-3 px-3'>
-          {locations.map((location) => (
-            <LocationCard key={location.id} location={location} onPress={() => onLocationSelect(location.id)} />
-          ))}
-        </View>
-      </ScrollView>
+      {/* <ScrollView className='flex-1' contentContainerStyle={{ paddingBottom: 10 }} contentContainerClassName='gap-5'> */}
+      <View className='flex-1 gap-3 px-3'>
+        {locations.map((location) => (
+          <LocationCard key={location.id} location={location} onPress={() => onLocationSelect(location.id)} />
+        ))}
+      </View>
+      {/* </ScrollView> */}
     </View>
   )
 }
@@ -154,7 +156,7 @@ interface LocationCardProps {
 function LocationCard({ location, onPress }: LocationCardProps) {
   return (
     <TouchableOpacity
-      className={`w-full overflow-hidden rounded-3xl shadow-lg ${location.isSelected ? 'bg-accent/10' : 'bg-white dark:bg-zinc-900'}`}
+      className={`w-full overflow-hidden rounded-3xl bg-white shadow-lg dark:bg-zinc-900`}
       style={{
         borderWidth: 2,
         borderColor: location.isSelected ? Colors.accent : 'transparent',
@@ -162,28 +164,30 @@ function LocationCard({ location, onPress }: LocationCardProps) {
       activeOpacity={0.92}
       onPress={onPress}
     >
-      <View className='flex-row p-2'>
+      <View className='flex-row items-center p-2'>
         <View className='overflow-hidden rounded-2xl'>
-          <Image source={{ uri: location.image }} className='size-28' resizeMode='cover' />
+          <Image source={{ uri: location.image }} resizeMode='cover' style={{ height: 80, width: 80 }} />
           <View className='absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent' />
         </View>
 
         <View className='flex-1 justify-center gap-1.5 px-4'>
-          <Bold className='text text-base leading-5' numberOfLines={1}>
+          <Bold className={`text-base leading-5 ${location.isSelected ? 'text-accent' : 'text'}`} numberOfLines={1}>
             {location.mainText}
           </Bold>
           <Medium className='gray text-xs' numberOfLines={2}>
             {location.secondaryText}
           </Medium>
-          <View className='flex-row'>
-            <Medium className='text rounded-lg border border-zinc-200 bg-zinc-100 px-2 py-1 text-xs dark:border-zinc-700 dark:bg-zinc-800'>
+          {/* <View className='flex-row'>
+            <Medium className='text rounded-lg border border-zinc-200 px-2 py-1 text-xs dark:border-zinc-700 dark:bg-zinc-800'>
               {location.distance} away
             </Medium>
-          </View>
+          </View> */}
         </View>
+        <View className='ml-2 mr-5 h-[60%] bg-gray opacity-50' style={{ width: 1.5 }}></View>
         <View className='flex items-center justify-center pr-4'>
           <Medium className='text-xs text-gray'>Queue</Medium>
-          <SemiBold className='text-2xl text-accent'>#12</SemiBold>
+          <SemiBold className={`text-2xl ${location.isSelected ? 'text-accent' : 'text-gray'}`}>#12</SemiBold>
+          <Medium className='text-xs text-gray'>{location.distance}</Medium>
         </View>
       </View>
     </TouchableOpacity>
