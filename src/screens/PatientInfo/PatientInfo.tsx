@@ -1,6 +1,5 @@
-import Animations from '@assets/animations/animations'
 import Button from '@components/Button'
-import { Lottie } from '@components/Lottie'
+import Checkbox from '@components/Checkbox'
 import { PaddingBottom, PaddingTop } from '@components/SafePadding'
 import Slider from '@components/Slider/Slider'
 import { useNavigation } from '@react-navigation/native'
@@ -15,6 +14,8 @@ import { TextInput, TextInputProps, View } from 'react-native'
 const PatientInfo = ({}: {}) => {
   const navigation = useNavigation<StackNav>()
   const [selectedGender, setSelectedGender] = useState<Gender>()
+  const [isFamilyMember, setIsFamilyMember] = useState(false)
+  const [relationName, setRelationName] = useState('')
 
   return (
     <View className='bg flex-1'>
@@ -37,9 +38,35 @@ const PatientInfo = ({}: {}) => {
           <Label>Mobile</Label>
           <Input placeholder='Enter your mobile number' keyboardType='phone-pad' />
         </View>
+
+        <Checkbox
+          checked={isFamilyMember}
+          onPress={() => setIsFamilyMember(!isFamilyMember)}
+          label='Save this profile as a family member'
+        />
+
+        {isFamilyMember && (
+          <View className='gap-2'>
+            <Label>Relation</Label>
+            <Input
+              placeholder='Enter relation (e.g., Father, Mother, Son, Daughter)'
+              value={relationName}
+              onChangeText={setRelationName}
+              keyboardType='default'
+            />
+          </View>
+        )}
       </View>
       <View className='px-6 pb-2 pt-2'>
-        <Button title='Save ' />
+        {isFamilyMember ? (
+          <Button title='Save Family Member' onPress={navigation.goBack} />
+        ) : (
+          <Slider
+            onComplete={() => {
+              navigation.navigate('Complete')
+            }}
+          />
+        )}
       </View>
       <PaddingBottom />
     </View>
