@@ -18,7 +18,7 @@ export function Header({ title }: { title: string }) {
         >
           <ArrowLeft01Icon
             size={25}
-            strokeWidth={1.5}
+            strokeWidth={1.7}
             style={{ marginRight: 2 }}
             color={colorScheme === 'dark' ? 'white' : 'black'}
           />

@@ -25,3 +25,8 @@
 .line {
   @apply border border-line dark:border-line-dark;
 }
+
+
+.b {
+  @apply border border-zinc-200 dark:border-zinc-800;
+}

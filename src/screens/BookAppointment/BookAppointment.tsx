@@ -109,7 +109,7 @@ const BookAppointment = () => {
       </ScrollView>
 
       <View className='px-6 pb-2 pt-2'>
-        <Button title='Next' onPress={() => navigation.navigate('PatientInfo')} />
+        <Button title='Next' onPress={() => navigation.navigate('FamilyMemberSelector')} />
       </View>
       <PaddingBottom />
     </View>

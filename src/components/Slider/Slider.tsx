@@ -57,7 +57,7 @@ function Slider({ onComplete, circleSize = 50, mainColor = Colors.accent }: Slid
   })
 
   const animatedContainerBg = useAnimatedStyle(() => {
-    const colorArr = [colorScheme === 'dark' ? Colors.card.dark : Colors.card.DEFAULT, mainColor]
+    const colorArr = [colorScheme === 'dark' ? Colors.card.dark : 'white', mainColor]
     const bgColor = interpolateColor(progress.value, [0, 1], colorArr)
     return { backgroundColor: bgColor }
   })

@@ -9,6 +9,7 @@ import PatientInfo from '@screens/PatientInfo/PatientInfo'
 import WelcomeScreen from '@screens/WelcomeScreen'
 import { Dimensions, useColorScheme } from 'react-native'
 import Home from './src/screens'
+import FamilyMemberSelectorScreen from '@screens/FamilyMemberSelector'
 
 const RootStack = createStackNavigator<RootStackParamList>()
 
@@ -51,6 +52,7 @@ export default function App() {
         <RootStack.Screen name='BookAppointment' component={BookAppointment} />
         <RootStack.Screen name='PatientInfo' component={PatientInfo} />
         <RootStack.Screen name='Welcome' component={WelcomeScreen} />
+        <RootStack.Screen name='FamilyMemberSelector' component={FamilyMemberSelectorScreen} />
       </RootStack.Navigator>
     </NavigationContainer>
   )
@@ -62,4 +64,5 @@ export type RootStackParamList = {
   Slide: undefined
   BookAppointment: undefined
   PatientInfo: undefined
+  FamilyMemberSelector: undefined
 }
