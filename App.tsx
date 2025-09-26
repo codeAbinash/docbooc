@@ -5,12 +5,13 @@ import { AutoStatusBar } from '@components/StatusBar'
 import { NavigationContainer } from '@react-navigation/native'
 import { CardStyleInterpolators, createStackNavigator, StackNavigationOptions } from '@react-navigation/stack'
 import BookAppointment from '@screens/BookAppointment/BookAppointment'
+import Complete from '@screens/Complete'
+import FamilyMemberSelectorScreen from '@screens/FamilyMemberSelector'
 import PatientInfo from '@screens/PatientInfo/PatientInfo'
+import Splash from '@screens/Splash/Splash'
 import WelcomeScreen from '@screens/WelcomeScreen'
 import { Dimensions, useColorScheme } from 'react-native'
 import Home from './src/screens'
-import FamilyMemberSelectorScreen from '@screens/FamilyMemberSelector'
-import Complete from '@screens/Complete'
 
 const RootStack = createStackNavigator<RootStackParamList>()
 
@@ -29,9 +30,6 @@ const NO_ANIMATION: StackNavigationOptions = {
 
 const SMOOTH_ANIMATION: StackNavigationOptions = {
   cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter,
-  gestureEnabled: true,
-  gestureDirection: 'horizontal',
-  gestureResponseDistance: height,
 }
 
 export default function App() {
@@ -49,7 +47,8 @@ export default function App() {
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
         }}
       >
-        <RootStack.Screen name='Home' component={Home} />
+        <RootStack.Screen name='Splash' component={Splash} options={SMOOTH_ANIMATION} />
+        <RootStack.Screen name='Home' component={Home} options={SMOOTH_ANIMATION} />
         <RootStack.Screen name='BookAppointment' component={BookAppointment} />
         <RootStack.Screen name='PatientInfo' component={PatientInfo} />
         <RootStack.Screen name='Welcome' component={WelcomeScreen} />
@@ -61,6 +60,7 @@ export default function App() {
 }
 
 export type RootStackParamList = {
+  Splash: undefined
   Home: undefined
   Welcome: undefined
   Slide: undefined
