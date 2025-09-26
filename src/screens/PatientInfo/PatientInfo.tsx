@@ -1,5 +1,7 @@
 import Button from '@components/Button'
 import Checkbox from '@components/Checkbox'
+import Input from '@components/Input'
+import Label from '@components/Label'
 import { PaddingBottom, PaddingTop } from '@components/SafePadding'
 import Slider from '@components/Slider/Slider'
 import { useNavigation } from '@react-navigation/native'
@@ -70,29 +72,6 @@ const PatientInfo = ({}: {}) => {
       </View>
       <PaddingBottom />
     </View>
-  )
-}
-
-function Label({ children }: { children: React.ReactNode }) {
-  return <SemiBold className='text text-sm'>{children}</SemiBold>
-}
-
-function Input({ placeholder, ...props }: TextInputProps) {
-  return (
-    <TextInput
-      className='b rounded-2xl bg-white text-sm placeholder:text-zinc-500 dark:bg-zinc-900 dark:text-white'
-      placeholder={placeholder}
-      style={{
-        ...MEDIUM,
-        borderRadius: 12,
-        paddingVertical: 15,
-        paddingHorizontal: 16,
-        paddingLeft: 16,
-      }}
-      selectionHandleColor={Colors.accent}
-      selectionColor={Colors.accent + '77'}
-      {...props}
-    />
   )
 }
 

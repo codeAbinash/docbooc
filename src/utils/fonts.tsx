@@ -1,22 +1,40 @@
 import { StyleSheet, Text, type TextProps } from 'react-native'
 
+// export const BLACK = {
+//   fontFamily: 'Inter-Black',
+// }
+// export const BOLD = {
+//   fontFamily: 'Inter-Bold',
+// }
+// export const LIGHT = {
+//   fontFamily: 'Inter-Light',
+// }
+// export const MEDIUM = {
+//   fontFamily: 'Inter-Medium',
+// }
+// export const REGULAR = {
+//   fontFamily: 'Inter-Regular',
+// }
+// export const SEMIBOLD = {
+//   fontFamily: 'Inter-SemiBold',
+// }
 export const BLACK = {
-  fontFamily: 'Inter-Black',
+  fontFamily: 'MiSansLatin-Heavy',
 }
 export const BOLD = {
-  fontFamily: 'Inter-Bold',
+  fontFamily: 'MiSansLatin-Bold',
 }
 export const LIGHT = {
-  fontFamily: 'Inter-Light',
+  fontFamily: 'MiSansLatin-Light',
 }
 export const MEDIUM = {
-  fontFamily: 'Inter-Medium',
+  fontFamily: 'MiSansLatin-Medium',
 }
 export const REGULAR = {
-  fontFamily: 'Inter-Regular',
+  fontFamily: 'MiSansLatin-Regular',
 }
 export const SEMIBOLD = {
-  fontFamily: 'Inter-SemiBold',
+  fontFamily: 'MiSansLatin-Semibold',
 }
 
 export function Light({ children, style, ...props }: TextProps) {

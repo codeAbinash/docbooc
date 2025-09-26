@@ -1,4 +1,4 @@
-import { Medium } from '@utils/fonts'
+import { Medium, SemiBold } from '@utils/fonts'
 import { TouchableOpacity, TouchableOpacityProps } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
@@ -15,7 +15,7 @@ export default function Button({ title, ...props }: ButtonProps) {
         end={{ x: 1, y: 1 }}
         start={{ x: 0, y: 0 }}
       >
-        <Medium className='text-sm text-white'>{title}</Medium>
+        <SemiBold className='text-sm text-white'>{title}</SemiBold>
       </LinearGradient>
     </TouchableOpacity>
   )

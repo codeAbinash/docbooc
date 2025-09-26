@@ -12,6 +12,8 @@ import Splash from '@screens/Splash/Splash'
 import WelcomeScreen from '@screens/WelcomeScreen'
 import { Dimensions, useColorScheme } from 'react-native'
 import Home from './src/screens'
+import Login from '@screens/Login/Login'
+import OTP from '@screens/Login/OTP'
 
 const RootStack = createStackNavigator<RootStackParamList>()
 
@@ -47,8 +49,10 @@ export default function App() {
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
         }}
       >
-        <RootStack.Screen name='Splash' component={Splash} options={SMOOTH_ANIMATION} />
-        <RootStack.Screen name='Home' component={Home} options={SMOOTH_ANIMATION} />
+        <RootStack.Screen name='Splash' component={Splash} options={NO_ANIMATION} />
+        <RootStack.Screen name='Login' component={Login} options={NO_ANIMATION} />
+        <RootStack.Screen name='OTP' component={OTP} options={NO_ANIMATION} />
+        <RootStack.Screen name='Home' component={Home} options={NO_ANIMATION} />
         <RootStack.Screen name='BookAppointment' component={BookAppointment} />
         <RootStack.Screen name='PatientInfo' component={PatientInfo} />
         <RootStack.Screen name='Welcome' component={WelcomeScreen} />
@@ -68,4 +72,6 @@ export type RootStackParamList = {
   PatientInfo: undefined
   FamilyMemberSelector: undefined
   Complete: undefined
+  Login: undefined
+  OTP: undefined
 }
