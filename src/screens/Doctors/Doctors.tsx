@@ -6,17 +6,59 @@ import { useNavigation } from '@react-navigation/native'
 import Colors from '@utils/colors'
 import { Medium, Regular, SemiBold } from '@utils/fonts'
 import { StackNav } from '@utils/types'
-import { useMemo, useState } from 'react'
-import { FlatList, Image, TouchableOpacity, View } from 'react-native'
+import { useMemo, useRef, useState } from 'react'
+import { Dimensions, FlatList, Image, TouchableOpacity, View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
+
+const ALL_SPECIALTY = { id: 0, name: 'All', icon: Doctor01Icon }
+
+const getScrollPosition = (selectedIndex: number, itemWidths: { [key: number]: number }, isForward: boolean) => {
+  let width = 0
+  for (let i = 0; i < selectedIndex; i++) {
+    width += (itemWidths[i] || 100) + 12
+  }
+
+  if (isForward) return Math.max(0, width - 20)
+
+  const screenCenter = Dimensions.get('window').width / 2
+  const itemCenter = width + (itemWidths[selectedIndex] || 100) / 2
+  return Math.max(0, itemCenter - screenCenter + 20)
+}
 
 const Doctors = () => {
   const [selected, setSelected] = useState<number | null>(null)
+  const scrollViewRef = useRef<ScrollView>(null)
+  const [itemWidths, setItemWidths] = useState<{ [key: number]: number }>({})
 
   const filteredDoctors = useMemo(
     () => (selected ? doctors.filter((doctor) => doctor.specialtyId === selected) : doctors),
     [selected],
   )
+
+  const handleItemLayout = (specialtyId: number, width: number) => {
+    setItemWidths((prev: { [key: number]: number }) => ({ ...prev, [specialtyId]: width }))
+  }
+
+  const handleSpecialtySelect = (specialtyId: number) => {
+    const previousSelected = selected
+    setSelected(specialtyId)
+
+    if (!scrollViewRef.current || specialtyId === 0) return
+
+    const allItems = [ALL_SPECIALTY, ...specialties]
+    const selectedIndex = allItems.findIndex((item) => item.id === specialtyId)
+    const previousIndex = previousSelected !== null ? allItems.findIndex((item) => item.id === previousSelected) : -1
+
+    if (selectedIndex > 0 && Object.keys(itemWidths).length > 0) {
+      const isForward = selectedIndex > previousIndex
+      const scrollPosition = getScrollPosition(selectedIndex, itemWidths, isForward)
+
+      scrollViewRef.current.scrollTo({
+        x: scrollPosition,
+        animated: true,
+      })
+    }
+  }
 
   return (
     <View className='bg flex-1'>
@@ -25,15 +67,27 @@ const Doctors = () => {
         <View className='p-5 py-3'>
           <Search placeholder='Search doctors, specialties, etc' />
         </View>
-        <ScrollView horizontal contentContainerClassName='gap-3 px-5' showsHorizontalScrollIndicator={false}>
+        <ScrollView
+          ref={scrollViewRef}
+          horizontal
+          contentContainerClassName='gap-3 px-5'
+          showsHorizontalScrollIndicator={false}
+        >
           <Item
             key={0}
-            specialty={{ id: 0, name: 'All', icon: Doctor01Icon }}
+            specialty={ALL_SPECIALTY}
             selected={selected}
-            setSelected={setSelected}
+            setSelected={handleSpecialtySelect}
+            onLayout={handleItemLayout}
           />
           {specialties.map((specialty) => (
-            <Item key={specialty.id} specialty={specialty} selected={selected} setSelected={setSelected} />
+            <Item
+              key={specialty.id}
+              specialty={specialty}
+              selected={selected}
+              setSelected={handleSpecialtySelect}
+              onLayout={handleItemLayout}
+            />
           ))}
         </ScrollView>
       </View>
@@ -86,10 +140,12 @@ function Item({
   specialty,
   selected,
   setSelected,
+  onLayout,
 }: {
-  specialty: (typeof specialties)[0]
+  specialty: (typeof specialties)[0] | { id: number; name: string; icon: any }
   selected: number | null
   setSelected: (id: number) => void
+  onLayout: (specialtyId: number, width: number) => void
 }) {
   return (
     <TouchableOpacity
@@ -97,6 +153,10 @@ function Item({
       className={`flex flex-row items-center rounded-full px-2 py-2 pr-4 ${selected === specialty.id ? 'bg-accent' : 'bg-neutral-400/30'}`}
       onPress={() => setSelected(specialty.id)}
       activeOpacity={0.8}
+      onLayout={(event) => {
+        const { width } = event.nativeEvent.layout
+        onLayout(specialty.id, width)
+      }}
     >
       <View className={`rounded-full ${selected === specialty.id ? 'bg-white' : 'bg-accent'} p-1.5`}>
         <specialty.icon size={20} strokeWidth={1.7} color={selected === specialty.id ? Colors.accent : 'white'} />
