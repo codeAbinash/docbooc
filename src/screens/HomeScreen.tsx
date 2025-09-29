@@ -1,16 +1,10 @@
+import { specialties } from '@/constants'
 import Gradient from '@components/Gradient'
 import Press from '@components/Press'
 import { PaddingTop } from '@components/SafePadding'
-import Bone02Icon from '@hugeicons/Bone02Icon'
-import Brain01Icon from '@hugeicons/Brain01Icon'
 import Calendar03Icon from '@hugeicons/Calendar03Icon'
-import Cardiogram02Icon from '@hugeicons/Cardiogram02Icon'
-import DigestionIcon from '@hugeicons/DigestionIcon'
-import DoNotTouch01Icon from '@hugeicons/DoNotTouch01Icon'
-import FemaleSymbolIcon from '@hugeicons/FemaleSymbolIcon'
 import Medicine02Icon from '@hugeicons/Medicine02Icon'
 import NotificationSquareIcon from '@hugeicons/NotificationSquareIcon'
-import PatientIcon from '@hugeicons/PatientIcon'
 import PlusSignIcon from '@hugeicons/PlusSignIcon'
 import Search01Icon from '@hugeicons/Search01Icon'
 import { useNavigation } from '@react-navigation/native'
@@ -98,50 +92,9 @@ function UpcomingSchedule() {
   )
 }
 
-const specialties = [
-  {
-    id: 1,
-    name: 'General Physician',
-    icon: Medicine02Icon,
-  },
-  {
-    id: 2,
-    name: 'Cardiologist',
-    icon: Cardiogram02Icon,
-  },
-  {
-    id: 3,
-    name: 'Orthopedist',
-    icon: Bone02Icon,
-  },
-  {
-    id: 4,
-    name: 'Gastroenterologist',
-    icon: DigestionIcon,
-  },
-  {
-    id: 5,
-    name: 'Neurologist',
-    icon: Brain01Icon,
-  },
-  {
-    id: 6,
-    name: 'Psychiatrist',
-    icon: PatientIcon,
-  },
-  {
-    id: 7,
-    name: 'Gynecologist',
-    icon: FemaleSymbolIcon,
-  },
-  {
-    id: 8,
-    name: 'Dermatologist',
-    icon: DoNotTouch01Icon,
-  },
-]
-
 const DoctorSpecialties = () => {
+  const navigation = useNavigation<StackNav>()
+
   return (
     <View className='gap-5 px-5 pb-5 pt-2'>
       <View className='mt-5 flex-row items-center justify-between'>
@@ -160,6 +113,7 @@ const DoctorSpecialties = () => {
               className='items-center gap-3 px-1'
               style={{ width: '25%' }} // 4 items per row with some spacing
               activeOpacity={0.7}
+              onPress={() => navigation.navigate('Doctors')}
             >
               <View
                 className='items-center justify-center rounded-full border border-accent/20 bg-accent/20 shadow-sm'

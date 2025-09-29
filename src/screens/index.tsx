@@ -11,6 +11,7 @@ import { SemiBold } from '@utils/fonts'
 import React, { type ReactNode } from 'react'
 import { TouchableOpacity, View, useColorScheme, type ColorSchemeName } from 'react-native'
 import colors from 'tailwindcss/colors'
+import Doctors from './Doctors/Doctors'
 
 const Tab = createBottomTabNavigator()
 
@@ -96,7 +97,6 @@ export function getColor(theme: ColorSchemeName) {
 }
 
 // Placeholder components
-const DoctorsScreen = () => <View className='bg flex-1' />
 const AppointmentsScreen = () => <View className='bg flex-1' />
 const ProfileScreen = () => <View className='bg flex-1' />
 
@@ -107,7 +107,7 @@ const screens = [
     label: 'Doctors',
     focusedIcon: Doctor01Icon,
     defaultIcon: Doctor01Icon,
-    component: DoctorsScreen,
+    component: Doctors,
   },
   {
     name: 'Appointments',
