@@ -7,13 +7,13 @@ import { CardStyleInterpolators, createStackNavigator, StackNavigationOptions } 
 import BookAppointment from '@screens/BookAppointment/BookAppointment'
 import Complete from '@screens/Complete'
 import FamilyMemberSelectorScreen from '@screens/FamilyMemberSelector'
+import Login from '@screens/Login/Login'
+import OTP from '@screens/Login/OTP'
 import PatientInfo from '@screens/PatientInfo/PatientInfo'
 import Splash from '@screens/Splash/Splash'
 import WelcomeScreen from '@screens/WelcomeScreen'
 import { Dimensions, useColorScheme } from 'react-native'
 import Home from './src/screens'
-import Login from '@screens/Login/Login'
-import OTP from '@screens/Login/OTP'
 
 const RootStack = createStackNavigator<RootStackParamList>()
 
@@ -42,17 +42,14 @@ export default function App() {
       <AutoStatusBar scheme={scheme} />
       <RootStack.Navigator
         screenOptions={{
-          gestureEnabled: true,
-          gestureDirection: 'horizontal',
-          gestureResponseDistance: width / 5,
           headerShown: false,
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
         }}
       >
         <RootStack.Screen name='Splash' component={Splash} options={NO_ANIMATION} />
         <RootStack.Screen name='Login' component={Login} options={NO_ANIMATION} />
-        <RootStack.Screen name='OTP' component={OTP} options={NO_ANIMATION} />
         <RootStack.Screen name='Home' component={Home} options={NO_ANIMATION} />
+        <RootStack.Screen name='OTP' component={OTP} />
         <RootStack.Screen name='BookAppointment' component={BookAppointment} />
         <RootStack.Screen name='PatientInfo' component={PatientInfo} />
         <RootStack.Screen name='Welcome' component={WelcomeScreen} />
