@@ -9,17 +9,47 @@ import { Bold, Regular, SemiBold } from '@utils/fonts'
 import { NavProp } from '@utils/types'
 import { useEffect, useState } from 'react'
 import { View } from 'react-native'
+import Animated, {
+  FadeInDown,
+  FadeInUp,
+  LinearTransition,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated'
 
 export default function Complete({ navigation }: NavProp) {
   const [showContent, setShowContent] = useState(false)
   const verificationCode = 'MBB-' + Math.random().toString(36).substring(2, 8).toUpperCase()
 
+  const contentOpacity = useSharedValue(0)
+  const mainContentTransform = useSharedValue(0)
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowContent(true)
+      contentOpacity.value = withTiming(1, { duration: 800 })
+      mainContentTransform.value = withTiming(1, { duration: 600 })
     }, 1000)
     return () => clearTimeout(timer)
   }, [])
+
+  const animatedMainStyle = useAnimatedStyle(() => {
+    return {
+      opacity: mainContentTransform.value,
+      transform: [
+        {
+          translateY: (1 - mainContentTransform.value) * 50,
+        },
+      ],
+    }
+  })
+
+  const animatedContentStyle = useAnimatedStyle(() => {
+    return {
+      opacity: contentOpacity.value,
+    }
+  })
 
   return (
     <View className='flex-1'>
@@ -67,7 +97,11 @@ export default function Complete({ navigation }: NavProp) {
         </View> */}
 
       {/* Main Content */}
-      <View className={`flex-1 items-center ${showContent ? 'justify-between' : 'justify-center'} px-6`}>
+      <Animated.View
+        className={`flex-1 items-center ${showContent ? 'justify-between' : 'justify-center'} px-6`}
+        style={animatedMainStyle}
+        layout={LinearTransition.springify().damping(15).stiffness(100)}
+      >
         <View>
           <PaddingTop />
           <Lottie
@@ -86,54 +120,72 @@ export default function Complete({ navigation }: NavProp) {
 
         {/* Verification Code Section */}
         {showContent && (
-          <View className='mb-6'>
+          <Animated.View
+            className='mb-6'
+            entering={FadeInUp.delay(200).duration(600).springify()}
+            layout={LinearTransition.springify().damping(15)}
+          >
             <Regular className='mb-2 text-center text-xs' style={{ color: Colors.gray.DEFAULT }}>
               Verification Code
             </Regular>
             <SemiBold className='text-center text-xl tracking-wider' style={{ color: Colors.accent }}>
               {verificationCode}
             </SemiBold>
-          </View>
+          </Animated.View>
         )}
 
         {/* Motorcycle Animation */}
         {showContent && (
-          <View className='mb-6 items-center'>
+          <Animated.View
+            className='mb-6 items-center'
+            entering={FadeInUp.delay(400).duration(700).springify()}
+            layout={LinearTransition.springify().damping(15)}
+          >
             <Lottie source={Animations.motorcycle} style={{ width: W * 0.9, height: W * 0.6 }} />
-          </View>
+          </Animated.View>
         )}
 
         {/* Agent Visit Notice */}
         {showContent && (
-          <>
-            <View className='w-full rounded-xl border border-amber-100 bg-amber-50 p-5 dark:bg-amber-900/20'>
+          <Animated.View style={animatedContentStyle} className='w-full'>
+            <Animated.View
+              className='w-full rounded-xl border border-amber-100 bg-amber-50 p-5 dark:bg-amber-900/20'
+              entering={FadeInUp.delay(600).duration(700).springify()}
+              layout={LinearTransition.springify().damping(15)}
+            >
               <SemiBold className='text-center text-sm text-amber-700 dark:text-amber-300'>
                 An agent will visit your home to confirm your booking and provide additional assistance.
               </SemiBold>
-            </View>
-            <View className='mt-6 w-full'>
-              <Button
-                title='View Appointment'
-                onPress={() =>
-                  navigation.reset({
-                    index: 0,
-                    routes: [
-                      {
-                        name: 'Home',
-                        state: {
-                          routes: [{ name: 'Appointments' }],
-                          index: 0,
+            </Animated.View>
+            <View>
+              <Animated.View
+                className='mt-6'
+                entering={FadeInDown.delay(800).duration(700).springify()}
+                layout={LinearTransition.springify().damping(15)}
+              >
+                <Button
+                  title='View Appointment'
+                  onPress={() =>
+                    navigation.reset({
+                      index: 0,
+                      routes: [
+                        {
+                          name: 'Home',
+                          state: {
+                            routes: [{ name: 'Appointments' }],
+                            index: 0,
+                          },
                         },
-                      },
-                    ],
-                  })
-                }
-              />
+                      ],
+                    })
+                  }
+                />
+              </Animated.View>
             </View>
-          </>
+          </Animated.View>
         )}
         <PaddingBottom />
-      </View>
+      </Animated.View>
     </View>
   )
 }
