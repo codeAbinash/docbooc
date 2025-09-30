@@ -11,6 +11,7 @@ import { SemiBold } from '@utils/fonts'
 import React, { type ReactNode } from 'react'
 import { TouchableOpacity, View, useColorScheme, type ColorSchemeName } from 'react-native'
 import colors from 'tailwindcss/colors'
+import Appointments from './Appointments/Appointments'
 import Doctors from './Doctors/Doctors'
 
 const Tab = createBottomTabNavigator()
@@ -76,8 +77,8 @@ function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
               className='flex items-center justify-center p-1'
               style={{ flex: 1, paddingTop: 13, paddingBottom: 11 }}
             >
-              {options.tabBarIcon && options.tabBarIcon({ focused: isFocused, color, size: 23 })}
-              <SemiBold style={{ color, marginTop: 4, fontSize: 8.5 }}>{label as ReactNode}</SemiBold>
+              {options.tabBarIcon && options.tabBarIcon({ focused: isFocused, color, size: 25 })}
+              <SemiBold style={{ color, marginTop: 4, fontSize: 9.5 }}>{label as ReactNode}</SemiBold>
             </TouchableOpacity>
           )
         })}
@@ -97,7 +98,6 @@ export function getColor(theme: ColorSchemeName) {
 }
 
 // Placeholder components
-const AppointmentsScreen = () => <View className='bg flex-1' />
 const ProfileScreen = () => <View className='bg flex-1' />
 
 const screens = [
@@ -114,7 +114,7 @@ const screens = [
     label: 'Appointments',
     focusedIcon: Calendar03Icon,
     defaultIcon: Calendar03Icon,
-    component: AppointmentsScreen,
+    component: Appointments,
   },
   { name: 'Profile', label: 'Profile', focusedIcon: User02Icon, defaultIcon: User02Icon, component: ProfileScreen },
 ]

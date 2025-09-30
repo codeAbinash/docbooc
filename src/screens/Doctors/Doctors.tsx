@@ -64,7 +64,7 @@ const Doctors = () => {
     <View className='bg flex-1'>
       <PaddingTop />
       <View>
-        <View className='p-5 py-3'>
+        <View className='p-5 py-3 pb-5'>
           <Search placeholder='Search doctors, specialties, etc' />
         </View>
         <ScrollView
@@ -150,7 +150,7 @@ function Item({
   return (
     <TouchableOpacity
       key={specialty.id}
-      className={`flex flex-row items-center rounded-full px-2 py-2 pr-4 ${selected === specialty.id ? 'bg-accent' : 'bg-neutral-400/30'}`}
+      className={`flex flex-row items-center rounded-full px-2 py-2 pr-4 ${selected === specialty.id ? 'bg-accent' : 'bg-white dark:bg-neutral-800'}`}
       onPress={() => setSelected(specialty.id)}
       activeOpacity={0.8}
       onLayout={(event) => {
