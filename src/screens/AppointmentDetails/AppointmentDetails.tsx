@@ -6,15 +6,13 @@ import PatientInfoCard from '@components/PatientInfoCard'
 import PaymentInfoCard from '@components/PaymentInfoCard'
 import Press from '@components/Press'
 import { PaddingBottom, PaddingTop } from '@components/SafePadding'
-import Slider from '@components/Slider/Slider'
-import { useNavigation } from '@react-navigation/native'
-import { Bold, Medium, SemiBold } from '@utils/fonts'
+import { useNavigation, useRoute } from '@react-navigation/native'
+import { Bold, Medium } from '@utils/fonts'
 import { StackNav } from '@utils/types'
 import { useColorScheme } from 'nativewind'
-import { ScrollView, TouchableOpacity, View } from 'react-native'
+import { ScrollView, View } from 'react-native'
 
-// Custom Header Component with Edit Details button
-function Header({ title, onEditPress }: { title: string; onEditPress: () => void }) {
+function Header({ title }: { title: string }) {
   const { colorScheme } = useColorScheme()
   const navigation = useNavigation<StackNav>()
 
@@ -33,28 +31,27 @@ function Header({ title, onEditPress }: { title: string; onEditPress: () => void
           />
         </Press>
       </View>
-      <View>
-        <SemiBold className='text text-base'>{title}</SemiBold>
+      <View className='flex-1'>
+        <Bold className='text text-center text-base'>{title}</Bold>
       </View>
-      <View>
-        <TouchableOpacity
-          className='rounded-full bg-white px-4 py-2 dark:bg-zinc-900'
-          onPress={onEditPress}
-          activeOpacity={0.7}
-        >
-          <Medium className='text text-sm'>Edit</Medium>
-        </TouchableOpacity>
-      </View>
+      <View className='w-12' />
     </View>
   )
 }
 
-const VerifyBeforeBooking = () => {
+export default function AppointmentDetails() {
   const navigation = useNavigation<StackNav>()
+  const route = useRoute()
 
+  // Get appointmentId from route params
+  const { appointmentId } = route.params as { appointmentId: string }
+
+  // In a real app, you would fetch appointment data based on appointmentId
+  // For now, we'll use mock data
   const appointmentData = {
+    id: '1',
     doctor: {
-      name: 'Dr. John Doe',
+      name: 'Dr. Michael Chen',
       specialty: 'Cardiologist',
       qualification: 'MBBS, MD, DM (Cardiology)',
       experience: '21+ Years of Experience',
@@ -69,10 +66,11 @@ const VerifyBeforeBooking = () => {
       relationship: 'Myself',
     },
     appointment: {
-      date: 'October 22, 2024',
+      date: 'October 15, 2024',
       day: 'Tuesday',
       time: '10:30 AM',
       queueNumber: 5,
+      status: 'provisional' as const,
     },
     location: {
       name: 'Metro Medical Center',
@@ -85,30 +83,42 @@ const VerifyBeforeBooking = () => {
       platformFee: 50,
       gst: 99,
       total: 649,
+      paymentMethod: 'UPI',
+      transactionId: 'TXN1234567890',
     },
+  }
+
+  const handleCancelAppointment = () => {
+    // Handle appointment cancellation
+    console.log('Cancel appointment')
+  }
+
+  const handleRescheduleAppointment = () => {
+    // Handle appointment rescheduling
+    console.log('Reschedule appointment')
   }
 
   return (
     <View className='bg flex-1'>
       <PaddingTop />
-      <Header title='Verify Details' onEditPress={() => navigation.goBack()} />
+      <Header title='Appointment Details' />
 
       <ScrollView className='flex-1' contentContainerClassName='pb-6' showsVerticalScrollIndicator={false}>
         <View className='gap-6 px-5 pt-4'>
-          {/* Doctor Information Card */}
+          {/* Doctor Information */}
           <DoctorInfoCard doctor={appointmentData.doctor} />
 
-          {/* Patient Information Card */}
+          {/* Patient Information */}
           <PatientInfoCard patient={appointmentData.patient} />
 
-          {/* Appointment Details Card */}
+          {/* Appointment Details */}
           <AppointmentDetailsCard appointment={appointmentData.appointment} />
 
-          {/* Location Information Card */}
+          {/* Location Information */}
           <LocationInfoCard location={appointmentData.location} />
 
-          {/* Payment Information Card */}
-          <PaymentInfoCard paymentInfo={appointmentData.payment} showPayButton={false} />
+          {/* Payment Information */}
+          <PaymentInfoCard paymentInfo={appointmentData.payment} isCompleted={true} />
 
           {/* Important Notes */}
           <View className='overflow-hidden rounded-3xl bg-amber-50 p-6 dark:bg-amber-900/20'>
@@ -124,20 +134,30 @@ const VerifyBeforeBooking = () => {
                 • Queue number may vary based on actual arrivals
               </Medium>
               <Medium className='text-sm text-amber-700 dark:text-amber-300'>
-                • You will receive a confirmation SMS shortly
+                • Contact hospital for any changes or cancellations
               </Medium>
             </View>
           </View>
+
+          {/* Action Buttons */}
+          <View className='gap-4'>
+            <Press
+              onPress={handleRescheduleAppointment}
+              className='flex-row items-center justify-center rounded-2xl bg-blue-600 p-4 dark:bg-blue-700'
+            >
+              <Bold className='text-base text-white'>Reschedule Appointment</Bold>
+            </Press>
+
+            <Press
+              onPress={handleCancelAppointment}
+              className='flex-row items-center justify-center rounded-2xl border border-red-600 p-4 dark:border-red-500'
+            >
+              <Bold className='text-base text-red-600 dark:text-red-500'>Cancel Appointment</Bold>
+            </Press>
+          </View>
         </View>
       </ScrollView>
-
-      {/* Slider to Confirm Appointment */}
-      <View className='px-6 pb-2 pt-3'>
-        <Slider onComplete={() => navigation.navigate('Complete')} />
-      </View>
       <PaddingBottom />
     </View>
   )
 }
-
-export default VerifyBeforeBooking

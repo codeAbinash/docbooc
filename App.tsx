@@ -4,6 +4,7 @@ import './src/global.css'
 import { AutoStatusBar } from '@components/StatusBar'
 import { NavigationContainer } from '@react-navigation/native'
 import { CardStyleInterpolators, createStackNavigator, StackNavigationOptions } from '@react-navigation/stack'
+import AppointmentDetails from '@screens/AppointmentDetails/AppointmentDetails'
 import BookAppointment from '@screens/BookAppointment/BookAppointment'
 import Complete from '@screens/Complete'
 import FamilyMemberSelectorScreen from '@screens/FamilyMemberSelector'
@@ -56,6 +57,7 @@ export default function App() {
         <RootStack.Screen name='Welcome' component={WelcomeScreen} />
         <RootStack.Screen name='FamilyMemberSelector' component={FamilyMemberSelectorScreen} />
         <RootStack.Screen name='VerifyBeforeBooking' component={VerifyBeforeBooking} />
+        <RootStack.Screen name='AppointmentDetails' component={AppointmentDetails} />
         <RootStack.Screen name='Complete' component={Complete} />
       </RootStack.Navigator>
     </NavigationContainer>
@@ -76,4 +78,5 @@ export type RootStackParamList = {
   Doctors: undefined
   VerifyBeforeBooking: undefined
   Appointments: undefined
+  AppointmentDetails: { appointmentId: string }
 }

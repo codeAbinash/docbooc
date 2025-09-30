@@ -4,8 +4,10 @@ import PatientIcon from '@assets/icons/hugeicons/PatientIcon'
 import Time04Icon from '@assets/icons/hugeicons/Time04Icon'
 import Press from '@components/Press'
 import { PaddingTop } from '@components/SafePadding'
+import { useNavigation } from '@react-navigation/native'
 import Colors from '@utils/colors'
 import { Medium, SemiBold } from '@utils/fonts'
+import { StackNav } from '@utils/types'
 import { useColorScheme } from 'nativewind'
 import { useState } from 'react'
 import { ScrollView, View } from 'react-native'
@@ -62,14 +64,15 @@ type Appointment = {
 
 type AppointmentCardProps = {
   appointment: Appointment
+  onPress?: () => void
 }
 
-function AppointmentCard({ appointment }: AppointmentCardProps) {
+function AppointmentCard({ appointment, onPress }: AppointmentCardProps) {
   const { colorScheme } = useColorScheme()
   const dark = colorScheme === 'dark'
 
   return (
-    <View className='overflow-hidden rounded-2xl bg-white p-5 shadow-sm dark:bg-neutral-800'>
+    <Press onPress={onPress} className='overflow-hidden rounded-2xl bg-white p-5 shadow-sm dark:bg-neutral-800'>
       {/* Status Badge */}
       <View className='mb-3 flex-row items-center justify-between'>
         <View
@@ -144,7 +147,7 @@ function AppointmentCard({ appointment }: AppointmentCardProps) {
         <Medium className='text-xs text-neutral-500 dark:text-neutral-400'>Location</Medium>
         <Medium className='text-sm text-neutral-900 dark:text-white'>{appointment.location}</Medium>
       </View>
-    </View>
+    </Press>
   )
 }
 
@@ -193,12 +196,17 @@ const appointments: Appointment[] = [
 ]
 export default function Appointments() {
   const [activeTab, setActiveTab] = useState(0)
+  const navigation = useNavigation<StackNav>()
 
   const tabLabels = ['Provisional', 'Confirmed']
 
   const filteredAppointments = appointments.filter((appointment) =>
     activeTab === 0 ? appointment.status === 'provisional' : appointment.status === 'confirmed',
   )
+
+  const handleAppointmentPress = (appointment: Appointment) => {
+    navigation.navigate('AppointmentDetails', { appointmentId: appointment.id })
+  }
 
   return (
     <View className='bg flex-1'>
@@ -214,7 +222,13 @@ export default function Appointments() {
         contentContainerClassName='gap-5'
       >
         {filteredAppointments.length > 0 ? (
-          filteredAppointments.map((appointment) => <AppointmentCard key={appointment.id} appointment={appointment} />)
+          filteredAppointments.map((appointment) => (
+            <AppointmentCard
+              key={appointment.id}
+              appointment={appointment}
+              onPress={() => handleAppointmentPress(appointment)}
+            />
+          ))
         ) : (
           <View className='mt-20 items-center justify-center'>
             <Medium className='text-neutral-500 dark:text-neutral-400'>
