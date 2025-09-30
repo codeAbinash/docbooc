@@ -203,7 +203,7 @@ export default function Appointments() {
   return (
     <View className='bg flex-1'>
       <PaddingTop />
-      <View className='px-5 pt-5'>
+      <View className='px-5 pt-3'>
         <Tabs tabs={tabLabels} activeTab={activeTab} onTabChange={setActiveTab} />
       </View>
 

@@ -19,7 +19,7 @@ type SliderProps = {
   circleSize?: number
 }
 
-function Slider({ onComplete, circleSize = 50, mainColor = Colors.accent }: SliderProps) {
+function Slider({ onComplete, circleSize = 45, mainColor = Colors.accent }: SliderProps) {
   const { colorScheme } = useColorScheme()
   const containerWidth = useSharedValue<number>(0)
   const pressed = useSharedValue<boolean>(false)

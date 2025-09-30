@@ -108,7 +108,7 @@ const BookAppointment = () => {
         <LocationCardContainer locations={locations} onLocationSelect={handleLocationSelect} />
       </ScrollView>
 
-      <View className='px-6 pb-2 pt-2'>
+      <View className='px-6 pb-2 pt-3'>
         <Button title='Next' onPress={() => navigation.navigate('FamilyMemberSelector')} />
       </View>
       <PaddingBottom />

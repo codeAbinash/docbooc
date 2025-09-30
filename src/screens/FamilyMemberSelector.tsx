@@ -8,6 +8,7 @@ import React from 'react'
 import { ScrollView, View } from 'react-native'
 import { Header } from './BookAppointment/components/Header'
 import FamilyMemberCard, { FamilyMember } from './FamilyMemberSelector/FamilyMemberCard'
+import Button from '@components/Button'
 
 const mockFamilyMembers: FamilyMember[] = [
   { id: '1', name: 'John Smith', relationship: 'Myself' },
@@ -59,17 +60,12 @@ const FamilyMemberSelectorScreen = ({ navigation }: NavProp) => {
         </ScrollView>
 
         <View className='px-5 pb-2 pt-2'>
-          {selectedMemberId ? (
-            <Slider
-              onComplete={() => {
-                navigation.navigate('Complete')
-              }}
-            />
-          ) : (
-            <View className='pointer-events-none opacity-50'>
-              <Slider onComplete={() => {}} />
-            </View>
-          )}
+          <Button
+            title='Continue'
+            onPress={() => {
+              navigation.navigate('VerifyBeforeBooking')
+            }}
+          />
         </View>
       </View>
 

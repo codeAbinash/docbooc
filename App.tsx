@@ -11,6 +11,7 @@ import Login from '@screens/Login/Login'
 import OTP from '@screens/Login/OTP'
 import PatientInfo from '@screens/PatientInfo/PatientInfo'
 import Splash from '@screens/Splash/Splash'
+import VerifyBeforeBooking from '@screens/VerifyBeforeBooking/VerifyBeforeBooking'
 import WelcomeScreen from '@screens/WelcomeScreen'
 import { Dimensions, useColorScheme } from 'react-native'
 import Home from './src/screens'
@@ -54,6 +55,7 @@ export default function App() {
         <RootStack.Screen name='PatientInfo' component={PatientInfo} />
         <RootStack.Screen name='Welcome' component={WelcomeScreen} />
         <RootStack.Screen name='FamilyMemberSelector' component={FamilyMemberSelectorScreen} />
+        <RootStack.Screen name='VerifyBeforeBooking' component={VerifyBeforeBooking} />
         <RootStack.Screen name='Complete' component={Complete} />
       </RootStack.Navigator>
     </NavigationContainer>
@@ -72,4 +74,6 @@ export type RootStackParamList = {
   Login: undefined
   OTP: undefined
   Doctors: undefined
+  VerifyBeforeBooking: undefined
+  Appointments: undefined
 }
