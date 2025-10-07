@@ -1,5 +1,4 @@
 import { PaddingBottom } from '@components/SafePadding'
-import { SemiBold } from '@utils/fonts'
 import { memo, useCallback, useState } from 'react'
 import { FlatList, View } from 'react-native'
 import PatientCard from './components/PatientCard'
@@ -82,7 +81,7 @@ function HPHomeScreen() {
     [expandedCardId, handleToggle],
   )
 
-  const ListHeaderComponent = useCallback(() => <SemiBold className='text mb-4 text-xl'>Recent Patients</SemiBold>, [])
+  // const ListHeaderComponent = useCallback(() => <SemiBold className='text mb-4 text-xl'>Recent Patients</SemiBold>, [])
 
   const ListFooterComponent = useCallback(() => <PaddingBottom />, [])
 
@@ -95,7 +94,7 @@ function HPHomeScreen() {
         keyExtractor={(item) => item.id}
         contentContainerClassName='pb-10 pt-5 px-5'
         showsVerticalScrollIndicator={false}
-        ListHeaderComponent={ListHeaderComponent}
+        // ListHeaderComponent={ListHeaderComponent}
         ListFooterComponent={ListFooterComponent}
       />
     </View>
