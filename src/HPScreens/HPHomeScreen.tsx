@@ -1,4 +1,7 @@
+import Chip from '@components/Chip'
 import { PaddingBottom } from '@components/SafePadding'
+import Loading03Icon from '@hugeicons/Loading03Icon'
+import TickDouble02Icon from '@hugeicons/TickDouble02Icon'
 import { memo, useCallback, useState } from 'react'
 import { FlatList, View } from 'react-native'
 import PatientCard from './components/PatientCard'
@@ -67,7 +70,34 @@ const SAMPLE_PATIENTS = [
   { id: '60', name: 'Hannah Gray', age: 28, gender: 'Female' as const, queuePosition: 60 },
 ]
 
+type TabsProps = {
+  activeTab: number
+  onTabChange: (index: number) => void
+}
+
+const tabs = [
+  { label: 'Ongoing', icon: Loading03Icon },
+  { label: 'Complete', icon: TickDouble02Icon },
+]
+function Tabs({ activeTab, onTabChange }: TabsProps) {
+  return (
+    <View className='flex-row gap-2 bg-white px-5 pb-3 dark:bg-neutral-900'>
+      {tabs.map((tab, index) => (
+        <Chip
+          key={index}
+          label={tab.label}
+          icon={tab.icon}
+          isActive={activeTab === index}
+          onPress={() => onTabChange(index)}
+        />
+      ))}
+    </View>
+  )
+}
+
 function HPHomeScreen() {
+  const [activeTab, setActiveTab] = useState(0)
+
   const [expandedCardId, setExpandedCardId] = useState<string | null>(null)
 
   const handleToggle = useCallback((patientId: string) => {
@@ -88,6 +118,7 @@ function HPHomeScreen() {
   return (
     <View className='bg flex-1'>
       <TopArea />
+      <Tabs activeTab={activeTab} onTabChange={setActiveTab} />
       <FlatList
         data={SAMPLE_PATIENTS}
         renderItem={renderPatientCard}
