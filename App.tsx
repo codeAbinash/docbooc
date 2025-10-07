@@ -8,6 +8,7 @@ import AppointmentDetails from '@screens/AppointmentDetails/AppointmentDetails'
 import BookAppointment from '@screens/BookAppointment/BookAppointment'
 import Complete from '@screens/Complete'
 import FamilyMemberSelectorScreen from '@screens/FamilyMemberSelector'
+import HPHome from '@screens/HP/HPHome'
 import Login from '@screens/Login/Login'
 import OTP from '@screens/Login/OTP'
 import PatientInfo from '@screens/PatientInfo/PatientInfo'
@@ -48,6 +49,7 @@ export default function App() {
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
         }}
       >
+        <RootStack.Screen name='HPHome' component={HPHome} options={NO_ANIMATION} />
         <RootStack.Screen name='Home' component={Home} options={NO_ANIMATION} />
         <RootStack.Screen name='Splash' component={Splash} options={NO_ANIMATION} />
         <RootStack.Screen name='Login' component={Login} options={NO_ANIMATION} />
@@ -67,6 +69,7 @@ export default function App() {
 export type RootStackParamList = {
   Splash: undefined
   Home: undefined
+  HPHome: undefined
   Welcome: undefined
   Slide: undefined
   BookAppointment: undefined
