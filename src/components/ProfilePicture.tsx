@@ -1,7 +1,6 @@
 import { SemiBold } from '@utils/fonts'
 import { memo } from 'react'
-import { TouchableOpacity, TouchableOpacityProps } from 'react-native'
-
+import { TouchableOpacity, TouchableOpacityProps, View } from 'react-native'
 type ProfilePictureProps = {
   name: string
   size?: 'sm' | 'md' | 'lg' | 'xl'
@@ -38,10 +37,10 @@ const TEXT_COLORS = [
 ]
 
 const SIZES = {
-  sm: { size: 'size-8', text: 'text-[11px]' },
-  md: { size: 'size-10', text: 'text-[13px]' },
-  lg: { size: 'size-12', text: 'text-[15px]' },
-  xl: { size: 'size-16', text: 'text-[19px]' },
+  sm: { size: 'size-9', text: 'text-[13px]' },
+  md: { size: 'size-11', text: 'text-[15px]' },
+  lg: { size: 'size-13', text: 'text-[17px]' },
+  xl: { size: 'size-16', text: 'text-[20px]' },
 }
 
 function getHash(str: string) {
@@ -71,12 +70,9 @@ function ProfilePicture({ name, size = 'md', ...props }: ProfilePictureProps) {
   const { size: sizeClass, text: textClass } = SIZES[size]
 
   return (
-    <TouchableOpacity
-      className={`${sizeClass} items-center justify-center rounded-full ${getBgColor(hash)}`}
-      {...props}
-    >
+    <View className={`${sizeClass} items-center justify-center rounded-xl ${getBgColor(hash)}`} {...props}>
       <SemiBold className={`${textClass} text-center uppercase ${getTextColor(hash)}`}>{getInitials(name)}</SemiBold>
-    </TouchableOpacity>
+    </View>
   )
 }
 

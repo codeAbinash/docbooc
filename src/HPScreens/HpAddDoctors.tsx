@@ -1,5 +1,5 @@
 import { doctors, specialties } from '@/constants'
-import { DepartmentChip } from '@components/DepartmentChip'
+import Chip from '@components/Chip'
 import { DoctorCard } from '@components/DoctorCard'
 import Search from '@components/Search'
 import { useNavigation } from '@react-navigation/native'
@@ -51,35 +51,37 @@ const HpAddDoctors = () => {
       <TopArea />
       <View className='bg flex-1'>
         <View>
-          <View className='p-5 py-3 pb-3'>
+          <View className='bg-white px-5 pb-2'>
             <Search placeholder='Search doctors, specialties, etc' />
           </View>
           <ScrollView
             ref={scrollViewRef}
             horizontal
-            contentContainerClassName='gap-3 px-5'
+            contentContainerClassName='gap-3 px-5 pt-4'
             showsHorizontalScrollIndicator={false}
           >
-            <DepartmentChip
-              key={0}
-              specialty={ALL_SPECIALTY}
-              selected={selected}
-              setSelected={handleSpecialtySelect}
-              onLayout={handleItemLayout}
+            <Chip
+              key={ALL_SPECIALTY.id}
+              icon={ALL_SPECIALTY.icon}
+              label={ALL_SPECIALTY.name}
+              onPress={() => handleSpecialtySelect(ALL_SPECIALTY.id)}
+              variant={selected === ALL_SPECIALTY.id ? 'deepAccent' : 'default'}
+              onLayout={(event) => handleItemLayout(ALL_SPECIALTY.id, event.nativeEvent.layout.width)}
             />
             {specialties.map((specialty) => (
-              <DepartmentChip
+              <Chip
                 key={specialty.id}
-                specialty={specialty}
-                selected={selected}
-                setSelected={handleSpecialtySelect}
-                onLayout={handleItemLayout}
+                icon={specialty.icon}
+                label={specialty.name}
+                onPress={() => handleSpecialtySelect(specialty.id)}
+                variant={selected === specialty.id ? 'deepAccent' : 'default'}
+                onLayout={(event) => handleItemLayout(specialty.id, event.nativeEvent.layout.width)}
               />
             ))}
           </ScrollView>
         </View>
         <FlatList
-          className='mt-3 flex-1'
+          className='mt-4 flex-1'
           contentContainerClassName='px-5 pb-10'
           data={filteredDoctors}
           renderItem={({ item }) => <DoctorCard doctor={item} onPress={() => navigate.navigate('DoctorDetails')} />}

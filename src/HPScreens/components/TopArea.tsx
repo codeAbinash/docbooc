@@ -1,9 +1,7 @@
 import ProfilePicture from '@components/ProfilePicture'
 import { PaddingTop } from '@components/SafePadding'
-import Menu05Icon from '@hugeicons/Menu05Icon'
 import { useNavigation } from '@react-navigation/native'
-import Colors from '@utils/colors'
-import { Medium, SemiBold } from '@utils/fonts'
+import { SemiBold } from '@utils/fonts'
 import { DrawerNav } from '@utils/types'
 import { useColorScheme } from 'nativewind'
 import { TouchableOpacity, View } from 'react-native'
@@ -16,18 +14,18 @@ const TopArea = () => {
     <View className='bg-white px-5 pb-3 pt-1 dark:bg-neutral-900'>
       <PaddingTop />
       <View className='flex-row justify-between'>
-        <TouchableOpacity onPress={() => navigation.openDrawer()} className='flex-row items-center gap-5'>
-          <Menu05Icon
+        <TouchableOpacity onPress={() => navigation.openDrawer()} className='flex-row items-center gap-4'>
+          <ProfilePicture name='Abinash Karmakar' />
+          {/* <Menu05Icon
             size={24}
             strokeWidth={1.7}
             color={colorScheme === 'dark' ? Colors.text.dark : Colors.text.DEFAULT}
-          />
+          /> */}
           <View className='flex-col'>
-            <SemiBold className='text text-[16px]'>Daktar Er name</SemiBold>
+            <SemiBold className='text text-[16px]'>Dr. Abinash Karmakar</SemiBold>
             {/* <Medium className='text text-xs opacity-80'>Daktar er Degree, Aro Degree, Bohut boro degree</Medium> */}
           </View>
         </TouchableOpacity>
-        <ProfilePicture name='Abinash Karmakar' />
       </View>
     </View>
   )
