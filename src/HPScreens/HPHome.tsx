@@ -21,7 +21,7 @@ export default function App() {
       <Drawer.Screen name='Upcoming Appointments' component={HPUpcomingAppointmentsScreen} />
       <Drawer.Screen name='Schedule Doctors' component={HpAddDoctors} />
       <Drawer.Screen name='View Doctors' component={HpAddDoctors} />
-      <Drawer.Screen name='Add Patients' component={HPAppointmentsScreen} />
+      <Drawer.Screen name='Add Patients' component={HpAddDoctors} />
       <Drawer.Screen name='Settings' component={HPAppointmentsScreen} />
     </Drawer.Navigator>
   )

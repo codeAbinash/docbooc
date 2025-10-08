@@ -24,7 +24,7 @@ const Chip = ({ label, icon: IconComponent, isActive = false, onPress, variant =
       case 'transparentAccent':
         return 'bg-accent/10'
       default:
-        return isActive ? 'bg-accent/15' : 'bg-white'
+        return isActive ? 'bg-accent/15' : 'bg-white dark:bg-neutral-900'
     }
   }
 

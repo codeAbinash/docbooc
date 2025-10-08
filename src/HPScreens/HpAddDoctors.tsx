@@ -51,7 +51,7 @@ const HpAddDoctors = () => {
       <TopArea />
       <View className='bg flex-1'>
         <View>
-          <View className='bg-white px-5 pb-2'>
+          <View className='bg-white px-5 pb-3 dark:bg-neutral-900'>
             <Search placeholder='Search doctors, specialties, etc' />
           </View>
           <ScrollView

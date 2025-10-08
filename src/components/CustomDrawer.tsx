@@ -11,6 +11,7 @@ import TimeScheduleIcon from '@assets/icons/hugeicons/TimeScheduleIcon'
 import PatientIcon from '@assets/icons/hugeicons/PatientIcon'
 import NotificationSquareIcon from '@assets/icons/hugeicons/NotificationSquareIcon'
 import UserIcon from '@assets/icons/hugeicons/UserIcon'
+import Logout05Icon from '@assets/icons/hugeicons/Logout05Icon'
 import Colors from '@utils/colors'
 
 const DRAWER_ITEMS = [
@@ -73,6 +74,20 @@ export default function CustomDrawer(props: any) {
           })}
         </View>
       </DrawerContentScrollView>
+
+      <View className='border-t px-1 pt-3' style={{ paddingBottom: insets.bottom + 12, borderColor: colors.border }}>
+        <Press
+          onPress={() => console.log('Logout pressed')}
+          className='flex-row items-center gap-4 rounded-lg px-4 py-3.5'
+        >
+          <View className='size-6 items-center justify-center'>
+            <Logout05Icon size={22} color='#ef4444' strokeWidth={1.8} />
+          </View>
+          <Medium className='text-md flex-lg' style={{ color: '#ef4444' }}>
+            Logout
+          </Medium>
+        </Press>
+      </View>
     </View>
   )
 }
