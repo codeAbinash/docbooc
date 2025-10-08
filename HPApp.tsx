@@ -1,12 +1,13 @@
 import { DarkTheme, DefaultTheme } from '@/themes'
 import './src/global.css'
 
-import AddDoctorSchedule from '@/HPScreens/AddDoctorSchedule'
+import AddDoctorSchedule from '@/HPScreens/AddDoctorSchedule/AddDoctorSchedule'
 import HPHome from '@/HPScreens/HPHome'
 import { AutoStatusBar } from '@components/StatusBar'
 import { NavigationContainer } from '@react-navigation/native'
 import { CardStyleInterpolators, createStackNavigator, StackNavigationOptions } from '@react-navigation/stack'
 import { Dimensions, useColorScheme } from 'react-native'
+import DoctorDetails from '@/HPScreens/AddDoctorSchedule/DoctorDetails'
 const { width, height } = Dimensions.get('window')
 
 const IOS_BOTTOM_STYLE: StackNavigationOptions = {
@@ -40,6 +41,7 @@ export default function HPApp() {
       >
         <RootStack.Screen name='Home' component={HPHome} options={NO_ANIMATION} />
         <RootStack.Screen name='AddDoctorSchedule' component={AddDoctorSchedule} />
+        <RootStack.Screen name='DoctorDetails' component={DoctorDetails} />
       </RootStack.Navigator>
     </NavigationContainer>
   )
@@ -48,4 +50,5 @@ export default function HPApp() {
 export type HpRootStackParamList = {
   Home: undefined
   AddDoctorSchedule: undefined
+  DoctorDetails: undefined
 }

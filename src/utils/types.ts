@@ -6,6 +6,7 @@ import { HpRootStackParamList } from '../../HPApp'
 export type StackNav = StackNavigationProp<RootStackParamList>
 export type HPStackNav = StackNavigationProp<HpRootStackParamList>
 export type NavProp = { navigation: StackNav }
+export type HPNavProp = { navigation: HPStackNav }
 export type DrawerNav = DrawerNavigationProp<RootStackParamList>
 export type DrawerProps = { navigation: DrawerNav }
 

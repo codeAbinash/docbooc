@@ -4,6 +4,7 @@ import PatientIcon from '@assets/icons/hugeicons/PatientIcon'
 import Time04Icon from '@assets/icons/hugeicons/Time04Icon'
 import Press from '@components/Press'
 import { PaddingTop } from '@components/SafePadding'
+import { Tabs } from '@components/Tabs'
 import { useNavigation } from '@react-navigation/native'
 import Colors from '@utils/colors'
 import { Medium, SemiBold } from '@utils/fonts'
@@ -12,7 +13,7 @@ import { useColorScheme } from 'nativewind'
 import { useState } from 'react'
 import { ScrollView, View } from 'react-native'
 
-type TabsProps = {
+export type TabsProps = {
   tabs: string[]
   activeTab: number
   activeBackground?: string
@@ -20,35 +21,6 @@ type TabsProps = {
   activeTextColor?: string
   inactiveTextColor?: string
   onTabChange: (index: number) => void
-}
-
-function Tabs({ tabs, activeTab, onTabChange }: TabsProps) {
-  const { colorScheme } = useColorScheme()
-  const dark = colorScheme === 'dark'
-  return (
-    <View className='flex-row rounded-xl bg-neutral-200 p-1 dark:bg-neutral-800'>
-      {tabs.map((tab, index) => (
-        <Press
-          key={index}
-          style={{
-            flex: 1,
-            alignItems: 'center',
-            justifyContent: 'center',
-            paddingVertical: 10,
-            borderRadius: 8,
-            backgroundColor: activeTab === index ? (dark ? '#ffffff55' : 'white') : 'transparent',
-          }}
-          onPress={() => onTabChange(index)}
-        >
-          <SemiBold
-            className={`text-sm ${activeTab === index ? 'text-black dark:text-white' : 'text-neutral-500 dark:text-neutral-300'}`}
-          >
-            {tab}
-          </SemiBold>
-        </Press>
-      ))}
-    </View>
-  )
 }
 
 type Appointment = {
@@ -194,6 +166,7 @@ const appointments: Appointment[] = [
     status: 'confirmed',
   },
 ]
+
 export default function Appointments() {
   const [activeTab, setActiveTab] = useState(0)
   const navigation = useNavigation<StackNav>()

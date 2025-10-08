@@ -82,7 +82,7 @@ const HpAddDoctors = () => {
           className='mt-3 flex-1'
           contentContainerClassName='px-5 pb-10'
           data={filteredDoctors}
-          renderItem={({ item }) => <DoctorCard doctor={item} onPress={() => navigate.navigate('AddDoctorSchedule')} />}
+          renderItem={({ item }) => <DoctorCard doctor={item} onPress={() => navigate.navigate('DoctorDetails')} />}
           keyExtractor={(item) => item.id.toString()}
           ItemSeparatorComponent={() => <View className='h-3' />}
           showsVerticalScrollIndicator={false}
