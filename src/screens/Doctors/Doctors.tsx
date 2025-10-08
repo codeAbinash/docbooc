@@ -1,16 +1,14 @@
 import { doctors, specialties } from '@/constants'
+import Chip from '@components/Chip'
 import { PaddingTop } from '@components/SafePadding'
 import Search from '@components/Search'
 import Doctor01Icon from '@hugeicons/Doctor01Icon'
 import { useNavigation } from '@react-navigation/native'
-import Colors from '@utils/colors'
-import { Medium } from '@utils/fonts'
 import { StackNav } from '@utils/types'
 import { useMemo, useRef, useState } from 'react'
-import { Dimensions, FlatList, TouchableOpacity, View } from 'react-native'
+import { Dimensions, FlatList, View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import { DoctorCard } from '../../components/DoctorCard'
-import { DepartmentChip } from '@components/DepartmentChip'
 
 export const ALL_SPECIALTY = { id: 0, name: 'All', icon: Doctor01Icon }
 
@@ -76,20 +74,22 @@ const Doctors = () => {
           contentContainerClassName='gap-3 px-5'
           showsHorizontalScrollIndicator={false}
         >
-          <DepartmentChip
-            key={0}
-            specialty={ALL_SPECIALTY}
-            selected={selected}
-            setSelected={handleSpecialtySelect}
-            onLayout={handleItemLayout}
+          <Chip
+            key={ALL_SPECIALTY.id}
+            icon={ALL_SPECIALTY.icon}
+            label={ALL_SPECIALTY.name}
+            onPress={() => handleSpecialtySelect(ALL_SPECIALTY.id)}
+            variant={selected === ALL_SPECIALTY.id ? 'deepAccent' : 'default'}
+            onLayout={(event) => handleItemLayout(ALL_SPECIALTY.id, event.nativeEvent.layout.width)}
           />
           {specialties.map((specialty) => (
-            <DepartmentChip
+            <Chip
               key={specialty.id}
-              specialty={specialty}
-              selected={selected}
-              setSelected={handleSpecialtySelect}
-              onLayout={handleItemLayout}
+              icon={specialty.icon}
+              label={specialty.name}
+              onPress={() => handleSpecialtySelect(specialty.id)}
+              variant={selected === specialty.id ? 'deepAccent' : 'default'}
+              onLayout={(event) => handleItemLayout(specialty.id, event.nativeEvent.layout.width)}
             />
           ))}
         </ScrollView>
@@ -106,6 +106,5 @@ const Doctors = () => {
     </View>
   )
 }
-
 
 export default Doctors
