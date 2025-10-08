@@ -95,7 +95,7 @@ function Tabs({ activeTab, onTabChange }: TabsProps) {
   )
 }
 
-function HPHomeScreen() {
+function HPAppointmentsScreen() {
   const [activeTab, setActiveTab] = useState(0)
 
   const [expandedCardId, setExpandedCardId] = useState<string | null>(null)
@@ -132,4 +132,4 @@ function HPHomeScreen() {
   )
 }
 
-export default memo(HPHomeScreen)
+export default memo(HPAppointmentsScreen)

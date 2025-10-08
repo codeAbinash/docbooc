@@ -24,7 +24,7 @@ const TopArea = () => {
           />
           <View className='flex-col'>
             <SemiBold className='text text-[16px]'>Daktar Er name</SemiBold>
-            <Medium className='text text-xs opacity-80'>Daktar er Degree, Aro Degree, Bohut boro degree</Medium>
+            {/* <Medium className='text text-xs opacity-80'>Daktar er Degree, Aro Degree, Bohut boro degree</Medium> */}
           </View>
         </TouchableOpacity>
         <ProfilePicture name='Abinash Karmakar' />
