@@ -5,7 +5,7 @@ import { Header } from '@/UserScreens/BookAppointment/components/Header'
 import { HPNavProp } from '@utils/types'
 import { ScrollView, View } from 'react-native'
 
-export default function DoctorDetails({ navigation }: HPNavProp) {
+export default function HPDoctorDetails({ navigation }: HPNavProp) {
   return (
     <View className='bg flex-1'>
       <PaddingTop />

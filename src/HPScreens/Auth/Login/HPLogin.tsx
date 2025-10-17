@@ -20,16 +20,16 @@ export default function HPLogin({ navigation }: NavProp) {
             <View className='items-center justify-center gap-1'>
               <Bold className='text text-3xl'>Welcome to</Bold>
               <Black className='text text-5xl'>DocBook</Black>
+              <Bold className='text text-4xl'>Console</Bold>
               <Medium className='text mt-3 text-sm opacity-70'>Please enter your phone number to login.</Medium>
             </View>
             <View className='gap-5'>
               <View className='gap-2'>
-                <Label>Phone Number</Label>
+                <Label>Email Address</Label>
                 <View className='flex flex-row gap-3'>
-                  <Input value='+91' style={{ paddingRight: 18, fontSize: 13 }} editable={false} />
                   <Input
-                    placeholder='Enter your phone number'
-                    keyboardType='phone-pad'
+                    placeholder='Enter your email address'
+                    keyboardType='email-address'
                     style={{ flex: 1, fontSize: 13 }}
                   />
                 </View>

@@ -8,7 +8,7 @@ import AppointmentDetails from '@/UserScreens/AppointmentDetails/AppointmentDeta
 import BookAppointment from '@/UserScreens/BookAppointment/BookAppointment'
 import Complete from '@/UserScreens/Complete'
 import FamilyMemberSelectorScreen from '@/UserScreens/FamilyMemberSelector'
-import Login from '@/UserScreens/Login/Login'
+import HPLogin from '@/UserScreens/Login/Login'
 import OTP from '@/UserScreens/Login/OTP'
 import PatientInfo from '@/UserScreens/PatientInfo/PatientInfo'
 import Splash from '@/UserScreens/Splash/Splash'
@@ -50,7 +50,7 @@ export default function App() {
       >
         <RootStack.Screen name='Splash' component={Splash} options={NO_ANIMATION} />
         <RootStack.Screen name='Home' component={Home} options={NO_ANIMATION} />
-        <RootStack.Screen name='Login' component={Login} options={NO_ANIMATION} />
+        <RootStack.Screen name='Login' component={HPLogin} options={NO_ANIMATION} />
         <RootStack.Screen name='OTP' component={OTP} />
         <RootStack.Screen name='BookAppointment' component={BookAppointment} />
         <RootStack.Screen name='PatientInfo' component={PatientInfo} />

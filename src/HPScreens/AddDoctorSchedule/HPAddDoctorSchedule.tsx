@@ -1,8 +1,8 @@
+import { Header } from '@/UserScreens/BookAppointment/components/Header'
 import Press from '@components/Press'
 import { PaddingTop } from '@components/SafePadding'
 import { Tabs } from '@components/Tabs'
 import Tick02Icon from '@hugeicons/Tick02Icon'
-import { Header } from '@/UserScreens/BookAppointment/components/Header'
 import { useState } from 'react'
 import { View } from 'react-native'
 import colors from 'tailwindcss/colors'
@@ -13,7 +13,7 @@ import Weekly from './components/Weekly'
 const tabLabels = ['Daily', 'Weekly', 'Monthly']
 const ContentMap = [Daily, Weekly, Monthly] as const
 
-const AddDoctorSchedule = () => {
+const HPAddDoctorSchedule = () => {
   const [activeTab, setActiveTab] = useState(1)
 
   return (
@@ -39,4 +39,4 @@ const AddDoctorSchedule = () => {
   )
 }
 
-export default AddDoctorSchedule
+export default HPAddDoctorSchedule

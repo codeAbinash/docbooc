@@ -1,13 +1,16 @@
 import { DarkTheme, DefaultTheme } from '@/themes'
 import './src/global.css'
 
-import AddDoctorSchedule from '@/HPScreens/AddDoctorSchedule/AddDoctorSchedule'
+import HPAddDoctorSchedule from '@/HPScreens/AddDoctorSchedule/HPAddDoctorSchedule'
+import HPDoctorDetails from '@/HPScreens/AddDoctorSchedule/HPDoctorDetails'
+import HPOTP from '@/HPScreens/Auth/OTP/HPOTP'
 import HPHome from '@/HPScreens/HPHome'
+import HPSplash from '@/HPScreens/HPSplash'
 import { AutoStatusBar } from '@components/StatusBar'
 import { NavigationContainer } from '@react-navigation/native'
 import { CardStyleInterpolators, createStackNavigator, StackNavigationOptions } from '@react-navigation/stack'
 import { Dimensions, useColorScheme } from 'react-native'
-import DoctorDetails from '@/HPScreens/AddDoctorSchedule/DoctorDetails'
+import HPLogin from '@/HPScreens/Auth/Login/HPLogin'
 const { width, height } = Dimensions.get('window')
 
 const IOS_BOTTOM_STYLE: StackNavigationOptions = {
@@ -39,15 +42,21 @@ export default function HPApp() {
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
         }}
       >
+        <RootStack.Screen name='Splash' component={HPSplash} options={NO_ANIMATION} />
+        <RootStack.Screen name='Login' component={HPLogin} options={NO_ANIMATION} />
+        <RootStack.Screen name='OTP' component={HPOTP} options={NO_ANIMATION} />
         <RootStack.Screen name='Home' component={HPHome} options={NO_ANIMATION} />
-        <RootStack.Screen name='AddDoctorSchedule' component={AddDoctorSchedule} />
-        <RootStack.Screen name='DoctorDetails' component={DoctorDetails} />
+        <RootStack.Screen name='AddDoctorSchedule' component={HPAddDoctorSchedule} />
+        <RootStack.Screen name='DoctorDetails' component={HPDoctorDetails} />
       </RootStack.Navigator>
     </NavigationContainer>
   )
 }
 
 export type HpRootStackParamList = {
+  Splash: undefined
+  OTP: undefined
+  Login: undefined
   Home: undefined
   AddDoctorSchedule: undefined
   DoctorDetails: undefined
