@@ -13,7 +13,6 @@ import { useColorScheme } from 'nativewind'
 import { useState } from 'react'
 import { ScrollView, View } from 'react-native'
 
-
 type Appointment = {
   id: string
   patientName: string

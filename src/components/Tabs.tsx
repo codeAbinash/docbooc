@@ -3,7 +3,6 @@ import { SemiBold } from '@utils/fonts'
 import { useColorScheme } from 'nativewind'
 import { View } from 'react-native'
 
-
 export type TabsProps = {
   tabs: string[]
   activeTab: number
@@ -13,8 +12,6 @@ export type TabsProps = {
   inactiveTextColor?: string
   onTabChange: (index: number) => void
 }
-
-
 
 export function Tabs({ tabs, activeTab, onTabChange }: TabsProps) {
   const { colorScheme } = useColorScheme()
