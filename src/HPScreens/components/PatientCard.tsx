@@ -18,9 +18,10 @@ type PatientCardProps = {
   patient: Patient
   isExpanded: boolean
   onToggle: (patientId: string) => void
+  isCompleteTab?: boolean
 }
 
-const PatientCard = memo(({ patient, isExpanded, onToggle }: PatientCardProps) => {
+const PatientCard = memo(({ patient, isExpanded, onToggle, isCompleteTab = false }: PatientCardProps) => {
   const animatedHeight = useSharedValue(0)
 
   useEffect(() => {
@@ -66,34 +67,32 @@ const PatientCard = memo(({ patient, isExpanded, onToggle }: PatientCardProps) =
 
       <Animated.View style={animatedStyle} className='overflow-hidden px-1'>
         <View className='flex-row justify-around gap-3 pb-3'>
-          <TouchableOpacity
-            className='ml-2 flex-1 flex-row items-center justify-center rounded-xl bg-red-500/15 py-3.5'
-            activeOpacity={0.7}
-          >
-            <Cancel01Icon size={18} color='#ef4444' strokeWidth={2.5} />
-            <SemiBold className='ml-2 text-red-600 dark:text-red-400'>Cancel</SemiBold>
-          </TouchableOpacity>
-          <TouchableOpacity
-            className='mr-2 flex-1 flex-row items-center justify-center rounded-xl bg-green-500/15 py-3.5'
-            activeOpacity={0.7}
-          >
-            <TickDouble02Icon size={18} color={Colors.success} strokeWidth={2.5} />
-            <SemiBold className='ml-2 text-green-600 dark:text-green-400'>Complete</SemiBold>
-          </TouchableOpacity>
-          {/* <TouchableOpacity
-            className='ml-2 flex-1 flex-row items-center justify-center rounded-2xl border bg-red-500/30 py-3.5'
-            activeOpacity={0.7}
-          >
-            <Cancel01Icon size={18} color='black' variant='solid-rounded' />
-            <Medium className='ml-2 text-black'>Cancel</Medium>
-          </TouchableOpacity>
-          <TouchableOpacity
-            className='mr-2 flex-1 flex-row items-center justify-center rounded-2xl bg-green-500/30 py-3.5'
-            activeOpacity={0.7}
-          >
-            <Tick01Icon size={18} color='black' variant='solid-rounded' />
-            <Medium className='ml-2 text-black'>Complete</Medium>
-          </TouchableOpacity> */}
+          {isCompleteTab ? (
+            <TouchableOpacity
+              className='mx-2 flex-1 flex-row items-center justify-center rounded-xl bg-red-500/15 py-3.5'
+              activeOpacity={0.7}
+            >
+              <Cancel01Icon size={18} color='#ef4444' strokeWidth={2.5} />
+              <SemiBold className='ml-2 text-red-600 dark:text-red-400'>Cancel</SemiBold>
+            </TouchableOpacity>
+          ) : (
+            <>
+              <TouchableOpacity
+                className='ml-2 flex-1 flex-row items-center justify-center rounded-xl bg-red-500/15 py-3.5'
+                activeOpacity={0.7}
+              >
+                <Cancel01Icon size={18} color='#ef4444' strokeWidth={2.5} />
+                <SemiBold className='ml-2 text-red-600 dark:text-red-400'>Cancel</SemiBold>
+              </TouchableOpacity>
+              <TouchableOpacity
+                className='mr-2 flex-1 flex-row items-center justify-center rounded-xl bg-green-500/15 py-3.5'
+                activeOpacity={0.7}
+              >
+                <TickDouble02Icon size={18} color={Colors.success} strokeWidth={2.5} />
+                <SemiBold className='ml-2 text-green-600 dark:text-green-400'>Complete</SemiBold>
+              </TouchableOpacity>
+            </>
+          )}
         </View>
       </Animated.View>
     </View>

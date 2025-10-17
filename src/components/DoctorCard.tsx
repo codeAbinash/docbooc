@@ -1,5 +1,5 @@
 import { doctors } from '@/constants'
-import { Medium, Regular, SemiBold } from '@utils/fonts'
+import { Black, Medium, SemiBold } from '@utils/fonts'
 import { Image, TouchableOpacity, TouchableOpacityProps, View } from 'react-native'
 
 type DoctorCardProps = {
@@ -8,25 +8,40 @@ type DoctorCardProps = {
 
 export function DoctorCard({ doctor, ...rest }: DoctorCardProps) {
   return (
-    <TouchableOpacity className='rounded-3xl bg-white p-3 dark:bg-neutral-900' activeOpacity={0.7} {...rest}>
-      <View className='flex-row items-center'>
-        {/* <View className='mr-4 size-[80px] items-center justify-center rounded-2xl bg-accent/20'>
-              <SemiBold className='text-xl text-accent'>{getInitials(doctor.name)}</SemiBold>
-            </View> */}
+    <TouchableOpacity className='rounded-3xl bg-white p-4 dark:bg-neutral-900' activeOpacity={0.7} {...rest}>
+      <View>
+        <View className='mb-3 flex-row items-center justify-between'>
+          <View className='flex-row items-center'>
+            <Image
+              source={{
+                uri: 'https://st4.depositphotos.com/7877830/25337/v/450/depositphotos_253374286-stock-illustration-vector-illustration-male-doctor-avatar.jpg',
+              }}
+              className='size-16 rounded-xl'
+              resizeMode='cover'
+            />
+            <View className='ml-4'>
+              <SemiBold className='text-lg'>{doctor.name}</SemiBold>
+              <Medium className='text-sm text-accent'>General Physician</Medium>
+            </View>
+          </View>
+          {/* <View className='items-end'>
+            <Black className='text text-right text-2xl opacity-20'>Doc{'\n'}Book</Black>
+          </View> */}
+        </View>
 
-        {/* <DoctorIcon width={80} height={80} style={{ marginRight: 16 }} /> */}
-        <Image
-          source={{
-            uri: 'https://st4.depositphotos.com/7877830/25337/v/450/depositphotos_253374286-stock-illustration-vector-illustration-male-doctor-avatar.jpg',
-          }}
-          className='mr-4 size-20 rounded-2xl'
-          resizeMode='cover'
-        />
-        <View className='flex-1'>
-          <SemiBold className='text text-lg'>{doctor.name}</SemiBold>
-          <Medium className='text text-sm opacity-70'>MBBS, MD (General Medicine)</Medium>
-          <Medium className='text text-sm text-accent opacity-70'>General Physician</Medium>
-          <Regular className='text-sm text-neutral-500 dark:text-neutral-400'>20+ years of experience</Regular>
+        <View className='rounded-xl bg-neutral-100 p-3 dark:bg-neutral-800'>
+          <View className='flex-row items-center justify-between'>
+            <View>
+              <Medium className='mb-1 text-xs text-neutral-500 dark:text-neutral-400'>Qualification</Medium>
+              <SemiBold className='text-sm text-neutral-700 dark:text-neutral-200'>
+                MBBS, MD (General Medicine)
+              </SemiBold>
+            </View>
+            <View className='items-end'>
+              <Medium className='mb-1 text-xs text-neutral-500 dark:text-neutral-400'>Experience</Medium>
+              <SemiBold className='text-sm text-neutral-700 dark:text-neutral-200'>20+ years</SemiBold>
+            </View>
+          </View>
         </View>
       </View>
     </TouchableOpacity>

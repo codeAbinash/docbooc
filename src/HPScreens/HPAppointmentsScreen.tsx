@@ -106,9 +106,14 @@ function HPAppointmentsScreen() {
 
   const renderPatientCard = useCallback(
     ({ item }: { item: (typeof SAMPLE_PATIENTS)[0] }) => (
-      <PatientCard patient={item} isExpanded={expandedCardId === item.id} onToggle={handleToggle} />
+      <PatientCard
+        patient={item}
+        isExpanded={expandedCardId === item.id}
+        onToggle={handleToggle}
+        isCompleteTab={activeTab === 1}
+      />
     ),
-    [expandedCardId, handleToggle],
+    [expandedCardId, handleToggle, activeTab],
   )
 
   // const ListHeaderComponent = useCallback(() => <SemiBold className='text mb-4 text-xl'>Recent Patients</SemiBold>, [])

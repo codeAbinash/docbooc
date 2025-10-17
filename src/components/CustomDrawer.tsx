@@ -1,26 +1,26 @@
+import Calendar01Icon from '@assets/icons/hugeicons/Calendar01Icon'
+import Calendar03Icon from '@assets/icons/hugeicons/Calendar03Icon'
+import Logout05Icon from '@assets/icons/hugeicons/Logout05Icon'
+import NotificationSquareIcon from '@assets/icons/hugeicons/NotificationSquareIcon'
+import PatientIcon from '@assets/icons/hugeicons/PatientIcon'
+import TimeScheduleIcon from '@assets/icons/hugeicons/TimeScheduleIcon'
+import UserIcon from '@assets/icons/hugeicons/UserIcon'
 import { DrawerContentScrollView } from '@react-navigation/drawer'
 import { useTheme } from '@react-navigation/native'
+import Colors from '@utils/colors'
+import { Medium, SemiBold } from '@utils/fonts'
 import { View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Press from './Press'
 import ProfilePicture from './ProfilePicture'
-import { SemiBold, Regular, Medium } from '@utils/fonts'
-import Calendar01Icon from '@assets/icons/hugeicons/Calendar01Icon'
-import Calendar03Icon from '@assets/icons/hugeicons/Calendar03Icon'
-import TimeScheduleIcon from '@assets/icons/hugeicons/TimeScheduleIcon'
-import PatientIcon from '@assets/icons/hugeicons/PatientIcon'
-import NotificationSquareIcon from '@assets/icons/hugeicons/NotificationSquareIcon'
-import UserIcon from '@assets/icons/hugeicons/UserIcon'
-import Logout05Icon from '@assets/icons/hugeicons/Logout05Icon'
-import Colors from '@utils/colors'
 
 const DRAWER_ITEMS = [
-  { name: 'Appointments', icon: Calendar01Icon },
-  { name: 'Upcoming Appointments', icon: Calendar03Icon },
-  { name: 'Schedule Doctors', icon: TimeScheduleIcon },
-  { name: 'View Doctors', icon: UserIcon },
-  { name: 'Add Patients', icon: PatientIcon },
-  { name: 'Settings', icon: NotificationSquareIcon },
+  { name: "Today's Appointments", icon: Calendar01Icon, navigationName: 'Appointments' },
+  { name: 'Upcoming Appointments', icon: Calendar03Icon, navigationName: 'UpcomingAppointments' },
+  { name: 'Schedule Doctors', icon: TimeScheduleIcon, navigationName: 'ScheduleDoctors' },
+  { name: 'View Doctors', icon: UserIcon, navigationName: 'ViewDoctors' },
+  { name: 'Add Patients', icon: PatientIcon, navigationName: 'AddPatients' },
+  { name: 'Settings', icon: NotificationSquareIcon, navigationName: 'Settings' },
 ]
 
 export default function CustomDrawer(props: any) {
@@ -52,12 +52,12 @@ export default function CustomDrawer(props: any) {
 
         <View className='gap-1 px-0'>
           {DRAWER_ITEMS.map((item) => {
-            const isActive = currentRoute === item.name
+            const isActive = currentRoute === item.navigationName
             const Icon = item.icon
             return (
               <Press
                 key={item.name}
-                onPress={() => navigation.navigate(item.name)}
+                onPress={() => navigation.navigate(item.navigationName)}
                 className='flex-row items-center gap-4 rounded-lg px-4 py-3.5'
                 style={{
                   backgroundColor: isActive ? `${Colors.accent}15` : 'transparent',

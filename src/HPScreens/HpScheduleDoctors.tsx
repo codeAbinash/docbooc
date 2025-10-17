@@ -1,16 +1,17 @@
 import { doctors, specialties } from '@/constants'
+import { ALL_SPECIALTY, getScrollPosition } from '@/UserScreens/Doctors/Doctors'
 import Chip from '@components/Chip'
 import { DoctorCard } from '@components/DoctorCard'
 import Search from '@components/Search'
 import { useNavigation } from '@react-navigation/native'
-import { ALL_SPECIALTY, getScrollPosition } from '@/UserScreens/Doctors/Doctors'
+import { SemiBold } from '@utils/fonts'
 import { HPStackNav } from '@utils/types'
 import { useMemo, useRef, useState } from 'react'
 import { FlatList, View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import TopArea from './components/TopArea'
 
-const HpAddDoctors = () => {
+const HPScheduleDoctors = () => {
   const navigate = useNavigation<HPStackNav>()
   const [selected, setSelected] = useState<number | null>(null)
   const scrollViewRef = useRef<ScrollView>(null)
@@ -48,7 +49,9 @@ const HpAddDoctors = () => {
 
   return (
     <>
-      <TopArea />
+      <TopArea>
+        <SemiBold className='text text-lg opacity-90'>Select doctor and schedule visits</SemiBold>
+      </TopArea>
       <View className='bg flex-1'>
         <View>
           <View className='bg-white px-5 pb-3 dark:bg-neutral-900'>
@@ -86,7 +89,7 @@ const HpAddDoctors = () => {
           data={filteredDoctors}
           renderItem={({ item }) => <DoctorCard doctor={item} onPress={() => navigate.navigate('DoctorDetails')} />}
           keyExtractor={(item) => item.id.toString()}
-          ItemSeparatorComponent={() => <View className='h-3' />}
+          ItemSeparatorComponent={() => <View className='h-4' />}
           showsVerticalScrollIndicator={false}
         />
       </View>
@@ -94,4 +97,4 @@ const HpAddDoctors = () => {
   )
 }
 
-export default HpAddDoctors
+export default HPScheduleDoctors

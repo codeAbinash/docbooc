@@ -9,11 +9,12 @@ import { useColorScheme } from 'nativewind'
 import { StyleSheet, View } from 'react-native'
 import { OtpInput } from 'react-native-otp-entry'
 import colors from 'tailwindcss/colors'
+import KeyboardAvoid from '@components/KeyboardAvoid'
 
 export default function HPOTP({ navigation }: NavProp) {
   const { colorScheme } = useColorScheme()
   return (
-    <View className='flex-1'>
+    <KeyboardAvoid className='flex-1'>
       <View className='flex-1'>
         <PaddingTop />
         <Header title='' />
@@ -69,7 +70,7 @@ export default function HPOTP({ navigation }: NavProp) {
         </View>
         <PaddingBottom />
       </View>
-    </View>
+    </KeyboardAvoid>
   )
 }
 
