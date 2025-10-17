@@ -1,7 +1,7 @@
 import FabIcon from '@components/FabIcon'
 import { PaddingTop } from '@components/SafePadding'
 import PlusSignIcon from '@hugeicons/PlusSignIcon'
-import { Header } from '@screens/BookAppointment/components/Header'
+import { Header } from '@/UserScreens/BookAppointment/components/Header'
 import { HPNavProp } from '@utils/types'
 import { ScrollView, View } from 'react-native'
 

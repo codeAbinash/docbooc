@@ -13,15 +13,6 @@ import { useColorScheme } from 'nativewind'
 import { useState } from 'react'
 import { ScrollView, View } from 'react-native'
 
-export type TabsProps = {
-  tabs: string[]
-  activeTab: number
-  activeBackground?: string
-  inactiveBackground?: string
-  activeTextColor?: string
-  inactiveTextColor?: string
-  onTabChange: (index: number) => void
-}
 
 type Appointment = {
   id: string

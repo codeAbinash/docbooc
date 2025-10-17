@@ -11,7 +11,6 @@ module.exports = {
           '@images': './src/assets/images/src',
           '@assets': './src/assets',
           '@utils': './src/utils',
-          '@screens': './src/screens',
           '@query': './src/query',
           '@': './src/',
         },

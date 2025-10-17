@@ -1,8 +1,20 @@
 import Press from '@components/Press'
-import { TabsProps } from '@screens/Appointments/Appointments'
 import { SemiBold } from '@utils/fonts'
 import { useColorScheme } from 'nativewind'
 import { View } from 'react-native'
+
+
+export type TabsProps = {
+  tabs: string[]
+  activeTab: number
+  activeBackground?: string
+  inactiveBackground?: string
+  activeTextColor?: string
+  inactiveTextColor?: string
+  onTabChange: (index: number) => void
+}
+
+
 
 export function Tabs({ tabs, activeTab, onTabChange }: TabsProps) {
   const { colorScheme } = useColorScheme()
