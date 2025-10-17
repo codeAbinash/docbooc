@@ -1,5 +1,13 @@
 {
-  "cSpell.words": ["nativewind"],
-  "typescript.preferences.autoImportFileExcludePatterns": ["react-native-reanimated/lib/typescript/*"],
-  "typescript.experimental.useTsgo": false
+  "cSpell.words": [
+    "nativewind"
+  ],
+  "typescript.preferences.autoImportFileExcludePatterns": [
+    "react-native-reanimated/lib/typescript/*"
+  ],
+  "typescript.experimental.useTsgo": false,
+  "files.exclude": {
+    "**/UserScreens": true,
+    "src/assets/icons/hugeicons": true
+  }
 }
