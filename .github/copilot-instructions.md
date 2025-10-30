@@ -2,9 +2,9 @@
 
 - Do not add unnecessary comments for my understanding.
 
-- Icons are used from hugeicons if you want to add extra icons to the library, you can add it running `ic iconName` command.
-  `iconName` is from the hugeicons website.
+- Icons are used from hugeicons if you want to add extra icons to the library, you can add it running `ic icon-name` command.
+  `icon-name` is from the hugeicons website. Always use hyphen `-` to separate words in icon names.
 
 - No need to fix formatting related issues.
 
-- No need to run the development server. Or build the project. You can just check for type errors. Using `bun ts` command.
+- You can use `bun ts` for type checking.
