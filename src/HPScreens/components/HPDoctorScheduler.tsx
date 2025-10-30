@@ -6,14 +6,14 @@ import Tick02Icon from '@hugeicons/Tick02Icon'
 import { useState } from 'react'
 import { View } from 'react-native'
 import colors from 'tailwindcss/colors'
-import Daily from './components/Daily'
-import Monthly from './components/Monthly'
-import Weekly from './components/Weekly'
+import Daily from './Daily'
+import Monthly from './Monthly'
+import Weekly from './Weekly'
 
 const tabLabels = ['Daily', 'Weekly', 'Monthly']
 const ContentMap = [Daily, Weekly, Monthly] as const
 
-const HPAddDoctorSchedule = () => {
+const HPDoctorScheduler = () => {
   const [activeTab, setActiveTab] = useState(1)
 
   return (
@@ -39,4 +39,4 @@ const HPAddDoctorSchedule = () => {
   )
 }
 
-export default HPAddDoctorSchedule
+export default HPDoctorScheduler

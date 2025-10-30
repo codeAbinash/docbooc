@@ -1,6 +1,7 @@
 import Add01Icon from '@assets/icons/hugeicons/Add01Icon'
 import { PaddingBottom } from '@components/SafePadding'
 import Calendar01Icon from '@hugeicons/Calendar01Icon'
+import Cancel01Icon from '@hugeicons/Cancel01Icon'
 import { DateTimePickerEvent } from '@react-native-community/datetimepicker'
 import Colors from '@utils/colors'
 import { Medium, SemiBold } from '@utils/fonts'
@@ -125,56 +126,105 @@ export default function Monthly() {
   }
 
   return (
-    <ScrollView className='flex-1' contentContainerClassName='px-5 py-4 pt-2 gap-5'>
-      <View className='flex-row flex-wrap gap-2'>
-            {DATES.map((date) => (
-              <TouchableOpacity
-                key={date}
-                onPress={() => toggleDate(date)}
-                activeOpacity={0.7}
-                className={`items-center rounded-xl py-3 ${
-                  selectedDates.includes(date) ? 'bg-accent' : 'bg-black/5 dark:bg-white/5'
+    <ScrollView className='flex-1' contentContainerClassName='px-5 py-4 pt-2 gap-6'>
+      <View className='rounded-2xl bg-white p-4 dark:bg-neutral-800'>
+        <View className='mb-4 flex-row items-center justify-between'>
+          <View className='flex-row items-center'>
+            <View className='mr-3 rounded-lg p-1 dark:border-blue-800/30 dark:bg-blue-900/20'>
+              <Calendar01Icon size={28} color='#3b82f6' strokeWidth={2} />
+            </View>
+            <SemiBold className='text-base text-neutral-800 dark:text-neutral-200'>Monthly Schedule</SemiBold>
+          </View>
+          <Medium className='text-xs text-neutral-500'>{selectedDates.length} dates selected</Medium>
+        </View>
+
+        <View className='flex-row flex-wrap gap-2'>
+          {DATES.map((date) => (
+            <TouchableOpacity
+              key={date}
+              onPress={() => toggleDate(date)}
+              activeOpacity={0.7}
+              style={{ width: '12.5%' }}
+            >
+              <View
+                className={`items-center justify-center rounded-lg py-3 ${
+                  selectedDates.includes(date)
+                    ? 'bg-blue-100 dark:bg-blue-900/30'
+                    : 'border-2 border-neutral-100 dark:border-neutral-700'
                 }`}
-                style={{ flexBasis: '15%' }}
               >
                 <SemiBold
                   className={`text-base ${
-                    selectedDates.includes(date) ? 'text-white' : 'text-neutral-700 dark:text-neutral-300'
+                    selectedDates.includes(date)
+                      ? 'text-blue-600 dark:text-blue-400'
+                      : 'text-neutral-600 dark:text-neutral-400'
                   }`}
                 >
                   {date}
                 </SemiBold>
-              </TouchableOpacity>
-            ))}
-          </View>
+              </View>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </View>
 
-          {selectedDates.map((date) => {
-            const dateSchedule = dateWiseSchedule[date]
-            if (!dateSchedule) return null
+      {selectedDates.map((date) => {
+        const dateSchedule = dateWiseSchedule[date]
+        if (!dateSchedule) return null
 
-            return (
-              <View key={date} className='gap-3.5'>
-                <View className='flex-row items-center gap-2'>
-                  <Calendar01Icon size={24} strokeWidth={1.9} />
-                  <SemiBold className='text-2xl text-neutral-800 dark:text-neutral-200'>Date {date}</SemiBold>
+        return (
+          <View key={date} className='overflow-hidden rounded-2xl bg-white dark:bg-neutral-800'>
+            <View className='border-b border-neutral-100 p-4 dark:border-neutral-700'>
+              <View className='flex-row items-center justify-between'>
+                <View className='flex-row items-center gap-3'>
+                  <View className='rounded-lg bg-blue-100/50 p-2.5 dark:bg-blue-900/20'>
+                    <Calendar01Icon size={20} color='#3b82f6' strokeWidth={2} />
+                  </View>
+                  <View>
+                    <SemiBold className='text-lg text-neutral-800 dark:text-neutral-200'>Date {date}</SemiBold>
+                    <Medium className='text-xs text-neutral-500'>{dateSchedule.slots.length} slots scheduled</Medium>
+                  </View>
                 </View>
+                <TouchableOpacity
+                  onPress={() => addDateTimeSlot(date)}
+                  activeOpacity={0.7}
+                  className='rounded-lg bg-blue-100/50 p-2 dark:bg-blue-900/20'
+                >
+                  <Add01Icon size={20} color='#3b82f6' />
+                </TouchableOpacity>
+              </View>
+            </View>
 
-                {dateSchedule.slots.map((slot, index) => (
-                  <TouchableOpacity
-                    activeOpacity={0.9}
-                    key={slot.id}
-                    className='overflow-hidden rounded-2xl bg-white p-5 pt-4 shadow-sm dark:bg-neutral-800'
-                  >
-                    <View className='mb-3 flex-row items-center justify-between'>
-                      <SemiBold className='text text-xl'>Slot {index + 1}</SemiBold>
+            <View>
+              {dateSchedule.slots.map((slot, index) => (
+                <View key={slot.id}>
+                  {index > 0 && <View className='h-[1px] bg-neutral-100 dark:bg-neutral-700' />}
+                  <View className='p-4'>
+                    <View className='mb-4 flex-row items-center justify-between'>
+                      <View className='flex-row items-center gap-3'>
+                        <View>
+                          <Medium>
+                            <View className='size-10 items-center justify-center rounded-lg bg-accent/10'>
+                              <SemiBold className='text-center text-xl text-accent'>
+                                {(index + 1).toString().padStart(2, '0')}
+                              </SemiBold>
+                            </View>
+                          </Medium>
+                        </View>
+                        <View>
+                          <SemiBold className='text text-lg'>Slot {index + 1}</SemiBold>
+                        </View>
+                      </View>
                       <TouchableOpacity
-                        onPress={() => removeDateTimeSlot(date, slot.id)}
+                        onPress={() => dateSchedule.slots.length > 1 && removeDateTimeSlot(date, slot.id)}
                         activeOpacity={0.7}
-                        style={{ opacity: dateSchedule.slots.length > 1 ? 1 : 0.3 }}
+                        className={`items-center rounded-lg p-2 ${
+                          dateSchedule.slots.length > 1
+                            ? 'bg-red-100/50 dark:border-red-800/30 dark:bg-red-900/20'
+                            : 'bg-neutral-100/50 dark:bg-neutral-700/20'
+                        }`}
                       >
-                        <Medium className='rounded-full bg-red-500/20 px-3.5 py-1.5 text-sm text-red-600 dark:text-red-400'>
-                          Remove
-                        </Medium>
+                        <Cancel01Icon size={20} color={dateSchedule.slots.length > 1 ? '#ef4444' : '#9ca3af'} />
                       </TouchableOpacity>
                     </View>
                     <View className='flex-row gap-3'>
@@ -191,19 +241,13 @@ export default function Monthly() {
                         onTimeChange={(id, type, event, dateVal) => updateDateTime(date, id, type, event, dateVal)}
                       />
                     </View>
-                  </TouchableOpacity>
-                ))}
-
-                <TouchableOpacity onPress={() => addDateTimeSlot(date)} activeOpacity={0.7}>
-                  <View className='flex-row items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-accent bg-accent/10 py-4 dark:border-accent/20 dark:bg-accent/30'>
-                    <Add01Icon size={20} color={Colors.accent} />
-                    <Medium className='text-sm text-accent'>Add Time Slot</Medium>
                   </View>
-                </TouchableOpacity>
-              </View>
-            )
-          })}
-
+                </View>
+              ))}
+            </View>
+          </View>
+        )
+      })}
       <PaddingBottom />
     </ScrollView>
   )

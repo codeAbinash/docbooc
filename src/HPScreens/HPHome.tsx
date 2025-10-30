@@ -1,8 +1,11 @@
 import { createDrawerNavigator } from '@react-navigation/drawer'
-import CustomDrawer from '@components/CustomDrawer'
-import HPScheduleDoctors from './HpScheduleDoctors'
-import HPAppointmentsScreen from './HPAppointmentsScreen'
-import HPUpcomingAppointmentsScreen from './HPUpcomingAppointmentsScreen'
+import CustomDrawer from '@/HPScreens/components/CustomDrawer'
+import HPScheduleDoctors from './HpScheduleDoctors/HpScheduleDoctors'
+import HPAddPatients from './HPAddPatients/HPAddPatients'
+import XAddDoctors from './XAddDoctors/XAddDoctors'
+import HPViewDoctors from './HPViewDoctors/HPViewDoctors'
+import HPTodaysAppointmentsScreen from './HPTodaysAppointments/HPTodaysAppointmentsScreen'
+import HPUpcomingAppointmentsScreen from './HPUpcomingAppointments/HPUpcomingAppointmentsScreen'
 
 const Drawer = createDrawerNavigator()
 
@@ -17,12 +20,16 @@ export default function App() {
         drawerStyle: { width: '70%' },
       }}
     >
-      <Drawer.Screen name='Appointments' component={HPAppointmentsScreen} />
+      <Drawer.Screen name='Appointments' component={HPTodaysAppointmentsScreen} />
       <Drawer.Screen name='UpcomingAppointments' component={HPUpcomingAppointmentsScreen} />
       <Drawer.Screen name='ScheduleDoctors' component={HPScheduleDoctors} />
-      <Drawer.Screen name='ViewDoctors' component={HPScheduleDoctors} />
-      <Drawer.Screen name='AddPatients' component={HPScheduleDoctors} />
-      <Drawer.Screen name='Settings' component={HPAppointmentsScreen} />
+      <Drawer.Screen name='ViewDoctors' component={HPViewDoctors} />
+      <Drawer.Screen name='AddPatients' component={HPAddPatients} />
+      <Drawer.Screen name='Settings' component={HPTodaysAppointmentsScreen} />
+      <Drawer.Screen name='ViewHPs' component={HPAddPatients} />
+      <Drawer.Screen name='AddDoctors' component={XAddDoctors} />
+      <Drawer.Screen name='ConfirmBookings' component={HPAddPatients} />
+      <Drawer.Screen name='ApproveSchedules' component={HPAddPatients} />
     </Drawer.Navigator>
   )
 }

@@ -1,7 +1,5 @@
-import React from 'react'
-import { Pressable, type PressableProps } from 'react-native'
-import { Gesture, GestureDetector } from 'react-native-gesture-handler'
-import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
+import React, { useCallback, useRef } from 'react'
+import { Pressable, type PressableProps, Animated } from 'react-native'
 export type CustomPressProps = PressableProps & {
   children: React.ReactNode
   activeOpacity?: number
@@ -19,30 +17,55 @@ export default function Press({
   activeOpacity = 0.8,
   activeScale = 0.98,
   duration = 100,
+  onPressIn,
+  onPressOut,
   ...props
 }: CustomPressProps) {
-  const scale = useSharedValue(1)
-  const opacity = useSharedValue(1)
-  const pan = Gesture.Pan()
-    .onBegin(() => {
-      scale.value = withTiming(activeScale, { duration })
-      opacity.value = withTiming(activeOpacity, { duration })
-    })
-    .onEnd(() => {
-      scale.value = withTiming(1, { duration })
-      opacity.value = withTiming(1, { duration })
-    })
-    .onFinalize(() => {
-      scale.value = withTiming(1, { duration })
-      opacity.value = withTiming(1, { duration })
-    })
+  const scale = useRef(new Animated.Value(1)).current
+  const opacity = useRef(new Animated.Value(1)).current
 
-  const animatedStyles = useAnimatedStyle(() => {
-    return {
-      transform: [{ scale: scale.value }],
-      opacity: opacity.value,
-    }
-  })
+  const handlePressIn = useCallback(
+    (e: any) => {
+      Animated.parallel([
+        Animated.timing(scale, {
+          toValue: activeScale,
+          duration,
+          useNativeDriver: true,
+        }),
+        Animated.timing(opacity, {
+          toValue: activeOpacity,
+          duration,
+          useNativeDriver: true,
+        }),
+      ]).start()
+      onPressIn?.(e)
+    },
+    [activeScale, activeOpacity, duration, onPressIn],
+  )
+
+  const handlePressOut = useCallback(
+    (e: any) => {
+      Animated.parallel([
+        Animated.timing(scale, {
+          toValue: 1,
+          duration,
+          useNativeDriver: true,
+        }),
+        Animated.timing(opacity, {
+          toValue: 1,
+          duration,
+          useNativeDriver: true,
+        }),
+      ]).start()
+      onPressOut?.(e)
+    },
+    [duration, onPressOut],
+  )
+
+  const animatedStyles = {
+    transform: [{ scale }],
+    opacity,
+  } as Animated.WithAnimatedValue<any>
 
   if (props.disabled) {
     return (
@@ -53,10 +76,13 @@ export default function Press({
   }
 
   return (
-    <GestureDetector gesture={pan}>
-      <AnimatedPressable style={[animatedStyles, style]} {...props}>
-        {children}
-      </AnimatedPressable>
-    </GestureDetector>
+    <AnimatedPressable
+      style={[animatedStyles, style as any]}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
+      {...props}
+    >
+      {children}
+    </AnimatedPressable>
   )
 }

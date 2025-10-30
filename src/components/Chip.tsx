@@ -2,7 +2,7 @@ import { HugeIconProps } from '@hugeicons/constants'
 import Colors from '@utils/colors'
 import { Medium, SemiBold } from '@utils/fonts'
 import { useColorScheme } from 'nativewind'
-import React from 'react'
+import { memo, useMemo } from 'react'
 import { TouchableOpacity, TouchableOpacityProps } from 'react-native'
 
 type ChipProps = {
@@ -13,57 +13,39 @@ type ChipProps = {
   variant?: 'default' | 'deepAccent' | 'transparentAccent'
 } & TouchableOpacityProps
 
-const Chip = ({ label, icon: IconComponent, isActive = false, onPress, variant = 'default' }: ChipProps) => {
+const Chip = memo(({ label, icon: IconComponent, isActive = false, onPress, variant = 'default' }: ChipProps) => {
   const { colorScheme } = useColorScheme()
   const dark = colorScheme === 'dark'
+  const isHighlighted = isActive || variant !== 'default'
 
-  const getBackgroundStyle = () => {
-    switch (variant) {
-      case 'deepAccent':
-        return 'bg-accent'
-      case 'transparentAccent':
-        return 'bg-accent/10'
-      default:
-        return isActive ? 'bg-accent/15' : 'bg-white dark:bg-neutral-900'
-    }
-  }
+  const { bgStyle, color } = useMemo(
+    () => ({
+      bgStyle:
+        variant === 'deepAccent'
+          ? 'bg-accent'
+          : variant === 'transparentAccent'
+            ? 'bg-accent/10'
+            : isActive
+              ? 'bg-accent/15'
+              : 'bg-white dark:bg-neutral-900',
+      color:
+        variant === 'deepAccent'
+          ? Colors.text.dark
+          : variant === 'transparentAccent' || isActive
+            ? Colors.accent
+            : (dark ? Colors.text.dark : Colors.text.DEFAULT) + 'aa',
+    }),
+    [variant, isActive, dark],
+  )
 
-  const getIconColor = () => {
-    switch (variant) {
-      case 'deepAccent':
-        return Colors.text.dark
-      case 'transparentAccent':
-        return Colors.accent
-      default:
-        return isActive ? Colors.accent : dark ? Colors.text.dark + 'aa' : Colors.text.DEFAULT + 'aa'
-    }
-  }
-
-  const getTextColor = () => {
-    switch (variant) {
-      case 'deepAccent':
-        return Colors.text.dark
-      case 'transparentAccent':
-        return Colors.accent
-      default:
-        return isActive ? Colors.accent : dark ? Colors.text.dark + 'aa' : Colors.text.DEFAULT + 'aa'
-    }
-  }
+  const TextComponent = isHighlighted ? SemiBold : Medium
 
   return (
-    <TouchableOpacity
-      onPress={onPress}
-      className={`flex-row p-1 ${getBackgroundStyle()} items-center gap-2 rounded-xl px-5 py-3.5 pr-6`}
-      activeOpacity={0.7}
-    >
-      <IconComponent color={getIconColor()} size={20} strokeWidth={2} />
-      {isActive || variant === 'deepAccent' || variant === 'transparentAccent' ? (
-        <SemiBold style={{ color: getTextColor() }}>{label}</SemiBold>
-      ) : (
-        <Medium style={{ color: getTextColor() }}>{label}</Medium>
-      )}
+    <TouchableOpacity onPress={onPress} className={`flex-row items-center gap-2 rounded-xl px-5 py-3.5 ${bgStyle}`}>
+      <IconComponent color={color} size={20} strokeWidth={2} />
+      <TextComponent style={{ color }}>{label}</TextComponent>
     </TouchableOpacity>
   )
-}
+})
 
 export default Chip

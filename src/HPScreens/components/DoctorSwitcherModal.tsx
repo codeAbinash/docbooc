@@ -1,9 +1,8 @@
-import Press from '@components/Press'
 import Cancel01Icon from '@hugeicons/Cancel01Icon'
 import Tick02Icon from '@hugeicons/Tick02Icon'
 import Colors from '@utils/colors'
 import { Medium, SemiBold } from '@utils/fonts'
-import { useState } from 'react'
+import { useState, memo } from 'react'
 import { Modal, ScrollView, TouchableOpacity, View } from 'react-native'
 
 type Doctor = {
@@ -28,12 +27,7 @@ type DoctorSwitcherModalProps = {
   onSelectDoctor: (doctor: Doctor) => void
 }
 
-export default function DoctorSwitcherModal({
-  visible,
-  onClose,
-  currentDoctorId,
-  onSelectDoctor,
-}: DoctorSwitcherModalProps) {
+const DoctorSwitcherModal = memo(({ visible, onClose, currentDoctorId, onSelectDoctor }: DoctorSwitcherModalProps) => {
   const [selectedId, setSelectedId] = useState(currentDoctorId)
 
   const handleSelect = (doctor: Doctor) => {
@@ -43,14 +37,7 @@ export default function DoctorSwitcherModal({
   }
 
   return (
-    <Modal
-      visible={visible}
-      transparent
-      animationType='fade'
-      onRequestClose={onClose}
-      statusBarTranslucent
-      navigationBarTranslucent
-    >
+    <Modal visible={visible} transparent animationType='none' onRequestClose={onClose}>
       <TouchableOpacity className='flex-1 bg-black/50' activeOpacity={1} onPress={onClose}>
         <View className='flex-1 items-center justify-center px-5'>
           <TouchableOpacity
@@ -59,18 +46,18 @@ export default function DoctorSwitcherModal({
             onPress={(e) => e.stopPropagation()}
           >
             <View className='mb-5 flex-row items-center justify-between'>
-              <SemiBold className='text text-xl'>Switch Doctor</SemiBold>
-              <Press onPress={onClose} className='rounded-full p-2'>
+              <SemiBold className='text-xl'>Switch Doctor</SemiBold>
+              <TouchableOpacity onPress={onClose}>
                 <Cancel01Icon size={22} color={Colors.text.DEFAULT} />
-              </Press>
+              </TouchableOpacity>
             </View>
 
-            <ScrollView className='max-h-96' showsVerticalScrollIndicator={false}>
+            <ScrollView className='max-h-96'>
               <View className='gap-2'>
                 {DOCTORS.map((doctor) => {
                   const isSelected = selectedId === doctor.id
                   return (
-                    <Press
+                    <TouchableOpacity
                       key={doctor.id}
                       onPress={() => handleSelect(doctor)}
                       className='flex-row items-center gap-3 rounded-2xl p-4'
@@ -81,16 +68,13 @@ export default function DoctorSwitcherModal({
                       }}
                     >
                       <View className='flex-1'>
-                        <SemiBold
-                          className='text-base'
-                          style={{ color: isSelected ? Colors.accent : Colors.text.DEFAULT }}
-                        >
+                        <SemiBold style={{ color: isSelected ? Colors.accent : Colors.text.DEFAULT }}>
                           {doctor.name}
                         </SemiBold>
-                        <Medium className='text mt-0.5 text-sm opacity-70'>{doctor.specialty}</Medium>
+                        <Medium className='opacity-70'>{doctor.specialty}</Medium>
                       </View>
                       {isSelected && <Tick02Icon size={22} color={Colors.accent} strokeWidth={2} />}
-                    </Press>
+                    </TouchableOpacity>
                   )
                 })}
               </View>
@@ -100,4 +84,6 @@ export default function DoctorSwitcherModal({
       </TouchableOpacity>
     </Modal>
   )
-}
+})
+
+export default DoctorSwitcherModal
