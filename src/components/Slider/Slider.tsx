@@ -1,17 +1,8 @@
 import Colors from '@utils/colors'
 import { useColorScheme } from 'nativewind'
-import { useCallback } from 'react'
-import { LayoutChangeEvent, StyleSheet, Vibration } from 'react-native'
+import { useCallback, useRef } from 'react'
+import { LayoutChangeEvent, StyleSheet, Vibration, Animated } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
-import Animated, {
-  interpolateColor,
-  useAnimatedStyle,
-  useDerivedValue,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated'
-
-import { runOnJS } from 'react-native-worklets'
 import ArrowIcon from './ArrowIcon'
 type SliderProps = {
   onComplete: () => void
@@ -21,11 +12,15 @@ type SliderProps = {
 
 function Slider({ onComplete, circleSize = 45, mainColor = Colors.accent }: SliderProps) {
   const { colorScheme } = useColorScheme()
-  const containerWidth = useSharedValue<number>(0)
-  const pressed = useSharedValue<boolean>(false)
-  const offset = useSharedValue<number>(0)
-  const progress = useDerivedValue(() => {
-    return containerWidth.value > 0 ? offset.value / (containerWidth.value - circleSize) : 0
+  const containerWidth = useRef(0)
+  const offset = useRef(new Animated.Value(0)).current
+  const pressed = useRef(new Animated.Value(0)).current
+  const scale = useRef(new Animated.Value(1)).current
+
+  const progress = offset.interpolate({
+    inputRange: [0, (containerWidth.current || 0) - circleSize || 1],
+    outputRange: [0, 1],
+    extrapolate: 'clamp',
   })
 
   const handleComplete = () => {
@@ -35,43 +30,73 @@ function Slider({ onComplete, circleSize = 45, mainColor = Colors.accent }: Slid
 
   const pan = Gesture.Pan()
     .onBegin(() => {
-      pressed.value = true
+      Animated.spring(scale, {
+        toValue: 1.05,
+        useNativeDriver: true,
+      }).start()
+      pressed.setValue(1)
     })
     .onChange((event) => {
-      if (event.translationX < 0) return
-      if (event.translationX > containerWidth.value - circleSize) return
-      offset.value = event.translationX
-      if (progress.value > 0.95) runOnJS(handleComplete)()
+      const translationX = Math.max(0, Math.min(event.translationX, containerWidth.current - circleSize))
+      offset.setValue(translationX)
+
+      // Check if progress is > 95%
+      if (translationX > (containerWidth.current - circleSize) * 0.95) {
+        handleComplete()
+      }
     })
     .onFinalize(() => {
-      offset.value = withTiming(0)
-      pressed.value = false
+      Animated.parallel([
+        Animated.timing(offset, {
+          toValue: 0,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+        Animated.spring(scale, {
+          toValue: 1,
+          useNativeDriver: true,
+        }),
+      ]).start()
+      pressed.setValue(0)
     })
 
-  const animatedStyles = useAnimatedStyle(() => {
-    const bgColor = interpolateColor(progress.value, [0, 1], [mainColor, 'white'])
-    return {
-      transform: [{ translateX: offset.value }, { scale: withTiming(pressed.value ? 1.05 : 1) }],
-      backgroundColor: bgColor,
-    }
+  const backgroundColor = progress.interpolate({
+    inputRange: [0, 1],
+    outputRange: [mainColor, 'white'],
   })
 
-  const animatedContainerBg = useAnimatedStyle(() => {
-    const colorArr = [colorScheme === 'dark' ? Colors.card.dark : 'white', mainColor]
-    const bgColor = interpolateColor(progress.value, [0, 1], colorArr)
-    return { backgroundColor: bgColor }
+  const containerBgColor = progress.interpolate({
+    inputRange: [0, 1],
+    outputRange: [colorScheme === 'dark' ? Colors.card.dark : 'white', mainColor],
   })
 
-  const animatedTextStyle = useAnimatedStyle(() => {
-    const colorArr = [colorScheme === 'dark' ? Colors.gray.dark : Colors.gray.DEFAULT, 'white']
-    const textColor = interpolateColor(progress.value, [0, 1], colorArr)
-    const marginLeft = -progress.value * 2 * circleSize + circleSize
-    return { color: textColor, marginLeft }
+  const textColor = progress.interpolate({
+    inputRange: [0, 1],
+    outputRange: [colorScheme === 'dark' ? Colors.gray.dark : Colors.gray.DEFAULT, 'white'],
   })
+
+  const marginLeft = progress.interpolate({
+    inputRange: [0, 1],
+    outputRange: [circleSize, -circleSize],
+  })
+
+  const animatedStyles = {
+    transform: [{ translateX: offset }, { scale }],
+    backgroundColor,
+  }
+
+  const animatedContainerBg = {
+    backgroundColor: containerBgColor,
+  }
+
+  const animatedTextStyle = {
+    color: textColor,
+    marginLeft,
+  }
 
   const handleLayout = useCallback((event: LayoutChangeEvent) => {
     const { width } = event.nativeEvent.layout
-    if (width !== 0) containerWidth.value = width
+    if (width !== 0) containerWidth.current = width
   }, [])
 
   return (

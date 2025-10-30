@@ -7,48 +7,63 @@ import Colors from '@utils/colors'
 import { W } from '@utils/dimensions'
 import { Bold, Regular, SemiBold } from '@utils/fonts'
 import { NavProp } from '@utils/types'
-import { useEffect, useState } from 'react'
-import { View } from 'react-native'
-import Animated, {
-  FadeInDown,
-  FadeInUp,
-  LinearTransition,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated'
+import { useEffect, useRef, useState } from 'react'
+import { View, Animated } from 'react-native'
 
 export default function Complete({ navigation }: NavProp) {
   const [showContent, setShowContent] = useState(false)
   const verificationCode = 'MBB-' + Math.random().toString(36).substring(2, 8).toUpperCase()
 
-  const contentOpacity = useSharedValue(0)
-  const mainContentTransform = useSharedValue(0)
+  const contentOpacity = useRef(new Animated.Value(0)).current
+  const mainContentTransform = useRef(new Animated.Value(0)).current
+  const fadeAnim = useRef(new Animated.Value(0)).current
+  const translateAnim = useRef(new Animated.Value(50)).current
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowContent(true)
-      contentOpacity.value = withTiming(1, { duration: 800 })
-      mainContentTransform.value = withTiming(1, { duration: 600 })
+      Animated.parallel([
+        Animated.timing(contentOpacity, {
+          toValue: 1,
+          duration: 800,
+          useNativeDriver: true,
+        }),
+        Animated.timing(mainContentTransform, {
+          toValue: 1,
+          duration: 600,
+          useNativeDriver: true,
+        }),
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: 700,
+          useNativeDriver: true,
+        }),
+        Animated.timing(translateAnim, {
+          toValue: 0,
+          duration: 600,
+          useNativeDriver: true,
+        }),
+      ]).start()
     }, 1000)
     return () => clearTimeout(timer)
   }, [])
 
-  const animatedMainStyle = useAnimatedStyle(() => {
-    return {
-      opacity: mainContentTransform.value,
-      transform: [
-        {
-          translateY: (1 - mainContentTransform.value) * 50,
-        },
-      ],
-    }
-  })
+  const animatedMainStyle = {
+    opacity: mainContentTransform,
+    transform: [
+      {
+        translateY: translateAnim,
+      },
+    ],
+  }
 
-  const animatedContentStyle = useAnimatedStyle(() => {
-    return {
-      opacity: contentOpacity.value,
-    }
+  const animatedContentStyle = {
+    opacity: contentOpacity,
+  }
+
+  const fadeInUp = (delay: number) => ({
+    opacity: fadeAnim,
+    transform: [{ translateY: translateAnim }],
   })
 
   return (
@@ -100,16 +115,10 @@ export default function Complete({ navigation }: NavProp) {
       <Animated.View
         className={`flex-1 items-center ${showContent ? 'justify-between' : 'justify-center'} px-6`}
         style={animatedMainStyle}
-        layout={LinearTransition.springify().damping(15).stiffness(100)}
       >
         <View>
           <PaddingTop />
-          <Lottie
-            source={Animations.check}
-            loop={false}
-            // style={{ width: showContent ? 100 : 200, height: showContent ? 100 : 200, marginBottom: 20 }}
-            style={{ width: 200, height: 200, marginBottom: 20 }}
-          />
+          <Lottie source={Animations.check} loop={false} style={{ width: 200, height: 200, marginBottom: 20 }} />
           {/* Main Success Message */}
           <View className='mb-8 items-center'>
             <Bold className='mb-3 text-center text-2xl leading-8' style={{ color: Colors.text.DEFAULT }}>
@@ -120,11 +129,7 @@ export default function Complete({ navigation }: NavProp) {
 
         {/* Verification Code Section */}
         {showContent && (
-          <Animated.View
-            className='mb-6'
-            entering={FadeInUp.delay(200).duration(600).springify()}
-            layout={LinearTransition.springify().damping(15)}
-          >
+          <Animated.View className='mb-6' style={fadeInUp(200)}>
             <Regular className='mb-2 text-center text-xs' style={{ color: Colors.gray.DEFAULT }}>
               Verification Code
             </Regular>
@@ -136,33 +141,24 @@ export default function Complete({ navigation }: NavProp) {
 
         {/* Motorcycle Animation */}
         {showContent && (
-          <Animated.View
-            className='mb-6 items-center'
-            entering={FadeInUp.delay(400).duration(700).springify()}
-            layout={LinearTransition.springify().damping(15)}
-          >
+          <Animated.View className='mb-6 items-center' style={fadeInUp(400)}>
             <Lottie source={Animations.motorcycle} style={{ width: W * 0.9, height: W * 0.6 }} />
           </Animated.View>
         )}
 
         {/* Agent Visit Notice */}
         {showContent && (
-          <Animated.View style={animatedContentStyle} className='w-full'>
+          <Animated.View style={[animatedContentStyle, { width: '100%' }]}>
             <Animated.View
               className='w-full rounded-xl border border-amber-100 bg-amber-50 p-5 dark:bg-amber-900/20'
-              entering={FadeInUp.delay(600).duration(700).springify()}
-              layout={LinearTransition.springify().damping(15)}
+              style={fadeInUp(600)}
             >
               <SemiBold className='text-center text-sm text-amber-700 dark:text-amber-300'>
                 An agent will visit your home to confirm your booking and provide additional assistance.
               </SemiBold>
             </Animated.View>
             <View>
-              <Animated.View
-                className='mt-6'
-                entering={FadeInDown.delay(800).duration(700).springify()}
-                layout={LinearTransition.springify().damping(15)}
-              >
+              <Animated.View className='mt-6' style={fadeInUp(800)}>
                 <Button
                   title='View Appointment'
                   onPress={() =>

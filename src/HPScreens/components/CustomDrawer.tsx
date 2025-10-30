@@ -11,8 +11,8 @@ import Colors from '@utils/colors'
 import { Medium, SemiBold } from '@utils/fonts'
 import { View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import Press from './Press'
-import ProfilePicture from './ProfilePicture'
+import Press from '../../components/Press'
+import ProfilePicture from '../../components/ProfilePicture'
 
 const DRAWER_ITEMS = [
   { name: "Today's Appointments", icon: Calendar01Icon, navigationName: 'Appointments' },
@@ -20,6 +20,10 @@ const DRAWER_ITEMS = [
   { name: 'Schedule Doctors', icon: TimeScheduleIcon, navigationName: 'ScheduleDoctors' },
   { name: 'View Doctors', icon: UserIcon, navigationName: 'ViewDoctors' },
   { name: 'Add Patients', icon: PatientIcon, navigationName: 'AddPatients' },
+  { name: 'Add Doctors', icon: PatientIcon, navigationName: 'AddDoctors' },
+  { name: 'Confirm Bookings', icon: PatientIcon, navigationName: 'ConfirmBookings' },
+  { name: 'Approve Schedules', icon: PatientIcon, navigationName: 'ApproveSchedules' },
+  { name: "View Hp's", icon: PatientIcon, navigationName: 'ViewHPs' },
   { name: 'Settings', icon: NotificationSquareIcon, navigationName: 'Settings' },
 ]
 

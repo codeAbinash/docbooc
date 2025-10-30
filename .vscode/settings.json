@@ -7,7 +7,7 @@
   ],
   "typescript.experimental.useTsgo": false,
   "files.exclude": {
-    "**/UserScreens": true,
-    "src/assets/icons/hugeicons": true
+
+  
   }
 }

@@ -1,49 +1,105 @@
 import { doctors } from '@/constants'
-import { Black, Medium, SemiBold } from '@utils/fonts'
+import { Medium, SemiBold } from '@utils/fonts'
 import { Image, TouchableOpacity, TouchableOpacityProps, View } from 'react-native'
+import Gradient from '@components/Gradient'
+import { useNavigation } from '@react-navigation/native'
+import Colors from '@utils/colors'
+import TimeScheduleIcon from '@hugeicons/TimeScheduleIcon'
+import PatientIcon from '@hugeicons/PatientIcon'
+import { HPStackNav } from '@utils/types'
 
 type DoctorCardProps = {
   doctor: (typeof doctors)[0]
+  selected?: boolean
+  isExpanded?: boolean
 } & TouchableOpacityProps
 
-export function DoctorCard({ doctor, ...rest }: DoctorCardProps) {
+export function DoctorCard({ doctor, selected, ...rest }: DoctorCardProps) {
+  if (selected) {
+    return (
+      <Gradient className='overflow-hidden rounded-xl p-5'>
+        <DoctorCardInternal doctor={doctor} selected={true} isExpanded={rest.isExpanded} onPress={rest.onPress} />
+      </Gradient>
+    )
+  }
   return (
-    <TouchableOpacity className='rounded-3xl bg-white p-4 dark:bg-neutral-900' activeOpacity={0.7} {...rest}>
-      <View>
-        <View className='mb-3 flex-row items-center justify-between'>
-          <View className='flex-row items-center'>
-            <Image
-              source={{
-                uri: 'https://st4.depositphotos.com/7877830/25337/v/450/depositphotos_253374286-stock-illustration-vector-illustration-male-doctor-avatar.jpg',
-              }}
-              className='size-16 rounded-xl'
-              resizeMode='cover'
-            />
-            <View className='ml-4'>
-              <SemiBold className='text-lg'>{doctor.name}</SemiBold>
-              <Medium className='text-sm text-accent'>General Physician</Medium>
-            </View>
-          </View>
-          {/* <View className='items-end'>
-            <Black className='text text-right text-2xl opacity-20'>Doc{'\n'}Book</Black>
-          </View> */}
-        </View>
+    <TouchableOpacity
+      activeOpacity={0.7}
+      {...rest}
+      className='overflow-hidden rounded-xl bg-white px-5 py-4 dark:bg-neutral-800'
+    >
+      <DoctorCardInternal doctor={doctor} selected={false} isExpanded={rest.isExpanded} onPress={rest.onPress} />
+    </TouchableOpacity>
+  )
+}
 
-        <View className='rounded-xl bg-neutral-100 p-3 dark:bg-neutral-800'>
-          <View className='flex-row items-center justify-between'>
-            <View>
-              <Medium className='mb-1 text-xs text-neutral-500 dark:text-neutral-400'>Qualification</Medium>
-              <SemiBold className='text-sm text-neutral-700 dark:text-neutral-200'>
-                MBBS, MD (General Medicine)
-              </SemiBold>
-            </View>
-            <View className='items-end'>
-              <Medium className='mb-1 text-xs text-neutral-500 dark:text-neutral-400'>Experience</Medium>
-              <SemiBold className='text-sm text-neutral-700 dark:text-neutral-200'>20+ years</SemiBold>
-            </View>
+function DoctorCardInternal({
+  doctor,
+  selected,
+  isExpanded,
+  onPress,
+}: {
+  doctor: DoctorCardProps['doctor']
+  selected: boolean
+  isExpanded?: boolean
+  onPress?: TouchableOpacityProps['onPress']
+}) {
+  const navigate = useNavigation<HPStackNav>()
+
+  return (
+    <>
+      <View className='flex-row gap-3 pb-3'>
+        <View className='flex-1 flex-row items-center gap-3'>
+          <Image
+            source={{
+              uri: 'https://st4.depositphotos.com/7877830/25337/v/450/depositphotos_253374286-stock-illustration-vector-illustration-male-doctor-avatar.jpg',
+            }}
+            className='size-14 rounded-lg'
+            resizeMode='cover'
+          />
+          <View className='flex-1'>
+            <SemiBold className={selected ? 'text-white' : 'text'}>{doctor.name}</SemiBold>
           </View>
         </View>
       </View>
-    </TouchableOpacity>
+      <View
+        className={`flex-row items-end justify-between gap-5 rounded-lg p-3 dark:bg-neutral-900 ${selected ? 'bg-black/15' : 'bg-black/5'}`}
+      >
+        <View className='flex-1'>
+          <Medium className={`text-xs ${selected ? 'text-white' : 'text'} opacity-70`}>Qualification</Medium>
+          <Medium className={`text-sm ${selected ? 'text-white' : 'text'}`} numberOfLines={2}>
+            MBBS, MD (General Medicine)
+          </Medium>
+        </View>
+        <View className='items-end'>
+          <Medium className={`text-xs ${selected ? 'text-white' : 'text'} opacity-70`}>Experience</Medium>
+          <SemiBold className={`pt-1 text-xs ${selected ? 'text-white' : 'text'}`}>20+ years</SemiBold>
+        </View>
+      </View>
+      {isExpanded && (
+        <View className='pt-4'>
+          <View className='flex-row gap-4'>
+            <TouchableOpacity
+              className='flex-1 flex-row items-center justify-center gap-2 rounded-lg bg-accent/10'
+              onPress={() => navigate.navigate('HPDoctorScheduleDetails')}
+            >
+              <TimeScheduleIcon size={20} color={Colors.accent} strokeWidth={2} />
+              <SemiBold style={{ color: Colors.accent }} className='text-md'>
+                Edit
+              </SemiBold>
+            </TouchableOpacity>
+            <TouchableOpacity
+              className='flex-1 flex-row items-center justify-center gap-2 rounded-lg bg-red-500/10 py-2.5'
+              onPress={() => {}}
+            >
+              <PatientIcon size={20} color='#ef4444' strokeWidth={2} />
+              <SemiBold style={{ color: '#ef4444' }} className='text-md'>
+                Delete
+              </SemiBold>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
+    </>
   )
 }

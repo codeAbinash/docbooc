@@ -6,7 +6,7 @@ import { View } from 'react-native'
 export default function HPSplash({ navigation }: HPNavProp) {
   useEffect(() => {
     setTimeout(() => {
-      navigation.replace('Login')
+      navigation.replace('HPLogin')
     }, 0)
   }, [])
 

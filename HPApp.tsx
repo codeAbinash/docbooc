@@ -1,16 +1,17 @@
 import { DarkTheme, DefaultTheme } from '@/themes'
 import './src/global.css'
-
-import HPAddDoctorSchedule from '@/HPScreens/AddDoctorSchedule/HPAddDoctorSchedule'
-import HPDoctorDetails from '@/HPScreens/AddDoctorSchedule/HPDoctorDetails'
-import HPOTP from '@/HPScreens/Auth/OTP/HPOTP'
+import XAddDoctors from '@/HPScreens/XAddDoctors/XAddDoctors'
+import HPDoctorScheduler from '@/HPScreens/components/HPDoctorScheduler'
+import HPDoctorScheduleDetails from '@/HPScreens/HPViewDoctors/HPDoctorScheduleDetails'
+import DoctorModel from '@/HPScreens/components/DoctorModel'
+import HPOTP from '@/HPScreens/HPAuthentications/OTP/HPOTP'
 import HPHome from '@/HPScreens/HPHome'
 import HPSplash from '@/HPScreens/HPSplash'
 import { AutoStatusBar } from '@components/StatusBar'
 import { NavigationContainer } from '@react-navigation/native'
 import { CardStyleInterpolators, createStackNavigator, StackNavigationOptions } from '@react-navigation/stack'
 import { Dimensions, useColorScheme } from 'react-native'
-import HPLogin from '@/HPScreens/Auth/Login/HPLogin'
+import HPLogin from '@/HPScreens/HPAuthentications/Login/HPLogin'
 const { width, height } = Dimensions.get('window')
 
 const IOS_BOTTOM_STYLE: StackNavigationOptions = {
@@ -42,22 +43,26 @@ export default function HPApp() {
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
         }}
       >
-        <RootStack.Screen name='Home' component={HPHome} options={NO_ANIMATION} />
-        <RootStack.Screen name='Splash' component={HPSplash} options={NO_ANIMATION} />
-        <RootStack.Screen name='Login' component={HPLogin} options={NO_ANIMATION} />
-        <RootStack.Screen name='OTP' component={HPOTP} options={NO_ANIMATION} />
-        <RootStack.Screen name='AddDoctorSchedule' component={HPAddDoctorSchedule} />
-        <RootStack.Screen name='DoctorDetails' component={HPDoctorDetails} />
+        <RootStack.Screen name='HPHome' component={HPHome} options={NO_ANIMATION} />
+        <RootStack.Screen name='HPSplash' component={HPSplash} options={NO_ANIMATION} />
+        <RootStack.Screen name='HPLogin' component={HPLogin} options={NO_ANIMATION} />
+        <RootStack.Screen name='HPOTP' component={HPOTP} options={NO_ANIMATION} />
+        <RootStack.Screen name='HPDoctorScheduler' component={HPDoctorScheduler} />
+        <RootStack.Screen name='HPDoctorScheduleDetails' component={HPDoctorScheduleDetails} />
+        <RootStack.Screen name='XAddDoctors' component={XAddDoctors} />
+        <RootStack.Screen name='DoctorModel' component={DoctorModel} />
       </RootStack.Navigator>
     </NavigationContainer>
   )
 }
 
 export type HpRootStackParamList = {
-  Splash: undefined
-  OTP: undefined
-  Login: undefined
-  Home: undefined
-  AddDoctorSchedule: undefined
-  DoctorDetails: undefined
+  HPSplash: undefined
+  HPOTP: undefined
+  HPLogin: undefined
+  HPHome: undefined
+  HPDoctorScheduler: undefined
+  HPDoctorScheduleDetails: undefined
+  XAddDoctors: undefined
+  DoctorModel: undefined
 }

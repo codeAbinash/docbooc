@@ -2,10 +2,11 @@ import Chip from '@components/Chip'
 import { PaddingBottom } from '@components/SafePadding'
 import Loading03Icon from '@hugeicons/Loading03Icon'
 import TickDouble02Icon from '@hugeicons/TickDouble02Icon'
-import { memo, useCallback, useState } from 'react'
+import { memo, useState } from 'react'
 import { FlatList, View } from 'react-native'
-import PatientCard from './components/PatientCard'
-import TopArea from './components/TopArea'
+import PatientCard from '../components/PatientCard'
+import AppBar from '../components/AppBar'
+import ConfirmationModal from '@/HPScreens/components/ConfirmationModal'
 
 const SAMPLE_PATIENTS = [
   { id: '1', name: 'John Smith', age: 45, gender: 'Male' as const, queuePosition: 1 },
@@ -70,71 +71,90 @@ const SAMPLE_PATIENTS = [
   { id: '60', name: 'Hannah Gray', age: 28, gender: 'Female' as const, queuePosition: 60 },
 ]
 
-type TabsProps = {
-  activeTab: number
-  onTabChange: (index: number) => void
-}
-
 const tabs = [
   { label: 'Ongoing', icon: Loading03Icon },
   { label: 'Complete', icon: TickDouble02Icon },
 ]
-function Tabs({ activeTab, onTabChange }: TabsProps) {
-  return (
-    <View className='flex-row gap-2 bg-white px-5 pb-3 dark:bg-neutral-900'>
-      {tabs.map((tab, index) => (
-        <Chip
-          key={index}
-          label={tab.label}
-          icon={tab.icon}
-          isActive={activeTab === index}
-          onPress={() => onTabChange(index)}
-        />
-      ))}
-    </View>
-  )
-}
 
-function HPAppointmentsScreen() {
-  const [activeTab, setActiveTab] = useState(0)
-
-  const [expandedCardId, setExpandedCardId] = useState<string | null>(null)
-
-  const handleToggle = useCallback((patientId: string) => {
-    setExpandedCardId((prev) => (prev === patientId ? null : patientId))
-  }, [])
-
-  const renderPatientCard = useCallback(
-    ({ item }: { item: (typeof SAMPLE_PATIENTS)[0] }) => (
-      <PatientCard
-        patient={item}
-        isExpanded={expandedCardId === item.id}
-        onToggle={handleToggle}
-        isCompleteTab={activeTab === 1}
+const Tabs = ({ activeTab, onTabChange }: { activeTab: number; onTabChange: (index: number) => void }) => (
+  <View className='flex-row gap-2 bg-white px-5 pb-4 pt-1 dark:bg-neutral-900'>
+    {tabs.map((tab, index) => (
+      <Chip
+        key={index}
+        label={tab.label}
+        icon={tab.icon}
+        isActive={activeTab === index}
+        onPress={() => onTabChange(index)}
       />
-    ),
-    [expandedCardId, handleToggle, activeTab],
-  )
+    ))}
+  </View>
+)
 
-  // const ListHeaderComponent = useCallback(() => <SemiBold className='text mb-4 text-xl'>Recent Patients</SemiBold>, [])
+function HPTodaysAppointmentsScreen() {
+  const [activeTab, setActiveTab] = useState(0)
+  const [expandedCardId, setExpandedCardId] = useState<string | null>(null)
+  const [modalVisible, setModalVisible] = useState(false)
+  const [selectedAction, setSelectedAction] = useState<{
+    type: 'cancel' | 'complete' | 'move-to-ongoing'
+    patientId: string
+    patient: (typeof SAMPLE_PATIENTS)[0]
+  } | null>(null)
 
-  const ListFooterComponent = useCallback(() => <PaddingBottom />, [])
+  const handleConfirmation = (
+    action: 'cancel' | 'complete' | 'move-to-ongoing',
+    patient: (typeof SAMPLE_PATIENTS)[0],
+  ) => {
+    const actionType = activeTab === 1 && action === 'cancel' ? 'move-to-ongoing' : action
+    setSelectedAction({ type: actionType, patientId: patient.id, patient })
+    setModalVisible(true)
+  }
+
+  const handleConfirm = () => {
+    if (selectedAction) {
+      // Handle the action here
+      console.log(`${selectedAction.type} appointment for patient ${selectedAction.patientId}`)
+      setModalVisible(false)
+      setSelectedAction(null)
+    }
+  }
 
   return (
-    <View className='bg flex-1'>
-      <TopArea />
+    <View className='flex-1 bg-neutral-100 dark:bg-neutral-900'>
+      <AppBar />
       <Tabs activeTab={activeTab} onTabChange={setActiveTab} />
+      {selectedAction && (
+        <ConfirmationModal
+          visible={modalVisible}
+          onClose={() => {
+            setModalVisible(false)
+            setSelectedAction(null)
+          }}
+          onConfirm={handleConfirm}
+          title={`Do you want to ${selectedAction.type} this appointment?`}
+          actionType={selectedAction.type}
+          patient={selectedAction.patient}
+        />
+      )}
       <FlatList
         data={SAMPLE_PATIENTS}
-        renderItem={renderPatientCard}
+        renderItem={({ item }) => (
+          <PatientCard
+            patient={item}
+            isExpanded={expandedCardId === item.id}
+            onToggle={(id) => setExpandedCardId((prev) => (prev === id ? null : id))}
+            isCompleteTab={activeTab === 1}
+            onCancel={() => handleConfirmation('cancel', item)}
+            onComplete={() => handleConfirmation('complete', item)}
+            onMoveToOngoing={() => handleConfirmation('move-to-ongoing', item)}
+          />
+        )}
         keyExtractor={(item) => item.id}
-        contentContainerClassName='pb-10 pt-5 px-5'
+        contentContainerClassName=' px-5 pt-3'
         showsVerticalScrollIndicator={false}
-        // ListHeaderComponent={ListHeaderComponent}
-        ListFooterComponent={ListFooterComponent}
+        ListFooterComponent={PaddingBottom}
       />
     </View>
   )
 }
 
-export default memo(HPAppointmentsScreen)
+export default memo(HPTodaysAppointmentsScreen)

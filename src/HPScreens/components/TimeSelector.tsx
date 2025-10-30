@@ -3,7 +3,8 @@ import TimeScheduleIcon from '@hugeicons/TimeScheduleIcon'
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker'
 import Colors from '@utils/colors'
 import { Medium, SemiBold } from '@utils/fonts'
-import { useState } from 'react'
+import CustomTimePicker from '@/HPScreens/components/CustomTimePicker'
+import { useState, useCallback } from 'react'
 import { Platform, TouchableOpacity, View } from 'react-native'
 
 export type TimeSlot = {
@@ -13,8 +14,7 @@ export type TimeSlot = {
   showPicker?: 'start' | 'end'
 }
 
-export const formatTime = (date: Date) =>
-  date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })
+import { formatTime } from '@/HPScreens/components/CustomTimePicker'
 
 type TimeButtonProps = {
   slot: TimeSlot
@@ -27,10 +27,23 @@ export function TimeButton({ slot, type, onTogglePicker, onTimeChange }: TimeBut
   const isStart = type === 'start'
   const time = isStart ? slot.startTime : slot.endTime
   const label = isStart ? 'Start' : 'End'
+  const [showPicker, setShowPicker] = useState(false)
+
+  const handleTimeChange = useCallback(
+    (date: Date) => {
+      onTimeChange(slot.id, type, { type: 'set' } as DateTimePickerEvent, date)
+    },
+    [slot.id, type, onTimeChange],
+  )
+
+  const handleClose = useCallback(() => {
+    setShowPicker(false)
+    onTimeChange(slot.id, type, { type: 'dismissed' } as DateTimePickerEvent, undefined)
+  }, [slot.id, type, onTimeChange])
 
   return (
     <View className='flex-1'>
-      <TouchableOpacity onPress={() => onTogglePicker(slot.id, type)} activeOpacity={0.8}>
+      <TouchableOpacity onPress={() => setShowPicker(true)} activeOpacity={0.8}>
         <View className='flex-row items-center rounded-xl bg-black/5 p-3 dark:bg-white/5'>
           <View className='mr-3 p-1'>
             {type === 'start' ? (
@@ -45,14 +58,12 @@ export function TimeButton({ slot, type, onTogglePicker, onTimeChange }: TimeBut
           </View>
         </View>
       </TouchableOpacity>
-      {slot.showPicker === type && (
-        <DateTimePicker
-          value={time}
-          mode='time'
-          is24Hour={false}
-          onChange={(e, d) => onTimeChange(slot.id, type, e, d)}
-        />
-      )}
+      <CustomTimePicker
+        isVisible={showPicker}
+        currentTime={time}
+        onClose={handleClose}
+        onSelectTime={handleTimeChange}
+      />
     </View>
   )
 }
@@ -68,28 +79,34 @@ export default function TimeSelector({ startTime, endTime, onStartTimeChange, on
   const [showStartPicker, setShowStartPicker] = useState(false)
   const [showEndPicker, setShowEndPicker] = useState(false)
 
-  const handleStartTimeChange = (event: DateTimePickerEvent, date?: Date) => {
-    if (event.type === 'set' && date) {
+  const handleStartTimeChange = useCallback(
+    (date: Date) => {
       onStartTimeChange(date)
-    }
-    if (Platform.OS === 'android') {
       setShowStartPicker(false)
-    }
-  }
+    },
+    [onStartTimeChange],
+  )
 
-  const handleEndTimeChange = (event: DateTimePickerEvent, date?: Date) => {
-    if (event.type === 'set' && date) {
+  const handleEndTimeChange = useCallback(
+    (date: Date) => {
       onEndTimeChange(date)
-    }
-    if (Platform.OS === 'android') {
       setShowEndPicker(false)
-    }
-  }
+    },
+    [onEndTimeChange],
+  )
+
+  const handleStartClose = useCallback(() => {
+    setShowStartPicker(false)
+  }, [])
+
+  const handleEndClose = useCallback(() => {
+    setShowEndPicker(false)
+  }, [])
 
   return (
     <View className='flex-row gap-3'>
       <View className='flex-1'>
-        <TouchableOpacity onPress={() => setShowStartPicker(!showStartPicker)} activeOpacity={0.8}>
+        <TouchableOpacity onPress={() => setShowStartPicker(true)} activeOpacity={0.8}>
           <View className='flex-row items-center rounded-xl bg-black/5 p-3 dark:bg-white/5'>
             <View className='mr-3 p-1'>
               <TimeScheduleIcon size={20} color={Colors.accent} strokeWidth={1.9} />
@@ -100,13 +117,16 @@ export default function TimeSelector({ startTime, endTime, onStartTimeChange, on
             </View>
           </View>
         </TouchableOpacity>
-        {showStartPicker && (
-          <DateTimePicker value={startTime} mode='time' is24Hour={false} onChange={handleStartTimeChange} />
-        )}
+        <CustomTimePicker
+          isVisible={showStartPicker}
+          currentTime={startTime}
+          onClose={handleStartClose}
+          onSelectTime={handleStartTimeChange}
+        />
       </View>
 
       <View className='flex-1'>
-        <TouchableOpacity onPress={() => setShowEndPicker(!showEndPicker)} activeOpacity={0.8}>
+        <TouchableOpacity onPress={() => setShowEndPicker(true)} activeOpacity={0.8}>
           <View className='flex-row items-center rounded-xl bg-black/5 p-3 dark:bg-white/5'>
             <View className='mr-3 p-1'>
               <Clock03Icon size={20} color={Colors.accent} strokeWidth={1.9} />
@@ -117,9 +137,12 @@ export default function TimeSelector({ startTime, endTime, onStartTimeChange, on
             </View>
           </View>
         </TouchableOpacity>
-        {showEndPicker && (
-          <DateTimePicker value={endTime} mode='time' is24Hour={false} onChange={handleEndTimeChange} />
-        )}
+        <CustomTimePicker
+          isVisible={showEndPicker}
+          currentTime={endTime}
+          onClose={handleEndClose}
+          onSelectTime={handleEndTimeChange}
+        />
       </View>
     </View>
   )
