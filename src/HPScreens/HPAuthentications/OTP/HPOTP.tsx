@@ -1,4 +1,5 @@
 import { Header } from '@/UserScreens/BookAppointment/components/Header'
+import popupStore from '@/zustand/popupStore'
 import Animations from '@assets/animations/animations'
 import Button from '@components/Button'
 import KeyboardAvoid from '@components/KeyboardAvoid'
@@ -17,6 +18,7 @@ import colors from 'tailwindcss/colors'
 export default function HPOTP({ navigation, route }: HPNavProp) {
   const { colorScheme } = useColorScheme()
   const [otp, setOtp] = useState('')
+  const alert = popupStore((state) => state.alert)
 
   const { email, password, name, isSignup } = route.params || {}
 
@@ -39,7 +41,7 @@ export default function HPOTP({ navigation, route }: HPNavProp) {
     },
     onSuccess: (data) => {
       if (data.success && data.data) {
-        Alert.alert('Success', 'Account created successfully!')
+        alert('Success', 'Account created successfully!')
         navigation.navigate('HPHome')
       } else {
         Alert.alert('Error', data.message || 'Invalid OTP or registration failed')
