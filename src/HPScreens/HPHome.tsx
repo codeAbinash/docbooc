@@ -1,11 +1,11 @@
-import { createDrawerNavigator } from '@react-navigation/drawer'
 import CustomDrawer from '@/HPScreens/components/CustomDrawer'
-import HPScheduleDoctors from './HpScheduleDoctors/HpScheduleDoctors'
+import { createDrawerNavigator } from '@react-navigation/drawer'
 import HPAddPatients from './HPAddPatients/HPAddPatients'
-import XAddDoctors from './XAddDoctors/XAddDoctors'
-import HPViewDoctors from './HPViewDoctors/HPViewDoctors'
+import HPScheduleDoctors from './HpScheduleDoctors/HpScheduleDoctors'
 import HPTodaysAppointmentsScreen from './HPTodaysAppointments/HPTodaysAppointmentsScreen'
 import HPUpcomingAppointmentsScreen from './HPUpcomingAppointments/HPUpcomingAppointmentsScreen'
+import HPViewDoctors from './HPViewDoctors/HPViewDoctors'
+import XAddDoctors from './XAddDoctors/XAddDoctors'
 
 const Drawer = createDrawerNavigator()
 

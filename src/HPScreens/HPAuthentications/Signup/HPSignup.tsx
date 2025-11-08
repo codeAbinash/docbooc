@@ -1,6 +1,8 @@
+import popupStore from '@/zustand/popupStore'
 import Button from '@components/Button'
-import InputWithLabel from '@components/InputWithLabel'
+import Input from '@components/Input'
 import KeyboardAvoid from '@components/KeyboardAvoid'
+import Label from '@components/Label'
 import { PaddingBottom, PaddingTop } from '@components/SafePadding'
 import { TC_and_PP } from '@components/TC_and_PP'
 import { useMutation } from '@tanstack/react-query'
@@ -8,12 +10,13 @@ import { client } from '@utils/client'
 import { Black, Medium, SemiBold } from '@utils/fonts'
 import { HPNavProp } from '@utils/types'
 import { useState } from 'react'
-import { Alert, View } from 'react-native'
+import { View } from 'react-native'
 
 export default function HPSignup({ navigation }: HPNavProp) {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const alert = popupStore((state) => state.alert)
 
   const sendOtpMutation = useMutation({
     mutationFn: async (email: string) => {
@@ -28,33 +31,31 @@ export default function HPSignup({ navigation }: HPNavProp) {
       if (data.success) {
         navigation.navigate('HPOTP', { email, password, name, isSignup: true })
       } else {
-        Alert.alert('Error', data.message || 'Failed to send OTP')
+        alert('Error', data.message || 'Failed to send OTP')
       }
     },
     onError: (error) => {
       console.log(error)
-      Alert.alert('Error', 'Failed to send OTP. Please try again.')
+      alert('Error', 'Failed to send OTP. Please try again.')
       console.error(error)
     },
   })
 
   function handleSendOTP() {
-    // navigation.navigate('HPOTP', { email, password, name, isSignup: true })
-    // return
     if (!name.trim()) {
-      Alert.alert('Error', 'Please enter your name')
+      alert('Error', 'Please enter your name')
       return
     }
     if (!email.trim()) {
-      Alert.alert('Error', 'Please enter your email address')
+      alert('Error', 'Please enter your email address')
       return
     }
     if (!password.trim()) {
-      Alert.alert('Error', 'Please enter a password')
+      alert('Error', 'Please enter a password')
       return
     }
     if (password.length < 6) {
-      Alert.alert('Error', 'Password must be at least 6 characters')
+      alert('Error', 'Password must be at least 6 characters')
       return
     }
 
@@ -73,35 +74,32 @@ export default function HPSignup({ navigation }: HPNavProp) {
                 Sign up to get started with DocBook Console
               </Medium>
             </View>
-            <View className='gap-5'>
-              <InputWithLabel
-                label='Full Name'
-                placeholder='Enter your full name'
-                value={name}
-                onChangeText={setName}
-                autoCapitalize='words'
-              />
-              <InputWithLabel
-                label='Email Address'
-                placeholder='Enter your email address'
+            <View className='gap-2'>
+              <Label>Full Name</Label>
+              <Input placeholder='Enter your full name' value={name} onChangeText={setName} autoCapitalize='words' />
+              <Label>Email Address</Label>
+              <Input
+                placeholder='Email Address'
                 value={email}
                 onChangeText={setEmail}
                 keyboardType='email-address'
                 autoCapitalize='none'
               />
-              <InputWithLabel
-                label='Password'
+              <Label>Password</Label>
+              <Input
                 placeholder='Enter your password'
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry
                 autoCapitalize='none'
               />
-              <Button
-                title={sendOtpMutation.isPending ? 'Sending...' : 'Send OTP'}
-                onPress={handleSendOTP}
-                disabled={sendOtpMutation.isPending}
-              />
+              <View className='mt-5'>
+                <Button
+                  title={sendOtpMutation.isPending ? 'Sending...' : 'Send OTP'}
+                  onPress={handleSendOTP}
+                  disabled={sendOtpMutation.isPending}
+                />
+              </View>
               <SemiBold className='text text-center text-sm opacity-70' onPress={() => navigation.navigate('HPLogin')}>
                 Already have an account? <SemiBold className='text-accent'>Login</SemiBold>
               </SemiBold>

@@ -8,6 +8,7 @@ import HPSplash from '@/HPScreens/HPSplash'
 import HPDoctorScheduleDetails from '@/HPScreens/HPViewDoctors/HPDoctorScheduleDetails'
 import XAddDoctors from '@/HPScreens/XAddDoctors/XAddDoctors'
 import { DarkTheme, DefaultTheme } from '@/themes'
+import { Popups } from '@components/Popup'
 import { AutoStatusBar } from '@components/StatusBar'
 import { queryClient } from '@query/index'
 import { NavigationContainer } from '@react-navigation/native'
@@ -40,6 +41,7 @@ export default function HPApp() {
   return (
     <QueryClientProvider client={queryClient}>
       <NavigationContainer theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <Popups />
         <AutoStatusBar scheme={scheme} />
         <RootStack.Navigator
           screenOptions={{

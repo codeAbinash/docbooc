@@ -1,3 +1,4 @@
+import { handleLogout, logout } from '@/HPScreens/utils/utils'
 import Calendar01Icon from '@assets/icons/hugeicons/Calendar01Icon'
 import Calendar03Icon from '@assets/icons/hugeicons/Calendar03Icon'
 import Logout05Icon from '@assets/icons/hugeicons/Logout05Icon'
@@ -80,10 +81,7 @@ export default function CustomDrawer(props: any) {
       </DrawerContentScrollView>
 
       <View className='border-t px-1 pt-3' style={{ paddingBottom: insets.bottom + 12, borderColor: colors.border }}>
-        <Press
-          onPress={() => console.log('Logout pressed')}
-          className='flex-row items-center gap-4 rounded-lg px-4 py-3.5'
-        >
+        <Press onPress={() => handleLogout(logout)} className='flex-row items-center gap-4 rounded-lg px-4 py-3.5'>
           <View className='size-6 items-center justify-center'>
             <Logout05Icon size={22} color='#ef4444' strokeWidth={1.8} />
           </View>

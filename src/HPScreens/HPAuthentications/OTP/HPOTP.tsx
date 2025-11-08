@@ -115,7 +115,6 @@ export default function HPOTP({ navigation, route }: HPNavProp) {
             blurOnFilled
             hideStick
             onTextChange={setOtp}
-            onFilled={handleVerifyOTP}
             textInputProps={{
               accessibilityLabel: 'One-Time Password',
               selectionColor: 'transparent',

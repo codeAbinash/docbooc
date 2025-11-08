@@ -92,7 +92,7 @@ type Store<T extends StorageType> = keyof T['keys'] | `${Extract<keyof T['startW
 
 type DeveloperStorage = Store<typeof DeveloperStorage>
 type UserStorage = Store<typeof UserStorage>
-type misc = 'misc' | 'isOpenedApp'
+type misc = 'misc' | 'isOpenedApp' | 'token'
 export type StorageKeys = DeveloperStorage | UserStorage | misc
 
 function useMemoParsed<T>(key: StorageKeys) {

@@ -1,3 +1,4 @@
+import popupStore from '@/zustand/popupStore'
 import Button from '@components/Button'
 import Input from '@components/Input'
 import KeyboardAvoid from '@components/KeyboardAvoid'
@@ -7,13 +8,15 @@ import { TC_and_PP } from '@components/TC_and_PP'
 import { useMutation } from '@tanstack/react-query'
 import { client } from '@utils/client'
 import { Black, Bold, Medium, SemiBold } from '@utils/fonts'
+import { secureLs } from '@utils/storage'
 import { HPNavProp } from '@utils/types'
 import { useState } from 'react'
-import { Alert, View } from 'react-native'
+import { View } from 'react-native'
 
 export default function HPLogin({ navigation }: HPNavProp) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const alert = popupStore((state) => state.alert)
 
   const loginMutation = useMutation({
     mutationFn: async ({ email, password }: { email: string; password: string }) => {
@@ -23,28 +26,27 @@ export default function HPLogin({ navigation }: HPNavProp) {
       return response.json()
     },
     onSuccess: (data) => {
-      console.log(data)
-      if (data.success && data.data) {
-        Alert.alert('Success', 'Login successful!')
-        navigation.navigate('HPHome')
-      } else {
-        Alert.alert('Error', data.message || 'Invalid credentials')
-      }
+      if (!data || !data.success || !data.data) return alert('Error', data.message || 'Invalid credentials')
+      secureLs.set('token', data.data.token)
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'HPHome' }],
+      })
     },
     onError: (error) => {
       console.log(error)
-      Alert.alert('Error', 'Failed to login. Please try again.')
+      alert('Error', 'Failed to login. Please try again.')
       console.error(error)
     },
   })
 
   function handleLogin() {
     if (!email.trim()) {
-      Alert.alert('Error', 'Please enter your email address')
+      alert('Error', 'Please enter your email address')
       return
     }
     if (!password.trim()) {
-      Alert.alert('Error', 'Please enter your password')
+      alert('Error', 'Please enter your password')
       return
     }
 

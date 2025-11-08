@@ -2,14 +2,15 @@ import authStore from '@/zustand/authStore'
 import { navigationStore } from '@/zustand/navigationStore'
 import popupStore from '@/zustand/popupStore'
 import { queryClient } from '@query/index'
+import { HPStackNav } from '@utils/types'
 import { FadeOut, LinearTransition } from 'react-native-reanimated'
 
 export function logout() {
-  const navigation = navigationStore.getState().navigation
+  const navigation = navigationStore.getState().navigation as HPStackNav
   authStore.getState().removeToken()
   popupStore.getState().clear()
   queryClient.clear()
-  navigation?.reset({ index: 0, routes: [{ name: 'Login' }] })
+  navigation?.reset({ index: 0, routes: [{ name: 'HPLogin' }] })
 }
 
 export function handleLogout(logoutMutation: () => void) {

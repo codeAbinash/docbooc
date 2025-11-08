@@ -33,12 +33,12 @@ declare const client: {
                                 success: boolean;
                                 statusCode: number;
                                 message: string;
-                                data: import("hono/utils/types").JSONValue;
+                                data: null;
                                 error: import("hono/utils/types").JSONValue;
                                 timestamp: string;
                             };
                             outputFormat: "json";
-                            status: 200;
+                            status: 500;
                         } | {
                             input: {};
                             output: {
@@ -50,7 +50,7 @@ declare const client: {
                                 timestamp: string;
                             };
                             outputFormat: "json";
-                            status: 500;
+                            status: 200;
                         };
                     }>;
                 };
@@ -69,12 +69,12 @@ declare const client: {
                                 success: boolean;
                                 statusCode: number;
                                 message: string;
-                                data: import("hono/utils/types").JSONValue;
+                                data: null;
                                 error: import("hono/utils/types").JSONValue;
                                 timestamp: string;
                             };
                             outputFormat: "json";
-                            status: 200;
+                            status: 500;
                         } | {
                             input: {};
                             output: {
@@ -86,7 +86,7 @@ declare const client: {
                                 timestamp: string;
                             };
                             outputFormat: "json";
-                            status: 500;
+                            status: 200;
                         };
                     }>;
                 };
@@ -104,7 +104,7 @@ declare const client: {
                             success: boolean;
                             statusCode: number;
                             message: string;
-                            data: import("hono/utils/types").JSONValue;
+                            data: null;
                             error: import("hono/utils/types").JSONValue;
                             timestamp: string;
                         };
@@ -144,7 +144,7 @@ declare const client: {
                             success: boolean;
                             statusCode: number;
                             message: string;
-                            data: import("hono/utils/types").JSONValue;
+                            data: null;
                             error: import("hono/utils/types").JSONValue;
                             timestamp: string;
                         };
@@ -198,23 +198,7 @@ declare const client: {
                                 success: boolean;
                                 statusCode: number;
                                 message: string;
-                                data: import("hono/utils/types").JSONValue;
-                                error: import("hono/utils/types").JSONValue;
-                                timestamp: string;
-                            };
-                            outputFormat: "json";
-                            status: 200;
-                        } | {
-                            input: {
-                                param: {
-                                    id: string;
-                                };
-                            };
-                            output: {
-                                success: boolean;
-                                statusCode: number;
-                                message: string;
-                                data: import("hono/utils/types").JSONValue;
+                                data: null;
                                 error: import("hono/utils/types").JSONValue;
                                 timestamp: string;
                             };
@@ -230,12 +214,28 @@ declare const client: {
                                 success: boolean;
                                 statusCode: number;
                                 message: string;
-                                data: import("hono/utils/types").JSONValue;
+                                data: null;
                                 error: import("hono/utils/types").JSONValue;
                                 timestamp: string;
                             };
                             outputFormat: "json";
                             status: 500;
+                        } | {
+                            input: {
+                                param: {
+                                    id: string;
+                                };
+                            };
+                            output: {
+                                success: boolean;
+                                statusCode: number;
+                                message: string;
+                                data: import("hono/utils/types").JSONValue;
+                                error: import("hono/utils/types").JSONValue;
+                                timestamp: string;
+                            };
+                            outputFormat: "json";
+                            status: 200;
                         };
                         $get: {
                             input: {
@@ -247,7 +247,7 @@ declare const client: {
                                 success: boolean;
                                 statusCode: number;
                                 message: string;
-                                data: import("hono/utils/types").JSONValue;
+                                data: null;
                                 error: import("hono/utils/types").JSONValue;
                                 timestamp: string;
                             };
@@ -263,7 +263,7 @@ declare const client: {
                                 success: boolean;
                                 statusCode: number;
                                 message: string;
-                                data: import("hono/utils/types").JSONValue;
+                                data: null;
                                 error: import("hono/utils/types").JSONValue;
                                 timestamp: string;
                             };
@@ -311,7 +311,7 @@ declare const client: {
                                 success: boolean;
                                 statusCode: number;
                                 message: string;
-                                data: import("hono/utils/types").JSONValue;
+                                data: null;
                                 error: import("hono/utils/types").JSONValue;
                                 timestamp: string;
                             };
@@ -334,7 +334,7 @@ declare const client: {
                                 success: boolean;
                                 statusCode: number;
                                 message: string;
-                                data: import("hono/utils/types").JSONValue;
+                                data: null;
                                 error: import("hono/utils/types").JSONValue;
                                 timestamp: string;
                             };
@@ -398,7 +398,7 @@ declare const client: {
                                 success: boolean;
                                 statusCode: number;
                                 message: string;
-                                data: import("hono/utils/types").JSONValue;
+                                data: null;
                                 error: import("hono/utils/types").JSONValue;
                                 timestamp: string;
                             };
@@ -471,40 +471,6 @@ declare const client: {
                                 success: boolean;
                                 statusCode: number;
                                 message: string;
-                                data: import("hono/utils/types").JSONValue;
-                                error: import("hono/utils/types").JSONValue;
-                                timestamp: string;
-                            };
-                            outputFormat: "json";
-                            status: 401;
-                        } | {
-                            input: {
-                                json: {
-                                    email: string;
-                                    password: string;
-                                };
-                            };
-                            output: {
-                                success: boolean;
-                                statusCode: number;
-                                message: string;
-                                data: import("hono/utils/types").JSONValue;
-                                error: import("hono/utils/types").JSONValue;
-                                timestamp: string;
-                            };
-                            outputFormat: "json";
-                            status: 500;
-                        } | {
-                            input: {
-                                json: {
-                                    email: string;
-                                    password: string;
-                                };
-                            };
-                            output: {
-                                success: boolean;
-                                statusCode: number;
-                                message: string;
                                 data: {
                                     token: string;
                                     hp: {
@@ -517,7 +483,7 @@ declare const client: {
                                 timestamp: string;
                             };
                             outputFormat: "json";
-                            status: 200;
+                            status: import("hono/utils/http-status").ContentfulStatusCode;
                         };
                     }>;
                 };
@@ -543,56 +509,19 @@ declare const client: {
                                 success: boolean;
                                 statusCode: number;
                                 message: string;
-                                data: import("hono/utils/types").JSONValue;
-                                error: import("hono/utils/types").JSONValue;
-                                timestamp: string;
-                            };
-                            outputFormat: "json";
-                            status: 400;
-                        } | {
-                            input: {
-                                json: {
-                                    name: string;
-                                    email: string;
-                                    otp: string;
-                                    password: string;
-                                };
-                            };
-                            output: {
-                                success: boolean;
-                                statusCode: number;
-                                message: string;
-                                data: import("hono/utils/types").JSONValue;
-                                error: import("hono/utils/types").JSONValue;
-                                timestamp: string;
-                            };
-                            outputFormat: "json";
-                            status: 500;
-                        } | {
-                            input: {
-                                json: {
-                                    name: string;
-                                    email: string;
-                                    otp: string;
-                                    password: string;
-                                };
-                            };
-                            output: {
-                                success: boolean;
-                                statusCode: number;
-                                message: string;
                                 data: {
+                                    token: string;
                                     hp: {
+                                        id: string;
                                         name: string;
                                         email: string;
                                     };
-                                    token: string;
                                 } | null;
                                 error: import("hono/utils/types").JSONValue;
                                 timestamp: string;
                             };
                             outputFormat: "json";
-                            status: 201;
+                            status: import("hono/utils/http-status").ContentfulStatusCode;
                         };
                     }>;
                 };
@@ -615,38 +544,6 @@ declare const client: {
                                 success: boolean;
                                 statusCode: number;
                                 message: string;
-                                data: import("hono/utils/types").JSONValue;
-                                error: import("hono/utils/types").JSONValue;
-                                timestamp: string;
-                            };
-                            outputFormat: "json";
-                            status: 400;
-                        } | {
-                            input: {
-                                json: {
-                                    email: string;
-                                };
-                            };
-                            output: {
-                                success: boolean;
-                                statusCode: number;
-                                message: string;
-                                data: import("hono/utils/types").JSONValue;
-                                error: import("hono/utils/types").JSONValue;
-                                timestamp: string;
-                            };
-                            outputFormat: "json";
-                            status: 500;
-                        } | {
-                            input: {
-                                json: {
-                                    email: string;
-                                };
-                            };
-                            output: {
-                                success: boolean;
-                                statusCode: number;
-                                message: string;
                                 data: {
                                     email: string;
                                 } | null;
@@ -654,7 +551,7 @@ declare const client: {
                                 timestamp: string;
                             };
                             outputFormat: "json";
-                            status: 200;
+                            status: import("hono/utils/http-status").ContentfulStatusCode;
                         };
                     }>;
                 };
@@ -725,23 +622,7 @@ declare const client: {
                                 success: boolean;
                                 statusCode: number;
                                 message: string;
-                                data: import("hono/utils/types").JSONValue;
-                                error: import("hono/utils/types").JSONValue;
-                                timestamp: string;
-                            };
-                            outputFormat: "json";
-                            status: 200;
-                        } | {
-                            input: {
-                                param: {
-                                    id: string;
-                                };
-                            };
-                            output: {
-                                success: boolean;
-                                statusCode: number;
-                                message: string;
-                                data: import("hono/utils/types").JSONValue;
+                                data: null;
                                 error: import("hono/utils/types").JSONValue;
                                 timestamp: string;
                             };
@@ -757,7 +638,7 @@ declare const client: {
                                 success: boolean;
                                 statusCode: number;
                                 message: string;
-                                data: import("hono/utils/types").JSONValue;
+                                data: null;
                                 error: import("hono/utils/types").JSONValue;
                                 timestamp: string;
                             };
@@ -773,12 +654,28 @@ declare const client: {
                                 success: boolean;
                                 statusCode: number;
                                 message: string;
-                                data: import("hono/utils/types").JSONValue;
+                                data: null;
                                 error: import("hono/utils/types").JSONValue;
                                 timestamp: string;
                             };
                             outputFormat: "json";
                             status: 500;
+                        } | {
+                            input: {
+                                param: {
+                                    id: string;
+                                };
+                            };
+                            output: {
+                                success: boolean;
+                                statusCode: number;
+                                message: string;
+                                data: import("hono/utils/types").JSONValue;
+                                error: import("hono/utils/types").JSONValue;
+                                timestamp: string;
+                            };
+                            outputFormat: "json";
+                            status: 200;
                         };
                     }>;
                 };
@@ -802,23 +699,7 @@ declare const client: {
                                     success: boolean;
                                     statusCode: number;
                                     message: string;
-                                    data: import("hono/utils/types").JSONValue;
-                                    error: import("hono/utils/types").JSONValue;
-                                    timestamp: string;
-                                };
-                                outputFormat: "json";
-                                status: 200;
-                            } | {
-                                input: {
-                                    param: {
-                                        id: string;
-                                    };
-                                };
-                                output: {
-                                    success: boolean;
-                                    statusCode: number;
-                                    message: string;
-                                    data: import("hono/utils/types").JSONValue;
+                                    data: null;
                                     error: import("hono/utils/types").JSONValue;
                                     timestamp: string;
                                 };
@@ -834,7 +715,7 @@ declare const client: {
                                     success: boolean;
                                     statusCode: number;
                                     message: string;
-                                    data: import("hono/utils/types").JSONValue;
+                                    data: null;
                                     error: import("hono/utils/types").JSONValue;
                                     timestamp: string;
                                 };
@@ -850,12 +731,28 @@ declare const client: {
                                     success: boolean;
                                     statusCode: number;
                                     message: string;
-                                    data: import("hono/utils/types").JSONValue;
+                                    data: null;
                                     error: import("hono/utils/types").JSONValue;
                                     timestamp: string;
                                 };
                                 outputFormat: "json";
                                 status: 500;
+                            } | {
+                                input: {
+                                    param: {
+                                        id: string;
+                                    };
+                                };
+                                output: {
+                                    success: boolean;
+                                    statusCode: number;
+                                    message: string;
+                                    data: import("hono/utils/types").JSONValue;
+                                    error: import("hono/utils/types").JSONValue;
+                                    timestamp: string;
+                                };
+                                outputFormat: "json";
+                                status: 200;
                             };
                         }>;
                     };
@@ -880,23 +777,7 @@ declare const client: {
                                     success: boolean;
                                     statusCode: number;
                                     message: string;
-                                    data: import("hono/utils/types").JSONValue;
-                                    error: import("hono/utils/types").JSONValue;
-                                    timestamp: string;
-                                };
-                                outputFormat: "json";
-                                status: 200;
-                            } | {
-                                input: {
-                                    param: {
-                                        id: string;
-                                    };
-                                };
-                                output: {
-                                    success: boolean;
-                                    statusCode: number;
-                                    message: string;
-                                    data: import("hono/utils/types").JSONValue;
+                                    data: null;
                                     error: import("hono/utils/types").JSONValue;
                                     timestamp: string;
                                 };
@@ -912,7 +793,7 @@ declare const client: {
                                     success: boolean;
                                     statusCode: number;
                                     message: string;
-                                    data: import("hono/utils/types").JSONValue;
+                                    data: null;
                                     error: import("hono/utils/types").JSONValue;
                                     timestamp: string;
                                 };
@@ -928,12 +809,28 @@ declare const client: {
                                     success: boolean;
                                     statusCode: number;
                                     message: string;
-                                    data: import("hono/utils/types").JSONValue;
+                                    data: null;
                                     error: import("hono/utils/types").JSONValue;
                                     timestamp: string;
                                 };
                                 outputFormat: "json";
                                 status: 500;
+                            } | {
+                                input: {
+                                    param: {
+                                        id: string;
+                                    };
+                                };
+                                output: {
+                                    success: boolean;
+                                    statusCode: number;
+                                    message: string;
+                                    data: import("hono/utils/types").JSONValue;
+                                    error: import("hono/utils/types").JSONValue;
+                                    timestamp: string;
+                                };
+                                outputFormat: "json";
+                                status: 200;
                             };
                         }>;
                     };
@@ -991,7 +888,7 @@ declare const client: {
                             success: boolean;
                             statusCode: number;
                             message: string;
-                            data: import("hono/utils/types").JSONValue;
+                            data: null;
                             error: import("hono/utils/types").JSONValue;
                             timestamp: string;
                         };
@@ -1003,7 +900,7 @@ declare const client: {
                             success: boolean;
                             statusCode: number;
                             message: string;
-                            data: import("hono/utils/types").JSONValue;
+                            data: null;
                             error: import("hono/utils/types").JSONValue;
                             timestamp: string;
                         };
@@ -1071,7 +968,7 @@ declare const client: {
                             success: boolean;
                             statusCode: number;
                             message: string;
-                            data: import("hono/utils/types").JSONValue;
+                            data: null;
                             error: import("hono/utils/types").JSONValue;
                             timestamp: string;
                         };
@@ -1114,7 +1011,7 @@ declare const client: {
                             success: boolean;
                             statusCode: number;
                             message: string;
-                            data: import("hono/utils/types").JSONValue;
+                            data: null;
                             error: import("hono/utils/types").JSONValue;
                             timestamp: string;
                         };
@@ -1134,7 +1031,7 @@ declare const client: {
                             success: boolean;
                             statusCode: number;
                             message: string;
-                            data: import("hono/utils/types").JSONValue;
+                            data: null;
                             error: import("hono/utils/types").JSONValue;
                             timestamp: string;
                         };
@@ -1200,7 +1097,7 @@ declare const client: {
                             success: boolean;
                             statusCode: number;
                             message: string;
-                            data: import("hono/utils/types").JSONValue;
+                            data: null;
                             error: import("hono/utils/types").JSONValue;
                             timestamp: string;
                         };
@@ -1218,7 +1115,7 @@ declare const client: {
                             success: boolean;
                             statusCode: number;
                             message: string;
-                            data: import("hono/utils/types").JSONValue;
+                            data: null;
                             error: import("hono/utils/types").JSONValue;
                             timestamp: string;
                         };
@@ -1281,7 +1178,7 @@ declare const client: {
                                 success: boolean;
                                 statusCode: number;
                                 message: string;
-                                data: import("hono/utils/types").JSONValue;
+                                data: null;
                                 error: import("hono/utils/types").JSONValue;
                                 timestamp: string;
                             };
@@ -1297,7 +1194,7 @@ declare const client: {
                                 success: boolean;
                                 statusCode: number;
                                 message: string;
-                                data: import("hono/utils/types").JSONValue;
+                                data: null;
                                 error: import("hono/utils/types").JSONValue;
                                 timestamp: string;
                             };
@@ -1400,7 +1297,7 @@ declare const client: {
                                     success: boolean;
                                     statusCode: number;
                                     message: string;
-                                    data: import("hono/utils/types").JSONValue;
+                                    data: null;
                                     error: import("hono/utils/types").JSONValue;
                                     timestamp: string;
                                 };
@@ -1416,7 +1313,7 @@ declare const client: {
                                     success: boolean;
                                     statusCode: number;
                                     message: string;
-                                    data: import("hono/utils/types").JSONValue;
+                                    data: null;
                                     error: import("hono/utils/types").JSONValue;
                                     timestamp: string;
                                 };
@@ -1432,7 +1329,7 @@ declare const client: {
                                     success: boolean;
                                     statusCode: number;
                                     message: string;
-                                    data: import("hono/utils/types").JSONValue;
+                                    data: null;
                                     error: import("hono/utils/types").JSONValue;
                                     timestamp: string;
                                 };
@@ -1481,7 +1378,7 @@ declare const client: {
                                 success: boolean;
                                 statusCode: number;
                                 message: string;
-                                data: import("hono/utils/types").JSONValue;
+                                data: null;
                                 error: import("hono/utils/types").JSONValue;
                                 timestamp: string;
                             };
@@ -1580,7 +1477,7 @@ declare const client: {
                                     success: boolean;
                                     statusCode: number;
                                     message: string;
-                                    data: import("hono/utils/types").JSONValue;
+                                    data: null;
                                     error: import("hono/utils/types").JSONValue;
                                     timestamp: string;
                                 };
@@ -1596,7 +1493,7 @@ declare const client: {
                                     success: boolean;
                                     statusCode: number;
                                     message: string;
-                                    data: import("hono/utils/types").JSONValue;
+                                    data: null;
                                     error: import("hono/utils/types").JSONValue;
                                     timestamp: string;
                                 };
@@ -1709,12 +1606,12 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 success: boolean;
                                 statusCode: number;
                                 message: string;
-                                data: import("hono/utils/types").JSONValue;
+                                data: null;
                                 error: import("hono/utils/types").JSONValue;
                                 timestamp: string;
                             };
                             outputFormat: "json";
-                            status: 200;
+                            status: 500;
                         } | {
                             input: {};
                             output: {
@@ -1726,7 +1623,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 timestamp: string;
                             };
                             outputFormat: "json";
-                            status: 500;
+                            status: 200;
                         };
                     }>;
                 };
@@ -1745,12 +1642,12 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 success: boolean;
                                 statusCode: number;
                                 message: string;
-                                data: import("hono/utils/types").JSONValue;
+                                data: null;
                                 error: import("hono/utils/types").JSONValue;
                                 timestamp: string;
                             };
                             outputFormat: "json";
-                            status: 200;
+                            status: 500;
                         } | {
                             input: {};
                             output: {
@@ -1762,7 +1659,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 timestamp: string;
                             };
                             outputFormat: "json";
-                            status: 500;
+                            status: 200;
                         };
                     }>;
                 };
@@ -1780,7 +1677,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             success: boolean;
                             statusCode: number;
                             message: string;
-                            data: import("hono/utils/types").JSONValue;
+                            data: null;
                             error: import("hono/utils/types").JSONValue;
                             timestamp: string;
                         };
@@ -1820,7 +1717,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             success: boolean;
                             statusCode: number;
                             message: string;
-                            data: import("hono/utils/types").JSONValue;
+                            data: null;
                             error: import("hono/utils/types").JSONValue;
                             timestamp: string;
                         };
@@ -1874,23 +1771,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 success: boolean;
                                 statusCode: number;
                                 message: string;
-                                data: import("hono/utils/types").JSONValue;
-                                error: import("hono/utils/types").JSONValue;
-                                timestamp: string;
-                            };
-                            outputFormat: "json";
-                            status: 200;
-                        } | {
-                            input: {
-                                param: {
-                                    id: string;
-                                };
-                            };
-                            output: {
-                                success: boolean;
-                                statusCode: number;
-                                message: string;
-                                data: import("hono/utils/types").JSONValue;
+                                data: null;
                                 error: import("hono/utils/types").JSONValue;
                                 timestamp: string;
                             };
@@ -1906,12 +1787,28 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 success: boolean;
                                 statusCode: number;
                                 message: string;
-                                data: import("hono/utils/types").JSONValue;
+                                data: null;
                                 error: import("hono/utils/types").JSONValue;
                                 timestamp: string;
                             };
                             outputFormat: "json";
                             status: 500;
+                        } | {
+                            input: {
+                                param: {
+                                    id: string;
+                                };
+                            };
+                            output: {
+                                success: boolean;
+                                statusCode: number;
+                                message: string;
+                                data: import("hono/utils/types").JSONValue;
+                                error: import("hono/utils/types").JSONValue;
+                                timestamp: string;
+                            };
+                            outputFormat: "json";
+                            status: 200;
                         };
                         $get: {
                             input: {
@@ -1923,7 +1820,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 success: boolean;
                                 statusCode: number;
                                 message: string;
-                                data: import("hono/utils/types").JSONValue;
+                                data: null;
                                 error: import("hono/utils/types").JSONValue;
                                 timestamp: string;
                             };
@@ -1939,7 +1836,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 success: boolean;
                                 statusCode: number;
                                 message: string;
-                                data: import("hono/utils/types").JSONValue;
+                                data: null;
                                 error: import("hono/utils/types").JSONValue;
                                 timestamp: string;
                             };
@@ -1987,7 +1884,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 success: boolean;
                                 statusCode: number;
                                 message: string;
-                                data: import("hono/utils/types").JSONValue;
+                                data: null;
                                 error: import("hono/utils/types").JSONValue;
                                 timestamp: string;
                             };
@@ -2010,7 +1907,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 success: boolean;
                                 statusCode: number;
                                 message: string;
-                                data: import("hono/utils/types").JSONValue;
+                                data: null;
                                 error: import("hono/utils/types").JSONValue;
                                 timestamp: string;
                             };
@@ -2074,7 +1971,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 success: boolean;
                                 statusCode: number;
                                 message: string;
-                                data: import("hono/utils/types").JSONValue;
+                                data: null;
                                 error: import("hono/utils/types").JSONValue;
                                 timestamp: string;
                             };
@@ -2147,40 +2044,6 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 success: boolean;
                                 statusCode: number;
                                 message: string;
-                                data: import("hono/utils/types").JSONValue;
-                                error: import("hono/utils/types").JSONValue;
-                                timestamp: string;
-                            };
-                            outputFormat: "json";
-                            status: 401;
-                        } | {
-                            input: {
-                                json: {
-                                    email: string;
-                                    password: string;
-                                };
-                            };
-                            output: {
-                                success: boolean;
-                                statusCode: number;
-                                message: string;
-                                data: import("hono/utils/types").JSONValue;
-                                error: import("hono/utils/types").JSONValue;
-                                timestamp: string;
-                            };
-                            outputFormat: "json";
-                            status: 500;
-                        } | {
-                            input: {
-                                json: {
-                                    email: string;
-                                    password: string;
-                                };
-                            };
-                            output: {
-                                success: boolean;
-                                statusCode: number;
-                                message: string;
                                 data: {
                                     token: string;
                                     hp: {
@@ -2193,7 +2056,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 timestamp: string;
                             };
                             outputFormat: "json";
-                            status: 200;
+                            status: import("hono/utils/http-status").ContentfulStatusCode;
                         };
                     }>;
                 };
@@ -2219,56 +2082,19 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 success: boolean;
                                 statusCode: number;
                                 message: string;
-                                data: import("hono/utils/types").JSONValue;
-                                error: import("hono/utils/types").JSONValue;
-                                timestamp: string;
-                            };
-                            outputFormat: "json";
-                            status: 400;
-                        } | {
-                            input: {
-                                json: {
-                                    name: string;
-                                    email: string;
-                                    otp: string;
-                                    password: string;
-                                };
-                            };
-                            output: {
-                                success: boolean;
-                                statusCode: number;
-                                message: string;
-                                data: import("hono/utils/types").JSONValue;
-                                error: import("hono/utils/types").JSONValue;
-                                timestamp: string;
-                            };
-                            outputFormat: "json";
-                            status: 500;
-                        } | {
-                            input: {
-                                json: {
-                                    name: string;
-                                    email: string;
-                                    otp: string;
-                                    password: string;
-                                };
-                            };
-                            output: {
-                                success: boolean;
-                                statusCode: number;
-                                message: string;
                                 data: {
+                                    token: string;
                                     hp: {
+                                        id: string;
                                         name: string;
                                         email: string;
                                     };
-                                    token: string;
                                 } | null;
                                 error: import("hono/utils/types").JSONValue;
                                 timestamp: string;
                             };
                             outputFormat: "json";
-                            status: 201;
+                            status: import("hono/utils/http-status").ContentfulStatusCode;
                         };
                     }>;
                 };
@@ -2291,38 +2117,6 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 success: boolean;
                                 statusCode: number;
                                 message: string;
-                                data: import("hono/utils/types").JSONValue;
-                                error: import("hono/utils/types").JSONValue;
-                                timestamp: string;
-                            };
-                            outputFormat: "json";
-                            status: 400;
-                        } | {
-                            input: {
-                                json: {
-                                    email: string;
-                                };
-                            };
-                            output: {
-                                success: boolean;
-                                statusCode: number;
-                                message: string;
-                                data: import("hono/utils/types").JSONValue;
-                                error: import("hono/utils/types").JSONValue;
-                                timestamp: string;
-                            };
-                            outputFormat: "json";
-                            status: 500;
-                        } | {
-                            input: {
-                                json: {
-                                    email: string;
-                                };
-                            };
-                            output: {
-                                success: boolean;
-                                statusCode: number;
-                                message: string;
                                 data: {
                                     email: string;
                                 } | null;
@@ -2330,7 +2124,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 timestamp: string;
                             };
                             outputFormat: "json";
-                            status: 200;
+                            status: import("hono/utils/http-status").ContentfulStatusCode;
                         };
                     }>;
                 };
@@ -2401,23 +2195,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 success: boolean;
                                 statusCode: number;
                                 message: string;
-                                data: import("hono/utils/types").JSONValue;
-                                error: import("hono/utils/types").JSONValue;
-                                timestamp: string;
-                            };
-                            outputFormat: "json";
-                            status: 200;
-                        } | {
-                            input: {
-                                param: {
-                                    id: string;
-                                };
-                            };
-                            output: {
-                                success: boolean;
-                                statusCode: number;
-                                message: string;
-                                data: import("hono/utils/types").JSONValue;
+                                data: null;
                                 error: import("hono/utils/types").JSONValue;
                                 timestamp: string;
                             };
@@ -2433,7 +2211,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 success: boolean;
                                 statusCode: number;
                                 message: string;
-                                data: import("hono/utils/types").JSONValue;
+                                data: null;
                                 error: import("hono/utils/types").JSONValue;
                                 timestamp: string;
                             };
@@ -2449,12 +2227,28 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 success: boolean;
                                 statusCode: number;
                                 message: string;
-                                data: import("hono/utils/types").JSONValue;
+                                data: null;
                                 error: import("hono/utils/types").JSONValue;
                                 timestamp: string;
                             };
                             outputFormat: "json";
                             status: 500;
+                        } | {
+                            input: {
+                                param: {
+                                    id: string;
+                                };
+                            };
+                            output: {
+                                success: boolean;
+                                statusCode: number;
+                                message: string;
+                                data: import("hono/utils/types").JSONValue;
+                                error: import("hono/utils/types").JSONValue;
+                                timestamp: string;
+                            };
+                            outputFormat: "json";
+                            status: 200;
                         };
                     }>;
                 };
@@ -2478,23 +2272,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                     success: boolean;
                                     statusCode: number;
                                     message: string;
-                                    data: import("hono/utils/types").JSONValue;
-                                    error: import("hono/utils/types").JSONValue;
-                                    timestamp: string;
-                                };
-                                outputFormat: "json";
-                                status: 200;
-                            } | {
-                                input: {
-                                    param: {
-                                        id: string;
-                                    };
-                                };
-                                output: {
-                                    success: boolean;
-                                    statusCode: number;
-                                    message: string;
-                                    data: import("hono/utils/types").JSONValue;
+                                    data: null;
                                     error: import("hono/utils/types").JSONValue;
                                     timestamp: string;
                                 };
@@ -2510,7 +2288,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                     success: boolean;
                                     statusCode: number;
                                     message: string;
-                                    data: import("hono/utils/types").JSONValue;
+                                    data: null;
                                     error: import("hono/utils/types").JSONValue;
                                     timestamp: string;
                                 };
@@ -2526,12 +2304,28 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                     success: boolean;
                                     statusCode: number;
                                     message: string;
-                                    data: import("hono/utils/types").JSONValue;
+                                    data: null;
                                     error: import("hono/utils/types").JSONValue;
                                     timestamp: string;
                                 };
                                 outputFormat: "json";
                                 status: 500;
+                            } | {
+                                input: {
+                                    param: {
+                                        id: string;
+                                    };
+                                };
+                                output: {
+                                    success: boolean;
+                                    statusCode: number;
+                                    message: string;
+                                    data: import("hono/utils/types").JSONValue;
+                                    error: import("hono/utils/types").JSONValue;
+                                    timestamp: string;
+                                };
+                                outputFormat: "json";
+                                status: 200;
                             };
                         }>;
                     };
@@ -2556,23 +2350,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                     success: boolean;
                                     statusCode: number;
                                     message: string;
-                                    data: import("hono/utils/types").JSONValue;
-                                    error: import("hono/utils/types").JSONValue;
-                                    timestamp: string;
-                                };
-                                outputFormat: "json";
-                                status: 200;
-                            } | {
-                                input: {
-                                    param: {
-                                        id: string;
-                                    };
-                                };
-                                output: {
-                                    success: boolean;
-                                    statusCode: number;
-                                    message: string;
-                                    data: import("hono/utils/types").JSONValue;
+                                    data: null;
                                     error: import("hono/utils/types").JSONValue;
                                     timestamp: string;
                                 };
@@ -2588,7 +2366,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                     success: boolean;
                                     statusCode: number;
                                     message: string;
-                                    data: import("hono/utils/types").JSONValue;
+                                    data: null;
                                     error: import("hono/utils/types").JSONValue;
                                     timestamp: string;
                                 };
@@ -2604,12 +2382,28 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                     success: boolean;
                                     statusCode: number;
                                     message: string;
-                                    data: import("hono/utils/types").JSONValue;
+                                    data: null;
                                     error: import("hono/utils/types").JSONValue;
                                     timestamp: string;
                                 };
                                 outputFormat: "json";
                                 status: 500;
+                            } | {
+                                input: {
+                                    param: {
+                                        id: string;
+                                    };
+                                };
+                                output: {
+                                    success: boolean;
+                                    statusCode: number;
+                                    message: string;
+                                    data: import("hono/utils/types").JSONValue;
+                                    error: import("hono/utils/types").JSONValue;
+                                    timestamp: string;
+                                };
+                                outputFormat: "json";
+                                status: 200;
                             };
                         }>;
                     };
@@ -2667,7 +2461,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             success: boolean;
                             statusCode: number;
                             message: string;
-                            data: import("hono/utils/types").JSONValue;
+                            data: null;
                             error: import("hono/utils/types").JSONValue;
                             timestamp: string;
                         };
@@ -2679,7 +2473,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             success: boolean;
                             statusCode: number;
                             message: string;
-                            data: import("hono/utils/types").JSONValue;
+                            data: null;
                             error: import("hono/utils/types").JSONValue;
                             timestamp: string;
                         };
@@ -2747,7 +2541,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             success: boolean;
                             statusCode: number;
                             message: string;
-                            data: import("hono/utils/types").JSONValue;
+                            data: null;
                             error: import("hono/utils/types").JSONValue;
                             timestamp: string;
                         };
@@ -2790,7 +2584,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             success: boolean;
                             statusCode: number;
                             message: string;
-                            data: import("hono/utils/types").JSONValue;
+                            data: null;
                             error: import("hono/utils/types").JSONValue;
                             timestamp: string;
                         };
@@ -2810,7 +2604,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             success: boolean;
                             statusCode: number;
                             message: string;
-                            data: import("hono/utils/types").JSONValue;
+                            data: null;
                             error: import("hono/utils/types").JSONValue;
                             timestamp: string;
                         };
@@ -2876,7 +2670,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             success: boolean;
                             statusCode: number;
                             message: string;
-                            data: import("hono/utils/types").JSONValue;
+                            data: null;
                             error: import("hono/utils/types").JSONValue;
                             timestamp: string;
                         };
@@ -2894,7 +2688,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             success: boolean;
                             statusCode: number;
                             message: string;
-                            data: import("hono/utils/types").JSONValue;
+                            data: null;
                             error: import("hono/utils/types").JSONValue;
                             timestamp: string;
                         };
@@ -2957,7 +2751,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 success: boolean;
                                 statusCode: number;
                                 message: string;
-                                data: import("hono/utils/types").JSONValue;
+                                data: null;
                                 error: import("hono/utils/types").JSONValue;
                                 timestamp: string;
                             };
@@ -2973,7 +2767,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 success: boolean;
                                 statusCode: number;
                                 message: string;
-                                data: import("hono/utils/types").JSONValue;
+                                data: null;
                                 error: import("hono/utils/types").JSONValue;
                                 timestamp: string;
                             };
@@ -3076,7 +2870,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                     success: boolean;
                                     statusCode: number;
                                     message: string;
-                                    data: import("hono/utils/types").JSONValue;
+                                    data: null;
                                     error: import("hono/utils/types").JSONValue;
                                     timestamp: string;
                                 };
@@ -3092,7 +2886,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                     success: boolean;
                                     statusCode: number;
                                     message: string;
-                                    data: import("hono/utils/types").JSONValue;
+                                    data: null;
                                     error: import("hono/utils/types").JSONValue;
                                     timestamp: string;
                                 };
@@ -3108,7 +2902,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                     success: boolean;
                                     statusCode: number;
                                     message: string;
-                                    data: import("hono/utils/types").JSONValue;
+                                    data: null;
                                     error: import("hono/utils/types").JSONValue;
                                     timestamp: string;
                                 };
@@ -3157,7 +2951,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 success: boolean;
                                 statusCode: number;
                                 message: string;
-                                data: import("hono/utils/types").JSONValue;
+                                data: null;
                                 error: import("hono/utils/types").JSONValue;
                                 timestamp: string;
                             };
@@ -3256,7 +3050,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                     success: boolean;
                                     statusCode: number;
                                     message: string;
-                                    data: import("hono/utils/types").JSONValue;
+                                    data: null;
                                     error: import("hono/utils/types").JSONValue;
                                     timestamp: string;
                                 };
@@ -3272,7 +3066,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                     success: boolean;
                                     statusCode: number;
                                     message: string;
-                                    data: import("hono/utils/types").JSONValue;
+                                    data: null;
                                     error: import("hono/utils/types").JSONValue;
                                     timestamp: string;
                                 };
@@ -3350,4 +3144,3 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
     };
 };
 export default hcWithType;
-//# sourceMappingURL=hcWithType.d.ts.map

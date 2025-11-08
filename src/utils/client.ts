@@ -8,7 +8,7 @@ import { hc } from 'hono/dist/client/client'
 import { WEB } from './constants'
 
 let address = WEB
-// address = __DEV__ ? 'http://192.168.29.220:8787/' : WEB
+address = __DEV__ ? 'http://192.168.29.220:8787/' : WEB
 
 console.log(process.env.LOCAL)
 

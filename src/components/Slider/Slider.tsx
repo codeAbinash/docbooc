@@ -1,7 +1,7 @@
 import Colors from '@utils/colors'
 import { useColorScheme } from 'nativewind'
 import { useCallback, useRef } from 'react'
-import { LayoutChangeEvent, StyleSheet, Vibration, Animated } from 'react-native'
+import { Animated, LayoutChangeEvent, StyleSheet, Vibration } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import ArrowIcon from './ArrowIcon'
 type SliderProps = {

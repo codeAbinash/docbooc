@@ -10,7 +10,7 @@ import HPApp from './HPApp'
 Text.defaultProps = Text.defaultProps || {}
 Text.defaultProps.allowFontScaling = true
 TextInput.defaultProps = TextInput.defaultProps || {}
-TextInput.defaultProps.allowFontScaling = false
+TextInput.defaultProps.allowFontScaling = true
 
 AppRegistry.registerComponent(appName, () => HPApp)
 // AppRegistry.registerComponent(appName, () => App)
