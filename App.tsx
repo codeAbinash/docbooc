@@ -16,6 +16,8 @@ import VerifyBeforeBooking from '@/UserScreens/VerifyBeforeBooking/VerifyBeforeB
 import WelcomeScreen from '@/UserScreens/WelcomeScreen'
 import { Dimensions, useColorScheme } from 'react-native'
 import Home from './src/UserScreens'
+import { QueryClientProvider } from '@tanstack/react-query'
+import { queryClient } from '@query/index'
 
 const RootStack = createStackNavigator<RootStackParamList>()
 
@@ -40,27 +42,29 @@ export default function App() {
   const scheme = useColorScheme()
 
   return (
-    <NavigationContainer theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <AutoStatusBar scheme={scheme} />
-      <RootStack.Navigator
-        screenOptions={{
-          headerShown: false,
-          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-        }}
-      >
-        <RootStack.Screen name='Splash' component={Splash} options={NO_ANIMATION} />
-        <RootStack.Screen name='Home' component={Home} options={NO_ANIMATION} />
-        <RootStack.Screen name='Login' component={HPLogin} options={NO_ANIMATION} />
-        <RootStack.Screen name='OTP' component={OTP} />
-        <RootStack.Screen name='BookAppointment' component={BookAppointment} />
-        <RootStack.Screen name='PatientInfo' component={PatientInfo} />
-        <RootStack.Screen name='Welcome' component={WelcomeScreen} />
-        <RootStack.Screen name='FamilyMemberSelector' component={FamilyMemberSelectorScreen} />
-        <RootStack.Screen name='VerifyBeforeBooking' component={VerifyBeforeBooking} />
-        <RootStack.Screen name='AppointmentDetails' component={AppointmentDetails} />
-        <RootStack.Screen name='Complete' component={Complete} />
-      </RootStack.Navigator>
-    </NavigationContainer>
+    <QueryClientProvider client={queryClient}>
+      <NavigationContainer theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <AutoStatusBar scheme={scheme} />
+        <RootStack.Navigator
+          screenOptions={{
+            headerShown: false,
+            cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+          }}
+        >
+          <RootStack.Screen name='Splash' component={Splash} options={NO_ANIMATION} />
+          <RootStack.Screen name='Home' component={Home} options={NO_ANIMATION} />
+          <RootStack.Screen name='Login' component={HPLogin} options={NO_ANIMATION} />
+          <RootStack.Screen name='OTP' component={OTP} />
+          <RootStack.Screen name='BookAppointment' component={BookAppointment} />
+          <RootStack.Screen name='PatientInfo' component={PatientInfo} />
+          <RootStack.Screen name='Welcome' component={WelcomeScreen} />
+          <RootStack.Screen name='FamilyMemberSelector' component={FamilyMemberSelectorScreen} />
+          <RootStack.Screen name='VerifyBeforeBooking' component={VerifyBeforeBooking} />
+          <RootStack.Screen name='AppointmentDetails' component={AppointmentDetails} />
+          <RootStack.Screen name='Complete' component={Complete} />
+        </RootStack.Navigator>
+      </NavigationContainer>
+    </QueryClientProvider>
   )
 }
 

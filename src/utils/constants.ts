@@ -1,1 +1,1 @@
-export const WEB = 'https://techtriangle.vercel.app/'
+export const WEB = 'https://api.docbook.live/'

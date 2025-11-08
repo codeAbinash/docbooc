@@ -1,18 +1,100 @@
+import { Header } from '@/UserScreens/BookAppointment/components/Header'
 import Animations from '@assets/animations/animations'
 import Button from '@components/Button'
+import KeyboardAvoid from '@components/KeyboardAvoid'
 import { Lottie } from '@components/Lottie'
 import { PaddingBottom, PaddingTop } from '@components/SafePadding'
-import { Header } from '@/UserScreens/BookAppointment/components/Header'
+import { useMutation } from '@tanstack/react-query'
+import { client } from '@utils/client'
 import { Bold, Medium, SEMIBOLD, SemiBold } from '@utils/fonts'
-import { NavProp } from '@utils/types'
+import { HPNavProp } from '@utils/types'
 import { useColorScheme } from 'nativewind'
-import { StyleSheet, View } from 'react-native'
+import { useState } from 'react'
+import { Alert, StyleSheet, View } from 'react-native'
 import { OtpInput } from 'react-native-otp-entry'
 import colors from 'tailwindcss/colors'
-import KeyboardAvoid from '@components/KeyboardAvoid'
 
-export default function HPOTP({ navigation }: NavProp) {
+export default function HPOTP({ navigation, route }: HPNavProp) {
   const { colorScheme } = useColorScheme()
+  const [otp, setOtp] = useState('')
+
+  const { email, password, name, isSignup } = route.params || {}
+
+  const registerMutation = useMutation({
+    mutationFn: async ({
+      name,
+      email,
+      password,
+      otp,
+    }: {
+      name: string
+      email: string
+      password: string
+      otp: string
+    }) => {
+      const response = await client.api.v1.hp.auth.register.$post({
+        json: { name, email, password, otp },
+      })
+      return response.json()
+    },
+    onSuccess: (data) => {
+      if (data.success && data.data) {
+        Alert.alert('Success', 'Account created successfully!')
+        navigation.navigate('HPHome')
+      } else {
+        Alert.alert('Error', data.message || 'Invalid OTP or registration failed')
+      }
+    },
+    onError: (error) => {
+      Alert.alert('Error', 'Failed to verify OTP. Please try again.')
+      console.error(error)
+    },
+  })
+
+  const resendOtpMutation = useMutation({
+    mutationFn: async (email: string) => {
+      const response = await client.api.v1.hp.auth['verify-email'].$post({
+        json: { email },
+      })
+      return response.json()
+    },
+    onSuccess: (data) => {
+      if (data.success) {
+        Alert.alert('Success', 'OTP sent successfully!')
+      } else {
+        Alert.alert('Error', data.message || 'Failed to resend OTP')
+      }
+    },
+    onError: (error) => {
+      Alert.alert('Error', 'Failed to resend OTP. Please try again.')
+      console.error(error)
+    },
+  })
+
+  function handleVerifyOTP() {
+    if (otp.length !== 6) {
+      Alert.alert('Error', 'Please enter a valid 6-digit OTP')
+      return
+    }
+
+    if (!isSignup || !email || !password || !name) {
+      Alert.alert('Error', 'Invalid signup flow. Please try again.')
+      navigation.navigate('HPSignup')
+      return
+    }
+
+    registerMutation.mutate({ name, email, password, otp })
+  }
+
+  function handleResendOTP() {
+    if (!email) {
+      Alert.alert('Error', 'Email not found. Please start over.')
+      return
+    }
+
+    resendOtpMutation.mutate(email)
+  }
+
   return (
     <KeyboardAvoid className='flex-1'>
       <View className='flex-1'>
@@ -23,7 +105,7 @@ export default function HPOTP({ navigation }: NavProp) {
           <View className='gap-2'>
             <Bold className='text text-2xl'>OTP Verification</Bold>
             <Medium className='text text-base opacity-70'>
-              A verification code has been sent to your mobile number.
+              A verification code has been sent to {email || 'your email'}.
             </Medium>
           </View>
           <OtpInput
@@ -32,8 +114,8 @@ export default function HPOTP({ navigation }: NavProp) {
             focusStickBlinkingDuration={500}
             blurOnFilled
             hideStick
-            onTextChange={(text) => {}}
-            // onFilled={verifyOtp}
+            onTextChange={setOtp}
+            onFilled={handleVerifyOTP}
             textInputProps={{
               accessibilityLabel: 'One-Time Password',
               selectionColor: 'transparent',
@@ -62,10 +144,16 @@ export default function HPOTP({ navigation }: NavProp) {
               },
             }}
           />
-          {/* <Button title='Verify' onPress={() => navigation.reset({ index: 0, routes: [{ name: 'Home' }] })} /> */}
-          <Button title='Verify' onPress={() => navigation.navigate('Home')} />
+          <Button
+            title={registerMutation.isPending ? 'Verifying...' : 'Verify & Sign Up'}
+            onPress={handleVerifyOTP}
+            disabled={registerMutation.isPending || otp.length !== 6}
+          />
           <SemiBold className='text text-center text-sm opacity-70'>
-            Didn't receive the code? <SemiBold className='text-accent'>Resend OTP</SemiBold>
+            Didn't receive the code?{' '}
+            <SemiBold className='text-accent' onPress={handleResendOTP}>
+              Resend OTP
+            </SemiBold>
           </SemiBold>
         </View>
         <PaddingBottom />

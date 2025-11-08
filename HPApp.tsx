@@ -1,17 +1,20 @@
-import { DarkTheme, DefaultTheme } from '@/themes'
-import './src/global.css'
-import XAddDoctors from '@/HPScreens/XAddDoctors/XAddDoctors'
-import HPDoctorScheduler from '@/HPScreens/components/HPDoctorScheduler'
-import HPDoctorScheduleDetails from '@/HPScreens/HPViewDoctors/HPDoctorScheduleDetails'
 import DoctorModel from '@/HPScreens/components/DoctorModel'
+import HPDoctorScheduler from '@/HPScreens/components/HPDoctorScheduler'
+import HPLogin from '@/HPScreens/HPAuthentications/Login/HPLogin'
 import HPOTP from '@/HPScreens/HPAuthentications/OTP/HPOTP'
+import HPSignup from '@/HPScreens/HPAuthentications/Signup/HPSignup'
 import HPHome from '@/HPScreens/HPHome'
 import HPSplash from '@/HPScreens/HPSplash'
+import HPDoctorScheduleDetails from '@/HPScreens/HPViewDoctors/HPDoctorScheduleDetails'
+import XAddDoctors from '@/HPScreens/XAddDoctors/XAddDoctors'
+import { DarkTheme, DefaultTheme } from '@/themes'
 import { AutoStatusBar } from '@components/StatusBar'
+import { queryClient } from '@query/index'
 import { NavigationContainer } from '@react-navigation/native'
 import { CardStyleInterpolators, createStackNavigator, StackNavigationOptions } from '@react-navigation/stack'
+import { QueryClientProvider } from '@tanstack/react-query'
 import { Dimensions, useColorScheme } from 'react-native'
-import HPLogin from '@/HPScreens/HPAuthentications/Login/HPLogin'
+import './src/global.css'
 const { width, height } = Dimensions.get('window')
 
 const IOS_BOTTOM_STYLE: StackNavigationOptions = {
@@ -35,31 +38,40 @@ export default function HPApp() {
   const scheme = useColorScheme()
 
   return (
-    <NavigationContainer theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <AutoStatusBar scheme={scheme} />
-      <RootStack.Navigator
-        screenOptions={{
-          headerShown: false,
-          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-        }}
-      >
-        <RootStack.Screen name='HPHome' component={HPHome} options={NO_ANIMATION} />
-        <RootStack.Screen name='HPSplash' component={HPSplash} options={NO_ANIMATION} />
-        <RootStack.Screen name='HPLogin' component={HPLogin} options={NO_ANIMATION} />
-        <RootStack.Screen name='HPOTP' component={HPOTP} options={NO_ANIMATION} />
-        <RootStack.Screen name='HPDoctorScheduler' component={HPDoctorScheduler} />
-        <RootStack.Screen name='HPDoctorScheduleDetails' component={HPDoctorScheduleDetails} />
-        <RootStack.Screen name='XAddDoctors' component={XAddDoctors} />
-        <RootStack.Screen name='DoctorModel' component={DoctorModel} />
-      </RootStack.Navigator>
-    </NavigationContainer>
+    <QueryClientProvider client={queryClient}>
+      <NavigationContainer theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <AutoStatusBar scheme={scheme} />
+        <RootStack.Navigator
+          screenOptions={{
+            headerShown: false,
+            cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+          }}
+        >
+          <RootStack.Screen name='HPSplash' component={HPSplash} options={NO_ANIMATION} />
+          <RootStack.Screen name='HPLogin' component={HPLogin} />
+          <RootStack.Screen name='HPSignup' component={HPSignup} />
+          <RootStack.Screen name='HPHome' component={HPHome} options={NO_ANIMATION} />
+          <RootStack.Screen name='HPOTP' component={HPOTP} options={NO_ANIMATION} />
+          <RootStack.Screen name='HPDoctorScheduler' component={HPDoctorScheduler} />
+          <RootStack.Screen name='HPDoctorScheduleDetails' component={HPDoctorScheduleDetails} />
+          <RootStack.Screen name='XAddDoctors' component={XAddDoctors} />
+          <RootStack.Screen name='DoctorModel' component={DoctorModel} />
+        </RootStack.Navigator>
+      </NavigationContainer>
+    </QueryClientProvider>
   )
 }
 
 export type HpRootStackParamList = {
   HPSplash: undefined
-  HPOTP: undefined
+  HPOTP: {
+    email: string
+    password: string
+    name: string
+    isSignup: boolean
+  }
   HPLogin: undefined
+  HPSignup: undefined
   HPHome: undefined
   HPDoctorScheduler: undefined
   HPDoctorScheduleDetails: undefined

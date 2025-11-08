@@ -4,15 +4,17 @@ import Input from '@components/Input'
 import KeyboardAvoid from '@components/KeyboardAvoid'
 import Label from '@components/Label'
 import { Lottie } from '@components/Lottie'
+import { PaddingBottom, PaddingTop } from '@components/SafePadding'
 import { TC_and_PP } from '@components/TC_and_PP'
 import { Black, Bold, Medium } from '@utils/fonts'
 import { NavProp } from '@utils/types'
+import { useEffect } from 'react'
 import { View } from 'react-native'
 
 export default function HPLogin({ navigation }: NavProp) {
   return (
     <KeyboardAvoid className='bg h-full flex-1'>
-      {/* <PaddingTop /> */}
+      <PaddingTop />
       <View className='h-screen flex-1 items-center justify-between p-5'>
         <View className='w-full gap-10'>
           <Lottie source={Animations.doctor} style={{ width: '100%', height: 300, marginTop: -50 }} />
@@ -40,7 +42,7 @@ export default function HPLogin({ navigation }: NavProp) {
           <TC_and_PP />
         </View>
       </View>
-      {/* <PaddingBottom /> */}
+      <PaddingBottom />
     </KeyboardAvoid>
   )
 }

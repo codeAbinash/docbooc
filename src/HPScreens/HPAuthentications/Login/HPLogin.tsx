@@ -1,46 +1,102 @@
-import Animations from '@assets/animations/animations'
 import Button from '@components/Button'
 import Input from '@components/Input'
 import KeyboardAvoid from '@components/KeyboardAvoid'
 import Label from '@components/Label'
-import { Lottie } from '@components/Lottie'
+import { PaddingBottom, PaddingTop } from '@components/SafePadding'
 import { TC_and_PP } from '@components/TC_and_PP'
-import { Black, Bold, Medium } from '@utils/fonts'
-import { NavProp } from '@utils/types'
-import { View } from 'react-native'
+import { useMutation } from '@tanstack/react-query'
+import { client } from '@utils/client'
+import { Black, Bold, Medium, SemiBold } from '@utils/fonts'
+import { HPNavProp } from '@utils/types'
+import { useState } from 'react'
+import { Alert, View } from 'react-native'
 
-export default function HPLogin({ navigation }: NavProp) {
+export default function HPLogin({ navigation }: HPNavProp) {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+
+  const loginMutation = useMutation({
+    mutationFn: async ({ email, password }: { email: string; password: string }) => {
+      const response = await client.api.v1.hp.auth.login.$post({
+        json: { email, password },
+      })
+      return response.json()
+    },
+    onSuccess: (data) => {
+      console.log(data)
+      if (data.success && data.data) {
+        Alert.alert('Success', 'Login successful!')
+        navigation.navigate('HPHome')
+      } else {
+        Alert.alert('Error', data.message || 'Invalid credentials')
+      }
+    },
+    onError: (error) => {
+      console.log(error)
+      Alert.alert('Error', 'Failed to login. Please try again.')
+      console.error(error)
+    },
+  })
+
+  function handleLogin() {
+    if (!email.trim()) {
+      Alert.alert('Error', 'Please enter your email address')
+      return
+    }
+    if (!password.trim()) {
+      Alert.alert('Error', 'Please enter your password')
+      return
+    }
+
+    loginMutation.mutate({ email: email.trim(), password })
+  }
+
   return (
     <KeyboardAvoid className='bg h-full flex-1'>
-      {/* <PaddingTop /> */}
+      <PaddingTop />
       <View className='h-screen flex-1 items-center justify-between p-5'>
-        <View className='w-full gap-10'>
-          <Lottie source={Animations.doctor} style={{ width: '100%', height: 300, marginTop: -50 }} />
+        <View className='w-full flex-1 justify-center gap-10'>
           <View className='gap-16'>
             <View className='items-center justify-center gap-1'>
-              <Bold className='text text-3xl'>Welcome to</Bold>
               <Black className='text text-5xl'>DocBook</Black>
               <Bold className='text text-4xl'>Console</Bold>
-              <Medium className='text mt-3 text-sm opacity-70'>Please enter your phone number to login.</Medium>
+              <Medium className='text mt-3 text-sm opacity-70'>Please enter your credentials to login.</Medium>
             </View>
             <View className='gap-5'>
               <View className='gap-2'>
                 <Label>Email Address</Label>
-                <View className='flex flex-row gap-3'>
-                  <Input
-                    placeholder='Enter your email address'
-                    keyboardType='email-address'
-                    style={{ flex: 1, fontSize: 13 }}
-                  />
-                </View>
+                <Input
+                  placeholder='Enter your email address'
+                  value={email}
+                  onChangeText={setEmail}
+                  keyboardType='email-address'
+                  autoCapitalize='none'
+                />
               </View>
-              <Button title='Send OTP' onPress={() => navigation.navigate('OTP')} />
+              <View className='gap-2'>
+                <Label>Password</Label>
+                <Input
+                  placeholder='Enter your password'
+                  value={password}
+                  onChangeText={setPassword}
+                  secureTextEntry
+                  autoCapitalize='none'
+                />
+              </View>
+              <Button
+                title={loginMutation.isPending ? 'Logging in...' : 'Login'}
+                onPress={handleLogin}
+                disabled={loginMutation.isPending}
+              />
+              <SemiBold className='text text-center text-sm opacity-70' onPress={() => navigation.navigate('HPSignup')}>
+                Don't have an account? <SemiBold className='text-accent'>Sign Up</SemiBold>
+              </SemiBold>
             </View>
           </View>
           <TC_and_PP />
         </View>
       </View>
-      {/* <PaddingBottom /> */}
+      <PaddingBottom />
     </KeyboardAvoid>
   )
 }
