@@ -1,4 +1,3 @@
-import { doctors } from '@/constants'
 import { Medium, SemiBold } from '@utils/fonts'
 import { Image, TouchableOpacity, TouchableOpacityProps, View } from 'react-native'
 import Gradient from '@components/Gradient'
@@ -9,7 +8,7 @@ import PatientIcon from '@hugeicons/PatientIcon'
 import { HPStackNav } from '@utils/types'
 
 type DoctorCardProps = {
-  doctor: (typeof doctors)[0]
+  doctor: any
   selected?: boolean
   isExpanded?: boolean
 } & TouchableOpacityProps
@@ -68,12 +67,14 @@ function DoctorCardInternal({
         <View className='flex-1'>
           <Medium className={`text-xs ${selected ? 'text-white' : 'text'} opacity-70`}>Qualification</Medium>
           <Medium className={`text-sm ${selected ? 'text-white' : 'text'}`} numberOfLines={2}>
-            MBBS, MD (General Medicine)
+            {doctor.degrees || 'N/A'}
           </Medium>
         </View>
         <View className='items-end'>
           <Medium className={`text-xs ${selected ? 'text-white' : 'text'} opacity-70`}>Experience</Medium>
-          <SemiBold className={`pt-1 text-xs ${selected ? 'text-white' : 'text'}`}>20+ years</SemiBold>
+          <SemiBold className={`pt-1 text-xs ${selected ? 'text-white' : 'text'}`}>
+            {doctor.experience ? `${doctor.experience}+ years` : 'N/A'}
+          </SemiBold>
         </View>
       </View>
       {isExpanded && (

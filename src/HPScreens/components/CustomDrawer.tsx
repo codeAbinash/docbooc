@@ -22,7 +22,6 @@ const DRAWER_ITEMS = [
   { name: 'Schedule Doctors', icon: TimeScheduleIcon, navigationName: 'ScheduleDoctors' },
   { name: 'View Doctors', icon: UserIcon, navigationName: 'ViewDoctors' },
   { name: 'Add Patients', icon: PatientIcon, navigationName: 'AddPatients' },
-  { name: 'Add Doctors', icon: PatientIcon, navigationName: 'AddDoctors' },
   { name: 'Confirm Bookings', icon: PatientIcon, navigationName: 'ConfirmBookings' },
   { name: 'Approve Schedules', icon: PatientIcon, navigationName: 'ApproveSchedules' },
   { name: "View Hp's", icon: PatientIcon, navigationName: 'ViewHPs' },
@@ -82,7 +81,10 @@ export default function CustomDrawer(props: any) {
       </DrawerContentScrollView>
 
       <View className='border-t px-1 pt-3' style={{ paddingBottom: insets.bottom + 12, borderColor: colors.border }}>
-        <Press onPress={() => handleLogout(logout)} className='flex-row items-center gap-4 rounded-lg px-4 py-3.5'>
+        <Press
+          onPress={() => handleLogout(() => logout('HPLogin'))}
+          className='flex-row items-center gap-4 rounded-lg px-4 py-3.5'
+        >
           <View className='size-6 items-center justify-center'>
             <Logout05Icon size={22} color='#ef4444' strokeWidth={1.8} />
           </View>

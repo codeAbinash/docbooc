@@ -81,7 +81,7 @@ export default function HPLogin({ navigation }: HPNavProp) {
                   placeholder='Enter your password'
                   value={password}
                   onChangeText={setPassword}
-                  secureTextEntry
+                  secureTextEntry={__DEV__ ? false : true}
                   autoCapitalize='none'
                 />
               </View>
