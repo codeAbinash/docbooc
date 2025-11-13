@@ -1,26 +1,26 @@
 import { specialties } from '@/constants'
 import { ALL_SPECIALTY, getScrollPosition } from '@/UserScreens/Doctors/Doctors'
+import Button from '@components/Button'
 import Chip from '@components/Chip'
 import { DoctorCard } from '@components/DoctorCard'
+import Cancel01Icon from '@hugeicons/Cancel01Icon'
+import Search01Icon from '@hugeicons/Search01Icon'
 import { useNavigation } from '@react-navigation/native'
+import { useQuery } from '@tanstack/react-query'
+import { hpApi } from '@utils/client'
+import Colors from '@utils/colors'
 import { SemiBold } from '@utils/fonts'
 import { HPStackNav } from '@utils/types'
-import { useMemo, useRef, useState, useCallback } from 'react'
-import { FlatList, View, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native'
 import { useColorScheme } from 'nativewind'
-import Search01Icon from '@hugeicons/Search01Icon'
-import Cancel01Icon from '@hugeicons/Cancel01Icon'
-import Colors from '@utils/colors'
+import { useCallback, useMemo, useRef, useState } from 'react'
+import { ActivityIndicator, FlatList, TextInput, TouchableOpacity, View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import AppBar from '../components/AppBar'
-import Button from '@components/Button'
-import { hpApi } from '@utils/client'
-import { useQuery } from '@tanstack/react-query'
 
 const HPScheduleDoctors = () => {
   const navigate = useNavigation<HPStackNav>()
   const { colorScheme } = useColorScheme()
-  const [selected, setSelected] = useState<number | null>(null)
+  const [selected, setSelected] = useState<number>(0)
   const [selectedDoctorId, setSelectedDoctorId] = useState<string | null>(null)
   const scrollViewRef = useRef<ScrollView>(null)
   const [itemWidths, setItemWidths] = useState<Record<number, number>>({})

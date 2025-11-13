@@ -27,7 +27,6 @@ export default function App() {
       <Drawer.Screen name='AddPatients' component={HPAddPatients} />
       <Drawer.Screen name='Settings' component={HPTodaysAppointmentsScreen} />
       <Drawer.Screen name='ViewHPs' component={HPAddPatients} />
-      <Drawer.Screen name='AddDoctors' component={AdminAddDoctors} />
       <Drawer.Screen name='ConfirmBookings' component={HPAddPatients} />
       <Drawer.Screen name='ApproveSchedules' component={HPAddPatients} />
     </Drawer.Navigator>
