@@ -16,7 +16,7 @@ type DoctorCardProps = {
 export function DoctorCard({ doctor, selected, ...rest }: DoctorCardProps) {
   if (selected) {
     return (
-      <Gradient className='overflow-hidden rounded-xl p-5'>
+      <Gradient className='overflow-hidden rounded-2xl p-5'>
         <DoctorCardInternal doctor={doctor} selected={true} isExpanded={rest.isExpanded} onPress={rest.onPress} />
       </Gradient>
     )
@@ -25,7 +25,7 @@ export function DoctorCard({ doctor, selected, ...rest }: DoctorCardProps) {
     <TouchableOpacity
       activeOpacity={0.7}
       {...rest}
-      className='overflow-hidden rounded-xl bg-white px-5 py-4 dark:bg-neutral-800'
+      className='overflow-hidden rounded-2xl bg-white p-5 dark:bg-neutral-800'
     >
       <DoctorCardInternal doctor={doctor} selected={false} isExpanded={rest.isExpanded} onPress={rest.onPress} />
     </TouchableOpacity>
@@ -58,6 +58,7 @@ function DoctorCardInternal({
           />
           <View className='flex-1'>
             <SemiBold className={selected ? 'text-white' : 'text'}>{doctor.name}</SemiBold>
+            <Medium className={`text-sm ${selected ? 'text-white' : 'text'} opacity-70`}>{doctor.department}</Medium>
           </View>
         </View>
       </View>

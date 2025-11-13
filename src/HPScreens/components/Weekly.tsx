@@ -46,7 +46,7 @@ const createDefaultSlot = (): TimeSlot => ({
 })
 
 export default function Weekly() {
-  const [selectedDays, setSelectedDays] = useState<string[]>(['Monday', 'Wednesday', 'Friday'])
+  const [selectedDays, setSelectedDays] = useState<string[]>(['Monday'])
   const [weekSchedule, setWeekSchedule] = useState<WeekSchedule>({
     Monday: { slots: [createDefaultSlot()] },
     Wednesday: { slots: [createDefaultSlot()] },

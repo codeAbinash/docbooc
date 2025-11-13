@@ -73,7 +73,10 @@ export type HpRootStackParamList = {
   HPLogin: undefined
   HPSignup: undefined
   HPHome: undefined
-  HPDoctorScheduler: undefined
+  HPDoctorScheduler: {
+    doctorId: string
+    doctorName: string
+  }
   HPDoctorScheduleDetails: undefined
   XAddDoctors: undefined
   DoctorModel: undefined

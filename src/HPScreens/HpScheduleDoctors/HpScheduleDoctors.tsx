@@ -37,6 +37,8 @@ const HPScheduleDoctors = () => {
 
   const doctors = doctorsData?.data || []
 
+  const selectedDoctor = doctors.find((d) => d.id === selectedDoctorId)
+
   const toggleSearch = useCallback(() => {
     setShowSearch((prev) => !prev)
     if (showSearch) setSearchQuery('')
@@ -108,11 +110,11 @@ const HPScheduleDoctors = () => {
         )}
       </AppBar>
       <View className='bg flex-1'>
-        <View className='bg-white pb-4'>
+        <View className='bg-white pb-3'>
           <ScrollView
             ref={scrollViewRef}
             horizontal
-            contentContainerClassName='gap-3 px-5 pt-1'
+            contentContainerClassName='gap-3 px-5 pt-2'
             showsHorizontalScrollIndicator={false}
           >
             {allItems.map((item) => (
@@ -121,7 +123,7 @@ const HPScheduleDoctors = () => {
                 icon={item.icon}
                 label={item.name}
                 onPress={() => handleSpecialtySelect(item.id)}
-                variant={selected === item.id ? 'deepAccent' : 'default'}
+                variant={selected === item.id ? 'transparentAccent' : 'default'}
                 onLayout={(e) => setItemWidths((prev) => ({ ...prev, [item.id]: e.nativeEvent.layout.width }))}
               />
             ))}
@@ -149,9 +151,19 @@ const HPScheduleDoctors = () => {
           />
         )}
       </View>
-      <View className='px-6 pb-8 pt-3'>
-        <Button title='Continue' onPress={() => navigate.navigate('HPDoctorScheduler')} />
-      </View>
+      {selectedDoctorId && selectedDoctor && (
+        <View className='px-6 pb-8 pt-3'>
+          <Button
+            title='Continue'
+            onPress={() =>
+              navigate.navigate('HPDoctorScheduler', {
+                doctorId: selectedDoctor.id,
+                doctorName: selectedDoctor.name,
+              })
+            }
+          />
+        </View>
+      )}
     </>
   )
 }

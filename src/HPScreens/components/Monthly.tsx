@@ -3,7 +3,6 @@ import { PaddingBottom } from '@components/SafePadding'
 import Calendar01Icon from '@hugeicons/Calendar01Icon'
 import Cancel01Icon from '@hugeicons/Cancel01Icon'
 import { DateTimePickerEvent } from '@react-native-community/datetimepicker'
-import Colors from '@utils/colors'
 import { Medium, SemiBold } from '@utils/fonts'
 import { useState } from 'react'
 import { Platform, ScrollView, TouchableOpacity, View } from 'react-native'
@@ -35,7 +34,7 @@ const createDefaultSlot = (): TimeSlot => ({
 const DATES = Array.from({ length: 31 }, (_, i) => i + 1)
 
 export default function Monthly() {
-  const [selectedDates, setSelectedDates] = useState<number[]>([1, 15])
+  const [selectedDates, setSelectedDates] = useState<number[]>([1])
   const [dateWiseSchedule, setDateWiseSchedule] = useState<DateWiseSchedule>({
     1: { slots: [createDefaultSlot()] },
     15: { slots: [createDefaultSlot()] },
@@ -144,7 +143,7 @@ export default function Monthly() {
               key={date}
               onPress={() => toggleDate(date)}
               activeOpacity={0.7}
-              style={{ width: '12.5%' }}
+              style={{ width: '12.3%' }}
             >
               <View
                 className={`items-center justify-center rounded-lg py-3 ${
