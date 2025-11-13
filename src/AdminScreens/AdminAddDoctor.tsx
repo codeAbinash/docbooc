@@ -9,6 +9,7 @@ import Button from '@components/Button'
 import Press from '@components/Press'
 import Tick02Icon from '@hugeicons/Tick02Icon'
 import { useNavigation } from '@react-navigation/native'
+import { adminApi } from '@utils/client'
 import { HPStackNav } from '@utils/types'
 import { useColorScheme } from 'nativewind'
 import colors from 'tailwindcss/colors'
@@ -42,6 +43,7 @@ export default function AdminAddDoctor() {
   const [gender, setGender] = useState<Gender>('Male')
   const [degrees, setDegrees] = useState<Degree[]>([])
   const [department, setDepartment] = useState<Department>('General Medicine')
+  const [experience, setExperience] = useState('')
 
   const handleDegreeToggle = (degree: Degree) => {
     if (degrees.includes(degree)) {
@@ -51,8 +53,24 @@ export default function AdminAddDoctor() {
     }
   }
 
-  const handleSave = () => {
-    navigation.goBack()
+  const handleSave = async () => {
+    try {
+      await adminApi.doctors.$post({
+        json: {
+          name,
+          specialization: department,
+          contactNumber: contact,
+          email,
+          gender: gender.toLowerCase() as 'male' | 'female' | 'other',
+          degrees: degrees.join(','),
+          department,
+          experience: parseInt(experience) || 0,
+        },
+      })
+      navigation.goBack()
+    } catch (error) {
+      console.error('Failed to add doctor:', error)
+    }
   }
 
   const isDark = colorScheme === 'dark'
@@ -98,6 +116,13 @@ export default function AdminAddDoctor() {
                   value={contact}
                   onChangeText={setContact}
                   keyboardType='phone-pad'
+                />
+                <InputWithLabel
+                  label='Experience (years)'
+                  placeholder='Enter years of experience'
+                  value={experience}
+                  onChangeText={setExperience}
+                  keyboardType='numeric'
                 />
               </View>
             </View>

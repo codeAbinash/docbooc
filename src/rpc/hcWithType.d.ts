@@ -629,8 +629,12 @@ declare const client: {
                                     doctors: {
                                         name: string;
                                         email?: string | undefined;
-                                        specialization: string;
                                         contactNumber?: string | undefined;
+                                        gender?: "female" | "male" | "other" | undefined;
+                                        department?: string | undefined;
+                                        degrees?: string | undefined;
+                                        experience?: number | undefined;
+                                        specialization: string;
                                     }[];
                                 };
                             };
@@ -641,7 +645,11 @@ declare const client: {
                                     created: {
                                         contactNumber: string | null;
                                         createdAt: string;
+                                        degrees: string | null;
+                                        department: string | null;
                                         email: string | null;
+                                        experience: number | null;
+                                        gender: string | null;
                                         id: string;
                                         name: string;
                                         specialization: string;
@@ -652,8 +660,12 @@ declare const client: {
                                         doctor: {
                                             name: string;
                                             email?: string | undefined;
-                                            specialization: string;
                                             contactNumber?: string | undefined;
+                                            gender?: "female" | "male" | "other" | undefined;
+                                            department?: string | undefined;
+                                            degrees?: string | undefined;
+                                            experience?: number | undefined;
+                                            specialization: string;
                                         };
                                         error: string;
                                     }[];
@@ -684,8 +696,12 @@ declare const client: {
                                 id: string;
                                 name: string;
                                 email: string | null;
-                                specialization: string;
                                 contactNumber: string | null;
+                                gender: string | null;
+                                department: string | null;
+                                degrees: string | null;
+                                experience: number | null;
+                                specialization: string;
                                 createdAt: string;
                                 verified: boolean | null;
                             }[];
@@ -707,8 +723,12 @@ declare const client: {
                             json: {
                                 name: string;
                                 email?: string | undefined;
-                                specialization: string;
                                 contactNumber?: string | undefined;
+                                gender?: "female" | "male" | "other" | undefined;
+                                department?: string | undefined;
+                                degrees?: string | undefined;
+                                experience?: number | undefined;
+                                specialization: string;
                             };
                         };
                         output: {
@@ -717,7 +737,11 @@ declare const client: {
                             data: {
                                 contactNumber: string | null;
                                 createdAt: string;
+                                degrees: string | null;
+                                department: string | null;
                                 email: string | null;
+                                experience: number | null;
+                                gender: string | null;
                                 id: string;
                                 name: string;
                                 specialization: string;
@@ -763,8 +787,12 @@ declare const client: {
                                     id: string;
                                     name: string;
                                     email: string | null;
-                                    specialization: string;
                                     contactNumber: string | null;
+                                    gender: string | null;
+                                    department: string | null;
+                                    degrees: string | null;
+                                    experience: number | null;
+                                    specialization: string;
                                     createdAt: string;
                                     verified: boolean | null;
                                 };
@@ -788,8 +816,12 @@ declare const client: {
                                 json: {
                                     name?: string | undefined;
                                     email?: string | undefined;
-                                    specialization?: string | undefined;
                                     contactNumber?: string | undefined;
+                                    gender?: "female" | "male" | "other" | undefined;
+                                    department?: string | undefined;
+                                    degrees?: string | undefined;
+                                    experience?: number | undefined;
+                                    specialization?: string | undefined;
                                 };
                             } & {
                                 param: {
@@ -808,8 +840,12 @@ declare const client: {
                                 json: {
                                     name?: string | undefined;
                                     email?: string | undefined;
-                                    specialization?: string | undefined;
                                     contactNumber?: string | undefined;
+                                    gender?: "female" | "male" | "other" | undefined;
+                                    department?: string | undefined;
+                                    degrees?: string | undefined;
+                                    experience?: number | undefined;
+                                    specialization?: string | undefined;
                                 };
                             } & {
                                 param: {
@@ -823,8 +859,12 @@ declare const client: {
                                     id: string;
                                     name: string;
                                     email: string | null;
-                                    specialization: string;
                                     contactNumber: string | null;
+                                    gender: string | null;
+                                    department: string | null;
+                                    degrees: string | null;
+                                    experience: number | null;
+                                    specialization: string;
                                     createdAt: string;
                                     verified: boolean | null;
                                 };
@@ -1097,8 +1137,12 @@ declare const client: {
                                         id: string;
                                         name: string;
                                         email: string | null;
-                                        specialization: string;
                                         contactNumber: string | null;
+                                        gender: string | null;
+                                        department: string | null;
+                                        degrees: string | null;
+                                        experience: number | null;
+                                        specialization: string;
                                         createdAt: string;
                                         verified: boolean | null;
                                     } | null;
@@ -1206,8 +1250,12 @@ declare const client: {
                                         id: string;
                                         name: string;
                                         email: string | null;
-                                        specialization: string;
                                         contactNumber: string | null;
+                                        gender: string | null;
+                                        department: string | null;
+                                        degrees: string | null;
+                                        experience: number | null;
+                                        specialization: string;
                                         createdAt: string;
                                         verified: boolean | null;
                                     } | null;
@@ -1316,8 +1364,12 @@ declare const client: {
                                             id: string;
                                             name: string;
                                             email: string | null;
-                                            specialization: string;
                                             contactNumber: string | null;
+                                            gender: string | null;
+                                            department: string | null;
+                                            degrees: string | null;
+                                            experience: number | null;
+                                            specialization: string;
                                             createdAt: string;
                                             verified: boolean | null;
                                         } | null;
@@ -2311,8 +2363,12 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                     doctors: {
                                         name: string;
                                         email?: string | undefined;
-                                        specialization: string;
                                         contactNumber?: string | undefined;
+                                        gender?: "female" | "male" | "other" | undefined;
+                                        department?: string | undefined;
+                                        degrees?: string | undefined;
+                                        experience?: number | undefined;
+                                        specialization: string;
                                     }[];
                                 };
                             };
@@ -2323,7 +2379,11 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                     created: {
                                         contactNumber: string | null;
                                         createdAt: string;
+                                        degrees: string | null;
+                                        department: string | null;
                                         email: string | null;
+                                        experience: number | null;
+                                        gender: string | null;
                                         id: string;
                                         name: string;
                                         specialization: string;
@@ -2334,8 +2394,12 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                         doctor: {
                                             name: string;
                                             email?: string | undefined;
-                                            specialization: string;
                                             contactNumber?: string | undefined;
+                                            gender?: "female" | "male" | "other" | undefined;
+                                            department?: string | undefined;
+                                            degrees?: string | undefined;
+                                            experience?: number | undefined;
+                                            specialization: string;
                                         };
                                         error: string;
                                     }[];
@@ -2366,8 +2430,12 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 id: string;
                                 name: string;
                                 email: string | null;
-                                specialization: string;
                                 contactNumber: string | null;
+                                gender: string | null;
+                                department: string | null;
+                                degrees: string | null;
+                                experience: number | null;
+                                specialization: string;
                                 createdAt: string;
                                 verified: boolean | null;
                             }[];
@@ -2389,8 +2457,12 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             json: {
                                 name: string;
                                 email?: string | undefined;
-                                specialization: string;
                                 contactNumber?: string | undefined;
+                                gender?: "female" | "male" | "other" | undefined;
+                                department?: string | undefined;
+                                degrees?: string | undefined;
+                                experience?: number | undefined;
+                                specialization: string;
                             };
                         };
                         output: {
@@ -2399,7 +2471,11 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             data: {
                                 contactNumber: string | null;
                                 createdAt: string;
+                                degrees: string | null;
+                                department: string | null;
                                 email: string | null;
+                                experience: number | null;
+                                gender: string | null;
                                 id: string;
                                 name: string;
                                 specialization: string;
@@ -2445,8 +2521,12 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                     id: string;
                                     name: string;
                                     email: string | null;
-                                    specialization: string;
                                     contactNumber: string | null;
+                                    gender: string | null;
+                                    department: string | null;
+                                    degrees: string | null;
+                                    experience: number | null;
+                                    specialization: string;
                                     createdAt: string;
                                     verified: boolean | null;
                                 };
@@ -2470,8 +2550,12 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 json: {
                                     name?: string | undefined;
                                     email?: string | undefined;
-                                    specialization?: string | undefined;
                                     contactNumber?: string | undefined;
+                                    gender?: "female" | "male" | "other" | undefined;
+                                    department?: string | undefined;
+                                    degrees?: string | undefined;
+                                    experience?: number | undefined;
+                                    specialization?: string | undefined;
                                 };
                             } & {
                                 param: {
@@ -2490,8 +2574,12 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 json: {
                                     name?: string | undefined;
                                     email?: string | undefined;
-                                    specialization?: string | undefined;
                                     contactNumber?: string | undefined;
+                                    gender?: "female" | "male" | "other" | undefined;
+                                    department?: string | undefined;
+                                    degrees?: string | undefined;
+                                    experience?: number | undefined;
+                                    specialization?: string | undefined;
                                 };
                             } & {
                                 param: {
@@ -2505,8 +2593,12 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                     id: string;
                                     name: string;
                                     email: string | null;
-                                    specialization: string;
                                     contactNumber: string | null;
+                                    gender: string | null;
+                                    department: string | null;
+                                    degrees: string | null;
+                                    experience: number | null;
+                                    specialization: string;
                                     createdAt: string;
                                     verified: boolean | null;
                                 };
@@ -2779,8 +2871,12 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                         id: string;
                                         name: string;
                                         email: string | null;
-                                        specialization: string;
                                         contactNumber: string | null;
+                                        gender: string | null;
+                                        department: string | null;
+                                        degrees: string | null;
+                                        experience: number | null;
+                                        specialization: string;
                                         createdAt: string;
                                         verified: boolean | null;
                                     } | null;
@@ -2888,8 +2984,12 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                         id: string;
                                         name: string;
                                         email: string | null;
-                                        specialization: string;
                                         contactNumber: string | null;
+                                        gender: string | null;
+                                        department: string | null;
+                                        degrees: string | null;
+                                        experience: number | null;
+                                        specialization: string;
                                         createdAt: string;
                                         verified: boolean | null;
                                     } | null;
@@ -2998,8 +3098,12 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                             id: string;
                                             name: string;
                                             email: string | null;
-                                            specialization: string;
                                             contactNumber: string | null;
+                                            gender: string | null;
+                                            department: string | null;
+                                            degrees: string | null;
+                                            experience: number | null;
+                                            specialization: string;
                                             createdAt: string;
                                             verified: boolean | null;
                                         } | null;
