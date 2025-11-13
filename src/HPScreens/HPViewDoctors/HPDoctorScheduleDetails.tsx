@@ -5,10 +5,10 @@ import { Header } from '@/UserScreens/BookAppointment/components/Header'
 import { HPNavProp } from '@utils/types'
 import { ScrollView, View, TouchableOpacity } from 'react-native'
 import { Medium, SemiBold } from '@utils/fonts'
-import Calendar03Icon from '@hugeicons/Calendar03Icon'
 import ArrowLeft01Icon from '@hugeicons/ArrowLeft01Icon'
 import { useColorScheme } from 'nativewind'
 import { useState } from 'react'
+import ScheduleCard from '../components/ScheduleCard'
 
 // Sample data structure
 const SCHEDULE_DATA = {
@@ -64,112 +64,21 @@ export default function HPDoctorScheduleDetails({ navigation }: HPNavProp) {
       />
       <ScrollView className='flex-1' showsVerticalScrollIndicator={false}>
         <View className='flex-1 gap-6 p-5'>
-          {/* Weekly Schedule */}
-          {SCHEDULE_DATA.weekly.length > 0 && (
-            <View className='gap-4'>
-              <View className='flex-row items-center gap-3'>
-                <View className='rounded-lg bg-purple-100/50 p-2.5 dark:bg-purple-900/20'>
-                  <Calendar03Icon size={20} color='#a855f7' strokeWidth={2} />
-                </View>
-                <SemiBold className='text-lg'>Weekly Schedule</SemiBold>
-              </View>
-
-              <View className='gap-3'>
-                {SCHEDULE_DATA.weekly.map((schedule, index) => (
-                  <View
-                    key={index}
-                    className='overflow-hidden rounded-xl border border-neutral-100 bg-white dark:border-neutral-700 dark:bg-neutral-800'
-                  >
-                    {schedule.slots.map((slot, slotIndex) => (
-                      <View key={slotIndex}>
-                        <View className='p-4'>
-                          <Medium className='text-base'>
-                            Every {schedule.day} {slot}
-                          </Medium>
-                        </View>
-                        {slotIndex !== schedule.slots.length - 1 && (
-                          <View className='h-[1px] w-full bg-neutral-100 dark:bg-neutral-700' />
-                        )}
-                      </View>
-                    ))}
-                  </View>
-                ))}
-              </View>
-            </View>
-          )}
-
-          {/* Daily Schedule */}
-          {SCHEDULE_DATA.daily.length > 0 && (
-            <View className='gap-4'>
-              <View className='flex-row items-center gap-3'>
-                <View className='rounded-lg bg-blue-100/50 p-2.5 dark:bg-blue-900/20'>
-                  <Calendar03Icon size={20} color='#3b82f6' strokeWidth={2} />
-                </View>
-                <SemiBold className='text-lg'>Daily Schedule</SemiBold>
-              </View>
-
-              <View className='gap-3'>
-                {SCHEDULE_DATA.daily.map((schedule, index) => (
-                  <View
-                    key={index}
-                    className='overflow-hidden rounded-xl border border-neutral-100 bg-white dark:border-neutral-700 dark:bg-neutral-800'
-                  >
-                    {schedule.slots.map((slot, slotIndex) => (
-                      <View key={slotIndex}>
-                        <View className='p-4'>
-                          <Medium className='text-base'>Every day {slot}</Medium>
-                        </View>
-                        {slotIndex !== schedule.slots.length - 1 && (
-                          <View className='h-[1px] w-full bg-neutral-100 dark:bg-neutral-700' />
-                        )}
-                      </View>
-                    ))}
-                  </View>
-                ))}
-              </View>
-            </View>
-          )}
-
-          {/* Monthly Schedule */}
-          {SCHEDULE_DATA.monthly.length > 0 && (
-            <View className='gap-4'>
-              <View className='flex-row items-center gap-3'>
-                <View className='rounded-lg bg-green-100/50 p-2.5 dark:bg-green-900/20'>
-                  <Calendar03Icon size={20} color='#22c55e' strokeWidth={2} />
-                </View>
-                <SemiBold className='text-lg'>Monthly Schedule</SemiBold>
-              </View>
-
-              <View className='gap-3'>
-                {SCHEDULE_DATA.monthly.map((schedule, index) => (
-                  <View
-                    key={index}
-                    className='overflow-hidden rounded-xl border border-neutral-100 bg-white dark:border-neutral-700 dark:bg-neutral-800'
-                  >
-                    {schedule.slots.map((slot, slotIndex) => (
-                      <View key={slotIndex}>
-                        <View className='p-4'>
-                          <Medium className='text-base'>
-                            Every month on {schedule.date}th {slot}
-                          </Medium>
-                        </View>
-                        {slotIndex !== schedule.slots.length - 1 && (
-                          <View className='h-[1px] w-full bg-neutral-100 dark:bg-neutral-700' />
-                        )}
-                      </View>
-                    ))}
-                  </View>
-                ))}
-              </View>
-            </View>
-          )}
+          {SCHEDULE_DATA.weekly.length > 0 && <ScheduleCard type='weekly' schedules={SCHEDULE_DATA.weekly} />}
+          {SCHEDULE_DATA.daily.length > 0 && <ScheduleCard type='daily' schedules={SCHEDULE_DATA.daily} />}
+          {SCHEDULE_DATA.monthly.length > 0 && <ScheduleCard type='monthly' schedules={SCHEDULE_DATA.monthly} />}
         </View>
         <PaddingBottom />
       </ScrollView>
 
       <FabIcon
         Icon={<PlusSignIcon color='white' strokeWidth={2} />}
-        onPress={() => navigation.navigate('HPDoctorScheduler')}
+        onPress={() =>
+          navigation.navigate('HPDoctorScheduler', {
+            doctorId: 'demo_id',
+            doctorName: 'Dr. Demo Doctor',
+          })
+        }
       />
     </View>
   )

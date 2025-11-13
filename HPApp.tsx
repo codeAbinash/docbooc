@@ -1,5 +1,6 @@
 import AdminAddDoctor from '@/AdminScreens/AdminAddDoctor'
 import HPDoctorScheduler from '@/HPScreens/components/HPDoctorScheduler'
+import HPScheduleReview from '@/HPScreens/components/HPScheduleReview'
 import HPLogin from '@/HPScreens/HPAuthentications/Login/HPLogin'
 import HPOTP from '@/HPScreens/HPAuthentications/OTP/HPOTP'
 import HPSignup from '@/HPScreens/HPAuthentications/Signup/HPSignup'
@@ -54,6 +55,7 @@ export default function HPApp() {
           <RootStack.Screen name='HPHome' component={HPHome} options={NO_ANIMATION} />
           <RootStack.Screen name='HPOTP' component={HPOTP} options={NO_ANIMATION} />
           <RootStack.Screen name='HPDoctorScheduler' component={HPDoctorScheduler} />
+          <RootStack.Screen name='HPScheduleReview' component={HPScheduleReview} />
           <RootStack.Screen name='HPDoctorScheduleDetails' component={HPDoctorScheduleDetails} />
           <RootStack.Screen name='DoctorModel' component={AdminAddDoctor} />
         </RootStack.Navigator>
@@ -76,6 +78,11 @@ export type HpRootStackParamList = {
   HPDoctorScheduler: {
     doctorId: string
     doctorName: string
+  }
+  HPScheduleReview: {
+    doctorId: string
+    doctorName: string
+    scheduleData: any
   }
   HPDoctorScheduleDetails: undefined
   XAddDoctors: undefined
