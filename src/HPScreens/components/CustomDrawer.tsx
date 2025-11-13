@@ -1,4 +1,5 @@
-import { handleLogout, logout } from '@/HPScreens/utils/utils'
+import { logout } from '@/AdminScreens/utils'
+import { handleLogout } from '@/HPScreens/utils/utils'
 import Calendar01Icon from '@assets/icons/hugeicons/Calendar01Icon'
 import Calendar03Icon from '@assets/icons/hugeicons/Calendar03Icon'
 import Logout05Icon from '@assets/icons/hugeicons/Logout05Icon'

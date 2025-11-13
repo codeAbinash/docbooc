@@ -1,9 +1,9 @@
+import { logout } from '@/AdminScreens/utils'
 import { navigationStore } from '@/zustand/navigationStore'
 import popupStore from '@/zustand/popupStore'
 import NetInfo from '@react-native-community/netinfo'
 import { useFocusEffect } from '@react-navigation/native'
 import { onlineManager, QueryClient, type NotifyOnChangeProps } from '@tanstack/react-query'
-import { logout } from '@/HPScreens/utils/utils'
 import React from 'react'
 
 // Online Status Manager

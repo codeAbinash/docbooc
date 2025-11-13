@@ -1,19 +1,18 @@
 import { doctors } from '@/constants'
 import { DoctorCard } from '@components/DoctorCard'
-import { SemiBold } from '@utils/fonts'
-import { useMemo, useState } from 'react'
-import { FlatList, View, TextInput, TouchableOpacity } from 'react-native'
-import { useColorScheme } from 'nativewind'
-import { useNavigation } from '@react-navigation/native'
-import { HPStackNav } from '@utils/types'
-import AppBar from '../components/AppBar'
-import Search01Icon from '@hugeicons/Search01Icon'
 import Cancel01Icon from '@hugeicons/Cancel01Icon'
 import PlusSignIcon from '@hugeicons/PlusSignIcon'
+import Search01Icon from '@hugeicons/Search01Icon'
+import { useNavigation } from '@react-navigation/native'
 import Colors from '@utils/colors'
+import { SemiBold } from '@utils/fonts'
+import { AdminNavProp, HPStackNav } from '@utils/types'
+import { useColorScheme } from 'nativewind'
+import { useMemo, useState } from 'react'
+import { FlatList, TextInput, TouchableOpacity, View } from 'react-native'
+import AppBar from '../HPScreens/components/AppBar'
 
-const XAddDoctors = () => {
-  const navigate = useNavigation<HPStackNav>()
+const AdminAddDoctors = ({ navigation }: AdminNavProp) => {
   const { colorScheme } = useColorScheme()
   const [selected, setSelected] = useState<number | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
@@ -70,7 +69,10 @@ const XAddDoctors = () => {
                   strokeWidth={2}
                 />
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => navigate.navigate('DoctorModel')} className='rounded-lg bg-accent p-2'>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('AdminAddDoctor')}
+                className='rounded-lg bg-accent p-2'
+              >
                 <PlusSignIcon size={26} color={Colors.text.dark} strokeWidth={2} />
               </TouchableOpacity>
             </View>
@@ -100,4 +102,4 @@ const XAddDoctors = () => {
   )
 }
 
-export default XAddDoctors
+export default AdminAddDoctors

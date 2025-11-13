@@ -108,6 +108,4 @@ const ConfirmationModal = memo(
   },
 )
 
-
-
 export default ConfirmationModal

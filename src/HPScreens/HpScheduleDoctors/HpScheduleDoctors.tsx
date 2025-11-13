@@ -62,7 +62,7 @@ const HPScheduleDoctors = () => {
     <>
       <AppBar>
         {showSearch ? (
-          <View className='pl-4 flex-1'>
+          <View className='flex-1 pl-4'>
             <View className='flex-row items-center'>
               <TextInput
                 className='flex-1 rounded-xl bg-neutral-100 px-4 py-2.5 text-neutral-900 dark:bg-neutral-800 dark:text-white'
@@ -83,12 +83,9 @@ const HPScheduleDoctors = () => {
         ) : (
           <>
             <View className='flex-1 items-center justify-center'>
-              <SemiBold className=' text-lg'>Schedule Doctors</SemiBold>
+              <SemiBold className='text-lg'>Schedule Doctors</SemiBold>
             </View>
-            <TouchableOpacity
-              onPress={toggleSearch}
-              className=' rounded-lg bg-neutral-100 p-2 dark:bg-neutral-800'
-            >
+            <TouchableOpacity onPress={toggleSearch} className='rounded-lg bg-neutral-100 p-2 dark:bg-neutral-800'>
               <Search01Icon
                 size={26}
                 color={colorScheme === 'dark' ? Colors.text.dark : Colors.text.DEFAULT}
@@ -98,7 +95,7 @@ const HPScheduleDoctors = () => {
           </>
         )}
       </AppBar>
-      <View className='bg flex-1'> 
+      <View className='bg flex-1'>
         <View className='bg-white pb-4'>
           <ScrollView
             ref={scrollViewRef}

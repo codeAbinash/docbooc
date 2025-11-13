@@ -93,8 +93,8 @@ const HPViewDoctors = () => {
           </>
         )}
       </AppBar>
-      <View className=' bg flex-1'>
-        <View className=' bg-white pb-4 pt-2'>
+      <View className='bg flex-1'>
+        <View className='bg-white pb-4 pt-2'>
           <ScrollView
             ref={scrollViewRef}
             horizontal

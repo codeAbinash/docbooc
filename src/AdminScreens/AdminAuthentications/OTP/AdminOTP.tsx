@@ -8,14 +8,14 @@ import { PaddingBottom, PaddingTop } from '@components/SafePadding'
 import { useMutation } from '@tanstack/react-query'
 import { client } from '@utils/client'
 import { Bold, Medium, SEMIBOLD, SemiBold } from '@utils/fonts'
-import { HPNavProp } from '@utils/types'
+import { AdminNavProp } from '@utils/types'
 import { useColorScheme } from 'nativewind'
 import { useState } from 'react'
 import { Alert, StyleSheet, View } from 'react-native'
 import { OtpInput } from 'react-native-otp-entry'
 import colors from 'tailwindcss/colors'
 
-export default function HPOTP({ navigation, route }: HPNavProp) {
+export default function AdminOTP({ navigation, route }: AdminNavProp) {
   const { colorScheme } = useColorScheme()
   const [otp, setOtp] = useState('')
   const alert = popupStore((state) => state.alert)
@@ -35,7 +35,7 @@ export default function HPOTP({ navigation, route }: HPNavProp) {
       otp: string
     }) => {
       return (
-        await client.api.v1.hp.auth.register.$post({
+        await client.api.v1.admin.auth.register.$post({
           json: { name, email, password, otp },
         })
       ).json()
@@ -43,7 +43,7 @@ export default function HPOTP({ navigation, route }: HPNavProp) {
     onSuccess: (data) => {
       if (data.success && data.data) {
         alert('Success', 'Account created successfully!')
-        navigation.navigate('HPHome')
+        navigation.navigate('AdminHome')
       } else {
         Alert.alert('Error', data.message || 'Invalid OTP or registration failed')
       }
@@ -56,7 +56,7 @@ export default function HPOTP({ navigation, route }: HPNavProp) {
 
   const resendOtpMutation = useMutation({
     mutationFn: async (email: string) => {
-      const response = await client.api.v1.hp.auth['verify-email'].$post({
+      const response = await (client.api.v1.admin.auth as any)['verify-email'].$post({
         json: { email },
       })
       return response.json()
@@ -82,7 +82,7 @@ export default function HPOTP({ navigation, route }: HPNavProp) {
 
     if (!isSignup || !email || !password || !name) {
       Alert.alert('Error', 'Invalid signup flow. Please try again.')
-      navigation.navigate('HPSignup')
+      navigation.navigate('AdminSignup')
       return
     }
 

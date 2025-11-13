@@ -1,15 +1,21 @@
 import type { DrawerNavigationProp } from '@react-navigation/drawer'
 import { RouteProp } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
+import { AdminRootStackParamList } from '../../AdminApp'
 import { RootStackParamList } from '../../App'
 import { HpRootStackParamList } from '../../HPApp'
 
 export type StackNav = StackNavigationProp<RootStackParamList>
 export type HPStackNav = StackNavigationProp<HpRootStackParamList>
+export type AdminStackNav = StackNavigationProp<AdminRootStackParamList>
 export type NavProp = { navigation: StackNav }
 export type HPNavProp = {
   navigation: HPStackNav
   route: RouteProp<HpRootStackParamList>
+}
+export type AdminNavProp = {
+  navigation: AdminStackNav
+  route: RouteProp<AdminRootStackParamList>
 }
 export type DrawerNav = DrawerNavigationProp<RootStackParamList>
 export type DrawerProps = { navigation: DrawerNav }

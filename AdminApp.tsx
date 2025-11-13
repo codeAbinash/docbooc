@@ -1,16 +1,14 @@
 import AdminAddDoctor from '@/AdminScreens/AdminAddDoctor'
-import HPDoctorScheduler from '@/HPScreens/components/HPDoctorScheduler'
-import HPLogin from '@/HPScreens/HPAuthentications/Login/HPLogin'
-import HPOTP from '@/HPScreens/HPAuthentications/OTP/HPOTP'
-import HPSignup from '@/HPScreens/HPAuthentications/Signup/HPSignup'
-import HPHome from '@/HPScreens/HPHome'
-import HPSplash from '@/HPScreens/HPSplash'
-import HPDoctorScheduleDetails from '@/HPScreens/HPViewDoctors/HPDoctorScheduleDetails'
-import { DarkTheme, DefaultTheme } from '@/themes'
+import AdminAddDoctors from '@/AdminScreens/AdminAddDoctors'
+import AdminLogin from '@/AdminScreens/AdminAuthentications/Login/AdminLogin'
+import AdminOTP from '@/AdminScreens/AdminAuthentications/OTP/AdminOTP'
+import AdminSignup from '@/AdminScreens/AdminAuthentications/Signup/AdminSignup'
+import AdminHome from '@/AdminScreens/AdminHome'
+import AdminSplash from '@/AdminScreens/AdminSplash'
 import { Popups } from '@components/Popup'
 import { AutoStatusBar } from '@components/StatusBar'
 import { queryClient } from '@query/index'
-import { NavigationContainer } from '@react-navigation/native'
+import { DarkTheme, DefaultTheme, NavigationContainer } from '@react-navigation/native'
 import { CardStyleInterpolators, createStackNavigator, StackNavigationOptions } from '@react-navigation/stack'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { Dimensions, useColorScheme } from 'react-native'
@@ -32,9 +30,9 @@ const SMOOTH_ANIMATION: StackNavigationOptions = {
   cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter,
 }
 
-const RootStack = createStackNavigator<HpRootStackParamList>()
+const RootStack = createStackNavigator<AdminRootStackParamList>()
 
-export default function HPApp() {
+export default function AdminApp() {
   const scheme = useColorScheme()
 
   return (
@@ -48,33 +46,30 @@ export default function HPApp() {
             cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
           }}
         >
-          <RootStack.Screen name='HPSplash' component={HPSplash} options={NO_ANIMATION} />
-          <RootStack.Screen name='HPLogin' component={HPLogin} />
-          <RootStack.Screen name='HPSignup' component={HPSignup} />
-          <RootStack.Screen name='HPHome' component={HPHome} options={NO_ANIMATION} />
-          <RootStack.Screen name='HPOTP' component={HPOTP} options={NO_ANIMATION} />
-          <RootStack.Screen name='HPDoctorScheduler' component={HPDoctorScheduler} />
-          <RootStack.Screen name='HPDoctorScheduleDetails' component={HPDoctorScheduleDetails} />
-          <RootStack.Screen name='DoctorModel' component={AdminAddDoctor} />
+          <RootStack.Screen name='AdminSplash' component={AdminSplash} options={NO_ANIMATION} />
+          <RootStack.Screen name='AdminLogin' component={AdminLogin} />
+          <RootStack.Screen name='AdminSignup' component={AdminSignup} />
+          <RootStack.Screen name='AdminHome' component={AdminHome} />
+          <RootStack.Screen name='AdminOTP' component={AdminOTP} />
+          <RootStack.Screen name='AdminAddDoctors' component={AdminAddDoctors} />
+          <RootStack.Screen name='AdminAddDoctor' component={AdminAddDoctor} />
         </RootStack.Navigator>
       </NavigationContainer>
     </QueryClientProvider>
   )
 }
 
-export type HpRootStackParamList = {
-  HPSplash: undefined
-  HPOTP: {
+export type AdminRootStackParamList = {
+  AdminSplash: undefined
+  AdminOTP: {
     email: string
     password: string
     name: string
     isSignup: boolean
   }
-  HPLogin: undefined
-  HPSignup: undefined
-  HPHome: undefined
-  HPDoctorScheduler: undefined
-  HPDoctorScheduleDetails: undefined
-  XAddDoctors: undefined
-  DoctorModel: undefined
+  AdminLogin: undefined
+  AdminSignup: undefined
+  AdminHome: undefined
+  AdminAddDoctors: undefined
+  AdminAddDoctor: undefined
 }

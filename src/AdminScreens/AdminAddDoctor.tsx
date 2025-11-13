@@ -1,18 +1,17 @@
-import { View, ScrollView } from 'react-native'
-import { useState } from 'react'
-import { PaddingTop, PaddingBottom } from '@components/SafePadding'
-import { Medium, SemiBold } from '@utils/fonts'
 import InputWithLabel from '@components/InputWithLabel'
+import { PaddingBottom, PaddingTop } from '@components/SafePadding'
+import { Medium, SemiBold } from '@utils/fonts'
+import { useState } from 'react'
+import { ScrollView, View } from 'react-native'
 
-import Tick02Icon from '@hugeicons/Tick02Icon'
-import Press from '@components/Press'
-import colors from 'tailwindcss/colors'
-import Button from '@components/Button'
 import { Header } from '@/UserScreens/BookAppointment/components/Header'
+import Button from '@components/Button'
+import Press from '@components/Press'
+import Tick02Icon from '@hugeicons/Tick02Icon'
 import { useNavigation } from '@react-navigation/native'
 import { HPStackNav } from '@utils/types'
 import { useColorScheme } from 'nativewind'
-import Chip from '@components/Chip'
+import colors from 'tailwindcss/colors'
 
 const DEPARTMENTS = [
   'Cardiology',
@@ -34,7 +33,7 @@ type Department = (typeof DEPARTMENTS)[number]
 type Gender = (typeof GENDERS)[number]
 type Degree = (typeof DEGREES)[number]
 
-export default function DoctorModel() {
+export default function AdminAddDoctor() {
   const navigation = useNavigation<HPStackNav>()
   const { colorScheme } = useColorScheme()
   const [name, setName] = useState('')

@@ -18,60 +18,76 @@ type CustomTimePickerProps = {
   currentTime: Date
 }
 
-const ScrollItem = memo(({ item, selected, onPress }: { item: number; selected: number; onPress: (v: number) => void }) => {
-  const diff = Math.abs(selected - item)
-  const cls = diff === 0 ? 'text-2xl text-accent' : diff <= 1 ? 'text-lg text-neutral-500' : 'text-base text-neutral-400'
-  return (
-    <TouchableOpacity onPress={() => onPress(item)} className='h-[50px] items-center justify-center'>
-      <SemiBold className={cls}>{item.toString().padStart(2, '0')}</SemiBold>
-    </TouchableOpacity>
-  )
-})
+const ScrollItem = memo(
+  ({ item, selected, onPress }: { item: number; selected: number; onPress: (v: number) => void }) => {
+    const diff = Math.abs(selected - item)
+    const cls =
+      diff === 0 ? 'text-2xl text-accent' : diff <= 1 ? 'text-lg text-neutral-500' : 'text-base text-neutral-400'
+    return (
+      <TouchableOpacity onPress={() => onPress(item)} className='h-[50px] items-center justify-center'>
+        <SemiBold className={cls}>{item.toString().padStart(2, '0')}</SemiBold>
+      </TouchableOpacity>
+    )
+  },
+)
 
-const ScrollPicker = memo(({ items, selected, onScroll, onPress, scrollRef, label, subtitle, onScrollEnd }: {
-  items: number[]
-  selected: number
-  onScroll: (e: NativeSyntheticEvent<NativeScrollEvent>) => void
-  onPress: (v: number) => void
-  scrollRef: React.RefObject<ScrollView | null>
-  label: string
-  subtitle: string
-  onScrollEnd?: (e: NativeSyntheticEvent<NativeScrollEvent>) => void
-}) => (
-  <View className='flex-1 rounded-2xl bg-white dark:bg-neutral-800'>
-    <View className='border-b border-neutral-100 p-4 dark:border-neutral-700'>
-      <View className='flex-row items-center gap-3'>
-        <View className='rounded-lg bg-blue-100/50 p-2.5 dark:bg-blue-900/20'>
-          <Time04Icon size={20} color='#3b82f6' strokeWidth={2} />
-        </View>
-        <View>
-          <SemiBold className='text-lg text-neutral-800 dark:text-neutral-200'>{label}</SemiBold>
-          <Medium className='text-xs text-neutral-500'>{subtitle}</Medium>
+const ScrollPicker = memo(
+  ({
+    items,
+    selected,
+    onScroll,
+    onPress,
+    scrollRef,
+    label,
+    subtitle,
+    onScrollEnd,
+  }: {
+    items: number[]
+    selected: number
+    onScroll: (e: NativeSyntheticEvent<NativeScrollEvent>) => void
+    onPress: (v: number) => void
+    scrollRef: React.RefObject<ScrollView | null>
+    label: string
+    subtitle: string
+    onScrollEnd?: (e: NativeSyntheticEvent<NativeScrollEvent>) => void
+  }) => (
+    <View className='flex-1 rounded-2xl bg-white dark:bg-neutral-800'>
+      <View className='border-b border-neutral-100 p-4 dark:border-neutral-700'>
+        <View className='flex-row items-center gap-3'>
+          <View className='rounded-lg bg-blue-100/50 p-2.5 dark:bg-blue-900/20'>
+            <Time04Icon size={20} color='#3b82f6' strokeWidth={2} />
+          </View>
+          <View>
+            <SemiBold className='text-lg text-neutral-800 dark:text-neutral-200'>{label}</SemiBold>
+            <Medium className='text-xs text-neutral-500'>{subtitle}</Medium>
+          </View>
         </View>
       </View>
+      <View className='relative h-[200px]'>
+        <View className='absolute inset-x-0 top-1/2 -mt-[25px] h-[50px] bg-accent/5 dark:bg-accent/10' />
+        <View className='absolute inset-x-0 top-0 h-[75px] bg-gradient-to-b from-neutral-50 to-transparent dark:from-neutral-800/50' />
+        <View className='absolute inset-x-0 bottom-0 h-[75px] bg-gradient-to-t from-neutral-50 to-transparent dark:from-neutral-800/50' />
+        <ScrollView
+          ref={scrollRef}
+          className='h-full px-4'
+          showsVerticalScrollIndicator={false}
+          snapToInterval={ITEM_HEIGHT}
+          decelerationRate={0.85}
+          onScroll={onScroll}
+          scrollEventThrottle={16}
+          onMomentumScrollEnd={onScrollEnd}
+          removeClippedSubviews
+        >
+          <View className='py-[75px]'>
+            {items.map((i) => (
+              <ScrollItem key={i} item={i} selected={selected} onPress={onPress} />
+            ))}
+          </View>
+        </ScrollView>
+      </View>
     </View>
-    <View className='relative h-[200px]'>
-      <View className='absolute inset-x-0 top-1/2 -mt-[25px] h-[50px] bg-accent/5 dark:bg-accent/10' />
-      <View className='absolute inset-x-0 top-0 h-[75px] bg-gradient-to-b from-neutral-50 to-transparent dark:from-neutral-800/50' />
-      <View className='absolute inset-x-0 bottom-0 h-[75px] bg-gradient-to-t from-neutral-50 to-transparent dark:from-neutral-800/50' />
-      <ScrollView
-        ref={scrollRef}
-        className='h-full px-4'
-        showsVerticalScrollIndicator={false}
-        snapToInterval={ITEM_HEIGHT}
-        decelerationRate={0.85}
-        onScroll={onScroll}
-        scrollEventThrottle={16}
-        onMomentumScrollEnd={onScrollEnd}
-        removeClippedSubviews
-      >
-        <View className='py-[75px]'>
-          {items.map(i => <ScrollItem key={i} item={i} selected={selected} onPress={onPress} />)}
-        </View>
-      </ScrollView>
-    </View>
-  </View>
-))
+  ),
+)
 
 const CustomTimePicker = memo(({ isVisible, onClose, onSelectTime, currentTime }: CustomTimePickerProps) => {
   const [h, setH] = useState(currentTime.getHours() % 12 || 12)
@@ -94,7 +110,7 @@ const CustomTimePicker = memo(({ isVisible, onClose, onSelectTime, currentTime }
 
   const handleMScrollEnd = useCallback((e: NativeSyntheticEvent<NativeScrollEvent>) => {
     const v = Math.round(e.nativeEvent.contentOffset.y / ITEM_HEIGHT)
-    
+
     // Snap to 15-min intervals if scrolling fast
     if (scrollVelocity.current > 0.4) {
       const snapped = Math.round(v / 15) * 15
@@ -140,25 +156,47 @@ const CustomTimePicker = memo(({ isVisible, onClose, onSelectTime, currentTime }
 
           <View className='px-4 pb-4'>
             <View className='flex-row gap-4'>
-              <ScrollPicker items={HOURS} selected={h} onScroll={handleHScroll} onPress={handleHPress} scrollRef={hRef} label='Hour' subtitle='12-hour format' />
-              <ScrollPicker items={MINUTES} selected={m} onScroll={handleMScroll} onPress={handleMPress} scrollRef={mRef} label='Minute' subtitle='00-59' onScrollEnd={handleMScrollEnd} />
+              <ScrollPicker
+                items={HOURS}
+                selected={h}
+                onScroll={handleHScroll}
+                onPress={handleHPress}
+                scrollRef={hRef}
+                label='Hour'
+                subtitle='12-hour format'
+              />
+              <ScrollPicker
+                items={MINUTES}
+                selected={m}
+                onScroll={handleMScroll}
+                onPress={handleMPress}
+                scrollRef={mRef}
+                label='Minute'
+                subtitle='00-59'
+                onScrollEnd={handleMScrollEnd}
+              />
             </View>
 
             <View className='mt-4 flex-row justify-center gap-2'>
-              {PERIODS.map(pd => (
+              {PERIODS.map((pd) => (
                 <TouchableOpacity
                   key={pd}
                   onPress={() => setP(pd)}
                   className={`rounded-xl px-6 py-3 ${p === pd ? 'bg-accent' : 'bg-neutral-100 dark:bg-neutral-800'}`}
                 >
-                  <SemiBold className={p === pd ? 'text-white' : 'text-neutral-600 dark:text-neutral-400'}>{pd}</SemiBold>
+                  <SemiBold className={p === pd ? 'text-white' : 'text-neutral-600 dark:text-neutral-400'}>
+                    {pd}
+                  </SemiBold>
                 </TouchableOpacity>
               ))}
             </View>
           </View>
 
           <View className='flex-row gap-4 p-4 pb-10 pt-2'>
-            <TouchableOpacity onPress={onClose} className='flex-1 rounded-2xl border border-neutral-200 py-4 dark:border-neutral-700'>
+            <TouchableOpacity
+              onPress={onClose}
+              className='flex-1 rounded-2xl border border-neutral-200 py-4 dark:border-neutral-700'
+            >
               <Medium className='text-center text-neutral-600 dark:text-neutral-400'>Cancel</Medium>
             </TouchableOpacity>
             <TouchableOpacity onPress={handleConfirm} className='flex-1 rounded-2xl bg-accent py-4'>
