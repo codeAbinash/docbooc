@@ -1,18 +1,21 @@
-import { doctors, specialties } from '@/constants'
+import { specialties } from '@/constants'
 import { ALL_SPECIALTY, getScrollPosition } from '@/UserScreens/Doctors/Doctors'
 import Chip from '@components/Chip'
 import { DoctorCard } from '@components/DoctorCard'
+import Cancel01Icon from '@hugeicons/Cancel01Icon'
+import Search01Icon from '@hugeicons/Search01Icon'
 import { useNavigation } from '@react-navigation/native'
+import { useQuery } from '@tanstack/react-query'
+import { hpApi } from '@utils/client'
+import Colors from '@utils/colors'
 import { SemiBold } from '@utils/fonts'
 import { HPStackNav } from '@utils/types'
-import { useMemo, useRef, useState, useCallback } from 'react'
-import { FlatList, View, TextInput, TouchableOpacity } from 'react-native'
-import { ScrollView } from 'react-native-gesture-handler'
 import { useColorScheme } from 'nativewind'
+import { useCallback, useMemo, useRef, useState } from 'react'
+import { ActivityIndicator, FlatList, RefreshControl, TextInput, TouchableOpacity, View } from 'react-native'
+import { ScrollView } from 'react-native-gesture-handler'
 import AppBar from '../components/AppBar'
-import Search01Icon from '@hugeicons/Search01Icon'
-import Cancel01Icon from '@hugeicons/Cancel01Icon'
-import Colors from '@utils/colors'
+import { useRefreshOnFocus } from '@/query'
 
 const HPViewDoctors = () => {
   const navigate = useNavigation<HPStackNav>()
@@ -23,21 +26,45 @@ const HPViewDoctors = () => {
   const [showSearch, setShowSearch] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
 
+  const {
+    data: doctorsData,
+    isLoading,
+    refetch,
+  } = useQuery({
+    queryKey: ['my-doctors'],
+    queryFn: async () => {
+      const response = await hpApi.doctors['my-doctors'].$get()
+      return response.json()
+    },
+  })
+
+  const [refreshing, setRefreshing] = useState(false)
+
+  useRefreshOnFocus(refetch)
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true)
+    await refetch()
+    setRefreshing(false)
+  }, [refetch])
+
+  const doctors = doctorsData?.data || []
+
   const toggleSearch = useCallback(() => {
     setShowSearch((prev) => !prev)
     if (showSearch) setSearchQuery('')
   }, [showSearch])
 
   const filteredDoctors = useMemo(() => {
-    let filtered = selected ? doctors.filter((d) => d.specialtyId === selected) : doctors
+    let filtered = doctors
     if (searchQuery) {
       const query = searchQuery.toLowerCase()
       filtered = filtered.filter(
-        (d) => d.name.toLowerCase().includes(query) || d.specialty.toLowerCase().includes(query),
+        (d) => d.name.toLowerCase().includes(query) || d.specialization.toLowerCase().includes(query),
       )
     }
     return filtered
-  }, [selected, searchQuery])
+  }, [doctors, searchQuery])
 
   const handleSpecialtySelect = (id: number) => {
     const prevIdx = selected !== null ? [ALL_SPECIALTY, ...specialties].findIndex((i) => i.id === selected) : -1
@@ -113,17 +140,32 @@ const HPViewDoctors = () => {
             ))}
           </ScrollView>
         </View>
-        <FlatList
-          className='mt-4 flex-1'
-          contentContainerClassName='px-5 pb-10'
-          data={filteredDoctors}
-          renderItem={({ item }) => (
-            <DoctorCard doctor={item} onPress={() => navigate.navigate('HPDoctorScheduleDetails')} />
-          )}
-          keyExtractor={(item) => item.id.toString()}
-          ItemSeparatorComponent={() => <View className='h-4' />}
-          showsVerticalScrollIndicator={false}
-        />
+        {isLoading ? (
+          <View className='flex-1 items-center justify-center'>
+            <ActivityIndicator size='large' color={Colors.accent} />
+          </View>
+        ) : (
+          <FlatList
+            className='mt-4 flex-1'
+            contentContainerClassName='px-5 pb-10'
+            data={filteredDoctors}
+            renderItem={({ item }) => (
+              <DoctorCard
+                doctor={item}
+                onPress={() =>
+                  navigate.navigate('HPDoctorScheduleDetails', {
+                    doctorId: item.id,
+                    doctorName: item.name,
+                  })
+                }
+              />
+            )}
+            keyExtractor={(item) => item.id.toString()}
+            ItemSeparatorComponent={() => <View className='h-4' />}
+            showsVerticalScrollIndicator={false}
+            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={[Colors.accent]} />}
+          />
+        )}
       </View>
     </>
   )

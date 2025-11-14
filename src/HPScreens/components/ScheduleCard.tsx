@@ -1,14 +1,19 @@
 import { Medium, SemiBold } from '@utils/fonts'
-import { View } from 'react-native'
+import { View, TouchableOpacity } from 'react-native'
 import Calendar03Icon from '@hugeicons/Calendar03Icon'
+import Colors from '@utils/colors'
+import { useColorScheme } from 'nativewind'
+import CallIcon from '@hugeicons/CallIcon'
 
 type ScheduleCardProps = {
   type: 'weekly' | 'daily' | 'monthly'
   schedules: Array<{
+    id: string
     day?: string
     date?: number
     slots: string[]
   }>
+  onDelete?: (id: string) => void
 }
 
 const CONFIG = {
@@ -32,8 +37,9 @@ const CONFIG = {
   },
 }
 
-export default function ScheduleCard({ type, schedules }: ScheduleCardProps) {
+export default function ScheduleCard({ type, schedules, onDelete }: ScheduleCardProps) {
   const config = CONFIG[type]
+  const { colorScheme } = useColorScheme()
 
   return (
     <View className='gap-4'>
@@ -45,19 +51,27 @@ export default function ScheduleCard({ type, schedules }: ScheduleCardProps) {
       </View>
 
       <View className='gap-3'>
-        {schedules.map((schedule, index) => (
+        {schedules.map((schedule) => (
           <View
-            key={index}
+            key={schedule.id}
             className='overflow-hidden rounded-xl border border-neutral-100 bg-white dark:border-neutral-700 dark:bg-neutral-800'
           >
             {schedule.slots.map((slot, slotIndex) => (
               <View key={slotIndex}>
-                <View className='p-4'>
-                  <Medium className='text-base'>
+                <View className='flex-row items-center justify-between p-4'>
+                  <Medium className='flex-1 text-base'>
                     {type === 'weekly' && `${config.prefix} ${schedule.day} ${slot}`}
                     {type === 'daily' && `${config.prefix} ${slot}`}
                     {type === 'monthly' && `${config.prefix} ${schedule.date}th ${slot}`}
                   </Medium>
+                  {onDelete && slotIndex === 0 && (
+                    <TouchableOpacity
+                      onPress={() => onDelete(schedule.id)}
+                      className='ml-3 rounded-lg bg-red-50 p-2 dark:bg-red-900/20'
+                    >
+                      <CallIcon size={20} color='#ef4444' strokeWidth={2} />
+                    </TouchableOpacity>
+                  )}
                 </View>
                 {slotIndex !== schedule.slots.length - 1 && (
                   <View className='h-[1px] w-full bg-neutral-100 dark:bg-neutral-700' />

@@ -30,7 +30,7 @@ const HPScheduleDoctors = () => {
   const { data: doctorsData, isLoading } = useQuery({
     queryKey: ['doctors'],
     queryFn: async () => {
-      const response = await hpApi.doctors.$get()
+      const response = await hpApi.doctors.all.$get()
       return response.json()
     },
   })

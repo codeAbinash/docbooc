@@ -84,7 +84,10 @@ export type HpRootStackParamList = {
     doctorName: string
     scheduleData: any
   }
-  HPDoctorScheduleDetails: undefined
+  HPDoctorScheduleDetails: {
+    doctorId: string
+    doctorName: string
+  }
   XAddDoctors: undefined
   DoctorModel: undefined
 }
