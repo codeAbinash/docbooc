@@ -1,8 +1,10 @@
 import { Header } from '@/UserScreens/BookAppointment/components/Header'
+import popupStore from '@/zustand/popupStore'
 import Button from '@components/Button'
 import { PaddingBottom, PaddingTop } from '@components/SafePadding'
-import { useRoute } from '@react-navigation/native'
-import { Medium, SemiBold } from '@utils/fonts'
+import { useNavigation, useRoute } from '@react-navigation/native'
+import { useMutation } from '@tanstack/react-query'
+import { hpApi } from '@utils/client'
 import { HPStackNav } from '@utils/types'
 import { ScrollView, View } from 'react-native'
 import ScheduleCard from './ScheduleCard'
@@ -22,25 +24,46 @@ type RouteParams = {
   }
 }
 
+const formatTime = (isoString: string) =>
+  new Date(isoString).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false })
+
 const HPScheduleReview = () => {
+  const navigation = useNavigation<HPStackNav>()
   const route = useRoute<any>()
-  const { doctorName, scheduleData } = route.params as RouteParams
+  const { doctorId, doctorName, scheduleData } = route.params as RouteParams
+  const alert = popupStore((state) => state.alert)
 
-  const convertToScheduleFormat = () => {
-    const schedules: Array<{ day?: string; date?: number; slots: string[] }> = []
+  const { mutate, isPending } = useMutation({
+    mutationFn: async (payload: any) => (await hpApi.schedules.$post({ json: payload })).json(),
+    onSuccess: (data) => {
+      if (!data.success) return alert('Error', data.message || 'An error occurred while creating the schedule.')
+      alert('Success', 'Schedule created successfully', [{ text: 'OK', onPress: () => navigation.navigate('HPHome') }])
+    },
+    onError: (error: any) => {
+      alert('Error', error?.message || 'Network error. Please check your connection and try again.')
+    },
+  })
 
-    if (scheduleData?.timeSlots) {
-      scheduleData.timeSlots.forEach((slot) => {
-        schedules.push({
-          slots: [`${slot.startTime} - ${slot.endTime}`],
-        })
-      })
-    }
-
-    return schedules
+  const handleSendForReview = () => {
+    mutate({
+      doctorId,
+      scheduleType: scheduleData.scheduleType,
+      timeSlots: scheduleData.timeSlots.map((slot) => ({
+        startTime: formatTime(slot.startTime),
+        endTime: formatTime(slot.endTime),
+        maxBookings: slot.maxBookings,
+      })),
+      isActive: true,
+      ...(scheduleData.weekDays && { weekDays: scheduleData.weekDays }),
+      ...(scheduleData.monthDays && { monthDays: scheduleData.monthDays }),
+    })
   }
 
-  const scheduleType = (scheduleData?.scheduleType || 'daily') as 'daily' | 'weekly' | 'monthly'
+  const schedules = scheduleData.timeSlots.map((slot) => ({
+    slots: [`${formatTime(slot.startTime)} - ${formatTime(slot.endTime)}`],
+  }))
+
+  const scheduleType = (scheduleData.scheduleType || 'daily') as 'daily' | 'weekly' | 'monthly'
 
   return (
     <View className='bg flex-1'>
@@ -49,12 +72,15 @@ const HPScheduleReview = () => {
       <View className='flex-1'>
         <ScrollView className='flex-1' showsVerticalScrollIndicator={false}>
           <View className='gap-6 p-5'>
-            {scheduleData && <ScheduleCard type={scheduleType} schedules={convertToScheduleFormat()} />}
+            <ScheduleCard type={scheduleType} schedules={schedules} />
           </View>
         </ScrollView>
-
         <View className='px-6 pb-2 pt-2'>
-          <Button title='Send for Review' onPress={() => {}} />
+          <Button
+            title={isPending ? 'Sending...' : 'Send for Review'}
+            onPress={handleSendForReview}
+            disabled={isPending}
+          />
         </View>
         <PaddingBottom />
       </View>

@@ -747,7 +747,6 @@ declare const client: {
                                 doctorId: string;
                                 hpId: string;
                                 id: string;
-                                maxBookings: number;
                                 scheduleStatus: "active" | "cancelled" | "deleted" | "inactive" | null;
                                 scheduleType: "daily" | "monthly" | "weekly";
                             };
@@ -1023,6 +1022,16 @@ declare const client: {
 } & {
     api: {
         v1: {
+            hp: {
+                schedules: {
+                    "*": import("hono/client").ClientRequest<{}>;
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
             users: {
                 "verify-code": import("hono/client").ClientRequest<{
                     $post: {
@@ -1205,6 +1214,7 @@ declare const client: {
                                         day: number | null;
                                         startTime: string;
                                         endTime: string;
+                                        maxBookings: number;
                                     } | null;
                                     schedules: {
                                         id: string;
@@ -1213,7 +1223,6 @@ declare const client: {
                                         scheduleType: "daily" | "monthly" | "weekly";
                                         daysMask: number | null;
                                         scheduleStatus: "active" | "cancelled" | "deleted" | "inactive" | null;
-                                        maxBookings: number;
                                         createdAt: string;
                                     } | null;
                                 }[];
@@ -1318,6 +1327,7 @@ declare const client: {
                                         day: number | null;
                                         startTime: string;
                                         endTime: string;
+                                        maxBookings: number;
                                     } | null;
                                     schedules: {
                                         id: string;
@@ -1326,7 +1336,6 @@ declare const client: {
                                         scheduleType: "daily" | "monthly" | "weekly";
                                         daysMask: number | null;
                                         scheduleStatus: "active" | "cancelled" | "deleted" | "inactive" | null;
-                                        maxBookings: number;
                                         createdAt: string;
                                     } | null;
                                 };
@@ -1421,6 +1430,7 @@ declare const client: {
                                             day: number | null;
                                             startTime: string;
                                             endTime: string;
+                                            maxBookings: number;
                                         } | null;
                                         schedules: {
                                             id: string;
@@ -1429,7 +1439,6 @@ declare const client: {
                                             scheduleType: "daily" | "monthly" | "weekly";
                                             daysMask: number | null;
                                             scheduleStatus: "active" | "cancelled" | "deleted" | "inactive" | null;
-                                            maxBookings: number;
                                             createdAt: string;
                                         } | null;
                                     }[];
@@ -2512,7 +2521,6 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 doctorId: string;
                                 hpId: string;
                                 id: string;
-                                maxBookings: number;
                                 scheduleStatus: "active" | "cancelled" | "deleted" | "inactive" | null;
                                 scheduleType: "daily" | "monthly" | "weekly";
                             };
@@ -2788,6 +2796,16 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
 } & {
     api: {
         v1: {
+            hp: {
+                schedules: {
+                    "*": import("hono/client").ClientRequest<{}>;
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
             users: {
                 "verify-code": import("hono/client").ClientRequest<{
                     $post: {
@@ -2970,6 +2988,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                         day: number | null;
                                         startTime: string;
                                         endTime: string;
+                                        maxBookings: number;
                                     } | null;
                                     schedules: {
                                         id: string;
@@ -2978,7 +2997,6 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                         scheduleType: "daily" | "monthly" | "weekly";
                                         daysMask: number | null;
                                         scheduleStatus: "active" | "cancelled" | "deleted" | "inactive" | null;
-                                        maxBookings: number;
                                         createdAt: string;
                                     } | null;
                                 }[];
@@ -3083,6 +3101,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                         day: number | null;
                                         startTime: string;
                                         endTime: string;
+                                        maxBookings: number;
                                     } | null;
                                     schedules: {
                                         id: string;
@@ -3091,7 +3110,6 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                         scheduleType: "daily" | "monthly" | "weekly";
                                         daysMask: number | null;
                                         scheduleStatus: "active" | "cancelled" | "deleted" | "inactive" | null;
-                                        maxBookings: number;
                                         createdAt: string;
                                     } | null;
                                 };
@@ -3186,6 +3204,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                             day: number | null;
                                             startTime: string;
                                             endTime: string;
+                                            maxBookings: number;
                                         } | null;
                                         schedules: {
                                             id: string;
@@ -3194,7 +3213,6 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                             scheduleType: "daily" | "monthly" | "weekly";
                                             daysMask: number | null;
                                             scheduleStatus: "active" | "cancelled" | "deleted" | "inactive" | null;
-                                            maxBookings: number;
                                             createdAt: string;
                                         } | null;
                                     }[];
@@ -3528,4 +3546,3 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
     };
 };
 export default hcWithType;
-//# sourceMappingURL=hcWithType.d.ts.map

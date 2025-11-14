@@ -148,7 +148,7 @@ export default function Weekly() {
           {DAYS.map((day) => (
             <TouchableOpacity key={day} onPress={() => toggleDay(day)} activeOpacity={0.7} className='items-center'>
               <View
-                className={`mb-1.5 h-10 w-10 items-center justify-center rounded-lg ${
+                className={`mb-1.5 h-11 w-11 items-center justify-center rounded-lg ${
                   selectedDays.includes(day)
                     ? 'bg-blue-100 dark:bg-blue-900/30'
                     : 'border-2 border-neutral-100 dark:border-neutral-700'

@@ -5,9 +5,8 @@ import { Tabs } from '@components/Tabs'
 import Tick02Icon from '@hugeicons/Tick02Icon'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { HPStackNav } from '@utils/types'
-import { hpApi } from '@utils/client'
 import { useState } from 'react'
-import { View } from 'react-native'
+import { Alert, View } from 'react-native'
 import colors from 'tailwindcss/colors'
 import Daily from './Daily'
 import Monthly from './Monthly'
@@ -39,20 +38,45 @@ const HPDoctorScheduler = () => {
   const navigation = useNavigation<HPStackNav>()
   const route = useRoute<any>()
   const { doctorId, doctorName } = route.params
-  const [activeTab, setActiveTab] = useState(1)
+  const [activeTab, setActiveTab] = useState(0)
+  const [dailyTimeSlots, setDailyTimeSlots] = useState<any[]>([])
 
   const handleReview = () => {
-    const scheduleData = {
-      scheduleType: (tabLabels[activeTab] || 'Daily').toLowerCase(),
-      timeSlots: [
+    const scheduleType = (tabLabels[activeTab] || 'Daily').toLowerCase()
+
+    if (scheduleType === 'daily' && dailyTimeSlots.length === 0) {
+      Alert.alert('Error', 'Please add at least one time slot')
+      return
+    }
+
+    let scheduleData: any = {
+      scheduleType,
+    }
+
+    if (scheduleType === 'daily') {
+      scheduleData.timeSlots = dailyTimeSlots.map((slot) => ({
+        startTime: slot.startTime.toISOString(),
+        endTime: slot.endTime.toISOString(),
+        maxBookings: slot.maxBookings,
+      }))
+    } else if (scheduleType === 'weekly') {
+      scheduleData.timeSlots = [
         {
           startTime: '09:00',
           endTime: '12:00',
           maxBookings: 5,
         },
-      ],
-      weekDays: [0, 1, 2, 3, 4, 5, 6],
-      monthDays: Array.from({ length: 31 }, (_, i) => i + 1),
+      ]
+      scheduleData.weekDays = [0, 1, 2, 3, 4, 5, 6]
+    } else if (scheduleType === 'monthly') {
+      scheduleData.timeSlots = [
+        {
+          startTime: '09:00',
+          endTime: '12:00',
+          maxBookings: 5,
+        },
+      ]
+      scheduleData.monthDays = Array.from({ length: 31 }, (_, i) => i + 1)
     }
 
     navigation.navigate('HPScheduleReview', {
@@ -78,7 +102,11 @@ const HPDoctorScheduler = () => {
           <Tabs tabs={tabLabels} activeTab={activeTab} onTabChange={setActiveTab} />
         </View>
         <View className='mt-3 flex-1'>
-          {ContentMap.map((Component, index) => activeTab === index && <Component key={index} />)}
+          {ContentMap.map((Component, index) =>
+            activeTab === index ? (
+              <Component key={index} onTimeSlotsChange={index === 0 ? setDailyTimeSlots : undefined} />
+            ) : null,
+          )}
         </View>
       </View>
     </View>
