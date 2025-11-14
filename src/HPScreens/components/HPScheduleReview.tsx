@@ -18,14 +18,22 @@ type RouteParams = {
       startTime: string
       endTime: string
       maxBookings: number
+      dayOfWeek?: number
+      dayOfMonth?: number
     }>
     weekDays?: number[]
     monthDays?: number[]
   }
 }
 
-const formatTime = (isoString: string) =>
-  new Date(isoString).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false })
+const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+
+const formatTime = (timeString: string) => {
+  if (timeString.includes('T')) {
+    return new Date(timeString).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false })
+  }
+  return timeString.substring(0, 5)
+}
 
 const HPScheduleReview = () => {
   const navigation = useNavigation<HPStackNav>()
@@ -52,6 +60,8 @@ const HPScheduleReview = () => {
         startTime: formatTime(slot.startTime),
         endTime: formatTime(slot.endTime),
         maxBookings: slot.maxBookings,
+        ...(slot.dayOfWeek !== undefined && { dayOfWeek: slot.dayOfWeek }),
+        ...(slot.dayOfMonth !== undefined && { dayOfMonth: slot.dayOfMonth }),
       })),
       isActive: true,
       ...(scheduleData.weekDays && { weekDays: scheduleData.weekDays }),
@@ -59,9 +69,35 @@ const HPScheduleReview = () => {
     })
   }
 
-  const schedules = scheduleData.timeSlots.map((slot) => ({
-    slots: [`${formatTime(slot.startTime)} - ${formatTime(slot.endTime)}`],
-  }))
+  const schedules = (() => {
+    const scheduleType = scheduleData.scheduleType
+
+    if (scheduleType === 'daily') {
+      return scheduleData.timeSlots.map((slot) => ({
+        slots: [`${formatTime(slot.startTime)} - ${formatTime(slot.endTime)}`],
+      }))
+    } else if (scheduleType === 'weekly') {
+      const grouped: { [key: string]: string[] } = {}
+      scheduleData.timeSlots.forEach((slot) => {
+        if (slot.dayOfWeek !== undefined) {
+          const day = DAYS[slot.dayOfWeek]
+          if (!grouped[day]) grouped[day] = []
+          grouped[day].push(`${formatTime(slot.startTime)} - ${formatTime(slot.endTime)}`)
+        }
+      })
+      return Object.entries(grouped).map(([day, slots]) => ({ day, slots }))
+    } else if (scheduleType === 'monthly') {
+      const grouped: { [key: number]: string[] } = {}
+      scheduleData.timeSlots.forEach((slot) => {
+        if (slot.dayOfMonth !== undefined) {
+          if (!grouped[slot.dayOfMonth]) grouped[slot.dayOfMonth] = []
+          grouped[slot.dayOfMonth].push(`${formatTime(slot.startTime)} - ${formatTime(slot.endTime)}`)
+        }
+      })
+      return Object.entries(grouped).map(([date, slots]) => ({ date: parseInt(date), slots }))
+    }
+    return []
+  })()
 
   const scheduleType = (scheduleData.scheduleType || 'daily') as 'daily' | 'weekly' | 'monthly'
 

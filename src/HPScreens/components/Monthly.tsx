@@ -23,6 +23,10 @@ type DateWiseSchedule = {
   [date: number]: DateSchedule
 }
 
+type MonthlyProps = {
+  onScheduleChange?: (schedule: DateWiseSchedule) => void
+}
+
 const ONE_HOUR = 60 * 60 * 1000
 
 const createDefaultSlot = (): TimeSlot => ({
@@ -33,22 +37,24 @@ const createDefaultSlot = (): TimeSlot => ({
 
 const DATES = Array.from({ length: 31 }, (_, i) => i + 1)
 
-export default function Monthly() {
-  const [selectedDates, setSelectedDates] = useState<number[]>([1])
-  const [dateWiseSchedule, setDateWiseSchedule] = useState<DateWiseSchedule>({
-    1: { slots: [createDefaultSlot()] },
-    15: { slots: [createDefaultSlot()] },
-  })
+export default function Monthly({ onScheduleChange }: MonthlyProps) {
+  const [selectedDates, setSelectedDates] = useState<number[]>([])
+  const [dateWiseSchedule, setDateWiseSchedule] = useState<DateWiseSchedule>({})
+
+  const updateSchedule = (newSchedule: DateWiseSchedule) => {
+    setDateWiseSchedule(newSchedule)
+    onScheduleChange?.(newSchedule)
+  }
 
   const toggleDate = (date: number) => {
     if (selectedDates.includes(date)) {
       setSelectedDates(selectedDates.filter((d) => d !== date))
       const newSchedule = { ...dateWiseSchedule }
       delete newSchedule[date]
-      setDateWiseSchedule(newSchedule)
+      updateSchedule(newSchedule)
     } else {
       setSelectedDates([...selectedDates, date].sort((a, b) => a - b))
-      setDateWiseSchedule({
+      updateSchedule({
         ...dateWiseSchedule,
         [date]: {
           slots: [createDefaultSlot()],
@@ -61,7 +67,7 @@ export default function Monthly() {
     const dateSchedule = dateWiseSchedule[date]
     if (!dateSchedule) return
 
-    setDateWiseSchedule({
+    updateSchedule({
       ...dateWiseSchedule,
       [date]: {
         slots: [...dateSchedule.slots, createDefaultSlot()],
@@ -73,7 +79,7 @@ export default function Monthly() {
     const dateSchedule = dateWiseSchedule[date]
     if (!dateSchedule || dateSchedule.slots.length <= 1) return
 
-    setDateWiseSchedule({
+    updateSchedule({
       ...dateWiseSchedule,
       [date]: {
         slots: dateSchedule.slots.filter((slot) => slot.id !== slotId),
@@ -93,7 +99,7 @@ export default function Monthly() {
     const dateSchedule = dateWiseSchedule[date]
     if (!dateSchedule) return
 
-    setDateWiseSchedule({
+    updateSchedule({
       ...dateWiseSchedule,
       [date]: {
         slots: dateSchedule.slots.map((slot) =>

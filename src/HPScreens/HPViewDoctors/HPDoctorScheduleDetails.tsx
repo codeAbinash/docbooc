@@ -1,4 +1,6 @@
+import { queryClient } from '@/query'
 import { Header } from '@/UserScreens/BookAppointment/components/Header'
+import popupStore from '@/zustand/popupStore'
 import FabIcon from '@components/FabIcon'
 import { PaddingBottom, PaddingTop } from '@components/SafePadding'
 import ArrowLeft01Icon from '@hugeicons/ArrowLeft01Icon'
@@ -11,13 +13,15 @@ import { useColorScheme } from 'nativewind'
 import { useState } from 'react'
 import { ActivityIndicator, ScrollView, TouchableOpacity, View } from 'react-native'
 import ScheduleCard from '../components/ScheduleCard'
-import popupStore from '@/zustand/popupStore'
-import { queryClient } from '@/query'
 
 type TimeSlot = {
   id: string
   startTime: string
   endTime: string
+  scheduleDayId?: string
+  day?: string | null
+  dayOfWeek?: number | null
+  dayOfMonth?: number | null
 }
 
 type Schedule = {
@@ -30,9 +34,9 @@ type Schedule = {
 }
 
 type GroupedSchedules = {
-  weekly: Array<{ id: string; day: string; slots: string[] }>
-  daily: Array<{ id: string; slots: string[] }>
-  monthly: Array<{ id: string; date: number; slots: string[] }>
+  weekly: Array<{ key: string; id: string; scheduleDayId?: string; day: string; slots: string[] }>
+  daily: Array<{ key: string; id: string; slots: string[] }>
+  monthly: Array<{ key: string; id: string; scheduleDayId?: string; date: number; slots: string[] }>
 }
 
 const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
@@ -55,25 +59,60 @@ function groupSchedules(schedules: Schedule[]): GroupedSchedules {
   schedules.forEach((schedule) => {
     if (schedule.scheduleStatus !== 'active' || !schedule.timeSlots.length) return
 
-    const slots = schedule.timeSlots.map(formatSlot)
-
     if (schedule.scheduleType === 'daily') {
-      grouped.daily.push({ id: schedule.id, slots })
-    } else if (schedule.scheduleType === 'weekly' && schedule.daysMask !== null) {
-      for (let i = 0; i < 7; i++) {
-        if (!(schedule.daysMask & (1 << i))) continue
-        const dayName = DAYS[i]
-        if (!dayName) continue
-        const existingDay = grouped.weekly.find((d) => d.day === dayName)
-        if (existingDay) {
-          existingDay.slots.push(...slots)
-        } else {
-          grouped.weekly.push({ id: schedule.id, day: dayName, slots })
+      const slots = schedule.timeSlots.map(formatSlot)
+      grouped.daily.push({ key: schedule.id, id: schedule.id, slots })
+    } else if (schedule.scheduleType === 'weekly') {
+      const dayGroups: { [key: string]: { slots: string[]; scheduleDayId?: string } } = {}
+
+      schedule.timeSlots.forEach((slot) => {
+        const dayIndex = slot.dayOfWeek ?? slot.day
+        const dayName = typeof dayIndex === 'number' ? DAYS[dayIndex] : dayIndex
+        if (!dayName) return
+
+        if (!dayGroups[dayName]) {
+          dayGroups[dayName] = { slots: [], scheduleDayId: slot.scheduleDayId || slot.id }
         }
-      }
+        dayGroups[dayName].slots.push(formatSlot(slot))
+      })
+
+      Object.entries(dayGroups).forEach(([day, data]) => {
+        grouped.weekly.push({
+          key: `${schedule.id}-${day}-${data.scheduleDayId}`,
+          id: schedule.id,
+          scheduleDayId: data.scheduleDayId,
+          day,
+          slots: data.slots,
+        })
+      })
     } else if (schedule.scheduleType === 'monthly') {
-      const date = new Date(schedule.createdAt).getDate()
-      grouped.monthly.push({ id: schedule.id, date, slots })
+      const dateGroups: { [key: string]: { date: number; slots: string[]; scheduleDayId?: string } } = {}
+
+      schedule.timeSlots.forEach((slot) => {
+        const date = slot.dayOfMonth ?? new Date(schedule.createdAt).getDate()
+        if (!date) return
+
+        const groupKey = `${date}-${slot.scheduleDayId || slot.id}`
+
+        if (!dateGroups[groupKey]) {
+          dateGroups[groupKey] = {
+            date,
+            slots: [],
+            scheduleDayId: slot.scheduleDayId || slot.id,
+          }
+        }
+        dateGroups[groupKey].slots.push(formatSlot(slot))
+      })
+
+      Object.values(dateGroups).forEach((data) => {
+        grouped.monthly.push({
+          key: `${schedule.id}-${data.date}-${data.scheduleDayId}`,
+          id: schedule.id,
+          scheduleDayId: data.scheduleDayId,
+          date: data.date,
+          slots: data.slots,
+        })
+      })
     }
   })
 
@@ -108,14 +147,28 @@ export default function HPDoctorScheduleDetails({ navigation, route }: HPNavProp
     },
   })
 
+  const deleteDayMutation = useMutation({
+    mutationFn: async (scheduleDayId: string) => {
+      const response = await hpApi.schedules.day[':scheduleDayId'].$delete({
+        param: { scheduleDayId },
+      })
+      return response.json()
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['doctor-schedule', doctorId] })
+    },
+  })
+
   const handleDelete = (scheduleId: string) => {
     alert('Delete Schedule', 'Are you sure you want to delete this schedule?', [
-      { text: 'Cancel', style: 'cancel' },
-      {
-        text: 'Delete',
-        style: 'destructive',
-        onPress: () => deleteMutation.mutate(scheduleId),
-      },
+      { text: 'Cancel' },
+      { text: 'Delete', onPress: () => deleteMutation.mutate(scheduleId) },
+    ])
+  }
+
+  const handleDeleteDay = (scheduleDayId: string) => {
+    alert('Delete Day', 'Are you sure you want to delete this specific day from the schedule?', [
+      { text: 'Delete', onPress: () => deleteDayMutation.mutate(scheduleDayId) },
     ])
   }
 
@@ -161,13 +214,23 @@ export default function HPDoctorScheduleDetails({ navigation, route }: HPNavProp
         <ScrollView className='flex-1' showsVerticalScrollIndicator={false}>
           <View className='flex-1 gap-6 p-5'>
             {schedules.weekly.length > 0 && (
-              <ScheduleCard type='weekly' schedules={schedules.weekly} onDelete={handleDelete} />
+              <ScheduleCard
+                type='weekly'
+                schedules={schedules.weekly}
+                onDelete={handleDelete}
+                onDeleteDay={handleDeleteDay}
+              />
             )}
             {schedules.daily.length > 0 && (
               <ScheduleCard type='daily' schedules={schedules.daily} onDelete={handleDelete} />
             )}
             {schedules.monthly.length > 0 && (
-              <ScheduleCard type='monthly' schedules={schedules.monthly} onDelete={handleDelete} />
+              <ScheduleCard
+                type='monthly'
+                schedules={schedules.monthly}
+                onDelete={handleDelete}
+                onDeleteDay={handleDeleteDay}
+              />
             )}
           </View>
           <PaddingBottom />

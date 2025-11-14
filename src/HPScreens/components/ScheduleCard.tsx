@@ -8,12 +8,15 @@ import CallIcon from '@hugeicons/CallIcon'
 type ScheduleCardProps = {
   type: 'weekly' | 'daily' | 'monthly'
   schedules: Array<{
+    key: string
     id: string
+    scheduleDayId?: string
     day?: string
     date?: number
     slots: string[]
   }>
   onDelete?: (id: string) => void
+  onDeleteDay?: (scheduleDayId: string) => void
 }
 
 const CONFIG = {
@@ -37,9 +40,20 @@ const CONFIG = {
   },
 }
 
-export default function ScheduleCard({ type, schedules, onDelete }: ScheduleCardProps) {
+export default function ScheduleCard({ type, schedules, onDelete, onDeleteDay }: ScheduleCardProps) {
   const config = CONFIG[type]
   const { colorScheme } = useColorScheme()
+
+  const getDeleteHandler = (schedule: any) => {
+    if (type === 'daily') {
+      return onDelete ? () => onDelete(schedule.id) : undefined
+    } else if ((type === 'weekly' || type === 'monthly') && schedule.scheduleDayId && onDeleteDay) {
+      return () => onDeleteDay(schedule.scheduleDayId)
+    } else if (onDelete) {
+      return () => onDelete(schedule.id)
+    }
+    return undefined
+  }
 
   return (
     <View className='gap-4'>
@@ -53,9 +67,25 @@ export default function ScheduleCard({ type, schedules, onDelete }: ScheduleCard
       <View className='gap-3'>
         {schedules.map((schedule) => (
           <View
-            key={schedule.id}
+            key={schedule.key}
             className='overflow-hidden rounded-xl border border-neutral-100 bg-white dark:border-neutral-700 dark:bg-neutral-800'
           >
+            {(type === 'weekly' || type === 'monthly') && (
+              <View className='flex-row items-center justify-between border-b border-neutral-100 bg-neutral-50/50 px-4 py-2.5 dark:border-neutral-700 dark:bg-neutral-900/30'>
+                <SemiBold className='text-sm text-neutral-700 dark:text-neutral-300'>
+                  {type === 'weekly' && schedule.day}
+                  {type === 'monthly' && `Day ${schedule.date}`}
+                </SemiBold>
+                {getDeleteHandler(schedule) && (
+                  <TouchableOpacity
+                    onPress={getDeleteHandler(schedule)}
+                    className='rounded-lg bg-red-50 p-1.5 dark:bg-red-900/20'
+                  >
+                    <CallIcon size={18} color='#ef4444' strokeWidth={2} />
+                  </TouchableOpacity>
+                )}
+              </View>
+            )}
             {schedule.slots.map((slot, slotIndex) => (
               <View key={slotIndex}>
                 <View className='flex-row items-center justify-between p-4'>
@@ -64,9 +94,9 @@ export default function ScheduleCard({ type, schedules, onDelete }: ScheduleCard
                     {type === 'daily' && `${config.prefix} ${slot}`}
                     {type === 'monthly' && `${config.prefix} ${schedule.date}th ${slot}`}
                   </Medium>
-                  {onDelete && slotIndex === 0 && (
+                  {type === 'daily' && slotIndex === 0 && getDeleteHandler(schedule) && (
                     <TouchableOpacity
-                      onPress={() => onDelete(schedule.id)}
+                      onPress={getDeleteHandler(schedule)}
                       className='ml-3 rounded-lg bg-red-50 p-2 dark:bg-red-900/20'
                     >
                       <CallIcon size={20} color='#ef4444' strokeWidth={2} />

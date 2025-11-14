@@ -1,9 +1,11 @@
 import authStore from '@/zustand/authStore'
 import { navigationStore } from '@/zustand/navigationStore'
+import { hpApi } from '@utils/client'
 import { Medium } from '@utils/fonts'
 import { HPNavProp } from '@utils/types'
 import { useEffect } from 'react'
 import { View } from 'react-native'
+
 
 export default function HPSplash({ navigation }: HPNavProp) {
   const { token } = authStore()

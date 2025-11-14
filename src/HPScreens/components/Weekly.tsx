@@ -25,6 +25,10 @@ type WeekSchedule = {
   [key: string]: DaySchedule
 }
 
+type WeeklyProps = {
+  onScheduleChange?: (schedule: WeekSchedule) => void
+}
+
 const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 
 const CHAR_DAYS: { [key: string]: string } = {
@@ -45,23 +49,24 @@ const createDefaultSlot = (): TimeSlot => ({
   endTime: new Date(Date.now() + ONE_HOUR),
 })
 
-export default function Weekly() {
-  const [selectedDays, setSelectedDays] = useState<string[]>(['Monday'])
-  const [weekSchedule, setWeekSchedule] = useState<WeekSchedule>({
-    Monday: { slots: [createDefaultSlot()] },
-    Wednesday: { slots: [createDefaultSlot()] },
-    Friday: { slots: [createDefaultSlot()] },
-  })
+export default function Weekly({ onScheduleChange }: WeeklyProps) {
+  const [selectedDays, setSelectedDays] = useState<string[]>([])
+  const [weekSchedule, setWeekSchedule] = useState<WeekSchedule>({})
+
+  const updateSchedule = (newSchedule: WeekSchedule) => {
+    setWeekSchedule(newSchedule)
+    onScheduleChange?.(newSchedule)
+  }
 
   const toggleDay = (day: string) => {
     if (selectedDays.includes(day)) {
       setSelectedDays(selectedDays.filter((d) => d !== day))
       const newSchedule = { ...weekSchedule }
       delete newSchedule[day]
-      setWeekSchedule(newSchedule)
+      updateSchedule(newSchedule)
     } else {
       setSelectedDays([...selectedDays, day])
-      setWeekSchedule({
+      updateSchedule({
         ...weekSchedule,
         [day]: {
           slots: [createDefaultSlot()],
@@ -74,7 +79,7 @@ export default function Weekly() {
     const daySchedule = weekSchedule[day]
     if (!daySchedule) return
 
-    setWeekSchedule({
+    updateSchedule({
       ...weekSchedule,
       [day]: {
         slots: [...daySchedule.slots, createDefaultSlot()],
@@ -86,7 +91,7 @@ export default function Weekly() {
     const daySchedule = weekSchedule[day]
     if (!daySchedule || daySchedule.slots.length <= 1) return
 
-    setWeekSchedule({
+    updateSchedule({
       ...weekSchedule,
       [day]: {
         slots: daySchedule.slots.filter((slot) => slot.id !== slotId),
@@ -100,7 +105,7 @@ export default function Weekly() {
     const daySchedule = weekSchedule[day]
     if (!daySchedule) return
 
-    setWeekSchedule({
+    updateSchedule({
       ...weekSchedule,
       [day]: {
         slots: daySchedule.slots.map((slot) =>

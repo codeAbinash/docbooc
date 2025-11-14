@@ -40,17 +40,44 @@ const HPDoctorScheduler = () => {
   const { doctorId, doctorName } = route.params
   const [activeTab, setActiveTab] = useState(0)
   const [dailyTimeSlots, setDailyTimeSlots] = useState<any[]>([])
+  const [weeklySchedule, setWeeklySchedule] = useState<any>({})
+  const [monthlySchedule, setMonthlySchedule] = useState<any>({})
 
   const handleReview = () => {
     const scheduleType = (tabLabels[activeTab] || 'Daily').toLowerCase()
 
-    if (scheduleType === 'daily' && dailyTimeSlots.length === 0) {
-      Alert.alert('Error', 'Please add at least one time slot')
-      return
+    if (scheduleType === 'daily') {
+      if (dailyTimeSlots.length === 0) {
+        Alert.alert('Error', 'Please add at least one time slot')
+        return
+      }
+    }
+
+    if (scheduleType === 'weekly') {
+      const hasValidSchedule =
+        Object.keys(weeklySchedule).length > 0 &&
+        Object.values(weeklySchedule).some((data: any) => data.slots && data.slots.length > 0)
+
+      if (!hasValidSchedule) {
+        Alert.alert('Error', 'Please select at least one day and add time slots')
+        return
+      }
+    }
+
+    if (scheduleType === 'monthly') {
+      const hasValidSchedule =
+        Object.keys(monthlySchedule).length > 0 &&
+        Object.values(monthlySchedule).some((data: any) => data.slots && data.slots.length > 0)
+
+      if (!hasValidSchedule) {
+        Alert.alert('Error', 'Please select at least one date and add time slots')
+        return
+      }
     }
 
     let scheduleData: any = {
       scheduleType,
+      doctorId,
     }
 
     if (scheduleType === 'daily') {
@@ -60,23 +87,49 @@ const HPDoctorScheduler = () => {
         maxBookings: slot.maxBookings,
       }))
     } else if (scheduleType === 'weekly') {
-      scheduleData.timeSlots = [
-        {
-          startTime: '09:00',
-          endTime: '12:00',
-          maxBookings: 5,
-        },
-      ]
-      scheduleData.weekDays = [0, 1, 2, 3, 4, 5, 6]
+      const weekDays: number[] = []
+      const timeSlots: any[] = []
+
+      Object.entries(weeklySchedule).forEach(([day, data]: [string, any]) => {
+        const dayIndex = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].indexOf(day)
+        if (dayIndex !== -1 && !weekDays.includes(dayIndex)) {
+          weekDays.push(dayIndex)
+        }
+
+        data.slots.forEach((slot: any) => {
+          timeSlots.push({
+            dayOfWeek: dayIndex,
+            startTime: slot.startTime.toISOString().split('T')[1].substring(0, 8),
+            endTime: slot.endTime.toISOString().split('T')[1].substring(0, 8),
+            maxBookings: 20,
+          })
+        })
+      })
+
+      scheduleData.weekDays = weekDays
+      scheduleData.timeSlots = timeSlots
     } else if (scheduleType === 'monthly') {
-      scheduleData.timeSlots = [
-        {
-          startTime: '09:00',
-          endTime: '12:00',
-          maxBookings: 5,
-        },
-      ]
-      scheduleData.monthDays = Array.from({ length: 31 }, (_, i) => i + 1)
+      const monthDays: number[] = []
+      const timeSlots: any[] = []
+
+      Object.entries(monthlySchedule).forEach(([dateStr, data]: [string, any]) => {
+        const date = parseInt(dateStr)
+        if (!monthDays.includes(date)) {
+          monthDays.push(date)
+        }
+
+        data.slots.forEach((slot: any) => {
+          timeSlots.push({
+            dayOfMonth: date,
+            startTime: slot.startTime.toISOString().split('T')[1].substring(0, 8),
+            endTime: slot.endTime.toISOString().split('T')[1].substring(0, 8),
+            maxBookings: 20,
+          })
+        })
+      })
+
+      scheduleData.monthDays = monthDays.sort((a, b) => a - b)
+      scheduleData.timeSlots = timeSlots
     }
 
     navigation.navigate('HPScheduleReview', {
@@ -104,7 +157,11 @@ const HPDoctorScheduler = () => {
         <View className='mt-3 flex-1'>
           {ContentMap.map((Component, index) =>
             activeTab === index ? (
-              <Component key={index} onTimeSlotsChange={index === 0 ? setDailyTimeSlots : undefined} />
+              <Component
+                key={index}
+                onTimeSlotsChange={index === 0 ? setDailyTimeSlots : undefined}
+                onScheduleChange={index === 1 ? setWeeklySchedule : index === 2 ? setMonthlySchedule : undefined}
+              />
             ) : null,
           )}
         </View>

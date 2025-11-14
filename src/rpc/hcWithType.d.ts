@@ -26,33 +26,105 @@ declare const client: {
         v1: {
             admin: {
                 auth: {
-                    login: import("hono/client").ClientRequest<{
+                    logout: import("hono/client").ClientRequest<{
+                        $post: {
+                            input: {};
+                            output: {
+                                success: true;
+                                message: string;
+                                data: null;
+                            };
+                            outputFormat: "json";
+                            status: 200;
+                        };
+                    }>;
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            admin: {
+                doctors: import("hono/client").ClientRequest<{
+                    $post: {
+                        input: {
+                            json: {
+                                name: string;
+                                email?: string | undefined;
+                                contactNumber?: string | undefined;
+                                gender?: "female" | "male" | "other" | undefined;
+                                department?: string | undefined;
+                                degrees?: string | undefined;
+                                experience?: number | undefined;
+                                specialization: string;
+                            };
+                        };
+                        output: {
+                            success: true;
+                            message: string;
+                            data: {
+                                contactNumber: string | null;
+                                createdAt: string;
+                                degrees: string | null;
+                                department: string | null;
+                                email: string | null;
+                                experience: number | null;
+                                gender: string | null;
+                                id: string;
+                                name: string;
+                                specialization: string;
+                                verified: boolean | null;
+                            };
+                        };
+                        outputFormat: "json";
+                        status: 200;
+                    };
+                }>;
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            admin: {
+                doctors: import("hono/client").ClientRequest<{
+                    $get: {
+                        input: {};
+                        output: {
+                            success: true;
+                            message: string;
+                            data: {
+                                id: string;
+                                name: string;
+                                email: string | null;
+                                contactNumber: string | null;
+                                gender: string | null;
+                                department: string | null;
+                                degrees: string | null;
+                                experience: number | null;
+                                specialization: string;
+                                createdAt: string;
+                                verified: boolean | null;
+                            }[];
+                        };
+                        outputFormat: "json";
+                        status: 200;
+                    };
+                }>;
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            admin: {
+                auth: {
+                    "verify-email": import("hono/client").ClientRequest<{
                         $post: {
                             input: {
                                 json: {
                                     email: string;
-                                    password: string;
-                                };
-                            };
-                            output: {
-                                success: true;
-                                message: string;
-                                data: {
-                                    token: string;
-                                    admin: {
-                                        id: string;
-                                        email: string;
-                                        name: string;
-                                    };
-                                };
-                            };
-                            outputFormat: "json";
-                            status: 200;
-                        } | {
-                            input: {
-                                json: {
-                                    email: string;
-                                    password: string;
                                 };
                             };
                             output: {
@@ -61,21 +133,22 @@ declare const client: {
                                 data: null;
                             };
                             outputFormat: "json";
-                            status: 401;
+                            status: 400;
                         } | {
                             input: {
                                 json: {
                                     email: string;
-                                    password: string;
                                 };
                             };
                             output: {
-                                success: false;
+                                success: true;
                                 message: string;
-                                data: import("hono/utils/types").JSONValue;
+                                data: {
+                                    email: string;
+                                };
                             };
                             outputFormat: "json";
-                            status: 500;
+                            status: 200;
                         };
                     }>;
                 };
@@ -89,22 +162,6 @@ declare const client: {
                 auth: {
                     register: import("hono/client").ClientRequest<{
                         $post: {
-                            input: {
-                                json: {
-                                    name: string;
-                                    email: string;
-                                    otp: string;
-                                    password: string;
-                                };
-                            };
-                            output: {
-                                success: false;
-                                message: string;
-                                data: import("hono/utils/types").JSONValue;
-                            };
-                            outputFormat: "json";
-                            status: 500;
-                        } | {
                             input: {
                                 json: {
                                     name: string;
@@ -143,6 +200,83 @@ declare const client: {
                             };
                             outputFormat: "json";
                             status: 200;
+                        } | {
+                            input: {
+                                json: {
+                                    name: string;
+                                    email: string;
+                                    otp: string;
+                                    password: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: import("hono/utils/types").JSONValue;
+                            };
+                            outputFormat: "json";
+                            status: 500;
+                        };
+                    }>;
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            admin: {
+                auth: {
+                    login: import("hono/client").ClientRequest<{
+                        $post: {
+                            input: {
+                                json: {
+                                    email: string;
+                                    password: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: import("hono/utils/types").JSONValue;
+                            };
+                            outputFormat: "json";
+                            status: 500;
+                        } | {
+                            input: {
+                                json: {
+                                    email: string;
+                                    password: string;
+                                };
+                            };
+                            output: {
+                                success: true;
+                                message: string;
+                                data: {
+                                    token: string;
+                                    admin: {
+                                        id: string;
+                                        email: string;
+                                        name: string;
+                                    };
+                                };
+                            };
+                            outputFormat: "json";
+                            status: 200;
+                        } | {
+                            input: {
+                                json: {
+                                    email: string;
+                                    password: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: null;
+                            };
+                            outputFormat: "json";
+                            status: 401;
                         };
                     }>;
                 };
@@ -211,79 +345,6 @@ declare const client: {
                         };
                     }>;
                 };
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            admin: {
-                doctors: import("hono/client").ClientRequest<{
-                    $get: {
-                        input: {};
-                        output: {
-                            success: true;
-                            message: string;
-                            data: {
-                                id: string;
-                                name: string;
-                                email: string | null;
-                                contactNumber: string | null;
-                                gender: string | null;
-                                department: string | null;
-                                degrees: string | null;
-                                experience: number | null;
-                                specialization: string;
-                                createdAt: string;
-                                verified: boolean | null;
-                            }[];
-                        };
-                        outputFormat: "json";
-                        status: 200;
-                    };
-                }>;
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            admin: {
-                doctors: import("hono/client").ClientRequest<{
-                    $post: {
-                        input: {
-                            json: {
-                                name: string;
-                                email?: string | undefined;
-                                contactNumber?: string | undefined;
-                                gender?: "female" | "male" | "other" | undefined;
-                                department?: string | undefined;
-                                degrees?: string | undefined;
-                                experience?: number | undefined;
-                                specialization: string;
-                            };
-                        };
-                        output: {
-                            success: true;
-                            message: string;
-                            data: {
-                                contactNumber: string | null;
-                                createdAt: string;
-                                degrees: string | null;
-                                department: string | null;
-                                email: string | null;
-                                experience: number | null;
-                                gender: string | null;
-                                id: string;
-                                name: string;
-                                specialization: string;
-                                verified: boolean | null;
-                            };
-                        };
-                        outputFormat: "json";
-                        status: 200;
-                    };
-                }>;
             };
         };
     };
@@ -422,99 +483,38 @@ declare const client: {
                                 };
                             };
                             output: {
+                                success: true;
+                                message: string;
+                                data: null;
+                            };
+                            outputFormat: "json";
+                            status: 200;
+                        } | {
+                            input: {
+                                param: {
+                                    id: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: null;
+                            };
+                            outputFormat: "json";
+                            status: 400;
+                        } | {
+                            input: {
+                                param: {
+                                    id: string;
+                                };
+                            };
+                            output: {
                                 success: false;
                                 message: string;
                                 data: import("hono/utils/types").JSONValue;
                             };
                             outputFormat: "json";
                             status: 500;
-                        } | {
-                            input: {
-                                param: {
-                                    id: string;
-                                };
-                            };
-                            output: {
-                                success: false;
-                                message: string;
-                                data: null;
-                            };
-                            outputFormat: "json";
-                            status: 400;
-                        } | {
-                            input: {
-                                param: {
-                                    id: string;
-                                };
-                            };
-                            output: {
-                                success: true;
-                                message: string;
-                                data: null;
-                            };
-                            outputFormat: "json";
-                            status: 200;
-                        };
-                    }>;
-                };
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            admin: {
-                auth: {
-                    "verify-email": import("hono/client").ClientRequest<{
-                        $post: {
-                            input: {
-                                json: {
-                                    email: string;
-                                };
-                            };
-                            output: {
-                                success: false;
-                                message: string;
-                                data: null;
-                            };
-                            outputFormat: "json";
-                            status: 400;
-                        } | {
-                            input: {
-                                json: {
-                                    email: string;
-                                };
-                            };
-                            output: {
-                                success: true;
-                                message: string;
-                                data: {
-                                    email: string;
-                                };
-                            };
-                            outputFormat: "json";
-                            status: 200;
-                        };
-                    }>;
-                };
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            admin: {
-                auth: {
-                    logout: import("hono/client").ClientRequest<{
-                        $post: {
-                            input: {};
-                            output: {
-                                success: true;
-                                message: string;
-                                data: null;
-                            };
-                            outputFormat: "json";
-                            status: 200;
                         };
                     }>;
                 };
@@ -545,159 +545,6 @@ declare const client: {
                                     createdAt: string;
                                     verified: boolean | null;
                                 }[];
-                            };
-                            outputFormat: "json";
-                            status: 200;
-                        };
-                    }>;
-                };
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            hp: {
-                auth: {
-                    login: import("hono/client").ClientRequest<{
-                        $post: {
-                            input: {
-                                json: {
-                                    email: string;
-                                    password: string;
-                                };
-                            };
-                            output: {
-                                success: false;
-                                message: string;
-                                data: null;
-                            };
-                            outputFormat: "json";
-                            status: 401;
-                        } | {
-                            input: {
-                                json: {
-                                    email: string;
-                                    password: string;
-                                };
-                            };
-                            output: {
-                                success: true;
-                                message: string;
-                                data: {
-                                    token: string;
-                                    hp: {
-                                        id: string;
-                                        email: string;
-                                        name: string;
-                                    };
-                                };
-                            };
-                            outputFormat: "json";
-                            status: 200;
-                        };
-                    }>;
-                };
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            hp: {
-                schedules: {
-                    ":id": {
-                        enable: import("hono/client").ClientRequest<{
-                            $post: {
-                                input: {
-                                    param: {
-                                        id: string;
-                                    };
-                                };
-                                output: {
-                                    success: false;
-                                    message: string;
-                                    data: null;
-                                };
-                                outputFormat: "json";
-                                status: 401;
-                            } | {
-                                input: {
-                                    param: {
-                                        id: string;
-                                    };
-                                };
-                                output: {
-                                    success: false;
-                                    message: string;
-                                    data: import("hono/utils/types").JSONValue;
-                                };
-                                outputFormat: "json";
-                                status: 500;
-                            } | {
-                                input: {
-                                    param: {
-                                        id: string;
-                                    };
-                                };
-                                output: {
-                                    success: false;
-                                    message: string;
-                                    data: null;
-                                };
-                                outputFormat: "json";
-                                status: 400;
-                            } | {
-                                input: {
-                                    param: {
-                                        id: string;
-                                    };
-                                };
-                                output: {
-                                    success: true;
-                                    message: string;
-                                    data: null;
-                                };
-                                outputFormat: "json";
-                                status: 200;
-                            };
-                        }>;
-                    };
-                };
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            hp: {
-                auth: {
-                    "verify-email": import("hono/client").ClientRequest<{
-                        $post: {
-                            input: {
-                                json: {
-                                    email: string;
-                                };
-                            };
-                            output: {
-                                success: false;
-                                message: string;
-                                data: null;
-                            };
-                            outputFormat: "json";
-                            status: 400;
-                        } | {
-                            input: {
-                                json: {
-                                    email: string;
-                                };
-                            };
-                            output: {
-                                success: true;
-                                message: string;
-                                data: {
-                                    email: string;
-                                };
                             };
                             outputFormat: "json";
                             status: 200;
@@ -763,25 +610,6 @@ declare const client: {
         v1: {
             hp: {
                 schedules: import("hono/client").ClientRequest<{
-                    $get: {
-                        input: {};
-                        output: {
-                            success: true;
-                            message: string;
-                            data: null;
-                        };
-                        outputFormat: "json";
-                        status: 200;
-                    };
-                }>;
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            hp: {
-                schedules: import("hono/client").ClientRequest<{
                     $post: {
                         input: {
                             json: {
@@ -805,7 +633,7 @@ declare const client: {
                             data: null;
                         };
                         outputFormat: "json";
-                        status: 401;
+                        status: 400;
                     } | {
                         input: {
                             json: {
@@ -853,7 +681,7 @@ declare const client: {
                             data: null;
                         };
                         outputFormat: "json";
-                        status: 400;
+                        status: 401;
                     } | {
                         input: {
                             json: {
@@ -895,9 +723,128 @@ declare const client: {
     api: {
         v1: {
             hp: {
+                schedules: import("hono/client").ClientRequest<{
+                    $get: {
+                        input: {};
+                        output: {
+                            success: true;
+                            message: string;
+                            data: null;
+                        };
+                        outputFormat: "json";
+                        status: 200;
+                    };
+                }>;
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
+                auth: {
+                    "verify-email": import("hono/client").ClientRequest<{
+                        $post: {
+                            input: {
+                                json: {
+                                    email: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: null;
+                            };
+                            outputFormat: "json";
+                            status: 400;
+                        } | {
+                            input: {
+                                json: {
+                                    email: string;
+                                };
+                            };
+                            output: {
+                                success: true;
+                                message: string;
+                                data: {
+                                    email: string;
+                                };
+                            };
+                            outputFormat: "json";
+                            status: 200;
+                        };
+                    }>;
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
+                auth: {
+                    login: import("hono/client").ClientRequest<{
+                        $post: {
+                            input: {
+                                json: {
+                                    email: string;
+                                    password: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: null;
+                            };
+                            outputFormat: "json";
+                            status: 401;
+                        } | {
+                            input: {
+                                json: {
+                                    email: string;
+                                    password: string;
+                                };
+                            };
+                            output: {
+                                success: true;
+                                message: string;
+                                data: {
+                                    token: string;
+                                    hp: {
+                                        id: string;
+                                        email: string;
+                                        name: string;
+                                    };
+                                };
+                            };
+                            outputFormat: "json";
+                            status: 200;
+                        };
+                    }>;
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
                 schedules: {
                     ":id": import("hono/client").ClientRequest<{
                         $delete: {
+                            input: {
+                                param: {
+                                    id: string;
+                                };
+                            };
+                            output: {
+                                success: true;
+                                message: string;
+                                data: null;
+                            };
+                            outputFormat: "json";
+                            status: 200;
+                        } | {
                             input: {
                                 param: {
                                     id: string;
@@ -909,7 +856,7 @@ declare const client: {
                                 data: null;
                             };
                             outputFormat: "json";
-                            status: 401;
+                            status: 400;
                         } | {
                             input: {
                                 param: {
@@ -935,20 +882,7 @@ declare const client: {
                                 data: null;
                             };
                             outputFormat: "json";
-                            status: 400;
-                        } | {
-                            input: {
-                                param: {
-                                    id: string;
-                                };
-                            };
-                            output: {
-                                success: true;
-                                message: string;
-                                data: null;
-                            };
-                            outputFormat: "json";
-                            status: 200;
+                            status: 401;
                         };
                     }>;
                 };
@@ -961,8 +895,21 @@ declare const client: {
             hp: {
                 schedules: {
                     ":id": {
-                        disable: import("hono/client").ClientRequest<{
+                        enable: import("hono/client").ClientRequest<{
                             $post: {
+                                input: {
+                                    param: {
+                                        id: string;
+                                    };
+                                };
+                                output: {
+                                    success: true;
+                                    message: string;
+                                    data: null;
+                                };
+                                outputFormat: "json";
+                                status: 200;
+                            } | {
                                 input: {
                                     param: {
                                         id: string;
@@ -974,7 +921,7 @@ declare const client: {
                                     data: null;
                                 };
                                 outputFormat: "json";
-                                status: 401;
+                                status: 400;
                             } | {
                                 input: {
                                     param: {
@@ -1000,8 +947,22 @@ declare const client: {
                                     data: null;
                                 };
                                 outputFormat: "json";
-                                status: 400;
-                            } | {
+                                status: 401;
+                            };
+                        }>;
+                    };
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
+                schedules: {
+                    ":id": {
+                        disable: import("hono/client").ClientRequest<{
+                            $post: {
                                 input: {
                                     param: {
                                         id: string;
@@ -1014,6 +975,45 @@ declare const client: {
                                 };
                                 outputFormat: "json";
                                 status: 200;
+                            } | {
+                                input: {
+                                    param: {
+                                        id: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: null;
+                                };
+                                outputFormat: "json";
+                                status: 400;
+                            } | {
+                                input: {
+                                    param: {
+                                        id: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: import("hono/utils/types").JSONValue;
+                                };
+                                outputFormat: "json";
+                                status: 500;
+                            } | {
+                                input: {
+                                    param: {
+                                        id: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: null;
+                                };
+                                outputFormat: "json";
+                                status: 401;
                             };
                         }>;
                     };
@@ -1040,7 +1040,7 @@ declare const client: {
                                     data: null;
                                 };
                                 outputFormat: "json";
-                                status: 401;
+                                status: 400;
                             } | {
                                 input: {
                                     param: {
@@ -1066,7 +1066,7 @@ declare const client: {
                                     data: null;
                                 };
                                 outputFormat: "json";
-                                status: 400;
+                                status: 401;
                             } | {
                                 input: {
                                     param: {
@@ -1095,6 +1095,72 @@ declare const client: {
                                 };
                                 outputFormat: "json";
                                 status: 200;
+                            };
+                        }>;
+                    };
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
+                schedules: {
+                    day: {
+                        ":scheduleDayId": import("hono/client").ClientRequest<{
+                            $delete: {
+                                input: {
+                                    param: {
+                                        scheduleDayId: string;
+                                    };
+                                };
+                                output: {
+                                    success: true;
+                                    message: string;
+                                    data: null;
+                                };
+                                outputFormat: "json";
+                                status: 200;
+                            } | {
+                                input: {
+                                    param: {
+                                        scheduleDayId: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: null;
+                                };
+                                outputFormat: "json";
+                                status: 400;
+                            } | {
+                                input: {
+                                    param: {
+                                        scheduleDayId: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: import("hono/utils/types").JSONValue;
+                                };
+                                outputFormat: "json";
+                                status: 500;
+                            } | {
+                                input: {
+                                    param: {
+                                        scheduleDayId: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: null;
+                                };
+                                outputFormat: "json";
+                                status: 401;
                             };
                         }>;
                     };
@@ -1234,7 +1300,7 @@ declare const client: {
                             data: null;
                         };
                         outputFormat: "json";
-                        status: 401;
+                        status: 400;
                     } | {
                         input: {
                             json: {
@@ -1249,7 +1315,7 @@ declare const client: {
                             data: null;
                         };
                         outputFormat: "json";
-                        status: 400;
+                        status: 401;
                     } | {
                         input: {
                             json: {
@@ -1388,7 +1454,7 @@ declare const client: {
                                 data: null;
                             };
                             outputFormat: "json";
-                            status: 401;
+                            status: 400;
                         } | {
                             input: {
                                 param: {
@@ -1401,7 +1467,7 @@ declare const client: {
                                 data: null;
                             };
                             outputFormat: "json";
-                            status: 400;
+                            status: 401;
                         } | {
                             input: {
                                 param: {
@@ -1502,7 +1568,7 @@ declare const client: {
                                     data: null;
                                 };
                                 outputFormat: "json";
-                                status: 401;
+                                status: 400;
                             } | {
                                 input: {
                                     param: {
@@ -1515,7 +1581,7 @@ declare const client: {
                                     data: null;
                                 };
                                 outputFormat: "json";
-                                status: 400;
+                                status: 401;
                             } | {
                                 input: {
                                     param: {
@@ -1606,7 +1672,7 @@ declare const client: {
                                     data: null;
                                 };
                                 outputFormat: "json";
-                                status: 401;
+                                status: 400;
                             } | {
                                 input: {
                                     param: {
@@ -1619,7 +1685,7 @@ declare const client: {
                                     data: null;
                                 };
                                 outputFormat: "json";
-                                status: 400;
+                                status: 401;
                             } | {
                                 input: {
                                     param: {
@@ -1707,7 +1773,7 @@ declare const client: {
                             data: null;
                         };
                         outputFormat: "json";
-                        status: 401;
+                        status: 400;
                     } | {
                         input: {
                             json: {
@@ -1724,7 +1790,7 @@ declare const client: {
                             data: null;
                         };
                         outputFormat: "json";
-                        status: 400;
+                        status: 401;
                     } | {
                         input: {
                             json: {
@@ -1810,7 +1876,7 @@ declare const client: {
                             data: null;
                         };
                         outputFormat: "json";
-                        status: 401;
+                        status: 400;
                     } | {
                         input: {};
                         output: {
@@ -1819,7 +1885,7 @@ declare const client: {
                             data: null;
                         };
                         outputFormat: "json";
-                        status: 400;
+                        status: 401;
                     } | {
                         input: {};
                         output: {
@@ -1856,7 +1922,7 @@ declare const client: {
                             data: null;
                         };
                         outputFormat: "json";
-                        status: 401;
+                        status: 400;
                     } | {
                         input: {
                             json: {
@@ -1872,7 +1938,7 @@ declare const client: {
                             data: null;
                         };
                         outputFormat: "json";
-                        status: 400;
+                        status: 401;
                     } | {
                         input: {
                             json: {
@@ -1935,33 +2001,105 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
         v1: {
             admin: {
                 auth: {
-                    login: import("hono/client").ClientRequest<{
+                    logout: import("hono/client").ClientRequest<{
+                        $post: {
+                            input: {};
+                            output: {
+                                success: true;
+                                message: string;
+                                data: null;
+                            };
+                            outputFormat: "json";
+                            status: 200;
+                        };
+                    }>;
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            admin: {
+                doctors: import("hono/client").ClientRequest<{
+                    $post: {
+                        input: {
+                            json: {
+                                name: string;
+                                email?: string | undefined;
+                                contactNumber?: string | undefined;
+                                gender?: "female" | "male" | "other" | undefined;
+                                department?: string | undefined;
+                                degrees?: string | undefined;
+                                experience?: number | undefined;
+                                specialization: string;
+                            };
+                        };
+                        output: {
+                            success: true;
+                            message: string;
+                            data: {
+                                contactNumber: string | null;
+                                createdAt: string;
+                                degrees: string | null;
+                                department: string | null;
+                                email: string | null;
+                                experience: number | null;
+                                gender: string | null;
+                                id: string;
+                                name: string;
+                                specialization: string;
+                                verified: boolean | null;
+                            };
+                        };
+                        outputFormat: "json";
+                        status: 200;
+                    };
+                }>;
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            admin: {
+                doctors: import("hono/client").ClientRequest<{
+                    $get: {
+                        input: {};
+                        output: {
+                            success: true;
+                            message: string;
+                            data: {
+                                id: string;
+                                name: string;
+                                email: string | null;
+                                contactNumber: string | null;
+                                gender: string | null;
+                                department: string | null;
+                                degrees: string | null;
+                                experience: number | null;
+                                specialization: string;
+                                createdAt: string;
+                                verified: boolean | null;
+                            }[];
+                        };
+                        outputFormat: "json";
+                        status: 200;
+                    };
+                }>;
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            admin: {
+                auth: {
+                    "verify-email": import("hono/client").ClientRequest<{
                         $post: {
                             input: {
                                 json: {
                                     email: string;
-                                    password: string;
-                                };
-                            };
-                            output: {
-                                success: true;
-                                message: string;
-                                data: {
-                                    token: string;
-                                    admin: {
-                                        id: string;
-                                        email: string;
-                                        name: string;
-                                    };
-                                };
-                            };
-                            outputFormat: "json";
-                            status: 200;
-                        } | {
-                            input: {
-                                json: {
-                                    email: string;
-                                    password: string;
                                 };
                             };
                             output: {
@@ -1970,21 +2108,22 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 data: null;
                             };
                             outputFormat: "json";
-                            status: 401;
+                            status: 400;
                         } | {
                             input: {
                                 json: {
                                     email: string;
-                                    password: string;
                                 };
                             };
                             output: {
-                                success: false;
+                                success: true;
                                 message: string;
-                                data: import("hono/utils/types").JSONValue;
+                                data: {
+                                    email: string;
+                                };
                             };
                             outputFormat: "json";
-                            status: 500;
+                            status: 200;
                         };
                     }>;
                 };
@@ -1998,22 +2137,6 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                 auth: {
                     register: import("hono/client").ClientRequest<{
                         $post: {
-                            input: {
-                                json: {
-                                    name: string;
-                                    email: string;
-                                    otp: string;
-                                    password: string;
-                                };
-                            };
-                            output: {
-                                success: false;
-                                message: string;
-                                data: import("hono/utils/types").JSONValue;
-                            };
-                            outputFormat: "json";
-                            status: 500;
-                        } | {
                             input: {
                                 json: {
                                     name: string;
@@ -2052,6 +2175,83 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             };
                             outputFormat: "json";
                             status: 200;
+                        } | {
+                            input: {
+                                json: {
+                                    name: string;
+                                    email: string;
+                                    otp: string;
+                                    password: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: import("hono/utils/types").JSONValue;
+                            };
+                            outputFormat: "json";
+                            status: 500;
+                        };
+                    }>;
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            admin: {
+                auth: {
+                    login: import("hono/client").ClientRequest<{
+                        $post: {
+                            input: {
+                                json: {
+                                    email: string;
+                                    password: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: import("hono/utils/types").JSONValue;
+                            };
+                            outputFormat: "json";
+                            status: 500;
+                        } | {
+                            input: {
+                                json: {
+                                    email: string;
+                                    password: string;
+                                };
+                            };
+                            output: {
+                                success: true;
+                                message: string;
+                                data: {
+                                    token: string;
+                                    admin: {
+                                        id: string;
+                                        email: string;
+                                        name: string;
+                                    };
+                                };
+                            };
+                            outputFormat: "json";
+                            status: 200;
+                        } | {
+                            input: {
+                                json: {
+                                    email: string;
+                                    password: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: null;
+                            };
+                            outputFormat: "json";
+                            status: 401;
                         };
                     }>;
                 };
@@ -2120,79 +2320,6 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                         };
                     }>;
                 };
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            admin: {
-                doctors: import("hono/client").ClientRequest<{
-                    $get: {
-                        input: {};
-                        output: {
-                            success: true;
-                            message: string;
-                            data: {
-                                id: string;
-                                name: string;
-                                email: string | null;
-                                contactNumber: string | null;
-                                gender: string | null;
-                                department: string | null;
-                                degrees: string | null;
-                                experience: number | null;
-                                specialization: string;
-                                createdAt: string;
-                                verified: boolean | null;
-                            }[];
-                        };
-                        outputFormat: "json";
-                        status: 200;
-                    };
-                }>;
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            admin: {
-                doctors: import("hono/client").ClientRequest<{
-                    $post: {
-                        input: {
-                            json: {
-                                name: string;
-                                email?: string | undefined;
-                                contactNumber?: string | undefined;
-                                gender?: "female" | "male" | "other" | undefined;
-                                department?: string | undefined;
-                                degrees?: string | undefined;
-                                experience?: number | undefined;
-                                specialization: string;
-                            };
-                        };
-                        output: {
-                            success: true;
-                            message: string;
-                            data: {
-                                contactNumber: string | null;
-                                createdAt: string;
-                                degrees: string | null;
-                                department: string | null;
-                                email: string | null;
-                                experience: number | null;
-                                gender: string | null;
-                                id: string;
-                                name: string;
-                                specialization: string;
-                                verified: boolean | null;
-                            };
-                        };
-                        outputFormat: "json";
-                        status: 200;
-                    };
-                }>;
             };
         };
     };
@@ -2331,99 +2458,38 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 };
                             };
                             output: {
+                                success: true;
+                                message: string;
+                                data: null;
+                            };
+                            outputFormat: "json";
+                            status: 200;
+                        } | {
+                            input: {
+                                param: {
+                                    id: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: null;
+                            };
+                            outputFormat: "json";
+                            status: 400;
+                        } | {
+                            input: {
+                                param: {
+                                    id: string;
+                                };
+                            };
+                            output: {
                                 success: false;
                                 message: string;
                                 data: import("hono/utils/types").JSONValue;
                             };
                             outputFormat: "json";
                             status: 500;
-                        } | {
-                            input: {
-                                param: {
-                                    id: string;
-                                };
-                            };
-                            output: {
-                                success: false;
-                                message: string;
-                                data: null;
-                            };
-                            outputFormat: "json";
-                            status: 400;
-                        } | {
-                            input: {
-                                param: {
-                                    id: string;
-                                };
-                            };
-                            output: {
-                                success: true;
-                                message: string;
-                                data: null;
-                            };
-                            outputFormat: "json";
-                            status: 200;
-                        };
-                    }>;
-                };
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            admin: {
-                auth: {
-                    "verify-email": import("hono/client").ClientRequest<{
-                        $post: {
-                            input: {
-                                json: {
-                                    email: string;
-                                };
-                            };
-                            output: {
-                                success: false;
-                                message: string;
-                                data: null;
-                            };
-                            outputFormat: "json";
-                            status: 400;
-                        } | {
-                            input: {
-                                json: {
-                                    email: string;
-                                };
-                            };
-                            output: {
-                                success: true;
-                                message: string;
-                                data: {
-                                    email: string;
-                                };
-                            };
-                            outputFormat: "json";
-                            status: 200;
-                        };
-                    }>;
-                };
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            admin: {
-                auth: {
-                    logout: import("hono/client").ClientRequest<{
-                        $post: {
-                            input: {};
-                            output: {
-                                success: true;
-                                message: string;
-                                data: null;
-                            };
-                            outputFormat: "json";
-                            status: 200;
                         };
                     }>;
                 };
@@ -2454,159 +2520,6 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                     createdAt: string;
                                     verified: boolean | null;
                                 }[];
-                            };
-                            outputFormat: "json";
-                            status: 200;
-                        };
-                    }>;
-                };
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            hp: {
-                auth: {
-                    login: import("hono/client").ClientRequest<{
-                        $post: {
-                            input: {
-                                json: {
-                                    email: string;
-                                    password: string;
-                                };
-                            };
-                            output: {
-                                success: false;
-                                message: string;
-                                data: null;
-                            };
-                            outputFormat: "json";
-                            status: 401;
-                        } | {
-                            input: {
-                                json: {
-                                    email: string;
-                                    password: string;
-                                };
-                            };
-                            output: {
-                                success: true;
-                                message: string;
-                                data: {
-                                    token: string;
-                                    hp: {
-                                        id: string;
-                                        email: string;
-                                        name: string;
-                                    };
-                                };
-                            };
-                            outputFormat: "json";
-                            status: 200;
-                        };
-                    }>;
-                };
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            hp: {
-                schedules: {
-                    ":id": {
-                        enable: import("hono/client").ClientRequest<{
-                            $post: {
-                                input: {
-                                    param: {
-                                        id: string;
-                                    };
-                                };
-                                output: {
-                                    success: false;
-                                    message: string;
-                                    data: null;
-                                };
-                                outputFormat: "json";
-                                status: 401;
-                            } | {
-                                input: {
-                                    param: {
-                                        id: string;
-                                    };
-                                };
-                                output: {
-                                    success: false;
-                                    message: string;
-                                    data: import("hono/utils/types").JSONValue;
-                                };
-                                outputFormat: "json";
-                                status: 500;
-                            } | {
-                                input: {
-                                    param: {
-                                        id: string;
-                                    };
-                                };
-                                output: {
-                                    success: false;
-                                    message: string;
-                                    data: null;
-                                };
-                                outputFormat: "json";
-                                status: 400;
-                            } | {
-                                input: {
-                                    param: {
-                                        id: string;
-                                    };
-                                };
-                                output: {
-                                    success: true;
-                                    message: string;
-                                    data: null;
-                                };
-                                outputFormat: "json";
-                                status: 200;
-                            };
-                        }>;
-                    };
-                };
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            hp: {
-                auth: {
-                    "verify-email": import("hono/client").ClientRequest<{
-                        $post: {
-                            input: {
-                                json: {
-                                    email: string;
-                                };
-                            };
-                            output: {
-                                success: false;
-                                message: string;
-                                data: null;
-                            };
-                            outputFormat: "json";
-                            status: 400;
-                        } | {
-                            input: {
-                                json: {
-                                    email: string;
-                                };
-                            };
-                            output: {
-                                success: true;
-                                message: string;
-                                data: {
-                                    email: string;
-                                };
                             };
                             outputFormat: "json";
                             status: 200;
@@ -2672,25 +2585,6 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
         v1: {
             hp: {
                 schedules: import("hono/client").ClientRequest<{
-                    $get: {
-                        input: {};
-                        output: {
-                            success: true;
-                            message: string;
-                            data: null;
-                        };
-                        outputFormat: "json";
-                        status: 200;
-                    };
-                }>;
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            hp: {
-                schedules: import("hono/client").ClientRequest<{
                     $post: {
                         input: {
                             json: {
@@ -2714,7 +2608,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             data: null;
                         };
                         outputFormat: "json";
-                        status: 401;
+                        status: 400;
                     } | {
                         input: {
                             json: {
@@ -2762,7 +2656,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             data: null;
                         };
                         outputFormat: "json";
-                        status: 400;
+                        status: 401;
                     } | {
                         input: {
                             json: {
@@ -2804,9 +2698,128 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
     api: {
         v1: {
             hp: {
+                schedules: import("hono/client").ClientRequest<{
+                    $get: {
+                        input: {};
+                        output: {
+                            success: true;
+                            message: string;
+                            data: null;
+                        };
+                        outputFormat: "json";
+                        status: 200;
+                    };
+                }>;
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
+                auth: {
+                    "verify-email": import("hono/client").ClientRequest<{
+                        $post: {
+                            input: {
+                                json: {
+                                    email: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: null;
+                            };
+                            outputFormat: "json";
+                            status: 400;
+                        } | {
+                            input: {
+                                json: {
+                                    email: string;
+                                };
+                            };
+                            output: {
+                                success: true;
+                                message: string;
+                                data: {
+                                    email: string;
+                                };
+                            };
+                            outputFormat: "json";
+                            status: 200;
+                        };
+                    }>;
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
+                auth: {
+                    login: import("hono/client").ClientRequest<{
+                        $post: {
+                            input: {
+                                json: {
+                                    email: string;
+                                    password: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: null;
+                            };
+                            outputFormat: "json";
+                            status: 401;
+                        } | {
+                            input: {
+                                json: {
+                                    email: string;
+                                    password: string;
+                                };
+                            };
+                            output: {
+                                success: true;
+                                message: string;
+                                data: {
+                                    token: string;
+                                    hp: {
+                                        id: string;
+                                        email: string;
+                                        name: string;
+                                    };
+                                };
+                            };
+                            outputFormat: "json";
+                            status: 200;
+                        };
+                    }>;
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
                 schedules: {
                     ":id": import("hono/client").ClientRequest<{
                         $delete: {
+                            input: {
+                                param: {
+                                    id: string;
+                                };
+                            };
+                            output: {
+                                success: true;
+                                message: string;
+                                data: null;
+                            };
+                            outputFormat: "json";
+                            status: 200;
+                        } | {
                             input: {
                                 param: {
                                     id: string;
@@ -2818,7 +2831,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 data: null;
                             };
                             outputFormat: "json";
-                            status: 401;
+                            status: 400;
                         } | {
                             input: {
                                 param: {
@@ -2844,20 +2857,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 data: null;
                             };
                             outputFormat: "json";
-                            status: 400;
-                        } | {
-                            input: {
-                                param: {
-                                    id: string;
-                                };
-                            };
-                            output: {
-                                success: true;
-                                message: string;
-                                data: null;
-                            };
-                            outputFormat: "json";
-                            status: 200;
+                            status: 401;
                         };
                     }>;
                 };
@@ -2870,8 +2870,21 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
             hp: {
                 schedules: {
                     ":id": {
-                        disable: import("hono/client").ClientRequest<{
+                        enable: import("hono/client").ClientRequest<{
                             $post: {
+                                input: {
+                                    param: {
+                                        id: string;
+                                    };
+                                };
+                                output: {
+                                    success: true;
+                                    message: string;
+                                    data: null;
+                                };
+                                outputFormat: "json";
+                                status: 200;
+                            } | {
                                 input: {
                                     param: {
                                         id: string;
@@ -2883,7 +2896,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                     data: null;
                                 };
                                 outputFormat: "json";
-                                status: 401;
+                                status: 400;
                             } | {
                                 input: {
                                     param: {
@@ -2909,8 +2922,22 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                     data: null;
                                 };
                                 outputFormat: "json";
-                                status: 400;
-                            } | {
+                                status: 401;
+                            };
+                        }>;
+                    };
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
+                schedules: {
+                    ":id": {
+                        disable: import("hono/client").ClientRequest<{
+                            $post: {
                                 input: {
                                     param: {
                                         id: string;
@@ -2923,6 +2950,45 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 };
                                 outputFormat: "json";
                                 status: 200;
+                            } | {
+                                input: {
+                                    param: {
+                                        id: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: null;
+                                };
+                                outputFormat: "json";
+                                status: 400;
+                            } | {
+                                input: {
+                                    param: {
+                                        id: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: import("hono/utils/types").JSONValue;
+                                };
+                                outputFormat: "json";
+                                status: 500;
+                            } | {
+                                input: {
+                                    param: {
+                                        id: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: null;
+                                };
+                                outputFormat: "json";
+                                status: 401;
                             };
                         }>;
                     };
@@ -2949,7 +3015,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                     data: null;
                                 };
                                 outputFormat: "json";
-                                status: 401;
+                                status: 400;
                             } | {
                                 input: {
                                     param: {
@@ -2975,7 +3041,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                     data: null;
                                 };
                                 outputFormat: "json";
-                                status: 400;
+                                status: 401;
                             } | {
                                 input: {
                                     param: {
@@ -3004,6 +3070,72 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 };
                                 outputFormat: "json";
                                 status: 200;
+                            };
+                        }>;
+                    };
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
+                schedules: {
+                    day: {
+                        ":scheduleDayId": import("hono/client").ClientRequest<{
+                            $delete: {
+                                input: {
+                                    param: {
+                                        scheduleDayId: string;
+                                    };
+                                };
+                                output: {
+                                    success: true;
+                                    message: string;
+                                    data: null;
+                                };
+                                outputFormat: "json";
+                                status: 200;
+                            } | {
+                                input: {
+                                    param: {
+                                        scheduleDayId: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: null;
+                                };
+                                outputFormat: "json";
+                                status: 400;
+                            } | {
+                                input: {
+                                    param: {
+                                        scheduleDayId: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: import("hono/utils/types").JSONValue;
+                                };
+                                outputFormat: "json";
+                                status: 500;
+                            } | {
+                                input: {
+                                    param: {
+                                        scheduleDayId: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: null;
+                                };
+                                outputFormat: "json";
+                                status: 401;
                             };
                         }>;
                     };
@@ -3143,7 +3275,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             data: null;
                         };
                         outputFormat: "json";
-                        status: 401;
+                        status: 400;
                     } | {
                         input: {
                             json: {
@@ -3158,7 +3290,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             data: null;
                         };
                         outputFormat: "json";
-                        status: 400;
+                        status: 401;
                     } | {
                         input: {
                             json: {
@@ -3297,7 +3429,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 data: null;
                             };
                             outputFormat: "json";
-                            status: 401;
+                            status: 400;
                         } | {
                             input: {
                                 param: {
@@ -3310,7 +3442,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 data: null;
                             };
                             outputFormat: "json";
-                            status: 400;
+                            status: 401;
                         } | {
                             input: {
                                 param: {
@@ -3411,7 +3543,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                     data: null;
                                 };
                                 outputFormat: "json";
-                                status: 401;
+                                status: 400;
                             } | {
                                 input: {
                                     param: {
@@ -3424,7 +3556,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                     data: null;
                                 };
                                 outputFormat: "json";
-                                status: 400;
+                                status: 401;
                             } | {
                                 input: {
                                     param: {
@@ -3515,7 +3647,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                     data: null;
                                 };
                                 outputFormat: "json";
-                                status: 401;
+                                status: 400;
                             } | {
                                 input: {
                                     param: {
@@ -3528,7 +3660,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                     data: null;
                                 };
                                 outputFormat: "json";
-                                status: 400;
+                                status: 401;
                             } | {
                                 input: {
                                     param: {
@@ -3616,7 +3748,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             data: null;
                         };
                         outputFormat: "json";
-                        status: 401;
+                        status: 400;
                     } | {
                         input: {
                             json: {
@@ -3633,7 +3765,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             data: null;
                         };
                         outputFormat: "json";
-                        status: 400;
+                        status: 401;
                     } | {
                         input: {
                             json: {
@@ -3719,7 +3851,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             data: null;
                         };
                         outputFormat: "json";
-                        status: 401;
+                        status: 400;
                     } | {
                         input: {};
                         output: {
@@ -3728,7 +3860,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             data: null;
                         };
                         outputFormat: "json";
-                        status: 400;
+                        status: 401;
                     } | {
                         input: {};
                         output: {
@@ -3765,7 +3897,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             data: null;
                         };
                         outputFormat: "json";
-                        status: 401;
+                        status: 400;
                     } | {
                         input: {
                             json: {
@@ -3781,7 +3913,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             data: null;
                         };
                         outputFormat: "json";
-                        status: 400;
+                        status: 401;
                     } | {
                         input: {
                             json: {
