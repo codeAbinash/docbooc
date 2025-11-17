@@ -1,9 +1,20 @@
 import Colors from '@utils/colors'
 import { useColorScheme } from 'nativewind'
-import { useCallback, useRef } from 'react'
-import { Animated, LayoutChangeEvent, StyleSheet, Vibration } from 'react-native'
+import { useCallback, useState } from 'react'
+import { LayoutChangeEvent, View } from 'react-native'
+import Animated, {
+  Extrapolate,
+  interpolate,
+  interpolateColor,
+  runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+  withTiming,
+} from 'react-native-reanimated'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import ArrowIcon from './ArrowIcon'
+
 type SliderProps = {
   onComplete: () => void
   mainColor?: string
@@ -12,129 +23,128 @@ type SliderProps = {
 
 function Slider({ onComplete, circleSize = 45, mainColor = Colors.accent }: SliderProps) {
   const { colorScheme } = useColorScheme()
-  const containerWidth = useRef(0)
-  const offset = useRef(new Animated.Value(0)).current
-  const pressed = useRef(new Animated.Value(0)).current
-  const scale = useRef(new Animated.Value(1)).current
+  const [containerWidth, setContainerWidth] = useState(0)
+  const translateX = useSharedValue(0)
+  const scale = useSharedValue(1)
 
-  const progress = offset.interpolate({
-    inputRange: [0, (containerWidth.current || 0) - circleSize || 1],
-    outputRange: [0, 1],
-    extrapolate: 'clamp',
-  })
+  const maxSlide = Math.max(containerWidth - circleSize, 0)
 
-  const handleComplete = () => {
-    Vibration.vibrate(100)
-    onComplete()
-  }
+  const progress = interpolate(translateX.value, [0, maxSlide || 1], [0, 1], Extrapolate.CLAMP)
 
-  const pan = Gesture.Pan()
-    .onBegin(() => {
-      Animated.spring(scale, {
-        toValue: 1.05,
-        useNativeDriver: true,
-      }).start()
-      pressed.setValue(1)
-    })
-    .onChange((event) => {
-      const translationX = Math.max(0, Math.min(event.translationX, containerWidth.current - circleSize))
-      offset.setValue(translationX)
+  const circleAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: translateX.value }, { scale: scale.value }],
+  }))
 
-      // Check if progress is > 95%
-      if (translationX > (containerWidth.current - circleSize) * 0.95) {
-        handleComplete()
-      }
-    })
-    .onFinalize(() => {
-      Animated.parallel([
-        Animated.timing(offset, {
-          toValue: 0,
-          duration: 300,
-          useNativeDriver: true,
-        }),
-        Animated.spring(scale, {
-          toValue: 1,
-          useNativeDriver: true,
-        }),
-      ]).start()
-      pressed.setValue(0)
-    })
+  const containerBgColor = interpolateColor(
+    progress,
+    [0, 1],
+    [colorScheme === 'dark' ? Colors.card.dark : 'white', mainColor],
+  )
 
-  const backgroundColor = progress.interpolate({
-    inputRange: [0, 1],
-    outputRange: [mainColor, 'white'],
-  })
-
-  const containerBgColor = progress.interpolate({
-    inputRange: [0, 1],
-    outputRange: [colorScheme === 'dark' ? Colors.card.dark : 'white', mainColor],
-  })
-
-  const textColor = progress.interpolate({
-    inputRange: [0, 1],
-    outputRange: [colorScheme === 'dark' ? Colors.gray.dark : Colors.gray.DEFAULT, 'white'],
-  })
-
-  const marginLeft = progress.interpolate({
-    inputRange: [0, 1],
-    outputRange: [circleSize, -circleSize],
-  })
-
-  const animatedStyles = {
-    transform: [{ translateX: offset }, { scale }],
-    backgroundColor,
-  }
-
-  const animatedContainerBg = {
+  const containerAnimatedStyle = useAnimatedStyle(() => ({
     backgroundColor: containerBgColor,
-  }
+  }))
 
-  const animatedTextStyle = {
+  const textColor = interpolateColor(
+    progress,
+    [0, 1],
+    [colorScheme === 'dark' ? Colors.gray.dark : Colors.gray.DEFAULT, 'white'],
+  )
+
+  const textAnimatedStyle = useAnimatedStyle(() => ({
     color: textColor,
-    marginLeft,
-  }
+    paddingLeft: interpolate(progress, [0, 1], [circleSize + 10, 10]),
+  }))
+
+  const circleBgColor = interpolateColor(progress, [0, 1], [mainColor, 'white'])
+
+  const circleColorStyle = useAnimatedStyle(() => ({
+    backgroundColor: circleBgColor,
+  }))
 
   const handleLayout = useCallback((event: LayoutChangeEvent) => {
     const { width } = event.nativeEvent.layout
-    if (width !== 0) containerWidth.current = width
+    if (width > 0) {
+      setContainerWidth(width)
+    }
   }, [])
 
+  const panGesture = Gesture.Pan()
+    .onUpdate((event) => {
+      const newValue = Math.max(0, Math.min(event.translationX, maxSlide))
+      translateX.value = newValue
+
+      if (newValue > maxSlide * 0.95 && maxSlide > 0) {
+        runOnJS(onComplete)()
+      }
+    })
+    .onStart(() => {
+      scale.value = withSpring(1.05, { damping: 10, mass: 1, stiffness: 100 })
+    })
+    .onEnd(() => {
+      translateX.value = withTiming(0, { duration: 300 })
+      scale.value = withSpring(1, { damping: 10, mass: 1, stiffness: 100 })
+    })
+
   return (
-    <Animated.View className='rounded-full p-2' style={[animatedContainerBg]}>
-      <Animated.View
+    <Animated.View
+      className='rounded-full'
+      style={[containerAnimatedStyle, { paddingVertical: 12, paddingHorizontal: 16 }]}
+    >
+      <View
         onLayout={handleLayout}
-        style={[styles.container, { height: circleSize }]}
-        className='flex flex-row items-center justify-center'
+        style={{
+          height: circleSize,
+          position: 'relative',
+          width: '100%',
+          overflow: 'hidden',
+        }}
       >
-        <GestureDetector gesture={pan}>
-          <Animated.View style={[styles.circle, animatedStyles, { height: circleSize, width: circleSize }]}>
-            <ArrowIcon progress={progress} strokeWidth={2} />
+        <GestureDetector gesture={panGesture}>
+          <Animated.View
+            style={[
+              {
+                height: circleSize,
+                width: circleSize,
+                borderRadius: circleSize / 2,
+                position: 'absolute',
+                left: 0,
+                top: 0,
+                zIndex: 10,
+                justifyContent: 'center',
+                alignItems: 'center',
+              },
+              circleColorStyle,
+              circleAnimatedStyle,
+            ]}
+          >
+            <ArrowIcon progress={progress} strokeWidth={2} size={22} />
           </Animated.View>
         </GestureDetector>
         <Animated.Text
-          className={'gray text-sm'}
-          style={[animatedTextStyle, { fontWeight: '500', fontFamily: 'Inter-Medium' }]}
+          numberOfLines={1}
+          style={[
+            {
+              fontWeight: '500',
+              fontFamily: 'Inter-Medium',
+              textAlign: 'center',
+              position: 'absolute',
+              left: circleSize + 20,
+              right: 10,
+              top: 0,
+              bottom: 0,
+              justifyContent: 'center',
+              height: circleSize,
+              lineHeight: circleSize,
+            },
+            textAnimatedStyle,
+          ]}
         >
           Slide to book appointment
         </Animated.Text>
-      </Animated.View>
+      </View>
     </Animated.View>
   )
 }
-
-const styles = StyleSheet.create({
-  circle: {
-    borderRadius: 500,
-    cursor: 'pointer',
-    position: 'absolute',
-    left: 0,
-    zIndex: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  container: {
-    position: 'relative',
-  },
-})
 
 export default Slider

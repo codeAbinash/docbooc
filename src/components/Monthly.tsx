@@ -5,13 +5,14 @@ import Cancel01Icon from '@hugeicons/Cancel01Icon'
 import { DateTimePickerEvent } from '@react-native-community/datetimepicker'
 import { Medium, SemiBold } from '@utils/fonts'
 import { useState } from 'react'
-import { Platform, ScrollView, TouchableOpacity, View } from 'react-native'
-import { TimeButton } from './TimeSelector'
+import { Platform, ScrollView, TouchableOpacity, View, TextInput } from 'react-native'
+import { TimeButton } from '@components/TimeSelector'
 
 type TimeSlot = {
   id: string
   startTime: Date
   endTime: Date
+  maxBookings: number
   showPicker?: 'start' | 'end'
 }
 
@@ -33,6 +34,7 @@ const createDefaultSlot = (): TimeSlot => ({
   id: Date.now().toString() + Math.random(),
   startTime: new Date(),
   endTime: new Date(Date.now() + ONE_HOUR),
+  maxBookings: 20,
 })
 
 const DATES = Array.from({ length: 31 }, (_, i) => i + 1)
@@ -126,6 +128,20 @@ export default function Monthly({ onScheduleChange }: MonthlyProps) {
           ...slot,
           showPicker: slot.id === id && slot.showPicker !== type ? type : undefined,
         })),
+      },
+    })
+  }
+
+  const updateMaxBookings = (date: number, id: string, value: string) => {
+    const dateSchedule = dateWiseSchedule[date]
+    if (!dateSchedule) return
+
+    const maxBookings = Math.max(0, Math.min(100, parseInt(value) || 0))
+
+    updateSchedule({
+      ...dateWiseSchedule,
+      [date]: {
+        slots: dateSchedule.slots.map((slot) => (slot.id === id ? { ...slot, maxBookings } : slot)),
       },
     })
   }
@@ -232,19 +248,31 @@ export default function Monthly({ onScheduleChange }: MonthlyProps) {
                         <Cancel01Icon size={20} color={dateSchedule.slots.length > 1 ? '#ef4444' : '#9ca3af'} />
                       </TouchableOpacity>
                     </View>
-                    <View className='flex-row gap-3'>
-                      <TimeButton
-                        slot={slot}
-                        type='start'
-                        onTogglePicker={(id, type) => toggleDatePicker(date, id, type)}
-                        onTimeChange={(id, type, event, dateVal) => updateDateTime(date, id, type, event, dateVal)}
-                      />
-                      <TimeButton
-                        slot={slot}
-                        type='end'
-                        onTogglePicker={(id, type) => toggleDatePicker(date, id, type)}
-                        onTimeChange={(id, type, event, dateVal) => updateDateTime(date, id, type, event, dateVal)}
-                      />
+                    <View className='gap-3'>
+                      <View className='flex-row gap-3'>
+                        <TimeButton
+                          slot={slot}
+                          type='start'
+                          onTogglePicker={(id, type) => toggleDatePicker(date, id, type)}
+                          onTimeChange={(id, type, event, dateVal) => updateDateTime(date, id, type, event, dateVal)}
+                        />
+                        <TimeButton
+                          slot={slot}
+                          type='end'
+                          onTogglePicker={(id, type) => toggleDatePicker(date, id, type)}
+                          onTimeChange={(id, type, event, dateVal) => updateDateTime(date, id, type, event, dateVal)}
+                        />
+                      </View>
+                      <View>
+                        <Medium className='mb-2 text-xs text-neutral-600 dark:text-neutral-400'>Max Bookings</Medium>
+                        <TextInput
+                          value={slot.maxBookings.toString()}
+                          onChangeText={(value) => updateMaxBookings(date, slot.id, value)}
+                          keyboardType='number-pad'
+                          maxLength={3}
+                          className='rounded-lg border border-neutral-200 bg-white px-4 py-3 text-center text-lg text-neutral-800 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-200'
+                        />
+                      </View>
                     </View>
                   </View>
                 </View>

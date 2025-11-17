@@ -1,16 +1,19 @@
 import Button from '@components/Button'
 import Gradient from '@components/Gradient'
-import { PaddingBottom, PaddingTop } from '@components/SafePadding'
+import { PaddingBottom } from '@components/SafePadding'
+import { DoctorCard } from '@components/DoctorCard'
+import { HPCards } from '@components/HPCards'
+import CustomHeader from '@components/CustomHeader'
 import { useNavigation } from '@react-navigation/native'
 import { Bold, Medium, SemiBold } from '@utils/fonts'
 import { StackNav } from '@utils/types'
-import { useColorScheme } from 'nativewind'
 import { useState } from 'react'
-import { Image, TouchableOpacity, View } from 'react-native'
+import { Image, View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import { DateCardContainer } from './components/DateCardContainer'
-import { DoctorCard } from './components/DoctorCard'
-import { Header } from './components/Header'
+import Calendar03Icon from '@assets/icons/hugeicons/Calendar03Icon'
+import Location06Icon from '@assets/icons/hugeicons/Location06Icon'
+import Colors from '@utils/colors'
 
 // Demo location data
 const demoLocations = [
@@ -21,6 +24,9 @@ const demoLocations = [
     image: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=400&h=300&fit=crop',
     distance: '2.5',
     isSelected: false,
+    startTime: '09:00 AM',
+    endTime: '05:00 PM',
+    q: '12',
   },
   {
     id: 2,
@@ -30,6 +36,9 @@ const demoLocations = [
     image: 'https://images.unsplash.com/photo-1586773860418-d37222d8fce3?w=400&h=300&fit=crop',
     distance: '4.2',
     isSelected: true,
+    startTime: '08:00 AM',
+    endTime: '06:00 PM',
+    q: '8',
   },
   {
     id: 3,
@@ -38,6 +47,9 @@ const demoLocations = [
     image: 'https://images.unsplash.com/photo-1551601651-2a8555f1a136?w=400&h=300&fit=crop',
     distance: '6.8',
     isSelected: false,
+    startTime: '10:00 AM',
+    endTime: '04:00 PM',
+    q: '15',
   },
   {
     id: 4,
@@ -46,6 +58,9 @@ const demoLocations = [
     image: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=400&h=300&fit=crop',
     distance: '8.1',
     isSelected: false,
+    startTime: '09:30 AM',
+    endTime: '05:30 PM',
+    q: '10',
   },
   // {
   //   id: 5,
@@ -85,6 +100,14 @@ const BookAppointment = () => {
   const navigation = useNavigation<StackNav>()
   const [locations, setLocations] = useState(demoLocations)
 
+  const doctorData = {
+    name: 'Dr. John Doe',
+    department: 'Cardiologist',
+    degrees: 'MBBS, MD, DM',
+    experience: 21,
+    id: 1,
+  }
+
   const handleLocationSelect = (selectedId: number) => {
     setLocations((prevLocations) =>
       prevLocations.map((location) => ({
@@ -96,20 +119,27 @@ const BookAppointment = () => {
 
   return (
     <View className='bg flex-1'>
-      <PaddingTop />
-      <Header title='Book Appointment' />
-      <ScrollView contentContainerClassName='pb-10'>
-        <View className='gap-6 pt-2'>
-          <View className='px-5'>
-            <DoctorCard />
+      <CustomHeader title='Book Appointment' showBackButton={true} onBackPress={() => navigation.goBack()} />
+      <ScrollView
+        className='flex-1 px-5'
+        contentContainerStyle={{ paddingTop: 20, paddingBottom: 20 }}
+        showsVerticalScrollIndicator={false}
+        contentContainerClassName='gap-5'
+      >
+        <View className='gap-5'>
+          <View>
+            <DoctorCard doctor={doctorData} showSelector={false} selected={false} />
           </View>
-          <DateCardContainer />
+
+          <View className='rounded-2xl bg-white p-5 dark:bg-neutral-800'>
+            <DateCardContainer />
+          </View>
         </View>
 
         <LocationCardContainer locations={locations} onLocationSelect={handleLocationSelect} />
       </ScrollView>
 
-      <View className='px-6 pb-2 pt-3'>
+      <View className='border-t border-neutral-100 bg-white px-6 py-3 dark:border-neutral-700 dark:bg-neutral-800'>
         <Button title='Next' onPress={() => navigation.navigate('FamilyMemberSelector')} />
       </View>
       <PaddingBottom />
@@ -124,18 +154,10 @@ interface LocationCardContainerProps {
 
 export function LocationCardContainer({ locations, onLocationSelect }: LocationCardContainerProps) {
   return (
-    <View className='flex-1'>
-      <View className='p-5'>
-        <Bold className='text text-base'>Select Location</Bold>
-        <Medium className='text-xs text-gray'>Choose your preferred medical facility</Medium>
-      </View>
-      {/* <ScrollView className='flex-1' contentContainerStyle={{ paddingBottom: 10 }} contentContainerClassName='gap-5'> */}
-      <View className='flex-1 gap-3 px-4'>
-        {locations.map((location) => (
-          <LocationCard key={location.id} location={location} onPress={() => onLocationSelect(location.id)} />
-        ))}
-      </View>
-      {/* </ScrollView> */}
+    <View className='gap-3'>
+      {locations.map((location) => (
+        <LocationCard key={location.id} location={location} onPress={() => onLocationSelect(location.id)} />
+      ))}
     </View>
   )
 }
@@ -147,6 +169,9 @@ interface LocationData {
   image: string
   distance: string
   isSelected: boolean
+  startTime?: string
+  endTime?: string
+  q?: string
 }
 
 interface LocationCardProps {
@@ -154,55 +179,35 @@ interface LocationCardProps {
   onPress: () => void
 }
 function LocationCard({ location, onPress }: LocationCardProps) {
-  const { colorScheme } = useColorScheme()
-  const selected = location.isSelected
-
-  if (selected)
-    return (
-      <Gradient className='overflow-hidden rounded-2xl p-5 shadow-sm'>
-        <LocationCardInternal location={location} onPress={onPress} />
-      </Gradient>
-    )
-
-  return (
-    <TouchableOpacity
-      activeOpacity={0.7}
-      onPress={onPress}
-      className={`overflow-hidden rounded-2xl bg-white p-5 shadow-sm dark:bg-neutral-800`}
-    >
-      <LocationCardInternal location={location} onPress={onPress} />
-    </TouchableOpacity>
-  )
-}
-
-function LocationCardInternal({ location, onPress }: LocationCardProps) {
-  const selected = location.isSelected
-
-  return (
+  const leftContent = (
     <>
-      <View className='mb-3 flex-row gap-3'>
-        <View className='flex-1 flex-row items-center gap-3'>
-          <Image source={{ uri: location.image }} className='size-14 rounded-lg' resizeMode='cover' />
-          <View className='flex-1'>
-            <SemiBold className={selected ? 'text-white' : 'text'}>{location.mainText}</SemiBold>
-          </View>
-        </View>
-        <SemiBold className={`text-xl opacity-100 ${selected ? 'text-white' : 'text'}`} style={{ lineHeight: 15 }}>
-          Q12
-        </SemiBold>
-      </View>
-      <View
-        className={`flex-row items-end justify-between gap-5 rounded-lg p-3 dark:bg-neutral-900 ${selected ? 'bg-black/15' : 'bg-black/5'}`}
-      >
-        <View className='flex-1'>
-          <Medium className={`text-xs ${selected ? 'text-white' : 'text'} opacity-70`}>Address</Medium>
-          <Medium className={`text-sm ${selected ? 'text-white' : 'text'}`} numberOfLines={2}>
-            {location.secondaryText}
-          </Medium>
-        </View>
-        <SemiBold className={`mt-1 text-xs ${selected ? 'text-white' : 'text'}`}>{location.distance} km</SemiBold>
-      </View>
+      <Medium className='text-xs font-semibold text-neutral-600 dark:text-neutral-400'>Address</Medium>
+      <Medium className='text-sm text-neutral-800 dark:text-neutral-100' numberOfLines={1}>
+        {location.secondaryText}
+      </Medium>
     </>
+  )
+
+  const rightContent = (
+    <>
+      <Medium className='text-xs font-semibold text-neutral-600 dark:text-neutral-400'>Distance</Medium>
+      <SemiBold className='text-sm text-accent'>{location.distance} km</SemiBold>
+    </>
+  )
+
+  return (
+    <HPCards
+      title={location.mainText}
+      startTime={location.startTime}
+      endTime={location.endTime}
+      q={location.q}
+      image={location.image}
+      address={location.secondaryText}
+      time={`${location.startTime} - ${location.endTime}`}
+      distance={`${location.distance} km`}
+      selected={location.isSelected}
+      onPress={onPress}
+    />
   )
 }
 

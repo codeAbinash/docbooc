@@ -5,7 +5,7 @@ import TickDouble02Icon from '@hugeicons/TickDouble02Icon'
 import { memo, useState } from 'react'
 import { FlatList, View } from 'react-native'
 import PatientCard from '../components/PatientCard'
-import AppBar from '../components/AppBar'
+import AppBar from '@components/AppBar'
 import ConfirmationModal from '@/HPScreens/components/ConfirmationModal'
 
 const SAMPLE_PATIENTS = [

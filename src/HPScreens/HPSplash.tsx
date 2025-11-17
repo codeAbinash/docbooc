@@ -6,7 +6,6 @@ import { HPNavProp } from '@utils/types'
 import { useEffect } from 'react'
 import { View } from 'react-native'
 
-
 export default function HPSplash({ navigation }: HPNavProp) {
   const { token } = authStore()
   const setNavigation = navigationStore((state) => state.setNavigation)

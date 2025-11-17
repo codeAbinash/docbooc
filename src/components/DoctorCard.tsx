@@ -1,33 +1,27 @@
 import { Medium, SemiBold } from '@utils/fonts'
 import { Image, TouchableOpacity, TouchableOpacityProps, View } from 'react-native'
-import Gradient from '@components/Gradient'
 import { useNavigation } from '@react-navigation/native'
 import Colors from '@utils/colors'
 import TimeScheduleIcon from '@hugeicons/TimeScheduleIcon'
-import PatientIcon from '@hugeicons/PatientIcon'
+import Cancel01Icon from '@hugeicons/Cancel01Icon'
 import { HPStackNav } from '@utils/types'
 
 type DoctorCardProps = {
   doctor: any
   selected?: boolean
   isExpanded?: boolean
+  showSelector?: boolean
 } & TouchableOpacityProps
 
-export function DoctorCard({ doctor, selected, ...rest }: DoctorCardProps) {
-  if (selected) {
-    return (
-      <Gradient className='overflow-hidden rounded-2xl p-5'>
-        <DoctorCardInternal doctor={doctor} selected={true} isExpanded={rest.isExpanded} onPress={rest.onPress} />
-      </Gradient>
-    )
-  }
+export function DoctorCard({ doctor, selected, isExpanded, showSelector = true, onPress, ...rest }: DoctorCardProps) {
   return (
     <TouchableOpacity
       activeOpacity={0.7}
+      onPress={onPress}
+      className={`overflow-hidden rounded-2xl border bg-white dark:bg-neutral-800 ${selected ? 'border-blue-600' : 'border-neutral-200 dark:border-neutral-700'}`}
       {...rest}
-      className='overflow-hidden rounded-2xl bg-white p-5 dark:bg-neutral-800'
     >
-      <DoctorCardInternal doctor={doctor} selected={false} isExpanded={rest.isExpanded} onPress={rest.onPress} />
+      <DoctorCardInternal doctor={doctor} selected={!!selected} isExpanded={isExpanded} showSelector={showSelector} />
     </TouchableOpacity>
   )
 }
@@ -36,71 +30,104 @@ function DoctorCardInternal({
   doctor,
   selected,
   isExpanded,
-  onPress,
+  showSelector = true,
 }: {
-  doctor: DoctorCardProps['doctor']
+  doctor: any
   selected: boolean
   isExpanded?: boolean
-  onPress?: TouchableOpacityProps['onPress']
+  showSelector?: boolean
 }) {
   const navigate = useNavigation<HPStackNav>()
 
+  // Extract qualifications from comma-separated string
+  const qualifications = doctor.degrees
+    ? doctor.degrees
+        .split(',')
+        .map((deg: string) => deg.trim())
+        .filter(Boolean)
+    : []
+
   return (
     <>
-      <View className='flex-row gap-3 pb-3'>
-        <View className='flex-1 flex-row items-center gap-3'>
-          <Image
-            source={{
-              uri: 'https://st4.depositphotos.com/7877830/25337/v/450/depositphotos_253374286-stock-illustration-vector-illustration-male-doctor-avatar.jpg',
-            }}
-            className='size-14 rounded-lg'
-            resizeMode='cover'
-          />
-          <View className='flex-1'>
-            <SemiBold className={selected ? 'text-white' : 'text'}>{doctor.name}</SemiBold>
-            <Medium className={`text-sm ${selected ? 'text-white' : 'text'} opacity-70`}>{doctor.department}</Medium>
-          </View>
-        </View>
-      </View>
-      <View
-        className={`flex-row items-end justify-between gap-5 rounded-lg p-3 dark:bg-neutral-900 ${selected ? 'bg-black/15' : 'bg-black/5'}`}
-      >
+      <View className='flex-row items-start gap-3 p-4 dark:bg-neutral-800'>
+        <Image
+          source={{
+            uri: 'https://st4.depositphotos.com/7877830/25337/v/450/depositphotos_253374286-stock-illustration-vector-illustration-male-doctor-avatar.jpg',
+          }}
+          className='size-16 rounded-xl'
+          resizeMode='cover'
+        />
         <View className='flex-1'>
-          <Medium className={`text-xs ${selected ? 'text-white' : 'text'} opacity-70`}>Qualification</Medium>
-          <Medium className={`text-sm ${selected ? 'text-white' : 'text'}`} numberOfLines={2}>
-            {doctor.degrees || 'N/A'}
-          </Medium>
+          <SemiBold className='text-base text-neutral-900 dark:text-white'>{doctor.name}</SemiBold>
+          <Medium className='text-sm text-neutral-600 dark:text-neutral-400'>{doctor.department}</Medium>
         </View>
-        <View className='items-end'>
-          <Medium className={`text-xs ${selected ? 'text-white' : 'text'} opacity-70`}>Experience</Medium>
-          <SemiBold className={`pt-1 text-xs ${selected ? 'text-white' : 'text'}`}>
+        {showSelector && (
+          <View className='w-7 items-center justify-center'>
+            <View
+              className={`h-6 w-6 items-center justify-center rounded-full border-2 ${
+                selected
+                  ? 'border-blue-600 bg-blue-600'
+                  : 'border-neutral-300 bg-white dark:border-neutral-600 dark:bg-zinc-800'
+              }`}
+            >
+              {selected && <View className='h-2.5 w-2.5 rounded-full bg-white' />}
+            </View>
+          </View>
+        )}
+      </View>
+
+      <View className='border-b border-neutral-200 dark:border-neutral-700' />
+
+      <View className='flex-row items-end gap-3 p-4 dark:bg-neutral-800'>
+        <View className='flex-1 gap-1 rounded-lg bg-neutral-100 p-3 dark:bg-neutral-700'>
+          <Medium className='text-xs font-semibold text-neutral-600 dark:text-neutral-400'>Qualification</Medium>
+          {qualifications.length > 0 ? (
+            <View className='flex-row flex-wrap gap-1.5'>
+              {qualifications.map((qualification: string, index: number) => (
+                <View key={index} className='rounded-md bg-blue-800 px-2 py-1 dark:bg-neutral-800'>
+                  <Medium className='text-xs text-white dark:text-neutral-100'>{qualification}</Medium>
+                </View>
+              ))}
+            </View>
+          ) : (
+            <Medium className='text-sm leading-5 text-neutral-800 dark:text-neutral-100'>N/A</Medium>
+          )}
+        </View>
+        <View className='h-full w-px bg-neutral-200 dark:bg-neutral-600' />
+        <View className='gap-1 rounded-lg bg-neutral-100 p-3 dark:bg-neutral-700'>
+          <Medium className='text-xs font-semibold text-neutral-600 dark:text-neutral-400'>Experience</Medium>
+          <SemiBold className='text-sm text-accent'>
             {doctor.experience ? `${doctor.experience}+ years` : 'N/A'}
           </SemiBold>
         </View>
       </View>
+
       {isExpanded && (
-        <View className='pt-4'>
-          <View className='flex-row gap-4'>
+        <>
+          <View className='border-b border-neutral-100 dark:border-neutral-700' />
+          <View className='gap-2 p-4 dark:bg-neutral-800'>
             <TouchableOpacity
-              className='flex-1 flex-row items-center justify-center gap-2 rounded-lg bg-accent/10'
-              onPress={() => navigate.navigate('HPDoctorScheduleDetails')}
+              className='flex-row items-center justify-center gap-2 rounded-lg bg-accent/10 py-2.5'
+              onPress={() =>
+                navigate.navigate('HPDoctorScheduleDetails', { doctorId: doctor.id, doctorName: doctor.name })
+              }
             >
               <TimeScheduleIcon size={20} color={Colors.accent} strokeWidth={2} />
-              <SemiBold style={{ color: Colors.accent }} className='text-md'>
-                Edit
+              <SemiBold style={{ color: Colors.accent }} className='text-sm'>
+                Edit Schedule
               </SemiBold>
             </TouchableOpacity>
             <TouchableOpacity
-              className='flex-1 flex-row items-center justify-center gap-2 rounded-lg bg-red-500/10 py-2.5'
+              className='flex-row items-center justify-center gap-2 rounded-lg bg-red-500/10 py-2.5'
               onPress={() => {}}
             >
-              <PatientIcon size={20} color='#ef4444' strokeWidth={2} />
-              <SemiBold style={{ color: '#ef4444' }} className='text-md'>
-                Delete
+              <Cancel01Icon size={20} color='#ef4444' strokeWidth={2} />
+              <SemiBold style={{ color: '#ef4444' }} className='text-sm'>
+                Delete Doctor
               </SemiBold>
             </TouchableOpacity>
           </View>
-        </View>
+        </>
       )}
     </>
   )

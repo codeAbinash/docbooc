@@ -7,7 +7,7 @@ import { useMutation } from '@tanstack/react-query'
 import { hpApi } from '@utils/client'
 import { HPStackNav } from '@utils/types'
 import { ScrollView, View } from 'react-native'
-import ScheduleCard from './ScheduleCard'
+import ScheduleCard from '@components/ScheduleCard'
 
 type RouteParams = {
   doctorId: string
@@ -73,7 +73,9 @@ const HPScheduleReview = () => {
     const scheduleType = scheduleData.scheduleType
 
     if (scheduleType === 'daily') {
-      return scheduleData.timeSlots.map((slot) => ({
+      return scheduleData.timeSlots.map((slot, index) => ({
+        key: `daily-${index}`,
+        id: `daily-${index}`,
         slots: [`${formatTime(slot.startTime)} - ${formatTime(slot.endTime)}`],
       }))
     } else if (scheduleType === 'weekly') {
@@ -81,20 +83,28 @@ const HPScheduleReview = () => {
       scheduleData.timeSlots.forEach((slot) => {
         if (slot.dayOfWeek !== undefined) {
           const day = DAYS[slot.dayOfWeek]
-          if (!grouped[day]) grouped[day] = []
-          grouped[day].push(`${formatTime(slot.startTime)} - ${formatTime(slot.endTime)}`)
+          if (day) {
+            if (!grouped[day]) grouped[day] = []
+            grouped[day].push(`${formatTime(slot.startTime)} - ${formatTime(slot.endTime)}`)
+          }
         }
       })
-      return Object.entries(grouped).map(([day, slots]) => ({ day, slots }))
+      return Object.entries(grouped).map(([day, slots]) => ({ key: day, id: day, day, slots }))
     } else if (scheduleType === 'monthly') {
       const grouped: { [key: number]: string[] } = {}
       scheduleData.timeSlots.forEach((slot) => {
         if (slot.dayOfMonth !== undefined) {
-          if (!grouped[slot.dayOfMonth]) grouped[slot.dayOfMonth] = []
-          grouped[slot.dayOfMonth].push(`${formatTime(slot.startTime)} - ${formatTime(slot.endTime)}`)
+          const day = slot.dayOfMonth
+          if (!grouped[day]) grouped[day] = []
+          grouped[day].push(`${formatTime(slot.startTime)} - ${formatTime(slot.endTime)}`)
         }
       })
-      return Object.entries(grouped).map(([date, slots]) => ({ date: parseInt(date), slots }))
+      return Object.entries(grouped).map(([date, slots]) => ({
+        key: `day-${date}`,
+        id: `day-${date}`,
+        date: parseInt(date),
+        slots,
+      }))
     }
     return []
   })()

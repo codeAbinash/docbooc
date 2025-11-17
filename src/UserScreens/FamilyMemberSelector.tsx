@@ -1,12 +1,12 @@
 import Press from '@components/Press'
-import { PaddingBottom, PaddingTop } from '@components/SafePadding'
+import { PaddingBottom } from '@components/SafePadding'
 import Slider from '@components/Slider/Slider'
 import PlusSignIcon from '@hugeicons/PlusSignIcon'
+import CustomHeader from '@components/CustomHeader'
 import { Medium } from '@utils/fonts'
 import { NavProp } from '@utils/types'
 import React from 'react'
 import { ScrollView, View } from 'react-native'
-import { Header } from './BookAppointment/components/Header'
 import FamilyMemberCard, { FamilyMember } from './FamilyMemberSelector/FamilyMemberCard'
 import Button from '@components/Button'
 
@@ -31,8 +31,7 @@ const FamilyMemberSelectorScreen = ({ navigation }: NavProp) => {
 
   return (
     <View className='bg flex-1'>
-      <PaddingTop />
-      <Header title='Select Family Member' />
+      <CustomHeader title='Select Family Member' showBackButton={true} onBackPress={() => navigation.goBack()} />
 
       <View className='flex-1'>
         <ScrollView className='flex-1' contentContainerClassName='px-5 py-3' showsVerticalScrollIndicator={false}>
@@ -63,8 +62,11 @@ const FamilyMemberSelectorScreen = ({ navigation }: NavProp) => {
           <Button
             title='Continue'
             onPress={() => {
-              navigation.navigate('VerifyBeforeBooking')
+              if (selectedMemberId) {
+                navigation.navigate('VerifyBeforeBooking')
+              }
             }}
+            disabled={!selectedMemberId}
           />
         </View>
       </View>

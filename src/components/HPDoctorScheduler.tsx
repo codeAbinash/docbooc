@@ -8,28 +8,9 @@ import { HPStackNav } from '@utils/types'
 import { useState } from 'react'
 import { Alert, View } from 'react-native'
 import colors from 'tailwindcss/colors'
-import Daily from './Daily'
-import Monthly from './Monthly'
-import Weekly from './Weekly'
-
-// hpApi.schedules.$post({
-//   json: {
-//     doctorId: 'doc_12345',
-//     scheduleType: 'daily',
-//     timeSlots: [
-//       {
-//         startTime: '09:00',
-//         endTime: '12:00',
-//         maxBookings: 5,
-//       },
-//     ],
-//     isActive: true,
-//     monthDays: [
-//       1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
-//     ],
-//     weekDays: [0, 1, 2, 3, 4, 5, 6],
-//   },
-// })
+import Daily from '@components/Daily'
+import Monthly from '@components/Monthly'
+import Weekly from '@components/Weekly'
 
 const tabLabels = ['Daily', 'Weekly', 'Monthly']
 const ContentMap = [Daily, Weekly, Monthly] as const
@@ -99,8 +80,8 @@ const HPDoctorScheduler = () => {
         data.slots.forEach((slot: any) => {
           timeSlots.push({
             dayOfWeek: dayIndex,
-            startTime: slot.startTime.toISOString().split('T')[1].substring(0, 8),
-            endTime: slot.endTime.toISOString().split('T')[1].substring(0, 8),
+            startTime: slot.startTime.toISOString(),
+            endTime: slot.endTime.toISOString(),
             maxBookings: 20,
           })
         })
@@ -121,8 +102,8 @@ const HPDoctorScheduler = () => {
         data.slots.forEach((slot: any) => {
           timeSlots.push({
             dayOfMonth: date,
-            startTime: slot.startTime.toISOString().split('T')[1].substring(0, 8),
-            endTime: slot.endTime.toISOString().split('T')[1].substring(0, 8),
+            startTime: slot.startTime.toISOString(),
+            endTime: slot.endTime.toISOString(),
             maxBookings: 20,
           })
         })
@@ -145,7 +126,7 @@ const HPDoctorScheduler = () => {
       <Header
         title={doctorName}
         RightComponent={
-          <Press className='size-12 items-center justify-center rounded-xl bg-green-500/15' onPress={handleReview}>
+          <Press className='size-12 items-center justify-center rounded-xl bg-white' onPress={handleReview}>
             <Tick02Icon size={25} strokeWidth={2} color={colors.green[600]} />
           </Press>
         }
@@ -154,7 +135,7 @@ const HPDoctorScheduler = () => {
         <View className='px-5'>
           <Tabs tabs={tabLabels} activeTab={activeTab} onTabChange={setActiveTab} />
         </View>
-        <View className='mt-3 flex-1'>
+        <View className='flex-1 pt-3'>
           {ContentMap.map((Component, index) =>
             activeTab === index ? (
               <Component

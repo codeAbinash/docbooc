@@ -8,7 +8,7 @@ import { DrawerNav } from '@utils/types'
 import { useColorScheme } from 'nativewind'
 import { useState, memo, useMemo } from 'react'
 import { TouchableOpacity, View } from 'react-native'
-import DoctorSwitcherModal from './DoctorSwitcherModal'
+import DoctorSwitcherModal from '@components/DoctorSwitcherModal'
 
 const initialDoctor = {
   id: '1',

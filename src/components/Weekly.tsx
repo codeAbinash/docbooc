@@ -7,13 +7,14 @@ import { DateTimePickerEvent } from '@react-native-community/datetimepicker'
 import Colors from '@utils/colors'
 import { Medium, SemiBold } from '@utils/fonts'
 import { useState } from 'react'
-import { Platform, ScrollView, TouchableOpacity, View } from 'react-native'
-import { TimeButton } from './TimeSelector'
+import { Platform, ScrollView, TouchableOpacity, View, TextInput } from 'react-native'
+import { TimeButton } from '@components/TimeSelector'
 
 type TimeSlot = {
   id: string
   startTime: Date
   endTime: Date
+  maxBookings: number
   showPicker?: 'start' | 'end'
 }
 
@@ -47,6 +48,7 @@ const createDefaultSlot = (): TimeSlot => ({
   id: Date.now().toString() + Math.random(),
   startTime: new Date(),
   endTime: new Date(Date.now() + ONE_HOUR),
+  maxBookings: 20,
 })
 
 export default function Weekly({ onScheduleChange }: WeeklyProps) {
@@ -132,6 +134,20 @@ export default function Weekly({ onScheduleChange }: WeeklyProps) {
           ...slot,
           showPicker: slot.id === id && slot.showPicker !== type ? type : undefined,
         })),
+      },
+    })
+  }
+
+  const updateMaxBookings = (day: string, id: string, value: string) => {
+    const daySchedule = weekSchedule[day]
+    if (!daySchedule) return
+
+    const maxBookings = Math.max(0, Math.min(100, parseInt(value) || 0))
+
+    updateSchedule({
+      ...weekSchedule,
+      [day]: {
+        slots: daySchedule.slots.map((slot) => (slot.id === id ? { ...slot, maxBookings } : slot)),
       },
     })
   }
@@ -244,19 +260,31 @@ export default function Weekly({ onScheduleChange }: WeeklyProps) {
                         <Cancel01Icon size={20} color={daySchedule.slots.length > 1 ? '#ef4444' : '#9ca3af'} />
                       </TouchableOpacity>
                     </View>
-                    <View className='flex-row gap-3'>
-                      <TimeButton
-                        slot={slot}
-                        type='start'
-                        onTogglePicker={(id, type) => togglePicker(day, id, type)}
-                        onTimeChange={(id, type, event, date) => updateTime(day, id, type, event, date)}
-                      />
-                      <TimeButton
-                        slot={slot}
-                        type='end'
-                        onTogglePicker={(id, type) => togglePicker(day, id, type)}
-                        onTimeChange={(id, type, event, date) => updateTime(day, id, type, event, date)}
-                      />
+                    <View className='gap-3'>
+                      <View className='flex-row gap-3'>
+                        <TimeButton
+                          slot={slot}
+                          type='start'
+                          onTogglePicker={(id, type) => togglePicker(day, id, type)}
+                          onTimeChange={(id, type, event, date) => updateTime(day, id, type, event, date)}
+                        />
+                        <TimeButton
+                          slot={slot}
+                          type='end'
+                          onTogglePicker={(id, type) => togglePicker(day, id, type)}
+                          onTimeChange={(id, type, event, date) => updateTime(day, id, type, event, date)}
+                        />
+                      </View>
+                      <View>
+                        <Medium className='mb-2 text-xs text-neutral-600 dark:text-neutral-400'>Max Bookings</Medium>
+                        <TextInput
+                          value={slot.maxBookings.toString()}
+                          onChangeText={(value) => updateMaxBookings(day, slot.id, value)}
+                          keyboardType='number-pad'
+                          maxLength={3}
+                          className='rounded-lg border border-neutral-200 bg-white px-4 py-3 text-center text-lg text-neutral-800 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-200'
+                        />
+                      </View>
                     </View>
                   </View>
                 </View>

@@ -6,7 +6,7 @@ import { DateTimePickerEvent } from '@react-native-community/datetimepicker'
 import { Medium, SemiBold } from '@utils/fonts'
 import { useEffect, useState } from 'react'
 import { ScrollView, TouchableOpacity, View } from 'react-native'
-import { TimeButton } from './TimeSelector'
+import { TimeButton } from '@components/TimeSelector'
 
 type TimeSlot = {
   id: string

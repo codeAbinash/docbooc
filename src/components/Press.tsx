@@ -1,12 +1,20 @@
-import React, { useCallback, useRef } from 'react'
-import { Pressable, type PressableProps, Animated } from 'react-native'
-export type CustomPressProps = PressableProps & {
+import React, { useCallback, useRef, useEffect } from 'react'
+import {
+  Pressable,
+  type PressableProps,
+  Animated,
+  type StyleProp,
+  type ViewStyle,
+  type GestureResponderEvent,
+} from 'react-native'
+
+export type CustomPressProps = Omit<PressableProps, 'style'> & {
   children: React.ReactNode
+  style?: StyleProp<ViewStyle>
   activeOpacity?: number
   activeScale?: number
   duration?: number
   disabled?: boolean
-  variant?: 'primary' | 'secondary'
 }
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
@@ -17,6 +25,7 @@ export default function Press({
   activeOpacity = 0.8,
   activeScale = 0.98,
   duration = 100,
+  disabled = false,
   onPressIn,
   onPressOut,
   ...props
@@ -24,8 +33,16 @@ export default function Press({
   const scale = useRef(new Animated.Value(1)).current
   const opacity = useRef(new Animated.Value(1)).current
 
+  // Cleanup animations on unmount
+  useEffect(() => {
+    return () => {
+      scale.stopAnimation()
+      opacity.stopAnimation()
+    }
+  }, [scale, opacity])
+
   const handlePressIn = useCallback(
-    (e: any) => {
+    (e: GestureResponderEvent) => {
       Animated.parallel([
         Animated.timing(scale, {
           toValue: activeScale,
@@ -40,11 +57,11 @@ export default function Press({
       ]).start()
       onPressIn?.(e)
     },
-    [activeScale, activeOpacity, duration, onPressIn],
+    [activeScale, activeOpacity, duration, onPressIn, scale, opacity],
   )
 
   const handlePressOut = useCallback(
-    (e: any) => {
+    (e: GestureResponderEvent) => {
       Animated.parallel([
         Animated.timing(scale, {
           toValue: 1,
@@ -59,17 +76,17 @@ export default function Press({
       ]).start()
       onPressOut?.(e)
     },
-    [duration, onPressOut],
+    [duration, onPressOut, scale, opacity],
   )
 
-  const animatedStyles = {
+  const animatedStyles: Animated.WithAnimatedValue<ViewStyle> = {
     transform: [{ scale }],
     opacity,
-  } as Animated.WithAnimatedValue<any>
+  }
 
-  if (props.disabled) {
+  if (disabled) {
     return (
-      <Pressable style={style} disabled {...props} className='opacity-40'>
+      <Pressable style={[style, { opacity: 0.4 }]} disabled {...props}>
         {children}
       </Pressable>
     )
@@ -77,9 +94,10 @@ export default function Press({
 
   return (
     <AnimatedPressable
-      style={[animatedStyles, style as any]}
+      style={[animatedStyles, style]}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
+      disabled={disabled}
       {...props}
     >
       {children}

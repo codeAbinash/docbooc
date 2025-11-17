@@ -7,7 +7,7 @@ import { SemiBold } from '@utils/fonts'
 import { memo, useCallback, useState } from 'react'
 import { FlatList, Platform, TouchableOpacity, View } from 'react-native'
 import PatientCard from '../components/PatientCard'
-import TopArea from '../components/AppBar'
+import TopArea from '@components/AppBar'
 
 const SAMPLE_PATIENTS = [
   { id: '1', name: 'John Smith', age: 45, gender: 'Male' as const, queuePosition: 1, status: 'confirmed' as const },

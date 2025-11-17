@@ -9,7 +9,7 @@ import { useMemo, useRef, useState, useCallback } from 'react'
 import { FlatList, View, TextInput, TouchableOpacity } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import { useColorScheme } from 'nativewind'
-import AppBar from '../components/AppBar'
+import AppBar from '@components/AppBar'
 import Search01Icon from '@hugeicons/Search01Icon'
 import Cancel01Icon from '@hugeicons/Cancel01Icon'
 import Colors from '@utils/colors'
@@ -118,7 +118,12 @@ const HPAddPatients = () => {
           contentContainerClassName='px-5 pb-10'
           data={filteredDoctors}
           renderItem={({ item }) => (
-            <DoctorCard doctor={item} onPress={() => navigate.navigate('HPDoctorScheduleDetails')} />
+            <DoctorCard
+              doctor={item}
+              onPress={() =>
+                navigate.navigate('HPDoctorScheduleDetails', { doctorId: item.id.toString(), doctorName: item.name })
+              }
+            />
           )}
           keyExtractor={(item) => item.id.toString()}
           ItemSeparatorComponent={() => <View className='h-4' />}

@@ -77,5 +77,8 @@
   },
   "engines": {
     "node": ">=18"
-  }
+  },
+  "trustedDependencies": [
+    "@heroui/shared-utils"
+  ]
 }

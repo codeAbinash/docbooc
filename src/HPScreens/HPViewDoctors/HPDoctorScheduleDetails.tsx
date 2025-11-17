@@ -3,8 +3,9 @@ import { Header } from '@/UserScreens/BookAppointment/components/Header'
 import popupStore from '@/zustand/popupStore'
 import FabIcon from '@components/FabIcon'
 import { PaddingBottom, PaddingTop } from '@components/SafePadding'
-import ArrowLeft01Icon from '@hugeicons/ArrowLeft01Icon'
 import PlusSignIcon from '@hugeicons/PlusSignIcon'
+import TimeScheduleIcon from '@hugeicons/TimeScheduleIcon'
+import Cancel01Icon from '@hugeicons/Cancel01Icon'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { hpApi } from '@utils/client'
 import Colors from '@utils/colors'
@@ -12,12 +13,13 @@ import { HPNavProp } from '@utils/types'
 import { useColorScheme } from 'nativewind'
 import { useState } from 'react'
 import { ActivityIndicator, ScrollView, TouchableOpacity, View } from 'react-native'
-import ScheduleCard from '../components/ScheduleCard'
+import ScheduleCard from '../../components/ScheduleCard'
 
 type TimeSlot = {
   id: string
   startTime: string
   endTime: string
+  maxBookings?: number
   scheduleDayId?: string
   day?: string | null
   dayOfWeek?: number | null
@@ -34,9 +36,16 @@ type Schedule = {
 }
 
 type GroupedSchedules = {
-  weekly: Array<{ key: string; id: string; scheduleDayId?: string; day: string; slots: string[] }>
-  daily: Array<{ key: string; id: string; slots: string[] }>
-  monthly: Array<{ key: string; id: string; scheduleDayId?: string; date: number; slots: string[] }>
+  weekly: Array<{ key: string; id: string; scheduleDayId?: string; day: string; slots: string[]; maxBookings?: number }>
+  daily: Array<{ key: string; id: string; slots: string[]; maxBookings?: number }>
+  monthly: Array<{
+    key: string
+    id: string
+    scheduleDayId?: string
+    date: number
+    slots: string[]
+    maxBookings?: number
+  }>
 }
 
 const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
@@ -61,9 +70,10 @@ function groupSchedules(schedules: Schedule[]): GroupedSchedules {
 
     if (schedule.scheduleType === 'daily') {
       const slots = schedule.timeSlots.map(formatSlot)
-      grouped.daily.push({ key: schedule.id, id: schedule.id, slots })
+      const maxBookings = schedule.timeSlots[0]?.maxBookings
+      grouped.daily.push({ key: schedule.id, id: schedule.id, slots, maxBookings })
     } else if (schedule.scheduleType === 'weekly') {
-      const dayGroups: { [key: string]: { slots: string[]; scheduleDayId?: string } } = {}
+      const dayGroups: { [key: string]: { slots: string[]; scheduleDayId?: string; maxBookings?: number } } = {}
 
       schedule.timeSlots.forEach((slot) => {
         const dayIndex = slot.dayOfWeek ?? slot.day
@@ -71,7 +81,11 @@ function groupSchedules(schedules: Schedule[]): GroupedSchedules {
         if (!dayName) return
 
         if (!dayGroups[dayName]) {
-          dayGroups[dayName] = { slots: [], scheduleDayId: slot.scheduleDayId || slot.id }
+          dayGroups[dayName] = {
+            slots: [],
+            scheduleDayId: slot.scheduleDayId || slot.id,
+            maxBookings: slot.maxBookings,
+          }
         }
         dayGroups[dayName].slots.push(formatSlot(slot))
       })
@@ -83,34 +97,42 @@ function groupSchedules(schedules: Schedule[]): GroupedSchedules {
           scheduleDayId: data.scheduleDayId,
           day,
           slots: data.slots,
+          maxBookings: data.maxBookings,
         })
       })
     } else if (schedule.scheduleType === 'monthly') {
-      const dateGroups: { [key: string]: { date: number; slots: string[]; scheduleDayId?: string } } = {}
+      const dateGroups: {
+        [key: string]: { date: number; slots: string[]; scheduleDayId?: string; maxBookings?: number }
+      } = {}
 
       schedule.timeSlots.forEach((slot) => {
-        const date = slot.dayOfMonth ?? new Date(schedule.createdAt).getDate()
+        const date = slot.dayOfMonth ?? slot.day
         if (!date) return
 
-        const groupKey = `${date}-${slot.scheduleDayId || slot.id}`
+        const numDate = typeof date === 'string' ? parseInt(date) : date
+        if (!numDate) return
+
+        const groupKey = `${numDate}-${slot.scheduleDayId || slot.id}`
 
         if (!dateGroups[groupKey]) {
           dateGroups[groupKey] = {
-            date,
+            date: numDate,
             slots: [],
             scheduleDayId: slot.scheduleDayId || slot.id,
+            maxBookings: slot.maxBookings,
           }
         }
         dateGroups[groupKey].slots.push(formatSlot(slot))
       })
 
-      Object.values(dateGroups).forEach((data) => {
+      Object.entries(dateGroups).forEach(([dateKey, data]) => {
         grouped.monthly.push({
-          key: `${schedule.id}-${data.date}-${data.scheduleDayId}`,
+          key: `${schedule.id}-${dateKey}-${data.scheduleDayId}`,
           id: schedule.id,
           scheduleDayId: data.scheduleDayId,
           date: data.date,
           slots: data.slots,
+          maxBookings: data.maxBookings,
         })
       })
     }
@@ -124,6 +146,9 @@ export default function HPDoctorScheduleDetails({ navigation, route }: HPNavProp
   const [isEnabled, setIsEnabled] = useState(true)
   const { colorScheme } = useColorScheme()
   const { alert } = popupStore()
+  const [selectedSchedule, setSelectedSchedule] = useState<{ key: string; id: string; scheduleDayId?: string } | null>(
+    null,
+  )
 
   const { data: scheduleData, isLoading } = useQuery({
     queryKey: ['doctor-schedule', doctorId],
@@ -182,26 +207,36 @@ export default function HPDoctorScheduleDetails({ navigation, route }: HPNavProp
         RightComponent={
           <View className='flex-row gap-2'>
             <TouchableOpacity
-              onPress={() => setIsEnabled(true)}
+              onPress={() => {
+                navigation.navigate('HPDoctorScheduler', {
+                  doctorId,
+                  doctorName,
+                })
+              }}
               className='size-12 items-center justify-center rounded-xl bg-white dark:bg-zinc-900'
             >
-              <PlusSignIcon
-                size={25}
-                strokeWidth={1.7}
-                color={isEnabled ? '#22c55e' : colorScheme === 'dark' ? 'white' : 'black'}
-                style={{ transform: [{ rotate: '45deg' }] }}
-              />
+              <TimeScheduleIcon size={25} strokeWidth={1.7} color={Colors.accent} />
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => setIsEnabled(false)}
+              onPress={() => {
+                alert('Delete Schedule', 'Are you sure you want to delete this schedule?', [
+                  { text: 'Cancel' },
+                  {
+                    text: 'Delete',
+                    onPress: () => {
+                      if (selectedSchedule?.scheduleDayId) {
+                        deleteDayMutation.mutate(selectedSchedule.scheduleDayId)
+                      } else if (selectedSchedule?.id) {
+                        deleteMutation.mutate(selectedSchedule.id)
+                      }
+                      setSelectedSchedule(null)
+                    },
+                  },
+                ])
+              }}
               className='size-12 items-center justify-center rounded-xl bg-white dark:bg-zinc-900'
             >
-              <ArrowLeft01Icon
-                size={25}
-                strokeWidth={1.7}
-                color={!isEnabled ? '#ef4444' : colorScheme === 'dark' ? 'white' : 'black'}
-                style={{ transform: [{ rotate: '45deg' }] }}
-              />
+              <Cancel01Icon size={25} strokeWidth={1.7} color='#ef4444' />
             </TouchableOpacity>
           </View>
         }
@@ -217,19 +252,33 @@ export default function HPDoctorScheduleDetails({ navigation, route }: HPNavProp
               <ScheduleCard
                 type='weekly'
                 schedules={schedules.weekly}
-                onDelete={handleDelete}
-                onDeleteDay={handleDeleteDay}
+                onSelectSchedule={(key, slotIndex) => {
+                  setSelectedSchedule(
+                    schedules.weekly.find((s) => s.key === key) as { key: string; id: string; scheduleDayId?: string },
+                  )
+                }}
               />
             )}
             {schedules.daily.length > 0 && (
-              <ScheduleCard type='daily' schedules={schedules.daily} onDelete={handleDelete} />
+              <ScheduleCard
+                type='daily'
+                schedules={schedules.daily}
+                onSelectSchedule={(key, slotIndex) => {
+                  setSelectedSchedule(
+                    schedules.daily.find((s) => s.key === key) as { key: string; id: string; scheduleDayId?: string },
+                  )
+                }}
+              />
             )}
             {schedules.monthly.length > 0 && (
               <ScheduleCard
                 type='monthly'
                 schedules={schedules.monthly}
-                onDelete={handleDelete}
-                onDeleteDay={handleDeleteDay}
+                onSelectSchedule={(key, slotIndex) => {
+                  setSelectedSchedule(
+                    schedules.monthly.find((s) => s.key === key) as { key: string; id: string; scheduleDayId?: string },
+                  )
+                }}
               />
             )}
           </View>

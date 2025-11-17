@@ -10,8 +10,8 @@ import UserIcon from '@assets/icons/hugeicons/UserIcon'
 import { DrawerContentScrollView } from '@react-navigation/drawer'
 import { useTheme } from '@react-navigation/native'
 import Colors from '@utils/colors'
-import { Medium, SemiBold } from '@utils/fonts'
-import { View } from 'react-native'
+import { Medium, Regular, SemiBold } from '@utils/fonts'
+import { View, Text } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Press from '../../components/Press'
 import ProfilePicture from '../../components/ProfilePicture'
@@ -22,9 +22,6 @@ const DRAWER_ITEMS = [
   { name: 'Schedule Doctors', icon: TimeScheduleIcon, navigationName: 'ScheduleDoctors' },
   { name: 'View Doctors', icon: UserIcon, navigationName: 'ViewDoctors' },
   { name: 'Add Patients', icon: PatientIcon, navigationName: 'AddPatients' },
-  // { name: 'Confirm Bookings', icon: PatientIcon, navigationName: 'ConfirmBookings' },
-  // { name: 'Approve Schedules', icon: PatientIcon, navigationName: 'ApproveSchedules' },
-  // { name: "View Hp's", icon: PatientIcon, navigationName: 'ViewHPs' },
   { name: 'Settings', icon: NotificationSquareIcon, navigationName: 'Settings' },
 ]
 
@@ -38,60 +35,110 @@ export default function CustomDrawer(props: any) {
     <View className='flex-1' style={{ backgroundColor: colors.background }}>
       <DrawerContentScrollView
         {...props}
-        contentContainerStyle={{ paddingTop: insets.top + 10 }}
+        contentContainerStyle={{ paddingTop: insets.top + 16 }}
         showsVerticalScrollIndicator={false}
       >
-        <View className='mb-6 px-3'>
-          <View className='flex-row items-center gap-3'>
-            <ProfilePicture name='Health Point' size='md' />
-            <View className='flex-1'>
-              <SemiBold className='text-lg' style={{ color: colors.text }}>
-                Health Point
-              </SemiBold>
+        <View className='px' style={{ paddingBottom: 32 }}>
+          <View
+            className='rounded-xl px-4 py-3'
+            style={{
+              backgroundColor: colors.card,
+            }}
+          >
+            <View className='flex-row items-center gap-4'>
+              <ProfilePicture name='Health Point' size='md' />
+              <View className='flex-1'>
+                <SemiBold className='text-lg' style={{ color: colors.text }}>
+                  Health Point
+                </SemiBold>
+              </View>
             </View>
-            <Press className='p-2'>
-              <View className='size-5' />
-            </Press>
           </View>
         </View>
 
-        <View className='gap-1 px-0'>
-          {DRAWER_ITEMS.map((item) => {
+        <View>
+          <View>
+            <View className='h-px bg-neutral-300 dark:bg-neutral-700' />
+          </View>
+          <View className='px gap-2 pt-5'>
+            {DRAWER_ITEMS.filter((item) => item.navigationName !== 'Settings').map((item) => {
+              const isActive = currentRoute === item.navigationName
+              const Icon = item.icon
+              return (
+                <Press
+                  key={item.name}
+                  onPress={() => navigation.navigate(item.navigationName)}
+                  className='flex-row items-center gap-4 rounded-xl px-4 py-3.5'
+                  style={{
+                    backgroundColor: isActive ? Colors.accent : 'transparent',
+                  }}
+                >
+                  <View className='size-6 items-center justify-center'>
+                    <Icon size={24} color={isActive ? 'white' : colors.text} strokeWidth={1.8} />
+                  </View>
+                  <Medium
+                    className='flex-1 text-base'
+                    style={{
+                      color: isActive ? 'white' : colors.text,
+                    }}
+                  >
+                    {item.name}
+                  </Medium>
+                </Press>
+              )
+            })}
+          </View>
+        </View>
+      </DrawerContentScrollView>
+
+      <View
+        className='border-t border-neutral-300 px-3 pt-4 dark:border-neutral-700'
+        style={{
+          paddingBottom: insets.bottom + 16,
+        }}
+      >
+        <View className='gap-2'>
+          {DRAWER_ITEMS.filter((item) => item.navigationName === 'Settings').map((item) => {
             const isActive = currentRoute === item.navigationName
             const Icon = item.icon
             return (
               <Press
                 key={item.name}
                 onPress={() => navigation.navigate(item.navigationName)}
-                className='flex-row items-center gap-4 rounded-lg px-4 py-3.5'
+                className='flex-row items-center gap-4 rounded-xl px-4 py-4'
                 style={{
-                  backgroundColor: isActive ? `${Colors.accent}15` : 'transparent',
+                  backgroundColor: isActive ? Colors.accent : 'transparent',
                 }}
               >
                 <View className='size-6 items-center justify-center'>
-                  <Icon size={22} color={isActive ? Colors.accent : colors.text} />
+                  <Icon size={24} color={isActive ? 'white' : colors.text} strokeWidth={1.8} />
                 </View>
-                <Medium className='text-md flex-lg' style={{ color: isActive ? Colors.accent : colors.text }}>
+                <SemiBold
+                  className='flex-1 text-base'
+                  style={{
+                    color: isActive ? 'white' : colors.text,
+                  }}
+                >
                   {item.name}
-                </Medium>
+                </SemiBold>
               </Press>
             )
           })}
+          <Press
+            onPress={() => handleLogout(() => logout('HPLogin'))}
+            className='flex-row items-center gap-4 rounded-xl px-4 py-4'
+            style={{
+              backgroundColor: '#ef444415',
+            }}
+          >
+            <View className='size-6 items-center justify-center'>
+              <Logout05Icon size={24} color='#ef4444' strokeWidth={1.8} />
+            </View>
+            <SemiBold className='flex-1 text-base' style={{ color: '#ef4444' }}>
+              Logout
+            </SemiBold>
+          </Press>
         </View>
-      </DrawerContentScrollView>
-
-      <View className='border-t px-1 pt-3' style={{ paddingBottom: insets.bottom + 12, borderColor: colors.border }}>
-        <Press
-          onPress={() => handleLogout(() => logout('HPLogin'))}
-          className='flex-row items-center gap-4 rounded-lg px-4 py-3.5'
-        >
-          <View className='size-6 items-center justify-center'>
-            <Logout05Icon size={22} color='#ef4444' strokeWidth={1.8} />
-          </View>
-          <Medium className='text-md flex-lg' style={{ color: '#ef4444' }}>
-            Logout
-          </Medium>
-        </Press>
       </View>
     </View>
   )
