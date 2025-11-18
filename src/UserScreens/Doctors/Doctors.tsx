@@ -1,18 +1,20 @@
-import { doctors, specialties } from '@/constants'
+import { specialties } from '@/constants'
 import Chip from '@components/Chip'
 import { PaddingTop } from '@components/SafePadding'
-import Doctor01Icon from '@hugeicons/Doctor01Icon'
 import Cancel01Icon from '@hugeicons/Cancel01Icon'
+import Doctor01Icon from '@hugeicons/Doctor01Icon'
 import Search01Icon from '@hugeicons/Search01Icon'
 import { useNavigation } from '@react-navigation/native'
-import { StackNav } from '@utils/types'
+import { useQuery } from '@tanstack/react-query'
+import { hpApi } from '@utils/client'
 import Colors from '@utils/colors'
+import { SemiBold } from '@utils/fonts'
+import { StackNav } from '@utils/types'
 import { useColorScheme } from 'nativewind'
-import { useMemo, useRef, useState, useCallback } from 'react'
-import { Dimensions, FlatList, View, TextInput, TouchableOpacity, Text } from 'react-native'
+import { useCallback, useMemo, useRef, useState } from 'react'
+import { ActivityIndicator, FlatList, TextInput, TouchableOpacity, View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import { DoctorCard } from '../../components/DoctorCard'
-import { SemiBold } from '@utils/fonts'
 
 export const ALL_SPECIALTY = { id: 0, name: 'All', icon: Doctor01Icon }
 
@@ -27,19 +29,30 @@ const Doctors = () => {
 
   const allItems = [ALL_SPECIALTY, ...specialties]
 
+  const { data: doctorsResponse, isLoading } = useQuery({
+    queryKey: ['doctors'],
+    queryFn: async () => (await hpApi.doctors.all.$get()).json(),
+  })
+
+  const doctors = useMemo(() => doctorsResponse?.data || [], [doctorsResponse])
+
   const toggleSearch = useCallback(() => {
     setShowSearch((prev) => !prev)
     if (showSearch) setSearchQuery('')
   }, [showSearch])
 
   const filteredDoctors = useMemo(() => {
-    let result = selected ? doctors.filter((doctor) => doctor.specialtyId === selected) : doctors
+    let result = selected
+      ? doctors.filter((doctor) => doctor.specialization === specialties.find((s) => s.id === selected)?.name)
+      : doctors
     if (searchQuery) {
       const query = searchQuery.toLowerCase()
-      result = result.filter((d) => d.name.toLowerCase().includes(query) || d.specialty.toLowerCase().includes(query))
+      result = result.filter(
+        (d) => d.name.toLowerCase().includes(query) || d.specialization.toLowerCase().includes(query),
+      )
     }
     return result
-  }, [selected, searchQuery])
+  }, [selected, searchQuery, doctors])
 
   const handleChipLayout = (itemId: number, x: number, width: number) => {
     setItemPositions((prev) => ({
@@ -139,22 +152,28 @@ const Doctors = () => {
       </View>
 
       <View className='flex-1 bg-neutral-100 dark:bg-neutral-900'>
-        <FlatList
-          className='flex-1 pt-4'
-          contentContainerClassName='px-5 pb-10'
-          data={filteredDoctors}
-          renderItem={({ item }) => (
-            <DoctorCard
-              doctor={item}
-              showSelector={false}
-              selected={false}
-              onPress={() => navigate.navigate('BookAppointment')}
-            />
-          )}
-          keyExtractor={(item) => item.id.toString()}
-          ItemSeparatorComponent={() => <View className='h-4' />}
-          showsVerticalScrollIndicator={false}
-        />
+        {isLoading ? (
+          <View className='flex-1 items-center justify-center'>
+            <ActivityIndicator size='large' color={Colors.accent} />
+          </View>
+        ) : (
+          <FlatList
+            className='flex-1 pt-4'
+            contentContainerClassName='px-5 pb-10'
+            data={filteredDoctors}
+            renderItem={({ item }) => (
+              <DoctorCard
+                doctor={item}
+                showSelector={false}
+                selected={false}
+                onPress={() => navigate.navigate('BookAppointment')}
+              />
+            )}
+            keyExtractor={(item) => item.id.toString()}
+            ItemSeparatorComponent={() => <View className='h-4' />}
+            showsVerticalScrollIndicator={false}
+          />
+        )}
       </View>
     </View>
   )
