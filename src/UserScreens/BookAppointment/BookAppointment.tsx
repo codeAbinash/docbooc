@@ -1,19 +1,16 @@
 import Button from '@components/Button'
-import Gradient from '@components/Gradient'
-import { PaddingBottom } from '@components/SafePadding'
+import CustomHeader from '@components/CustomHeader'
 import { DoctorCard } from '@components/DoctorCard'
 import { HPCards } from '@components/HPCards'
-import CustomHeader from '@components/CustomHeader'
-import { useNavigation } from '@react-navigation/native'
-import { Bold, Medium, SemiBold } from '@utils/fonts'
+import { PaddingBottom } from '@components/SafePadding'
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
+import { Medium, SemiBold } from '@utils/fonts'
 import { StackNav } from '@utils/types'
 import { useState } from 'react'
-import { Image, View } from 'react-native'
+import { View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
+import { RootStackParamList } from '../../../App'
 import { DateCardContainer } from './components/DateCardContainer'
-import Calendar03Icon from '@assets/icons/hugeicons/Calendar03Icon'
-import Location06Icon from '@assets/icons/hugeicons/Location06Icon'
-import Colors from '@utils/colors'
 
 // Demo location data
 const demoLocations = [
@@ -98,15 +95,10 @@ const demoLocations = [
 
 const BookAppointment = () => {
   const navigation = useNavigation<StackNav>()
+  const route = useRoute<RouteProp<RootStackParamList, 'BookAppointment'>>()
   const [locations, setLocations] = useState(demoLocations)
 
-  const doctorData = {
-    name: 'Dr. John Doe',
-    department: 'Cardiologist',
-    degrees: 'MBBS, MD, DM',
-    experience: 21,
-    id: 1,
-  }
+  const { doctor } = route.params
 
   const handleLocationSelect = (selectedId: number) => {
     setLocations((prevLocations) =>
@@ -128,7 +120,7 @@ const BookAppointment = () => {
       >
         <View className='gap-5'>
           <View>
-            <DoctorCard doctor={doctorData} showSelector={false} selected={false} />
+            <DoctorCard doctor={doctor} showSelector={false} selected={false} />
           </View>
 
           <View className='rounded-2xl bg-white p-5 dark:bg-neutral-800'>

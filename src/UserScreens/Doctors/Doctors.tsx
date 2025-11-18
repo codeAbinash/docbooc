@@ -166,7 +166,7 @@ const Doctors = () => {
                 doctor={item}
                 showSelector={false}
                 selected={false}
-                onPress={() => navigate.navigate('BookAppointment')}
+                onPress={() => navigate.navigate('BookAppointment', { doctor: item })}
               />
             )}
             keyExtractor={(item) => item.id.toString()}

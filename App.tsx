@@ -74,7 +74,21 @@ export type RootStackParamList = {
   Home: undefined
   Welcome: undefined
   Slide: undefined
-  BookAppointment: undefined
+  BookAppointment: {
+    doctor: {
+      id: string
+      name: string
+      email: string | null
+      contactNumber: string | null
+      gender: string | null
+      department: string | null
+      degrees: string | null
+      experience: number | null
+      specialization: string
+      createdAt: string
+      verified: boolean | null
+    }
+  }
   PatientInfo: undefined
   FamilyMemberSelector: undefined
   Complete: undefined
