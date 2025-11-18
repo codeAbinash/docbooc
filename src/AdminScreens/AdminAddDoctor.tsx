@@ -1,20 +1,22 @@
 import InputWithLabel from '@components/InputWithLabel'
-import SelectDropdown from '@components/SelectDropdown'
 import { PaddingBottom } from '@components/SafePadding'
+import SelectDropdown from '@components/SelectDropdown'
 import { Medium, SemiBold } from '@utils/fonts'
 import { useEffect, useState } from 'react'
 import { ScrollView, View } from 'react-native'
 
-import CustomHeader from '@components/CustomHeader'
 import Button from '@components/Button'
+import CustomHeader from '@components/CustomHeader'
 import Press from '@components/Press'
 
+import popupStore from '@/zustand/popupStore'
 import Doctor01Icon from '@hugeicons/Doctor01Icon'
 import { useNavigation, useRoute } from '@react-navigation/native'
+import { useMutation } from '@tanstack/react-query'
 import { adminApi } from '@utils/client'
 import { AdminStackNav } from '@utils/types'
 import { useColorScheme } from 'nativewind'
-import colors from 'tailwindcss/colors'
+import { z } from 'zod'
 
 const DEPARTMENTS = [
   'General Medicine',
@@ -108,10 +110,25 @@ type Specialization = (typeof SPECIALIZATIONS)[number] | null
 type Gender = (typeof GENDERS)[number]
 type Degree = (typeof DEGREES)[number]
 
+const doctorSchema = z.object({
+  name: z.string().min(1, 'Name is required').trim(),
+  email: z.string().email('Invalid email format').optional().or(z.literal('')),
+  contact: z.string().optional(),
+  specialization: z.string().optional().or(z.literal('')).nullable(),
+  gender: z.enum(['male', 'female', 'other']),
+  degrees: z
+    .string()
+    .trim()
+    .refine((val) => val.length > 0, { message: 'At least one degree is required' }),
+  department: z.string().min(1, 'Department is required'),
+  experience: z.number().min(0, 'Experience must be positive').optional(),
+})
+
 export default function AdminAddDoctor() {
   const navigation = useNavigation<AdminStackNav>()
   const route = useRoute()
   const { colorScheme } = useColorScheme()
+  const alert = popupStore((state) => state.alert)
 
   const doctorData = (route.params as any)?.doctor
   const isEditing = !!doctorData
@@ -124,6 +141,53 @@ export default function AdminAddDoctor() {
   const [department, setDepartment] = useState<Department>('General Medicine')
   const [specialization, setSpecialization] = useState<Specialization>(null)
   const [experience, setExperience] = useState('')
+
+  const createDoctorMutation = useMutation({
+    mutationFn: async (data: {
+      name: string
+      specialization: string
+      contactNumber: string
+      email: string
+      gender: 'male' | 'female' | 'other'
+      degrees: string
+      department: string
+      experience: number
+    }) => {
+      return await adminApi.doctors.$post({ json: data })
+    },
+    onSuccess: () => {
+      navigation.goBack()
+    },
+    onError: (error) => {
+      console.error('Failed to create doctor:', error)
+      alert('Error', 'Failed to save doctor. Please try again.')
+    },
+  })
+
+  const updateDoctorMutation = useMutation({
+    mutationFn: async (data: {
+      id: string
+      name: string
+      specialization: string
+      contactNumber: string
+      email: string
+      gender: 'male' | 'female' | 'other'
+      degrees: string
+      department: string
+      experience: number
+    }) => {
+      const { id, ...json } = data
+      return await (await adminApi.doctors[':id'].$put({ param: { id }, json })).json()
+    },
+    onSuccess: (data) => {
+      if (!data || !data.success) return alert('Error', 'Failed to update doctor. Please try again.')
+      navigation.goBack()
+    },
+    onError: (error) => {
+      console.error('Failed to update doctor:', error)
+      alert('Error', 'Failed to update doctor. Please try again.')
+    },
+  })
 
   useEffect(() => {
     if (isEditing && doctorData) {
@@ -150,40 +214,60 @@ export default function AdminAddDoctor() {
   }
 
   const handleSave = async () => {
-    try {
-      if (isEditing) {
-        await adminApi.doctors[':id'].$put({
-          param: { id: doctorData.id },
-          json: {
-            name,
-            specialization: specialization || '',
-            contactNumber: contact,
-            email,
-            gender: gender.toLowerCase() as 'male' | 'female' | 'other',
-            degrees: degrees.join(','),
-            department,
-            experience: parseInt(experience) || 0,
-          },
-        })
-      } else {
-        await adminApi.doctors.$post({
-          json: {
-            name,
-            specialization: specialization || '',
-            contactNumber: contact,
-            email,
-            gender: gender.toLowerCase() as 'male' | 'female' | 'other',
-            degrees: degrees.join(','),
-            department,
-            experience: parseInt(experience) || 0,
-          },
-        })
-      }
-      navigation.goBack()
-    } catch (error) {
-      console.error('Failed to save doctor:', error)
+    const data = {
+      name: name.trim(),
+      email: email.trim(),
+      contact: contact.trim(),
+      specialization: specialization || '',
+      gender: gender.toLowerCase() as 'male' | 'female' | 'other',
+      degrees: degrees.join(','),
+      department,
+      experience: parseInt(experience) || 0,
     }
+
+    const validation = doctorSchema.safeParse(data)
+
+    if (!validation.success) {
+      const firstError = validation.error.issues[0]
+      alert('Validation Error', firstError?.message || 'Invalid data')
+      return
+    }
+
+    alert('Confirm', `Are you sure you want to ${isEditing ? 'update' : 'add'} this doctor?`, [
+      { text: 'Cancel' },
+      {
+        text: isEditing ? 'Update' : 'Add',
+        onPress: () => {
+          if (isEditing) {
+            updateDoctorMutation.mutate({
+              id: doctorData.id,
+              name: data.name,
+              specialization: data.specialization,
+              contactNumber: data.contact,
+              email: data.email,
+              gender: data.gender,
+              degrees: data.degrees,
+              department: data.department,
+              experience: data.experience,
+            })
+          } else {
+            createDoctorMutation.mutate({
+              name: data.name,
+              specialization: data.specialization,
+              contactNumber: data.contact,
+              email: data.email,
+              gender: data.gender,
+              degrees: data.degrees,
+              department: data.department,
+              experience: data.experience,
+            })
+          }
+        },
+      },
+    ])
   }
+
+  const isLoading = createDoctorMutation.isPending || updateDoctorMutation.isPending
 
   const isDark = colorScheme === 'dark'
 
@@ -193,7 +277,6 @@ export default function AdminAddDoctor() {
         title={isEditing ? 'Edit Doctor' : "Doctor's Information"}
         showBackButton
         onBackPress={() => navigation.goBack()}
-        
       />
 
       <View className='flex-1'>
@@ -320,7 +403,7 @@ export default function AdminAddDoctor() {
         </ScrollView>
 
         <View className='gap-3 border-t border-neutral-200 bg-white px-5 py-4 dark:border-neutral-700 dark:bg-neutral-800'>
-          <Button title='Save Doctor' onPress={handleSave} />
+          <Button title='Save Doctor' onPress={handleSave} disabled={isLoading} />
         </View>
         <PaddingBottom />
       </View>
