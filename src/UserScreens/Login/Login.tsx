@@ -1,6 +1,6 @@
 import Animations from '@assets/animations/animations'
 import Button from '@components/Button'
-import Input from '@components/Input'
+import InputWithLabel from '@components/InputWithLabel'
 import KeyboardAvoid from '@components/KeyboardAvoid'
 import Label from '@components/Label'
 import { Lottie } from '@components/Lottie'
@@ -25,17 +25,7 @@ export default function HPLogin({ navigation }: NavProp) {
               <Medium className='text mt-3 text-sm opacity-70'>Please enter your phone number to login.</Medium>
             </View>
             <View className='gap-5'>
-              <View className='gap-2'>
-                <Label>Phone Number</Label>
-                <View className='flex flex-row gap-3'>
-                  <Input value='+91' style={{ paddingRight: 18, fontSize: 13 }} editable={false} />
-                  <Input
-                    placeholder='Enter your phone number'
-                    keyboardType='phone-pad'
-                    style={{ flex: 1, fontSize: 13 }}
-                  />
-                </View>
-              </View>
+              <InputWithLabel label='Phone Number' placeholder='Enter your phone number' keyboardType='phone-pad' />
               <Button title='Send OTP' onPress={() => navigation.navigate('OTP')} />
             </View>
           </View>

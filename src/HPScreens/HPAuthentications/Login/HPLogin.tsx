@@ -1,7 +1,7 @@
 import authStore from '@/zustand/authStore'
 import popupStore from '@/zustand/popupStore'
 import Button from '@components/Button'
-import Input from '@components/Input'
+import InputWithLabel from '@components/InputWithLabel'
 import KeyboardAvoid from '@components/KeyboardAvoid'
 import Label from '@components/Label'
 import { PaddingBottom, PaddingTop } from '@components/SafePadding'
@@ -69,26 +69,22 @@ export default function HPLogin({ navigation }: HPNavProp) {
               <Medium className='text mt-3 text-sm opacity-70'>Please enter your credentials to login.</Medium>
             </View>
             <View className='gap-5'>
-              <View className='gap-2'>
-                <Label>Email Address</Label>
-                <Input
-                  placeholder='Enter your email address'
-                  value={email}
-                  onChangeText={setEmail}
-                  keyboardType='email-address'
-                  autoCapitalize='none'
-                />
-              </View>
-              <View className='gap-2'>
-                <Label>Password</Label>
-                <Input
-                  placeholder='Enter your password'
-                  value={password}
-                  onChangeText={setPassword}
-                  secureTextEntry={__DEV__ ? false : true}
-                  autoCapitalize='none'
-                />
-              </View>
+              <InputWithLabel
+                label='Email'
+                placeholder='Enter your email address'
+                value={email}
+                onChangeText={setEmail}
+                keyboardType='email-address'
+                autoCapitalize='none'
+              />
+              <InputWithLabel
+                label='Password'
+                placeholder='Enter your password'
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry={__DEV__ ? false : true}
+                autoCapitalize='none'
+              />
               <Button
                 title={loginMutation.isPending ? 'Logging in...' : 'Login'}
                 onPress={handleLogin}

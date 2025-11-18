@@ -67,7 +67,7 @@ const Doctors = () => {
       {/* Custom Header */}
       <View className='bg-white dark:bg-neutral-900'>
         <PaddingTop />
-        <View className='py-2 pl-8 pr-6'>
+        <View className='pl-8 pr-6 pt-2' style={{ height: 50 }}>
           {showSearch ? (
             <View className='flex-row items-center gap-2'>
               <View className='flex-1 flex-row items-center gap-2 rounded-lg border border-neutral-800 bg-white px-6 py-3 dark:border-neutral-700 dark:bg-neutral-800'>
@@ -94,7 +94,7 @@ const Doctors = () => {
               </TouchableOpacity>
             </View>
           ) : (
-            <View className='flex-row items-center justify-start' style={{ height: 44 }}>
+            <View className='flex-row items-center justify-start' style={{ height: 50 }}>
               <SemiBold className='text-2xl text-neutral-900 dark:text-white'>DocBooc</SemiBold>
               <TouchableOpacity
                 onPress={toggleSearch}

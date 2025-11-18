@@ -1,5 +1,5 @@
 import { queryClient } from '@/query'
-import { Header } from '@/UserScreens/BookAppointment/components/Header'
+import CustomHeader from '@components/CustomHeader'
 import popupStore from '@/zustand/popupStore'
 import FabIcon from '@components/FabIcon'
 import { PaddingBottom, PaddingTop } from '@components/SafePadding'
@@ -201,10 +201,11 @@ export default function HPDoctorScheduleDetails({ navigation, route }: HPNavProp
 
   return (
     <View className='bg flex-1'>
-      <PaddingTop />
-      <Header
+      <CustomHeader
         title='Schedule Details'
-        RightComponent={
+        showBackButton
+        onBackPress={() => navigation.goBack()}
+        rightElement={
           <View className='flex-row gap-2'>
             <TouchableOpacity
               onPress={() => {

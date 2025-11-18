@@ -3,26 +3,38 @@ import { useColorScheme } from 'nativewind'
 import { useState } from 'react'
 import { TextInput, View, type TextInputProps } from 'react-native'
 import colors from 'tailwindcss/colors'
-import Animated from 'react-native-reanimated'
 
 interface InputWithLabelProps extends TextInputProps {
   label: string
+  isOptional?: boolean
   leftIcon?: React.ReactNode
 }
 
-export default function InputWithLabel({ label, value, leftIcon, ...props }: InputWithLabelProps) {
+export default function InputWithLabel({ label, isOptional, value, leftIcon, ...props }: InputWithLabelProps) {
   const { colorScheme } = useColorScheme()
   const [isFocused, setIsFocused] = useState(false)
 
   const isDark = colorScheme === 'dark'
-  const showLabel = isFocused || (value?.length ?? 0) > 0
-  const borderClass = isFocused
-    ? 'border-2 border-blue-600 dark:border-green-500'
-    : 'border border-neutral-400 dark:border-neutral-600'
+  const borderColor = isFocused ? '#2563eb' : isDark ? '#525252' : '#a3a3a3'
 
   return (
-    <Animated.View className='relative'>
-      <View className={`flex-row items-center rounded-lg ${borderClass} bg-current dark:bg-neutral-900`}>
+    <View className='gap-2'>
+      <View className='flex-row items-center gap-1.5'>
+        <Regular className='text-xs font-bold uppercase tracking-wide text-neutral-800 dark:text-neutral-200'>
+          {label}
+        </Regular>
+        {isOptional && (
+          <Regular className='text-xs font-medium text-neutral-500 dark:text-neutral-400'>(optional)</Regular>
+        )}
+      </View>
+
+      <View
+        className='flex-row items-center rounded-lg bg-white dark:bg-neutral-900'
+        style={{
+          borderWidth: 1,
+          borderColor: borderColor,
+        }}
+      >
         {leftIcon && <View className='ml-4'>{leftIcon}</View>}
 
         <TextInput
@@ -36,18 +48,12 @@ export default function InputWithLabel({ label, value, leftIcon, ...props }: Inp
             setIsFocused(false)
             props.onBlur?.(e)
           }}
-          placeholder={showLabel ? '' : label}
-          placeholderTextColor={isDark ? colors.black : colors.neutral[500]}
-          className={`flex-1 py-4 text-sm dark:text-white ${leftIcon ? 'pl-3 pr-4' : 'px-4'}`}
+          placeholder=''
+          placeholderTextColor={isDark ? colors.neutral[600] : colors.neutral[400]}
+          className={`flex-1 text-sm text-neutral-900 dark:text-white ${leftIcon ? 'pl-3' : 'px-4'} py-3 pr-4`}
           style={MEDIUM}
         />
       </View>
-
-      {showLabel && (
-        <View className={`absolute ${leftIcon ? 'left-14' : 'left-3'} -top-2.5 bg-white px-1.5 dark:bg-neutral-900`}>
-          <Regular className='text-sm text-blue-600 dark:text-green-500'>{label}</Regular>
-        </View>
-      )}
-    </Animated.View>
+    </View>
   )
 }

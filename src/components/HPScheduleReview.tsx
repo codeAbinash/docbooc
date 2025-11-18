@@ -1,4 +1,4 @@
-import { Header } from '@/UserScreens/BookAppointment/components/Header'
+import CustomHeader from '@components/CustomHeader'
 import popupStore from '@/zustand/popupStore'
 import Button from '@components/Button'
 import { PaddingBottom, PaddingTop } from '@components/SafePadding'
@@ -113,8 +113,7 @@ const HPScheduleReview = () => {
 
   return (
     <View className='bg flex-1'>
-      <PaddingTop />
-      <Header title={doctorName} />
+      <CustomHeader title={doctorName} showBackButton onBackPress={() => navigation.goBack()} />
       <View className='flex-1'>
         <ScrollView className='flex-1' showsVerticalScrollIndicator={false}>
           <View className='gap-6 p-5'>

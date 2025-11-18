@@ -1,20 +1,29 @@
-import { handleLogout } from '@/HPScreens/utils/utils'
-import Button from '@components/Button'
-import { PaddingBottom, PaddingTop } from '@components/SafePadding'
-import { Bold } from '@utils/fonts'
-import { AdminNavProp } from '@utils/types'
-import { View } from 'react-native'
-import { logout } from './utils'
+import AdminCustomDrawer from '@/AdminScreens/components/AdminCustomDrawer'
+import AdminAddDoctors from '@/AdminScreens/AdminAddDoctors'
+import AdminApproveSchedules from '@/AdminScreens/AdminApproveSchedules'
+import AdminApproveBookings from '@/AdminScreens/AdminApproveBookings'
+import AdminViewHPs from '@/AdminScreens/AdminViewHPs'
+import AdminViewPatients from '@/AdminScreens/AdminViewPatients'
+import { createDrawerNavigator } from '@react-navigation/drawer'
 
-export default function AdminHome({ navigation }: AdminNavProp) {
+const Drawer = createDrawerNavigator()
+
+export default function AdminHome() {
   return (
-    <View className='flex flex-1 items-center justify-center gap-5 p-5'>
-      <PaddingTop />
-      <Bold className='mb-5 text-3xl'>Admin App</Bold>
-
-      <Button onPress={() => navigation.navigate('AdminAddDoctors')} title='Add Doctors'></Button>
-      <Button onPress={() => handleLogout(() => logout('AdminLogin'))} title='Logout'></Button>
-      <PaddingBottom />
-    </View>
+    <Drawer.Navigator
+      initialRouteName='AdminAddDoctors'
+      drawerContent={(props) => <AdminCustomDrawer {...props} />}
+      screenOptions={{
+        headerShown: false,
+        drawerType: 'slide',
+        drawerStyle: { width: '70%' },
+      }}
+    >
+      <Drawer.Screen name='AdminAddDoctors' component={AdminAddDoctors} />
+      <Drawer.Screen name='AdminApproveSchedules' component={AdminApproveSchedules} />
+      <Drawer.Screen name='AdminApproveBookings' component={AdminApproveBookings} />
+      <Drawer.Screen name='AdminViewHPs' component={AdminViewHPs} />
+      <Drawer.Screen name='AdminViewPatients' component={AdminViewPatients} />
+    </Drawer.Navigator>
   )
 }

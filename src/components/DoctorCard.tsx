@@ -11,9 +11,20 @@ type DoctorCardProps = {
   selected?: boolean
   isExpanded?: boolean
   showSelector?: boolean
+  onDelete?: () => void
+  onEdit?: () => void
 } & TouchableOpacityProps
 
-export function DoctorCard({ doctor, selected, isExpanded, showSelector = true, onPress, ...rest }: DoctorCardProps) {
+export function DoctorCard({
+  doctor,
+  selected,
+  isExpanded,
+  showSelector = true,
+  onDelete,
+  onEdit,
+  onPress,
+  ...rest
+}: DoctorCardProps) {
   return (
     <TouchableOpacity
       activeOpacity={0.7}
@@ -21,7 +32,14 @@ export function DoctorCard({ doctor, selected, isExpanded, showSelector = true, 
       className={`overflow-hidden rounded-2xl border bg-white dark:bg-neutral-800 ${selected ? 'border-blue-600' : 'border-neutral-200 dark:border-neutral-700'}`}
       {...rest}
     >
-      <DoctorCardInternal doctor={doctor} selected={!!selected} isExpanded={isExpanded} showSelector={showSelector} />
+      <DoctorCardInternal
+        doctor={doctor}
+        selected={!!selected}
+        isExpanded={isExpanded}
+        showSelector={showSelector}
+        onDelete={onDelete}
+        onEdit={onEdit}
+      />
     </TouchableOpacity>
   )
 }
@@ -31,11 +49,15 @@ function DoctorCardInternal({
   selected,
   isExpanded,
   showSelector = true,
+  onDelete,
+  onEdit,
 }: {
   doctor: any
   selected: boolean
   isExpanded?: boolean
   showSelector?: boolean
+  onDelete?: () => void
+  onEdit?: () => void
 }) {
   const navigate = useNavigation<HPStackNav>()
 
@@ -104,26 +126,24 @@ function DoctorCardInternal({
 
       {isExpanded && (
         <>
-          <View className='border-b border-neutral-100 dark:border-neutral-700' />
-          <View className='gap-2 p-4 dark:bg-neutral-800'>
+          
+          <View className='flex-row gap-4 pb-4 px-4 dark:bg-neutral-800'>
             <TouchableOpacity
-              className='flex-row items-center justify-center gap-2 rounded-lg bg-accent/10 py-2.5'
-              onPress={() =>
-                navigate.navigate('HPDoctorScheduleDetails', { doctorId: doctor.id, doctorName: doctor.name })
-              }
+              className='flex-1 flex-row items-center justify-center gap-2 rounded-lg bg-accent/10 py-2.5'
+              onPress={() => onEdit?.()}
             >
-              <TimeScheduleIcon size={20} color={Colors.accent} strokeWidth={2} />
+              <TimeScheduleIcon size={22} color={Colors.accent} strokeWidth={2} />
               <SemiBold style={{ color: Colors.accent }} className='text-sm'>
-                Edit Schedule
+                Edit
               </SemiBold>
             </TouchableOpacity>
             <TouchableOpacity
-              className='flex-row items-center justify-center gap-2 rounded-lg bg-red-500/10 py-2.5'
-              onPress={() => {}}
+              className='flex-1 flex-row items-center justify-center gap-2 rounded-lg bg-red-500/10 py-2.5'
+              onPress={() => onDelete?.()}
             >
-              <Cancel01Icon size={20} color='#ef4444' strokeWidth={2} />
+              <Cancel01Icon size={22} color='#ef4444' strokeWidth={2} />
               <SemiBold style={{ color: '#ef4444' }} className='text-sm'>
-                Delete Doctor
+                Delete
               </SemiBold>
             </TouchableOpacity>
           </View>

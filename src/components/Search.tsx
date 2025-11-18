@@ -1,47 +1,74 @@
-import CancelCircleIcon from '@hugeicons/CancelCircleIcon'
+import { useColorScheme } from 'nativewind'
+import { useCallback, useState } from 'react'
+import { View, TextInput, TouchableOpacity } from 'react-native'
+import Cancel01Icon from '@hugeicons/Cancel01Icon'
 import Search01Icon from '@hugeicons/Search01Icon'
 import Colors from '@utils/colors'
-import { useRef } from 'react'
-import { TextInput, TouchableOpacity, View, useColorScheme, type TextInputProps } from 'react-native'
-import colors from 'tailwindcss/colors'
 
-export default function Search({ onChangeText, value, placeholder = 'Search...', ...all }: TextInputProps) {
-  const dark = useColorScheme() === 'dark'
-  const ref = useRef<TextInput>(null)
+interface SearchProps {
+  placeholder?: string
+  value: string
+  onChangeText: (text: string) => void
+  onToggle?: (isVisible: boolean) => void
+  isVisible?: boolean
+}
 
-  const clearText = () => {
-    onChangeText?.('')
-    ref.current?.focus()
-  }
+export const Search = ({
+  placeholder = 'Search...',
+  value,
+  onChangeText,
+  onToggle,
+  isVisible = false,
+}: SearchProps) => {
+  const { colorScheme } = useColorScheme()
+  const [showSearch, setShowSearch] = useState(isVisible)
+
+  const toggleSearch = useCallback(() => {
+    setShowSearch((prev) => !prev)
+    if (showSearch) {
+      onChangeText('')
+    }
+    onToggle?.(!showSearch)
+  }, [showSearch, onChangeText, onToggle])
 
   return (
-    <View className='w-full rounded-xl bg-white dark:bg-neutral-800'>
-      <View className='flex-row items-center px-1'>
-        <View className='rounded-xl bg-blue-100/80 p-2 dark:bg-blue-900/20'>
-          <Search01Icon size={24} color={dark ? Colors.accent : '#3b82f6'} variant='stroke-rounded' strokeWidth={2} />
-        </View>
-        <TextInput
-          ref={ref}
-          className='flex-1 px-3 text-lg text-neutral-900 dark:text-white'
-          placeholderTextColor={dark ? colors.neutral[400] : colors.neutral[500]}
-          cursorColor={Colors.accent}
-          selectionColor={dark ? '#3b82f680' : '#3b82f640'}
-          selectionHandleColor={Colors.accent}
-          placeholder={placeholder}
-          value={value}
-          onChangeText={onChangeText}
-          {...all}
-        />
-        {value ? (
+    <View>
+      {showSearch ? (
+        <View className='flex-row items-center gap-2'>
+          <View className='flex-1 flex-row items-center gap-2 rounded-lg border border-neutral-800 bg-white px-6 py-3 dark:border-neutral-700 dark:bg-neutral-800'>
+            <Search01Icon
+              size={20}
+              color={colorScheme === 'dark' ? Colors.text.dark : Colors.text.DEFAULT}
+              strokeWidth={2}
+            />
+            <TextInput
+              className='flex-1 text-neutral-900 dark:text-white'
+              style={{ paddingVertical: 0 }}
+              placeholder={placeholder}
+              placeholderTextColor={colorScheme === 'dark' ? '#9ca3af' : '#6b7280'}
+              value={value}
+              onChangeText={onChangeText}
+              autoFocus
+            />
+          </View>
           <TouchableOpacity
-            className='ml-2 rounded-full bg-neutral-100 p-2 dark:bg-neutral-900'
-            activeOpacity={0.7}
-            onPress={clearText}
+            onPress={toggleSearch}
+            className='rounded-lg border border-neutral-800 bg-neutral-100 p-2 dark:bg-neutral-800'
           >
-            <CancelCircleIcon color={dark ? colors.zinc[400] : colors.zinc[500]} size={18} variant='solid-rounded' />
+            <Cancel01Icon size={26} color={Colors.accent} strokeWidth={2} />
           </TouchableOpacity>
-        ) : null}
-      </View>
+        </View>
+      ) : (
+        <TouchableOpacity onPress={toggleSearch} className='rounded-lg bg-neutral-100 p-2 dark:bg-neutral-800'>
+          <Search01Icon
+            size={26}
+            color={colorScheme === 'dark' ? Colors.text.dark : Colors.text.DEFAULT}
+            strokeWidth={2}
+          />
+        </TouchableOpacity>
+      )}
     </View>
   )
 }
+
+export default Search

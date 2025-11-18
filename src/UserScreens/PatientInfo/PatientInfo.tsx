@@ -1,6 +1,6 @@
 import Button from '@components/Button'
 import Checkbox from '@components/Checkbox'
-import Input from '@components/Input'
+import InputWithLabel from '@components/InputWithLabel'
 import Label from '@components/Label'
 import { PaddingBottom, PaddingTop } from '@components/SafePadding'
 import Slider from '@components/Slider/Slider'
@@ -24,22 +24,13 @@ const PatientInfo = ({}: {}) => {
       <PaddingTop />
       <Header title='Patient Info' />
       <View className='flex-1 gap-3 p-5'>
-        <View className='gap-2'>
-          <Label>Name</Label>
-          <Input placeholder='Enter your full name' keyboardType='default' />
-        </View>
+        <InputWithLabel label='Name' placeholder='Enter your full name' keyboardType='default' />
         <View className='gap-2'>
           <Label>Gender</Label>
           <RadioGenderSelector selectedGender={selectedGender} onGenderChange={setSelectedGender} />
         </View>
-        <View className='gap-2'>
-          <Label>Age</Label>
-          <Input placeholder='Enter your age' keyboardType='numeric' />
-        </View>
-        <View className='gap-2'>
-          <Label>Mobile</Label>
-          <Input placeholder='Enter your mobile number' keyboardType='phone-pad' />
-        </View>
+        <InputWithLabel label='Age' placeholder='Enter your age' keyboardType='numeric' />
+        <InputWithLabel label='Mobile' placeholder='Enter your mobile number' keyboardType='phone-pad' />
 
         <Checkbox
           checked={isFamilyMember}
@@ -48,15 +39,13 @@ const PatientInfo = ({}: {}) => {
         />
 
         {isFamilyMember && (
-          <View className='gap-2'>
-            <Label>Relation</Label>
-            <Input
-              placeholder='Enter relation (e.g., Father, Mother, Son, Daughter)'
-              value={relationName}
-              onChangeText={setRelationName}
-              keyboardType='default'
-            />
-          </View>
+          <InputWithLabel
+            label='Relation'
+            placeholder='Enter relation (e.g., Father, Mother, Son, Daughter)'
+            value={relationName}
+            onChangeText={setRelationName}
+            keyboardType='default'
+          />
         )}
       </View>
       <View className='px-6 pb-2 pt-2'>

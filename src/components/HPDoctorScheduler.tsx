@@ -1,12 +1,12 @@
-import { Header } from '@/UserScreens/BookAppointment/components/Header'
+import CustomHeader from '@components/CustomHeader'
+import Chip from '@components/Chip'
 import Press from '@components/Press'
-import { PaddingTop } from '@components/SafePadding'
-import { Tabs } from '@components/Tabs'
 import Tick02Icon from '@hugeicons/Tick02Icon'
+import Clock03Icon from '@hugeicons/Clock03Icon'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { HPStackNav } from '@utils/types'
 import { useState } from 'react'
-import { Alert, View } from 'react-native'
+import { Alert, ScrollView, View } from 'react-native'
 import colors from 'tailwindcss/colors'
 import Daily from '@components/Daily'
 import Monthly from '@components/Monthly'
@@ -122,30 +122,39 @@ const HPDoctorScheduler = () => {
 
   return (
     <View className='bg flex-1'>
-      <PaddingTop />
-      <Header
+      <CustomHeader
         title={doctorName}
-        RightComponent={
-          <Press className='size-12 items-center justify-center rounded-xl bg-white' onPress={handleReview}>
+        showBackButton
+        onBackPress={() => navigation.goBack()}
+        rightElement={
+          <Press className='size-12 items-center justify-center rounded-xl bg-green-500/15' onPress={handleReview}>
             <Tick02Icon size={25} strokeWidth={2} color={colors.green[600]} />
           </Press>
         }
       />
+      <View className='flex-row items-center justify-center gap-5 bg-white px-5 py-2 dark:bg-neutral-900'>
+        {tabLabels.map((label, index) => (
+          <Chip
+            key={label}
+            label={label}
+            icon={Clock03Icon}
+            isActive={activeTab === index}
+            onPress={() => setActiveTab(index)}
+            variant={activeTab === index ? 'transparentAccent' : 'default'}
+            className='flex-1'
+          />
+        ))}
+      </View>
       <View className='flex-1'>
-        <View className='px-5'>
-          <Tabs tabs={tabLabels} activeTab={activeTab} onTabChange={setActiveTab} />
-        </View>
-        <View className='flex-1 pt-3'>
-          {ContentMap.map((Component, index) =>
-            activeTab === index ? (
-              <Component
-                key={index}
-                onTimeSlotsChange={index === 0 ? setDailyTimeSlots : undefined}
-                onScheduleChange={index === 1 ? setWeeklySchedule : index === 2 ? setMonthlySchedule : undefined}
-              />
-            ) : null,
-          )}
-        </View>
+        {ContentMap.map((Component, index) =>
+          activeTab === index ? (
+            <Component
+              key={index}
+              onTimeSlotsChange={index === 0 ? setDailyTimeSlots : undefined}
+              onScheduleChange={index === 1 ? setWeeklySchedule : index === 2 ? setMonthlySchedule : undefined}
+            />
+          ) : null,
+        )}
       </View>
     </View>
   )

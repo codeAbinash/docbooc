@@ -1,5 +1,4 @@
 import AdminAddDoctor from '@/AdminScreens/AdminAddDoctor'
-import AdminAddDoctors from '@/AdminScreens/AdminAddDoctors'
 import AdminLogin from '@/AdminScreens/AdminAuthentications/Login/AdminLogin'
 import AdminOTP from '@/AdminScreens/AdminAuthentications/OTP/AdminOTP'
 import AdminSignup from '@/AdminScreens/AdminAuthentications/Signup/AdminSignup'
@@ -46,12 +45,12 @@ export default function AdminApp() {
             cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
           }}
         >
+          <RootStack.Screen name='AdminHome' component={AdminHome} />
           <RootStack.Screen name='AdminSplash' component={AdminSplash} options={NO_ANIMATION} />
           <RootStack.Screen name='AdminLogin' component={AdminLogin} />
           <RootStack.Screen name='AdminSignup' component={AdminSignup} />
-          <RootStack.Screen name='AdminHome' component={AdminHome} />
           <RootStack.Screen name='AdminOTP' component={AdminOTP} />
-          <RootStack.Screen name='AdminAddDoctors' component={AdminAddDoctors} />
+
           <RootStack.Screen name='AdminAddDoctor' component={AdminAddDoctor} />
         </RootStack.Navigator>
       </NavigationContainer>
@@ -70,6 +69,21 @@ export type AdminRootStackParamList = {
   AdminLogin: undefined
   AdminSignup: undefined
   AdminHome: undefined
-  AdminAddDoctors: undefined
-  AdminAddDoctor: undefined
+  AdminAddDoctor:
+    | undefined
+    | {
+        doctor: {
+          id: string
+          name: string
+          email: string | null
+          contactNumber: string | null
+          gender: string | null
+          department: string | null
+          degrees: string | null
+          experience: number | null
+          specialization: string
+          createdAt: string
+          verified: boolean | null
+        }
+      }
 }

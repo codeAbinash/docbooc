@@ -168,7 +168,7 @@ export default function Appointments() {
   )
 
   const handleAppointmentPress = (appointment: Appointment) => {
-    navigation.navigate('AppointmentDetails', { appointmentId: appointment.id })
+    navigation.navigate('AppointmentDetails', { appointmentId: appointment.id, status: appointment.status } as any)
   }
 
   return (

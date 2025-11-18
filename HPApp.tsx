@@ -49,10 +49,12 @@ export default function HPApp() {
             cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
           }}
         >
+
+          <RootStack.Screen name='HPHome' component={HPHome} options={NO_ANIMATION} />
           <RootStack.Screen name='HPSplash' component={HPSplash} options={NO_ANIMATION} />
           <RootStack.Screen name='HPLogin' component={HPLogin} />
           <RootStack.Screen name='HPSignup' component={HPSignup} />
-          <RootStack.Screen name='HPHome' component={HPHome} options={NO_ANIMATION} />
+          
           <RootStack.Screen name='HPOTP' component={HPOTP} options={NO_ANIMATION} />
           <RootStack.Screen name='HPDoctorScheduler' component={HPDoctorScheduler} />
           <RootStack.Screen name='HPScheduleReview' component={HPScheduleReview} />

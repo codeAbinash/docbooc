@@ -1,6 +1,6 @@
 import popupStore from '@/zustand/popupStore'
 import Button from '@components/Button'
-import Input from '@components/Input'
+import InputWithLabel from '@components/InputWithLabel'
 import KeyboardAvoid from '@components/KeyboardAvoid'
 import Label from '@components/Label'
 import { PaddingBottom, PaddingTop } from '@components/SafePadding'
@@ -75,18 +75,23 @@ export default function HPSignup({ navigation }: HPNavProp) {
               </Medium>
             </View>
             <View className='gap-2'>
-              <Label>Full Name</Label>
-              <Input placeholder='Enter your full name' value={name} onChangeText={setName} autoCapitalize='words' />
-              <Label>Email Address</Label>
-              <Input
+              <InputWithLabel
+                label='Full Name'
+                placeholder='Enter your full name'
+                value={name}
+                onChangeText={setName}
+                autoCapitalize='words'
+              />
+              <InputWithLabel
+                label='Email Address'
                 placeholder='Email Address'
                 value={email}
                 onChangeText={setEmail}
                 keyboardType='email-address'
                 autoCapitalize='none'
               />
-              <Label>Password</Label>
-              <Input
+              <InputWithLabel
+                label='Password'
                 placeholder='Enter your password'
                 value={password}
                 onChangeText={setPassword}
