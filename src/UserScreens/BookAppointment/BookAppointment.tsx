@@ -4,109 +4,49 @@ import { DoctorCard } from '@components/DoctorCard'
 import { HPCards } from '@components/HPCards'
 import { PaddingBottom } from '@components/SafePadding'
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
+import { useQuery } from '@tanstack/react-query'
+import { api } from '@utils/client'
 import { Medium, SemiBold } from '@utils/fonts'
 import { StackNav } from '@utils/types'
 import { useState } from 'react'
-import { View } from 'react-native'
+import { ActivityIndicator, View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import { RootStackParamList } from '../../../App'
 import { DateCardContainer } from './components/DateCardContainer'
 
-// Demo location data
-const demoLocations = [
-  {
-    id: 1,
-    mainText: 'City Hospital - Main Branch',
-    secondaryText: '123 Medical Center Drive, Downtown',
-    image: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=400&h=300&fit=crop',
-    distance: '2.5',
-    isSelected: false,
-    startTime: '09:00 AM',
-    endTime: '05:00 PM',
-    q: '12',
-  },
-  {
-    id: 2,
-    mainText: 'Metro Medical Center',
-    secondaryText:
-      '456 Health Street, Metro Station. 456 Health Street, Metro Station. 456 Health Street, Metro Station.',
-    image: 'https://images.unsplash.com/photo-1586773860418-d37222d8fce3?w=400&h=300&fit=crop',
-    distance: '4.2',
-    isSelected: true,
-    startTime: '08:00 AM',
-    endTime: '06:00 PM',
-    q: '8',
-  },
-  {
-    id: 3,
-    mainText: 'Sunrise Clinic',
-    secondaryText: '789 Wellness Avenue, Sunrise District',
-    image: 'https://images.unsplash.com/photo-1551601651-2a8555f1a136?w=400&h=300&fit=crop',
-    distance: '6.8',
-    isSelected: false,
-    startTime: '10:00 AM',
-    endTime: '04:00 PM',
-    q: '15',
-  },
-  {
-    id: 4,
-    mainText: 'Green Valley Hospital',
-    secondaryText: '321 Valley Road, Green Hills',
-    image: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=400&h=300&fit=crop',
-    distance: '8.1',
-    isSelected: false,
-    startTime: '09:30 AM',
-    endTime: '05:30 PM',
-    q: '10',
-  },
-  // {
-  //   id: 5,
-  //   mainText: 'Apollo Specialty Hospital',
-  //   secondaryText: '567 Innovation Drive, Tech Park',
-  //   image: 'https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=400&h=300&fit=crop',
-  //   distance: '5.3',
-  //   isSelected: false,
-  // },
-  // {
-  //   id: 6,
-  //   mainText: 'Fortis Healthcare Center',
-  //   secondaryText: '890 Heritage Street, Old City',
-  //   image: 'https://images.unsplash.com/photo-1538108149393-fbbd81895907?w=400&h=300&fit=crop',
-  //   distance: '7.9',
-  //   isSelected: false,
-  // },
-  // {
-  //   id: 7,
-  //   mainText: 'Max Super Speciality Hospital',
-  //   secondaryText: '432 Lotus Road, Garden District',
-  //   image: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=300&fit=crop',
-  //   distance: '3.7',
-  //   isSelected: false,
-  // },
-  // {
-  //   id: 8,
-  //   mainText: 'Medanta Emergency Clinic',
-  //   secondaryText: '678 Express Highway, Business Hub',
-  //   image: 'https://images.unsplash.com/photo-1512678080530-7760d81faba6?w=400&h=300&fit=crop',
-  //   distance: '9.2',
-  //   isSelected: false,
-  // },
-]
-
 const BookAppointment = () => {
   const navigation = useNavigation<StackNav>()
   const route = useRoute<RouteProp<RootStackParamList, 'BookAppointment'>>()
-  const [locations, setLocations] = useState(demoLocations)
+  const [selectedLocationId, setSelectedLocationId] = useState<number | null>(null)
+  const [selectedDate, setSelectedDate] = useState<string>('')
 
   const { doctor } = route.params
 
+  const { data: availabilityData, isLoading: isLoadingAvailability } = useQuery({
+    queryKey: ['doctor-availability', doctor.id, selectedDate],
+    queryFn: async () => {
+      const response = await (
+        await api.users.doctors.availability.$post({
+          json: {
+            date: selectedDate,
+            doctorId: doctor.id,
+          },
+        })
+      ).json()
+      return response.success ? response.data : []
+    },
+    enabled: !!selectedDate && !!doctor.id,
+  })
+
+  const locations = availabilityData || []
+
   const handleLocationSelect = (selectedId: number) => {
-    setLocations((prevLocations) =>
-      prevLocations.map((location) => ({
-        ...location,
-        isSelected: location.id === selectedId,
-      })),
-    )
+    setSelectedLocationId(selectedId)
+  }
+
+  const handleDateChange = (date: string) => {
+    console.log('Date changed to:', date)
+    setSelectedDate(date)
   }
 
   return (
@@ -124,11 +64,28 @@ const BookAppointment = () => {
           </View>
 
           <View className='rounded-2xl bg-white p-5 dark:bg-neutral-800'>
-            <DateCardContainer />
+            <DateCardContainer onDateChange={handleDateChange} />
           </View>
         </View>
 
-        <LocationCardContainer locations={locations} onLocationSelect={handleLocationSelect} />
+        {isLoadingAvailability ? (
+          <View className='items-center justify-center py-10'>
+            <ActivityIndicator size='large' color='#3b82f6' />
+            <Medium className='mt-3 text-neutral-600 dark:text-neutral-400'>Loading available locations...</Medium>
+          </View>
+        ) : locations.length > 0 ? (
+          <LocationCardContainer
+            locations={locations}
+            selectedLocationId={selectedLocationId}
+            onLocationSelect={handleLocationSelect}
+          />
+        ) : selectedDate ? (
+          <View className='items-center justify-center rounded-2xl bg-white p-10 dark:bg-neutral-800'>
+            <Medium className='text-center text-neutral-600 dark:text-neutral-400'>
+              No available locations for selected date
+            </Medium>
+          </View>
+        ) : null}
       </ScrollView>
 
       <View className='border-t border-neutral-100 bg-white px-6 py-3 dark:border-neutral-700 dark:bg-neutral-800'>
@@ -140,15 +97,22 @@ const BookAppointment = () => {
 }
 
 interface LocationCardContainerProps {
-  locations: LocationData[]
+  locations: any[]
+  selectedLocationId: number | null
   onLocationSelect: (selectedId: number) => void
 }
 
-export function LocationCardContainer({ locations, onLocationSelect }: LocationCardContainerProps) {
+export function LocationCardContainer({ locations, selectedLocationId, onLocationSelect }: LocationCardContainerProps) {
+  console.log(locations)
   return (
     <View className='gap-3'>
-      {locations.map((location) => (
-        <LocationCard key={location.id} location={location} onPress={() => onLocationSelect(location.id)} />
+      {locations.map((location, index) => (
+        <LocationCard
+          key={location.scheduleId || index}
+          location={location}
+          isSelected={selectedLocationId === index}
+          onPress={() => onLocationSelect(index)}
+        />
       ))}
     </View>
   )
@@ -167,37 +131,42 @@ interface LocationData {
 }
 
 interface LocationCardProps {
-  location: LocationData
+  location: any
+  isSelected: boolean
   onPress: () => void
 }
-function LocationCard({ location, onPress }: LocationCardProps) {
+function LocationCard({ location, isSelected, onPress }: LocationCardProps) {
+  const hpName = location.healthcareProvider?.name || 'Unknown Provider'
+  const hpAddress = location.healthcareProvider?.address || 'Address not available'
+  const timeSlot = location.timeSlots?.[0]
+  const startTime = timeSlot?.startTime?.slice(0, 5) || ''
+  const endTime = timeSlot?.endTime?.slice(0, 5) || ''
+  const maxBookings = timeSlot?.maxBookings || 0
+
   const leftContent = (
     <>
       <Medium className='text-xs font-semibold text-neutral-600 dark:text-neutral-400'>Address</Medium>
       <Medium className='text-sm text-neutral-800 dark:text-neutral-100' numberOfLines={1}>
-        {location.secondaryText}
+        {hpAddress}
       </Medium>
     </>
   )
 
-  const rightContent = (
-    <>
-      <Medium className='text-xs font-semibold text-neutral-600 dark:text-neutral-400'>Distance</Medium>
-      <SemiBold className='text-sm text-accent'>{location.distance} km</SemiBold>
-    </>
-  )
+  const rightContent =
+    maxBookings > 0 ? (
+      <>
+        <Medium className='text-xs font-semibold text-neutral-600 dark:text-neutral-400'>Max Bookings</Medium>
+        <SemiBold className='text-sm text-accent'>{maxBookings}</SemiBold>
+      </>
+    ) : null
 
   return (
     <HPCards
-      title={location.mainText}
-      startTime={location.startTime}
-      endTime={location.endTime}
-      q={location.q}
-      image={location.image}
-      address={location.secondaryText}
-      time={`${location.startTime} - ${location.endTime}`}
-      distance={`${location.distance} km`}
-      selected={location.isSelected}
+      title={hpName}
+      time={startTime && endTime ? `${startTime} - ${endTime}` : undefined}
+      leftContent={leftContent}
+      rightContent={rightContent}
+      selected={isSelected}
       onPress={onPress}
     />
   )

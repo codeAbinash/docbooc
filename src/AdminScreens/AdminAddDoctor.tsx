@@ -145,17 +145,19 @@ export default function AdminAddDoctor() {
   const createDoctorMutation = useMutation({
     mutationFn: async (data: {
       name: string
-      specialization: string
-      contactNumber: string
+      specialization?: string
+      contactNumber?: string
       email: string
       gender: 'male' | 'female' | 'other'
       degrees: string
       department: string
       experience: number
     }) => {
-      return await adminApi.doctors.$post({ json: data })
+      return await (await adminApi.doctors.$post({ json: data })).json()
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log(data)
+      if (!data || !data.success) return alert('Error', 'Failed to save doctor. Please try again.')
       navigation.goBack()
     },
     onError: (error) => {
@@ -168,8 +170,8 @@ export default function AdminAddDoctor() {
     mutationFn: async (data: {
       id: string
       name: string
-      specialization: string
-      contactNumber: string
+      specialization?: string
+      contactNumber?: string
       email: string
       gender: 'male' | 'female' | 'other'
       degrees: string
@@ -218,7 +220,7 @@ export default function AdminAddDoctor() {
       name: name.trim(),
       email: email.trim(),
       contact: contact.trim(),
-      specialization: specialization || '',
+      specialization: specialization || undefined,
       gender: gender.toLowerCase() as 'male' | 'female' | 'other',
       degrees: degrees.join(','),
       department,
@@ -242,8 +244,8 @@ export default function AdminAddDoctor() {
             updateDoctorMutation.mutate({
               id: doctorData.id,
               name: data.name,
-              specialization: data.specialization,
-              contactNumber: data.contact,
+              ...(data.specialization && { specialization: data.specialization }),
+              ...(data.contact && { contactNumber: data.contact }),
               email: data.email,
               gender: data.gender,
               degrees: data.degrees,
@@ -253,8 +255,8 @@ export default function AdminAddDoctor() {
           } else {
             createDoctorMutation.mutate({
               name: data.name,
-              specialization: data.specialization,
-              contactNumber: data.contact,
+              ...(data.specialization && { specialization: data.specialization }),
+              ...(data.contact && { contactNumber: data.contact }),
               email: data.email,
               gender: data.gender,
               degrees: data.degrees,

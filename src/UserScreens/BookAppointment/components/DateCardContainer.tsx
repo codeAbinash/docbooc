@@ -1,8 +1,8 @@
-import { Medium, SemiBold } from '@utils/fonts'
-import { useRef, useState, useCallback } from 'react'
-import { TouchableOpacity, View, FlatList } from 'react-native'
-import Calendar01Icon from '@assets/icons/hugeicons/Calendar01Icon'
 import ArrowRightDoubleIcon from '@assets/icons/hugeicons/ArrowRightDoubleIcon'
+import Calendar01Icon from '@assets/icons/hugeicons/Calendar01Icon'
+import { Medium, SemiBold } from '@utils/fonts'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { FlatList, TouchableOpacity, View } from 'react-native'
 
 const monthNames = [
   'January',
@@ -31,10 +31,27 @@ const getDateInfo = (index: number) => {
   }
 }
 
-export function DateCardContainer() {
+interface DateCardContainerProps {
+  onDateChange?: (date: string) => void
+}
+
+export function DateCardContainer({ onDateChange }: DateCardContainerProps) {
   const [currentIndex, setCurrentIndex] = useState(1)
   const [containerWidth, setContainerWidth] = useState(0)
   const flatListRef = useRef<FlatList>(null)
+
+  useEffect(() => {
+    if (onDateChange) {
+      const dateInfo = getDateInfo(currentIndex)
+      const date = new Date(dateInfo.year, dateInfo.month, parseInt(dateInfo.date))
+      const isoDate = date.toISOString().split('T')[0]
+      console.log(isoDate)
+      if (isoDate) {
+        console.log('DateCardContainer: Calling onDateChange with:', isoDate)
+        onDateChange(isoDate)
+      }
+    }
+  }, [currentIndex])
 
   const handleScroll = useCallback(
     (event: any) => {

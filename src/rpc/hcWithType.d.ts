@@ -57,7 +57,7 @@ declare const client: {
                 department?: string | undefined
                 degrees?: string | undefined
                 experience?: number | undefined
-                specialization: string
+                specialization?: string | undefined
               }
             }
             output: {
@@ -73,7 +73,7 @@ declare const client: {
                 gender: string | null
                 id: string
                 name: string
-                specialization: string
+                specialization: string | null
                 verified: boolean | null
               }
             }
@@ -103,7 +103,7 @@ declare const client: {
                 department: string | null
                 degrees: string | null
                 experience: number | null
-                specialization: string
+                specialization: string | null
                 createdAt: string
                 verified: boolean | null
               }[]
@@ -308,7 +308,7 @@ declare const client: {
                     department?: string | undefined
                     degrees?: string | undefined
                     experience?: number | undefined
-                    specialization: string
+                    specialization?: string | undefined
                   }[]
                 }
               }
@@ -326,7 +326,7 @@ declare const client: {
                     gender: string | null
                     id: string
                     name: string
-                    specialization: string
+                    specialization: string | null
                     verified: boolean | null
                   }[]
                   errors: {
@@ -339,7 +339,7 @@ declare const client: {
                       department?: string | undefined
                       degrees?: string | undefined
                       experience?: number | undefined
-                      specialization: string
+                      specialization?: string | undefined
                     }
                     error: string
                   }[]
@@ -395,7 +395,7 @@ declare const client: {
                       department: string | null
                       degrees: string | null
                       experience: number | null
-                      specialization: string
+                      specialization: string | null
                       createdAt: string
                       verified: boolean | null
                     }
@@ -469,7 +469,7 @@ declare const client: {
                       department: string | null
                       degrees: string | null
                       experience: number | null
-                      specialization: string
+                      specialization: string | null
                       createdAt: string
                       verified: boolean | null
                     }
@@ -556,7 +556,7 @@ declare const client: {
                   department: string | null
                   degrees: string | null
                   experience: number | null
-                  specialization: string
+                  specialization: string | null
                   createdAt: string
                   verified: boolean | null
                 }[]
@@ -1244,7 +1244,7 @@ declare const client: {
                       department: string | null
                       degrees: string | null
                       experience: number | null
-                      specialization: string
+                      specialization: string | null
                       createdAt: string
                       verified: boolean | null
                     }[]
@@ -1274,6 +1274,37 @@ declare const client: {
         schedules: {
           '*': import('hono/client').ClientRequest<{}>
         }
+      }
+    }
+  }
+} & {
+  api: {
+    v1: {
+      users: {
+        doctors: import('hono/client').ClientRequest<{
+          $get: {
+            input: {}
+            output: {
+              success: true
+              message: string
+              data: {
+                id: string
+                name: string
+                email: string | null
+                contactNumber: string | null
+                gender: string | null
+                department: string | null
+                degrees: string | null
+                experience: number | null
+                specialization: string | null
+                createdAt: string
+                verified: boolean | null
+              }[]
+            }
+            outputFormat: 'json'
+            status: 200
+          }
+        }>
       }
     }
   }
@@ -1437,7 +1468,7 @@ declare const client: {
                         department: string | null
                         degrees: string | null
                         experience: number | null
-                        specialization: string
+                        specialization: string | null
                         createdAt: string
                         verified: boolean | null
                       } | null
@@ -1553,7 +1584,7 @@ declare const client: {
                         department: string | null
                         degrees: string | null
                         experience: number | null
-                        specialization: string
+                        specialization: string | null
                         createdAt: string
                         verified: boolean | null
                       } | null
@@ -1670,7 +1701,7 @@ declare const client: {
                           department: string | null
                           degrees: string | null
                           experience: number | null
-                          specialization: string
+                          specialization: string | null
                           createdAt: string
                           verified: boolean | null
                         } | null
@@ -1773,6 +1804,80 @@ declare const client: {
                   }
             }>
           }
+        }
+      }
+    }
+  }
+} & {
+  api: {
+    v1: {
+      users: {
+        doctors: {
+          availability: import('hono/client').ClientRequest<{
+            $post:
+              | {
+                  input: {
+                    json: {
+                      doctorId: string
+                      date: string
+                    }
+                  }
+                  output: {
+                    success: false
+                    message: string
+                    data: import('hono/utils/types').JSONValue
+                  }
+                  outputFormat: 'json'
+                  status: 500
+                }
+              | {
+                  input: {
+                    json: {
+                      doctorId: string
+                      date: string
+                    }
+                  }
+                  output: {
+                    success: true
+                    message: string
+                    data: {
+                      scheduleId: string
+                      scheduleType: 'daily' | 'monthly' | 'weekly'
+                      healthcareProvider: {
+                        id: string
+                        name: string
+                        email: string
+                        type: string | null
+                        address: string | null
+                        contactNumber: string | null
+                      }
+                      timeSlots: {
+                        scheduleDayId: string
+                        startTime: string
+                        endTime: string
+                        maxBookings: number
+                      }[]
+                    }[]
+                  }
+                  outputFormat: 'json'
+                  status: 200
+                }
+              | {
+                  input: {
+                    json: {
+                      doctorId: string
+                      date: string
+                    }
+                  }
+                  output: {
+                    success: false
+                    message: string
+                    data: null
+                  }
+                  outputFormat: 'json'
+                  status: 404
+                }
+          }>
         }
       }
     }
@@ -2110,7 +2215,7 @@ export declare const hcWithType: (
                 department?: string | undefined
                 degrees?: string | undefined
                 experience?: number | undefined
-                specialization: string
+                specialization?: string | undefined
               }
             }
             output: {
@@ -2126,7 +2231,7 @@ export declare const hcWithType: (
                 gender: string | null
                 id: string
                 name: string
-                specialization: string
+                specialization: string | null
                 verified: boolean | null
               }
             }
@@ -2156,7 +2261,7 @@ export declare const hcWithType: (
                 department: string | null
                 degrees: string | null
                 experience: number | null
-                specialization: string
+                specialization: string | null
                 createdAt: string
                 verified: boolean | null
               }[]
@@ -2361,7 +2466,7 @@ export declare const hcWithType: (
                     department?: string | undefined
                     degrees?: string | undefined
                     experience?: number | undefined
-                    specialization: string
+                    specialization?: string | undefined
                   }[]
                 }
               }
@@ -2379,7 +2484,7 @@ export declare const hcWithType: (
                     gender: string | null
                     id: string
                     name: string
-                    specialization: string
+                    specialization: string | null
                     verified: boolean | null
                   }[]
                   errors: {
@@ -2392,7 +2497,7 @@ export declare const hcWithType: (
                       department?: string | undefined
                       degrees?: string | undefined
                       experience?: number | undefined
-                      specialization: string
+                      specialization?: string | undefined
                     }
                     error: string
                   }[]
@@ -2448,7 +2553,7 @@ export declare const hcWithType: (
                       department: string | null
                       degrees: string | null
                       experience: number | null
-                      specialization: string
+                      specialization: string | null
                       createdAt: string
                       verified: boolean | null
                     }
@@ -2522,7 +2627,7 @@ export declare const hcWithType: (
                       department: string | null
                       degrees: string | null
                       experience: number | null
-                      specialization: string
+                      specialization: string | null
                       createdAt: string
                       verified: boolean | null
                     }
@@ -2609,7 +2714,7 @@ export declare const hcWithType: (
                   department: string | null
                   degrees: string | null
                   experience: number | null
-                  specialization: string
+                  specialization: string | null
                   createdAt: string
                   verified: boolean | null
                 }[]
@@ -3297,7 +3402,7 @@ export declare const hcWithType: (
                       department: string | null
                       degrees: string | null
                       experience: number | null
-                      specialization: string
+                      specialization: string | null
                       createdAt: string
                       verified: boolean | null
                     }[]
@@ -3327,6 +3432,37 @@ export declare const hcWithType: (
         schedules: {
           '*': import('hono/client').ClientRequest<{}>
         }
+      }
+    }
+  }
+} & {
+  api: {
+    v1: {
+      users: {
+        doctors: import('hono/client').ClientRequest<{
+          $get: {
+            input: {}
+            output: {
+              success: true
+              message: string
+              data: {
+                id: string
+                name: string
+                email: string | null
+                contactNumber: string | null
+                gender: string | null
+                department: string | null
+                degrees: string | null
+                experience: number | null
+                specialization: string | null
+                createdAt: string
+                verified: boolean | null
+              }[]
+            }
+            outputFormat: 'json'
+            status: 200
+          }
+        }>
       }
     }
   }
@@ -3490,7 +3626,7 @@ export declare const hcWithType: (
                         department: string | null
                         degrees: string | null
                         experience: number | null
-                        specialization: string
+                        specialization: string | null
                         createdAt: string
                         verified: boolean | null
                       } | null
@@ -3606,7 +3742,7 @@ export declare const hcWithType: (
                         department: string | null
                         degrees: string | null
                         experience: number | null
-                        specialization: string
+                        specialization: string | null
                         createdAt: string
                         verified: boolean | null
                       } | null
@@ -3723,7 +3859,7 @@ export declare const hcWithType: (
                           department: string | null
                           degrees: string | null
                           experience: number | null
-                          specialization: string
+                          specialization: string | null
                           createdAt: string
                           verified: boolean | null
                         } | null
@@ -3826,6 +3962,80 @@ export declare const hcWithType: (
                   }
             }>
           }
+        }
+      }
+    }
+  }
+} & {
+  api: {
+    v1: {
+      users: {
+        doctors: {
+          availability: import('hono/client').ClientRequest<{
+            $post:
+              | {
+                  input: {
+                    json: {
+                      doctorId: string
+                      date: string
+                    }
+                  }
+                  output: {
+                    success: false
+                    message: string
+                    data: import('hono/utils/types').JSONValue
+                  }
+                  outputFormat: 'json'
+                  status: 500
+                }
+              | {
+                  input: {
+                    json: {
+                      doctorId: string
+                      date: string
+                    }
+                  }
+                  output: {
+                    success: true
+                    message: string
+                    data: {
+                      scheduleId: string
+                      scheduleType: 'daily' | 'monthly' | 'weekly'
+                      healthcareProvider: {
+                        id: string
+                        name: string
+                        email: string
+                        type: string | null
+                        address: string | null
+                        contactNumber: string | null
+                      }
+                      timeSlots: {
+                        scheduleDayId: string
+                        startTime: string
+                        endTime: string
+                        maxBookings: number
+                      }[]
+                    }[]
+                  }
+                  outputFormat: 'json'
+                  status: 200
+                }
+              | {
+                  input: {
+                    json: {
+                      doctorId: string
+                      date: string
+                    }
+                  }
+                  output: {
+                    success: false
+                    message: string
+                    data: null
+                  }
+                  outputFormat: 'json'
+                  status: 404
+                }
+          }>
         }
       }
     }

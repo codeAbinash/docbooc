@@ -126,8 +126,7 @@ function DoctorCardInternal({
 
       {isExpanded && (
         <>
-          
-          <View className='flex-row gap-4 pb-4 px-4 dark:bg-neutral-800'>
+          <View className='flex-row gap-4 px-4 pb-4 dark:bg-neutral-800'>
             <TouchableOpacity
               className='flex-1 flex-row items-center justify-center gap-2 rounded-lg bg-accent/10 py-2.5'
               onPress={() => onEdit?.()}

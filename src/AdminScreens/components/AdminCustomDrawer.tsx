@@ -37,7 +37,6 @@ export default function AdminCustomDrawer(props: any) {
         showsVerticalScrollIndicator={false}
       >
         <View>
-          
           <View className='px gap-2 pt-5'>
             {DRAWER_ITEMS.map((item) => {
               const isActive = currentRoute === item.navigationName
