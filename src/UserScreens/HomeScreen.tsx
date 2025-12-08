@@ -91,7 +91,7 @@ function UpcomingSchedule() {
   if (!upcomingData) return null
 
   return (
-    <View className='gap-5 p-5 '>
+    <View className='gap-5 p-5'>
       <View className='mt-5 flex-row items-center justify-between'>
         <Bold className='text text-md'>Upcoming</Bold>
         <SemiBold className='text-sm text-accent'>See All</SemiBold>
@@ -125,9 +125,9 @@ const SearchDoctorByDept = () => {
               onPress={() => navigation.navigate('Doctors')}
             >
               <View className='items-center justify-center rounded-full bg-accent/90' style={{ width: 65, height: 65 }}>
-                <IconComponent size={30} color={'#FFFFFF'}  />
+                <IconComponent size={30} color={'#FFFFFF'} />
               </View>
-              <Medium className=' text text-center text-sm opacity-80' numberOfLines={1} style={{ lineHeight: 15 }}>
+              <Medium className='text text-center text-sm opacity-80' numberOfLines={1} style={{ lineHeight: 15 }}>
                 {specialty.name}
               </Medium>
             </TouchableOpacity>
@@ -157,8 +157,8 @@ function TopDoctors({ specialty }: TopDoctorsProps) {
   }
 
   return (
-    <View className=' gap-5 py-5 '>
-      <View className=' flex-row items-center justify-between px-5'>
+    <View className='gap-5 py-5'>
+      <View className='flex-row items-center justify-between px-5'>
         <SemiBold className='text text-base'>Experts in {specialty.name}</SemiBold>
         <TouchableOpacity>
           <Medium className='text-base text-blue-600'>See All</Medium>

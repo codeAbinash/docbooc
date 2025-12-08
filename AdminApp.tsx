@@ -81,7 +81,7 @@ export type AdminRootStackParamList = {
           department: string | null
           degrees: string | null
           experience: number | null
-          specialization: string
+          specialization: string | null
           createdAt: string
           verified: boolean | null
         }

@@ -53,7 +53,7 @@ export default function CustomHeader({
   return (
     <View className='bg-white dark:bg-neutral-900'>
       <PaddingTop />
-      <View className=' py-2 px-5'>
+      <View className='px-5 py-2'>
         {isSearchOpen ? (
           <View className='flex-row items-center gap-2'>
             <View className='flex-1 flex-row items-center gap-2 rounded-lg border border-neutral-800 bg-white px-6 py-3 dark:border-neutral-700 dark:bg-neutral-800'>
@@ -85,7 +85,7 @@ export default function CustomHeader({
               {showBackButton && (
                 <TouchableOpacity
                   onPress={onBackPress}
-                  className=' size-12 items-center justify-center rounded-lg bg-neutral-100 dark:bg-neutral-800'
+                  className='size-12 items-center justify-center rounded-lg bg-neutral-100 dark:bg-neutral-800'
                 >
                   <ArrowLeft01Icon size={24} strokeWidth={1.8} color={colorScheme === 'dark' ? 'white' : 'black'} />
                 </TouchableOpacity>

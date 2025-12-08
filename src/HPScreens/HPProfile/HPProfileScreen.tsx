@@ -105,7 +105,7 @@ export default function HPProfileScreen() {
               <Press
                 key={item.id}
                 onPress={item.onPress}
-                className=' flex-row items-center justify-between rounded-xl bg-white px-4 py-3 dark:bg-neutral-800'
+                className='flex-row items-center justify-between rounded-xl bg-white px-4 py-3 dark:bg-neutral-800'
               >
                 <View className='flex-1 flex-row items-center gap-3'>
                   <View className='h-10 w-10 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/30'>

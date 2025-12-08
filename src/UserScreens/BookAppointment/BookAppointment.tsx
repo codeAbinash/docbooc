@@ -1,7 +1,7 @@
 import Button from '@components/Button'
-import HybridHead from '@components/HybridHead'
 import { DoctorCard } from '@components/DoctorCard'
 import { HPCards } from '@components/HPCards'
+import HybridHead from '@components/HybridHead'
 import { PaddingBottom } from '@components/SafePadding'
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import { useQuery } from '@tanstack/react-query'
@@ -137,11 +137,14 @@ interface LocationCardProps {
 }
 function LocationCard({ location, isSelected, onPress }: LocationCardProps) {
   const hpName = location.healthcareProvider?.name || 'Unknown Provider'
-  const hpAddress = location.healthcareProvider?.address || 'Address not available'
+  const hpAddress =
+    `${location.healthcareProvider?.houseNumber} ${location.healthcareProvider?.roadName}, ${location.healthcareProvider?.city || ''}, ${location.healthcareProvider?.state || ''}, ${location.healthcareProvider?.pin || ''}` ||
+    'Address not available'
   const timeSlot = location.timeSlots?.[0]
   const startTime = timeSlot?.startTime?.slice(0, 5) || ''
   const endTime = timeSlot?.endTime?.slice(0, 5) || ''
   const maxBookings = timeSlot?.maxBookings || 0
+  const distance = location.distance
 
   const leftContent = (
     <>
@@ -155,8 +158,8 @@ function LocationCard({ location, isSelected, onPress }: LocationCardProps) {
   const rightContent =
     maxBookings > 0 ? (
       <>
-        <Medium className='text-xs font-semibold text-neutral-600 dark:text-neutral-400'>Max Bookings</Medium>
-        <SemiBold className='text-sm text-accent'>{maxBookings}</SemiBold>
+        <Medium className='text-xs font-semibold text-neutral-600 dark:text-neutral-400'>Distance</Medium>
+        <SemiBold className='text-sm text-accent'>{distance || 'N/A'}</SemiBold>
       </>
     ) : null
 

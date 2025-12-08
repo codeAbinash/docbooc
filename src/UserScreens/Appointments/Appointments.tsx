@@ -54,7 +54,7 @@ function AppointmentCard({ appointment, onPress }: AppointmentCardProps) {
             {appointment.status === 'confirmed' ? 'Confirmed' : 'Provisional'}
           </Medium>
         </View>
-        <View className=' dark:bg-blue-900/30'>
+        <View className='dark:bg-blue-900/30'>
           <SemiBold className='text-base text-blue-700 dark:text-blue-400'>Q{appointment.queueNumber}</SemiBold>
         </View>
       </View>
@@ -79,7 +79,6 @@ function AppointmentCard({ appointment, onPress }: AppointmentCardProps) {
           <Medium className='text-xs text-neutral-500 dark:text-neutral-400'>Doctor</Medium>
           <SemiBold className='text-base text-neutral-900 dark:text-white'>Dr. {appointment.doctorName}</SemiBold>
         </View>
-        
       </View>
 
       {/* Date & Time */}

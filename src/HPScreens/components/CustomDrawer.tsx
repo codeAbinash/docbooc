@@ -33,7 +33,7 @@ export default function CustomDrawer(props: any) {
   const currentRoute = state.routes[state.index].name
 
   return (
-    <View className='flex-1 ' style={{ backgroundColor: colors.background }}>
+    <View className='flex-1' style={{ backgroundColor: colors.background }}>
       <DrawerContentScrollView
         {...props}
         contentContainerStyle={{ paddingTop: insets.top + 16 }}
@@ -93,12 +93,12 @@ export default function CustomDrawer(props: any) {
       </DrawerContentScrollView>
 
       <View
-        className=' border-neutral-300  pt-2 dark:border-neutral-700'
+        className='border-neutral-300 pt-2 dark:border-neutral-700'
         style={{
           paddingBottom: insets.bottom + 16,
         }}
       >
-        <View className=' gap-4'>
+        <View className='gap-4'>
           {DRAWER_ITEMS.filter((item) => item.navigationName === 'Settings').map((item) => {
             const isActive = currentRoute === item.navigationName
             const Icon = item.icon

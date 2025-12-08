@@ -20,7 +20,8 @@ export default function AdminOTP({ navigation, route }: AdminNavProp) {
   const [otp, setOtp] = useState('')
   const alert = popupStore((state) => state.alert)
 
-  const { email, password, name, isSignup } = route.params || {}
+  const params = route.params && 'email' in route.params ? route.params : undefined
+  const { email, password, name, isSignup } = params || {}
 
   const registerMutation = useMutation({
     mutationFn: async ({

@@ -1,6 +1,7 @@
 import { ReactNode } from 'react'
 import { Image, TouchableOpacity, TouchableOpacityProps, View } from 'react-native'
 import { Medium, SemiBold } from '@utils/fonts'
+import { DEFAULT_PP_IMAGE } from '@/constants'
 
 type HPCardsProps = {
   title: string
@@ -100,7 +101,7 @@ function HPCardsInternal({
       {/* Header Section */}
       <View className='flex-row items-start gap-3 p-4 dark:bg-neutral-800'>
         {icon && <View className='pt-0.5'>{icon}</View>}
-        {image && <Image source={{ uri: image }} className='size-20 rounded-xl' resizeMode='cover' />}
+        <Image source={{ uri: image || DEFAULT_PP_IMAGE }} className='size-16 rounded-full' resizeMode='cover' />
 
         <View className='flex-1'>
           <View className='flex-1 flex-row items-start justify-between'>

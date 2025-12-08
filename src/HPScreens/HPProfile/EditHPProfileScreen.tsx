@@ -1,32 +1,18 @@
-import { PaddingBottom } from '@components/SafePadding'
-import CustomHeader from '@components/CustomHeader'
-import Button from '@components/Button'
-import InputWithLabel from '@components/InputWithLabel'
-import Press from '@components/Press'
+import { DEFAULT_PP_IMAGE } from '@/constants'
+import popupStore from '@/zustand/popupStore'
 import PlusSignIcon from '@assets/icons/hugeicons/PlusSignIcon'
-import Location06Icon from '@assets/icons/hugeicons/Location06Icon'
-import { useNavigation } from '@react-navigation/native'
-import { HPStackNav } from '@utils/types'
-import { Medium, SEMIBOLD, SemiBold } from '@utils/fonts'
-import { useState } from 'react'
-import { Image, ScrollView, View, useColorScheme, TextInput, Alert } from 'react-native'
-import { PermissionsAndroid } from 'react-native'
-import Geolocation from 'react-native-geolocation-service'
+import Button from '@components/Button'
+import CustomHeader from '@components/CustomHeader'
 import KeyboardAvoid from '@components/KeyboardAvoid'
-
-const PROFILE_DATA = {
-  name: 'Subham Kundu',
-  phone: '7479063583',
-  pincode: '700160',
-  state: 'West Bengal',
-  city: 'New Town',
-  houseNo: 'Kathjuridanga, milanpally',
-  roadName: '367, Shapoorji Housing Complex, Action Area 3E',
-  landmark: "JK's meditation",
-
-  image:
-    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSmtxVett3yUOa0Aq9xlNS_AT9Bbyu7yak43g&s&fit=crop&w=100&h=100',
-}
+import Press from '@components/Press'
+import { useNavigation } from '@react-navigation/native'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { hpApi } from '@utils/client'
+import { Medium, SEMIBOLD } from '@utils/fonts'
+import { HPStackNav } from '@utils/types'
+import { useEffect, useState } from 'react'
+import { ActivityIndicator, Image, PermissionsAndroid, TextInput, View, useColorScheme } from 'react-native'
+import { goodZodErrorMessage } from '../utils/goodZodError'
 
 const requestLocationPermission = async () => {
   try {
@@ -68,74 +54,130 @@ const fetchAddressFromCoordinates = async (latitude: number, longitude: number) 
 export default function EditHPProfileScreen() {
   const scheme = useColorScheme()
   const navigation = useNavigation<HPStackNav>()
+  const queryClient = useQueryClient()
+  const alert = popupStore((state) => state.alert)
 
-  const [name, setName] = useState(PROFILE_DATA.name)
-  const [phone, setPhone] = useState(PROFILE_DATA.phone)
-  const [pincode, setPincode] = useState(PROFILE_DATA.pincode)
-  const [state, setState] = useState(PROFILE_DATA.state)
-  const [city, setCity] = useState(PROFILE_DATA.city)
-  const [houseNo, setHouseNo] = useState(PROFILE_DATA.houseNo)
-  const [roadName, setRoadName] = useState(PROFILE_DATA.roadName)
-  const [landmark, setLandmark] = useState(PROFILE_DATA.landmark)
-  const [selectedLandmark, setSelectedLandmark] = useState(PROFILE_DATA.landmark)
-
-  const [profileImage, setProfileImage] = useState(PROFILE_DATA.image)
-  const [isLoading, setIsLoading] = useState(false)
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [phone, setPhone] = useState('')
+  const [pincode, setPincode] = useState('')
+  const [state, setState] = useState('')
+  const [city, setCity] = useState('')
+  const [houseNo, setHouseNo] = useState('')
+  const [roadName, setRoadName] = useState('')
+  const [landmark, setLandmark] = useState('')
+  const [profileImage, setProfileImage] = useState('')
   const [locationLoading, setLocationLoading] = useState(false)
 
-  const handleUseLocation = async () => {
-    setLocationLoading(true)
-    try {
-      const hasPermission = await requestLocationPermission()
-      if (!hasPermission) {
-        Alert.alert('Permission Denied', 'Location permission is required to auto-fill address details.')
-        setLocationLoading(false)
-        return
-      }
+  const { data: profileData, isLoading } = useQuery({
+    queryKey: ['hp-profile'],
+    queryFn: async () => (await (await hpApi.profile.$get()).json()).data?.hp,
+  })
 
-      Geolocation.getCurrentPosition(
-        async (position: any) => {
-          const { latitude, longitude } = position.coords
-          const addressData = await fetchAddressFromCoordinates(latitude, longitude)
+  useEffect(() => {
+    console.log(profileData)
 
-          if (addressData) {
-            setPincode(addressData.pincode)
-            setState(addressData.state)
-            setCity(addressData.city)
-            setHouseNo(addressData.houseNo)
-            setRoadName(addressData.roadName)
-            Alert.alert('Success', 'Address details filled from your location.')
-          } else {
-            Alert.alert('Error', 'Could not fetch address details from your location.')
-          }
-          setLocationLoading(false)
-        },
-        (error: any) => {
-          console.error('Geolocation error:', error)
-          Alert.alert('Error', 'Failed to get your location. Please try again.')
-          setLocationLoading(false)
-        },
-        { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
-      )
-    } catch (error) {
-      console.error('Error:', error)
-      Alert.alert('Error', 'An error occurred while fetching your location.')
-      setLocationLoading(false)
+    if (profileData) {
+      setName(profileData.name || '')
+      setEmail(profileData.email || '')
+      setPhone(profileData.contactNumber || '')
+      setPincode(profileData.pin || '')
+      setState(profileData.state || '')
+      setCity(profileData.city || '')
+      setHouseNo(profileData.houseNumber || '')
+      setRoadName(profileData.roadName || '')
+      setLandmark(profileData.landmark || '')
+      setProfileImage(profileData.profileImage || '')
     }
+  }, [profileData])
+
+  const updateMutation = useMutation({
+    mutationFn: async () => {
+      const response = await (
+        await hpApi.profile.$put({
+          json: {
+            name,
+            contactNumber: phone,
+            pin: pincode,
+            state,
+            city,
+            houseNumber: houseNo,
+            roadName,
+            landmark,
+            profileImage,
+          },
+        })
+      ).json()
+      return response
+    },
+    onSuccess: (data) => {
+      console.log(data)
+      if (!data.success) return alert('Error', goodZodErrorMessage(data.error) || '')
+      queryClient.invalidateQueries({ queryKey: ['hp-profile'] })
+      alert('Success', 'Profile updated successfully')
+      navigation.goBack()
+    },
+    onError: () => {
+      alert('Error', 'An unexpected error occurred. Please try again later.')
+    },
+  })
+
+  const handleSave = () => {
+    if (!name.trim()) {
+      alert('Error', 'Please enter your full name')
+      return
+    }
+    if (!email.trim()) {
+      alert('Error', 'Please enter your email address')
+      return
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(email)) {
+      alert('Error', 'Please enter a valid email address')
+      return
+    }
+    if (!phone.trim()) {
+      alert('Error', 'Please enter your phone number')
+      return
+    }
+    if (!pincode.trim()) {
+      alert('Error', 'Please enter pincode')
+      return
+    }
+    if (!state.trim()) {
+      alert('Error', 'Please enter state')
+      return
+    }
+    if (!city.trim()) {
+      alert('Error', 'Please enter city')
+      return
+    }
+    if (!houseNo.trim()) {
+      alert('Error', 'Please enter House No., Building Name')
+      return
+    }
+    if (!roadName.trim()) {
+      alert('Error', 'Please enter Road name, Area, Colony')
+      return
+    }
+    if (!landmark.trim()) {
+      alert('Error', 'Please enter Landmark')
+      return
+    }
+
+    updateMutation.mutate()
   }
 
-  const handleSave = async () => {
-    setIsLoading(true)
-    try {
-      // TODO: Add API call to save profile
-      setTimeout(() => {
-        setIsLoading(false)
-        navigation.goBack()
-      }, 1000)
-    } catch (error) {
-      setIsLoading(false)
-      console.error('Error saving profile:', error)
-    }
+  if (isLoading) {
+    return (
+      <View className='flex-1 bg-white dark:bg-neutral-900'>
+        <CustomHeader title='Edit Address' showBackButton onBackPress={() => navigation.goBack()} />
+        <View className='flex-1 items-center justify-center'>
+          <ActivityIndicator size='large' color='#2563eb' />
+          <Medium className='mt-4 text-neutral-600 dark:text-neutral-400'>Loading profile...</Medium>
+        </View>
+      </View>
+    )
   }
 
   return (
@@ -147,7 +189,7 @@ export default function EditHPProfileScreen() {
         <View className='items-center gap-4 px-5 py-8'>
           <View className='relative'>
             <Image
-              source={{ uri: profileImage }}
+              source={{ uri: profileImage || DEFAULT_PP_IMAGE }}
               className='h-40 w-40 rounded-full border-4 border-blue-600'
               resizeMode='cover'
             />
@@ -180,9 +222,11 @@ export default function EditHPProfileScreen() {
                 Email Address (Required) *
               </Medium>
               <TextInput
-                value={name}
-                onChangeText={setName}
+                value={email}
+                onChangeText={setEmail}
                 placeholder='Enter your email address'
+                keyboardType='email-address'
+                autoCapitalize='none'
                 className='rounded-xl border border-neutral-300 bg-white px-4 py-3 dark:border-neutral-600 dark:bg-neutral-800 dark:text-white'
                 placeholderTextColor={scheme === 'dark' ? '#9ca3af' : '#9ca3af'}
                 style={SEMIBOLD}
@@ -224,7 +268,6 @@ export default function EditHPProfileScreen() {
             <View className='flex-1'>
               <Medium className='mb-2 text-sm text-neutral-600 dark:text-neutral-400'></Medium>
               <Press
-                onPress={handleUseLocation}
                 disabled={locationLoading}
                 className='flex-1 items-center justify-center rounded-xl bg-blue-600 px-4'
               >
@@ -309,7 +352,11 @@ export default function EditHPProfileScreen() {
 
       {/* Save Button */}
       <View className='gap-3 border-t border-neutral-200 bg-white px-5 py-4 dark:border-neutral-700 dark:bg-neutral-800'>
-        <Button title='Save Address' onPress={handleSave} disabled={isLoading} />
+        <Button
+          title={updateMutation.isPending ? 'Saving...' : 'Save Address'}
+          onPress={handleSave}
+          disabled={updateMutation.isPending}
+        />
       </View>
     </View>
   )
