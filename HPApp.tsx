@@ -7,6 +7,7 @@ import HPSignup from '@/HPScreens/HPAuthentications/Signup/HPSignup'
 import HPHome from '@/HPScreens/HPHome'
 import HPSplash from '@/HPScreens/HPSplash'
 import HPDoctorScheduleDetails from '@/HPScreens/HPViewDoctors/HPDoctorScheduleDetails'
+import EditHPProfileScreen from '@/HPScreens/HPProfile/EditHPProfileScreen'
 import { DarkTheme, DefaultTheme } from '@/themes'
 import { Popups } from '@components/Popup'
 import { AutoStatusBar } from '@components/StatusBar'
@@ -53,11 +54,11 @@ export default function HPApp() {
           <RootStack.Screen name='HPSplash' component={HPSplash} options={NO_ANIMATION} />
           <RootStack.Screen name='HPLogin' component={HPLogin} />
           <RootStack.Screen name='HPSignup' component={HPSignup} />
-
           <RootStack.Screen name='HPOTP' component={HPOTP} options={NO_ANIMATION} />
           <RootStack.Screen name='HPDoctorScheduler' component={HPDoctorScheduler} />
           <RootStack.Screen name='HPScheduleReview' component={HPScheduleReview} />
           <RootStack.Screen name='HPDoctorScheduleDetails' component={HPDoctorScheduleDetails} />
+          <RootStack.Screen name='EditHPProfile' component={EditHPProfileScreen} />
           <RootStack.Screen name='DoctorModel' component={AdminAddDoctor} />
         </RootStack.Navigator>
       </NavigationContainer>
@@ -89,6 +90,7 @@ export type HpRootStackParamList = {
     doctorId: string
     doctorName: string
   }
+  EditHPProfile: undefined
   XAddDoctors: undefined
   DoctorModel: undefined
 }

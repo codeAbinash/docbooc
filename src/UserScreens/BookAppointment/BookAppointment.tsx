@@ -1,5 +1,5 @@
 import Button from '@components/Button'
-import CustomHeader from '@components/CustomHeader'
+import HybridHead from '@components/HybridHead'
 import { DoctorCard } from '@components/DoctorCard'
 import { HPCards } from '@components/HPCards'
 import { PaddingBottom } from '@components/SafePadding'
@@ -51,7 +51,7 @@ const BookAppointment = () => {
 
   return (
     <View className='bg flex-1'>
-      <CustomHeader title='Book Appointment' showBackButton={true} onBackPress={() => navigation.goBack()} />
+      <HybridHead title='Book Appointment' showBackButton={true} onBackPress={() => navigation.goBack()} />
       <ScrollView
         className='flex-1 px-5'
         contentContainerStyle={{ paddingTop: 20, paddingBottom: 20 }}

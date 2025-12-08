@@ -22,6 +22,7 @@
     "install-release-apk": "adb install -r android/app/build/outputs/apk/release/app-arm64-v8a-release.apk"
   },
   "dependencies": {
+    "@react-native-camera-roll/camera-roll": "^7.10.2",
     "@react-native-community/datetimepicker": "^8.4.5",
     "@react-native-community/netinfo": "^11.4.1",
     "@react-native-masked-view/masked-view": "0.3.2",
@@ -37,6 +38,7 @@
     "nativewind": "4.2.1",
     "react": "19.1.0",
     "react-native": "0.80.2",
+    "react-native-geolocation-service": "^5.3.1",
     "react-native-gesture-handler": "2.27.2",
     "react-native-linear-gradient": "2.8.3",
     "react-native-mmkv": "3.3.1",

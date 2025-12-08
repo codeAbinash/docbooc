@@ -7,7 +7,7 @@ import { SemiBold } from '@utils/fonts'
 import { memo, useCallback, useState } from 'react'
 import { FlatList, Platform, TouchableOpacity, View } from 'react-native'
 import PatientCard from '../components/PatientCard'
-import TopArea from '@components/AppBar'
+import HybridHead from '@components/HybridHead'
 
 const SAMPLE_PATIENTS = [
   { id: '1', name: 'John Smith', age: 45, gender: 'Male' as const, queuePosition: 1, status: 'confirmed' as const },
@@ -129,7 +129,7 @@ const HPUpcomingAppointmentsScreen = memo(function HPUpcomingAppointmentsScreenC
 
   return (
     <View className='bg flex-1'>
-      <TopArea />
+      <HybridHead searchPlaceholder='Search doctors, specialties...' showMenu={true} showDoctorInfo={true} />
       <View className='flex-1'>
         <FlatList
           data={filteredPatients}

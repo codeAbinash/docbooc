@@ -7,7 +7,19 @@ import Colors from '@utils/colors'
 import { Regular, SemiBold } from '@utils/fonts'
 import { Image, View } from 'react-native'
 
-export default function UpcomingScheduleCard() {
+interface UpcomingScheduleCardProps {
+  data?: {
+    doctorName: string
+    specialization: string
+    date: string
+    time: string
+    image?: string
+  }
+}
+
+export default function UpcomingScheduleCard({ data }: UpcomingScheduleCardProps) {
+  if (!data) return null
+
   return (
     <Gradient className='overflow-hidden rounded-3xl bg-accent p-5'>
       <View className='flex-row items-center justify-between'>
@@ -15,7 +27,9 @@ export default function UpcomingScheduleCard() {
           <View className='h-14 w-14 items-center justify-center rounded-full bg-white/20'>
             <Image
               source={{
-                uri: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=100&h=100&fit=crop&crop=face',
+                uri:
+                  data.image ||
+                  'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=100&h=100&fit=crop&crop=face',
               }}
               className='h-12 w-12 rounded-full'
               resizeMode='cover'
@@ -23,8 +37,8 @@ export default function UpcomingScheduleCard() {
           </View>
 
           <View>
-            <SemiBold className='text-lg text-white'>Dr. Alana Rueter</SemiBold>
-            <Regular className='text-sm text-white/80'>Dentist Consultation</Regular>
+            <SemiBold className='text-lg text-white'>{data.doctorName}</SemiBold>
+            <Regular className='text-sm text-white/80'>{data.specialization}</Regular>
           </View>
         </View>
 
@@ -38,13 +52,13 @@ export default function UpcomingScheduleCard() {
           <View className='h-8 w-8 items-center justify-center rounded-lg bg-white/20'>
             <Calendar03Icon color='white' size={16} strokeWidth={2} />
           </View>
-          <Regular className='text-sm text-white'>Monday, 26 July</Regular>
+          <Regular className='text-sm text-white'>{data.date}</Regular>
         </View>
         <View className='flex-row items-center gap-2'>
           <View className='h-8 w-8 items-center justify-center rounded-lg bg-white/20'>
             <Time04Icon color='white' size={16} strokeWidth={2} />
           </View>
-          <Regular className='text-sm text-white'>09:00 - 10:00</Regular>
+          <Regular className='text-sm text-white'>{data.time}</Regular>
         </View>
       </View>
     </Gradient>

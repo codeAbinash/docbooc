@@ -15,6 +15,7 @@ import { View, Text } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Press from '../../components/Press'
 import ProfilePicture from '../../components/ProfilePicture'
+import PlusSignIcon from '@hugeicons/PlusSignIcon'
 
 const DRAWER_ITEMS = [
   { name: "Today's Appointments", icon: Calendar01Icon, navigationName: 'Appointments' },
@@ -32,35 +33,35 @@ export default function CustomDrawer(props: any) {
   const currentRoute = state.routes[state.index].name
 
   return (
-    <View className='flex-1' style={{ backgroundColor: colors.background }}>
+    <View className='flex-1 ' style={{ backgroundColor: colors.background }}>
       <DrawerContentScrollView
         {...props}
         contentContainerStyle={{ paddingTop: insets.top + 16 }}
         showsVerticalScrollIndicator={false}
       >
-        <View className='px' style={{ paddingBottom: 32 }}>
+        <View className='' style={{ paddingBottom: 32 }}>
           <View
-            className='rounded-xl px-4 py-3'
+            className='flex-row items-center gap-4 rounded-xl px-5 py-3'
             style={{
-              backgroundColor: colors.card,
+              backgroundColor: Colors.accent + '15',
+              borderWidth: 1.5,
+              borderColor: Colors.accent + '30',
             }}
           >
-            <View className='flex-row items-center gap-4'>
-              <ProfilePicture name='Health Point' size='md' />
-              <View className='flex-1'>
-                <SemiBold className='text-lg' style={{ color: colors.text }}>
-                  Health Point
-                </SemiBold>
-              </View>
+            <ProfilePicture name='Health Point' size='md' />
+            <View className='flex-1'>
+              <SemiBold className='text-lg' style={{ color: colors.text }}>
+                Health Point
+              </SemiBold>
             </View>
+            <Press onPress={() => {}} className='rounded-lg p-2' style={{ backgroundColor: Colors.accent + '20' }}>
+              <PlusSignIcon size={20} color={Colors.accent} strokeWidth={1.8} />
+            </Press>
           </View>
         </View>
 
         <View>
-          <View>
-            <View className='h-px bg-neutral-300 dark:bg-neutral-700' />
-          </View>
-          <View className='px gap-2 pt-5'>
+          <View className='gap-4'>
             {DRAWER_ITEMS.filter((item) => item.navigationName !== 'Settings').map((item) => {
               const isActive = currentRoute === item.navigationName
               const Icon = item.icon
@@ -68,7 +69,7 @@ export default function CustomDrawer(props: any) {
                 <Press
                   key={item.name}
                   onPress={() => navigation.navigate(item.navigationName)}
-                  className='flex-row items-center gap-4 rounded-xl px-4 py-3.5'
+                  className='flex-row items-center gap-4 rounded-xl px-4 py-4'
                   style={{
                     backgroundColor: isActive ? Colors.accent : 'transparent',
                   }}
@@ -92,12 +93,12 @@ export default function CustomDrawer(props: any) {
       </DrawerContentScrollView>
 
       <View
-        className='border-t border-neutral-300 px-3 pt-4 dark:border-neutral-700'
+        className=' border-neutral-300  pt-2 dark:border-neutral-700'
         style={{
           paddingBottom: insets.bottom + 16,
         }}
       >
-        <View className='gap-2'>
+        <View className=' gap-4'>
           {DRAWER_ITEMS.filter((item) => item.navigationName === 'Settings').map((item) => {
             const isActive = currentRoute === item.navigationName
             const Icon = item.icon

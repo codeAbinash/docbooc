@@ -5,8 +5,9 @@ import TickDouble02Icon from '@hugeicons/TickDouble02Icon'
 import { memo, useState } from 'react'
 import { FlatList, View } from 'react-native'
 import PatientCard from '../components/PatientCard'
-import AppBar from '@components/AppBar'
+
 import ConfirmationModal from '@/HPScreens/components/ConfirmationModal'
+import HybridHead from '@components/HybridHead'
 
 const SAMPLE_PATIENTS = [
   { id: '1', name: 'John Smith', age: 45, gender: 'Male' as const, queuePosition: 1 },
@@ -77,7 +78,7 @@ const tabs = [
 ]
 
 const Tabs = ({ activeTab, onTabChange }: { activeTab: number; onTabChange: (index: number) => void }) => (
-  <View className='flex-row gap-2 bg-white px-5 pb-4 pt-1 dark:bg-neutral-900'>
+  <View className='flex-row gap-2 bg-white px-5 pb-4 dark:bg-neutral-900'>
     {tabs.map((tab, index) => (
       <Chip
         key={index}
@@ -120,7 +121,8 @@ function HPTodaysAppointmentsScreen() {
 
   return (
     <View className='flex-1 bg-neutral-100 dark:bg-neutral-900'>
-      <AppBar />
+      {/* <CustomHeader title="Today's Appointments" showSearch showHamburger /> */}
+      <HybridHead searchPlaceholder='Search doctors, specialties...' showMenu={true} showDoctorInfo={true} />
       <Tabs activeTab={activeTab} onTabChange={setActiveTab} />
       {selectedAction && (
         <ConfirmationModal

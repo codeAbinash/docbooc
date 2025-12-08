@@ -1,4 +1,4 @@
-import CustomHeader from '@components/CustomHeader'
+import HybridHead from '@components/HybridHead'
 import Press from '@components/Press'
 import { PaddingBottom } from '@components/SafePadding'
 import { useNavigation, useRoute } from '@react-navigation/native'
@@ -60,17 +60,9 @@ export default function AppointmentDetails() {
     },
   }
 
-  const handleCancelAppointment = () => {
-    console.log('Cancel appointment')
-  }
-
-  const handleRescheduleAppointment = () => {
-    console.log('Reschedule appointment')
-  }
-
   return (
     <View className='bg flex-1'>
-      <CustomHeader title='Appointment Details' showBackButton={true} onBackPress={() => navigation.goBack()} />
+      <HybridHead title='Appointment Details' showBackButton={true} onBackPress={() => navigation.goBack()} />
 
       <ScrollView className='flex-1' contentContainerClassName='pb-6' showsVerticalScrollIndicator={false}>
         <View className='gap-4 px-5 pt-2'>
@@ -85,8 +77,8 @@ export default function AppointmentDetails() {
                   </View>
                   <SemiBold className='text-base text-neutral-900 dark:text-white'>Appointment Details</SemiBold>
                 </View>
-                <View className='rounded-full bg-blue-100 px-3 py-1 dark:bg-blue-900/30'>
-                  <SemiBold className='text-xs capitalize text-blue-600 dark:text-blue-400'>
+                <View className='bg-green-100 px-3 py-1 dark:bg-blue-900/30'>
+                  <SemiBold className='text-xs capitalize text-green-600 dark:text-blue-400'>
                     {appointmentData.appointment.status}
                   </SemiBold>
                 </View>

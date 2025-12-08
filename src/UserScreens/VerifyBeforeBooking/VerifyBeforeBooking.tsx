@@ -4,7 +4,7 @@ import Location06Icon from '@assets/icons/hugeicons/Location06Icon'
 import PatientIcon from '@assets/icons/hugeicons/PatientIcon'
 import Doctor01Icon from '@assets/icons/hugeicons/Doctor01Icon'
 import Press from '@components/Press'
-import CustomHeader from '@components/CustomHeader'
+import HybridHead from '@components/HybridHead'
 import { PaddingBottom } from '@components/SafePadding'
 import Slider from '@components/Slider/Slider'
 import { useNavigation } from '@react-navigation/native'
@@ -55,7 +55,7 @@ const VerifyBeforeBooking = () => {
 
   return (
     <View className='bg flex-1'>
-      <CustomHeader title='Review Appointment' showBackButton={true} onBackPress={() => navigation.goBack()} />
+      <HybridHead title='Review Appointment' showBackButton={true} onBackPress={() => navigation.goBack()} />
 
       <ScrollView className='flex-1' contentContainerClassName='pb-6' showsVerticalScrollIndicator={false}>
         <View className='gap-4 px-5 pt-2'>
@@ -121,8 +121,11 @@ const VerifyBeforeBooking = () => {
                   <Medium className='mt-1 text-sm text-neutral-600 dark:text-neutral-400'>
                     {appointmentData.appointment.day}, {appointmentData.appointment.date}
                   </Medium>
-                  <SemiBold className='mt-1 text-sm text-blue-600 dark:text-blue-400'>
-                    Queue #{appointmentData.appointment.queueNumber}
+                </View>
+                <View className='items-end'>
+                  <SemiBold className='text-sm text-neutral-600 dark:text-neutral-400'>Queue</SemiBold>
+                  <SemiBold className='mt-1 text-lg text-blue-600 dark:text-blue-400'>
+                    Q{appointmentData.appointment.queueNumber}
                   </SemiBold>
                 </View>
               </View>
@@ -142,9 +145,6 @@ const VerifyBeforeBooking = () => {
                   <Medium className='mt-1 text-sm text-neutral-600 dark:text-neutral-400'>
                     {appointmentData.location.address}
                   </Medium>
-                  <SemiBold className='mt-1 text-sm text-blue-600 dark:text-blue-400'>
-                    {appointmentData.location.distance} away
-                  </SemiBold>
                 </View>
               </View>
             </View>

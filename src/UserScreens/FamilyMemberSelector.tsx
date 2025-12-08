@@ -2,7 +2,7 @@ import Press from '@components/Press'
 import { PaddingBottom } from '@components/SafePadding'
 import Slider from '@components/Slider/Slider'
 import PlusSignIcon from '@hugeicons/PlusSignIcon'
-import CustomHeader from '@components/CustomHeader'
+import HybridHead from '@components/HybridHead'
 import { Medium } from '@utils/fonts'
 import { NavProp } from '@utils/types'
 import React from 'react'
@@ -31,7 +31,7 @@ const FamilyMemberSelectorScreen = ({ navigation }: NavProp) => {
 
   return (
     <View className='bg flex-1'>
-      <CustomHeader title='Select Family Member' showBackButton={true} onBackPress={() => navigation.goBack()} />
+      <HybridHead title='Select Family Member' showBackButton={true} onBackPress={() => navigation.goBack()} />
 
       <View className='flex-1'>
         <ScrollView className='flex-1' contentContainerClassName='px-5 py-3' showsVerticalScrollIndicator={false}>
@@ -47,8 +47,8 @@ const FamilyMemberSelectorScreen = ({ navigation }: NavProp) => {
 
           {/* Add New Member Button */}
           <Press onPress={handleAddMember} activeScale={0.98} className='mb-4'>
-            <View className='card flex-row items-center justify-center rounded-[18] border-2 border-dashed border-accent/40 bg-accent/5 p-3 py-5'>
-              <View className='rounded-[10] bg-accent/10 p-2'>
+            <View className='card flex-row items-center justify-start rounded-xl border-2 border-dashed border-accent/40 px-5 py-5'>
+              <View className='rounded-full bg-accent/10 p-4'>
                 <PlusSignIcon size={20} color='#3b82f6' variant='stroke-rounded' />
               </View>
               <Medium className='ml-3 text-base text-accent'>Add New Member</Medium>

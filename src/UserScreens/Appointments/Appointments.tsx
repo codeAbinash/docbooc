@@ -38,7 +38,7 @@ function AppointmentCard({ appointment, onPress }: AppointmentCardProps) {
       {/* Status Badge */}
       <View className='mb-3 flex-row items-center justify-between'>
         <View
-          className={`rounded-full px-3 py-1 ${
+          className={`rounded-md px-3 py-1 ${
             appointment.status === 'confirmed'
               ? 'bg-green-100 dark:bg-green-900/30'
               : 'bg-orange-100 dark:bg-orange-900/30'
@@ -54,8 +54,8 @@ function AppointmentCard({ appointment, onPress }: AppointmentCardProps) {
             {appointment.status === 'confirmed' ? 'Confirmed' : 'Provisional'}
           </Medium>
         </View>
-        <View className='rounded-full bg-blue-100 px-3 py-1 dark:bg-blue-900/30'>
-          <Medium className='text-xs text-blue-700 dark:text-blue-400'>Queue #{appointment.queueNumber}</Medium>
+        <View className=' dark:bg-blue-900/30'>
+          <SemiBold className='text-base text-blue-700 dark:text-blue-400'>Q{appointment.queueNumber}</SemiBold>
         </View>
       </View>
 
@@ -79,6 +79,7 @@ function AppointmentCard({ appointment, onPress }: AppointmentCardProps) {
           <Medium className='text-xs text-neutral-500 dark:text-neutral-400'>Doctor</Medium>
           <SemiBold className='text-base text-neutral-900 dark:text-white'>Dr. {appointment.doctorName}</SemiBold>
         </View>
+        
       </View>
 
       {/* Date & Time */}

@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/native'
 import Colors from '@utils/colors'
 import TimeScheduleIcon from '@hugeicons/TimeScheduleIcon'
 import Cancel01Icon from '@hugeicons/Cancel01Icon'
+import PlusSignIcon from '@hugeicons/PlusSignIcon'
 import { HPStackNav } from '@utils/types'
 
 type DoctorCardProps = {
@@ -11,8 +12,10 @@ type DoctorCardProps = {
   selected?: boolean
   isExpanded?: boolean
   showSelector?: boolean
+  showBookButton?: boolean
   onDelete?: () => void
   onEdit?: () => void
+  onAdd?: () => void
 } & TouchableOpacityProps
 
 export function DoctorCard({
@@ -20,8 +23,10 @@ export function DoctorCard({
   selected,
   isExpanded,
   showSelector = true,
+  showBookButton = false,
   onDelete,
   onEdit,
+  onAdd,
   onPress,
   ...rest
 }: DoctorCardProps) {
@@ -37,8 +42,10 @@ export function DoctorCard({
         selected={!!selected}
         isExpanded={isExpanded}
         showSelector={showSelector}
+        showBookButton={showBookButton}
         onDelete={onDelete}
         onEdit={onEdit}
+        onAdd={onAdd}
       />
     </TouchableOpacity>
   )
@@ -49,15 +56,19 @@ function DoctorCardInternal({
   selected,
   isExpanded,
   showSelector = true,
+  showBookButton = false,
   onDelete,
   onEdit,
+  onAdd,
 }: {
   doctor: any
   selected: boolean
   isExpanded?: boolean
   showSelector?: boolean
+  showBookButton?: boolean
   onDelete?: () => void
   onEdit?: () => void
+  onAdd?: () => void
 }) {
   const navigate = useNavigation<HPStackNav>()
 
@@ -83,7 +94,15 @@ function DoctorCardInternal({
           <SemiBold className='text-base text-neutral-900 dark:text-white'>{doctor.name}</SemiBold>
           <Medium className='text-sm text-neutral-600 dark:text-neutral-400'>{doctor.department}</Medium>
         </View>
-        {showSelector && (
+        {showBookButton ? (
+          <TouchableOpacity
+            onPress={onAdd}
+            className='flex-row items-center gap-2 rounded-xl bg-accent px-5 py-5'
+            activeOpacity={0.7}
+          >
+            <PlusSignIcon color='white' size={20} strokeWidth={2} />
+          </TouchableOpacity>
+        ) : showSelector ? (
           <View className='w-7 items-center justify-center'>
             <View
               className={`h-6 w-6 items-center justify-center rounded-full border-2 ${
@@ -95,7 +114,7 @@ function DoctorCardInternal({
               {selected && <View className='h-2.5 w-2.5 rounded-full bg-white' />}
             </View>
           </View>
-        )}
+        ) : null}
       </View>
 
       <View className='border-b border-neutral-200 dark:border-neutral-700' />

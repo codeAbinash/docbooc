@@ -1,9 +1,9 @@
-import { useColorScheme } from 'nativewind'
 import { useCallback, useState } from 'react'
 import { View, TextInput, TouchableOpacity } from 'react-native'
 import Cancel01Icon from '@hugeicons/Cancel01Icon'
 import Search01Icon from '@hugeicons/Search01Icon'
 import Colors from '@utils/colors'
+import { useColorScheme } from 'nativewind'
 
 interface SearchProps {
   placeholder?: string
