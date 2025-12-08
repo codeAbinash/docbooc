@@ -7,11 +7,12 @@ import PlusSignIcon from '@assets/icons/hugeicons/PlusSignIcon'
 import Location06Icon from '@assets/icons/hugeicons/Location06Icon'
 import { useNavigation } from '@react-navigation/native'
 import { HPStackNav } from '@utils/types'
-import { Medium, SemiBold } from '@utils/fonts'
+import { Medium, SEMIBOLD, SemiBold } from '@utils/fonts'
 import { useState } from 'react'
 import { Image, ScrollView, View, useColorScheme, TextInput, Alert } from 'react-native'
 import { PermissionsAndroid } from 'react-native'
 import Geolocation from 'react-native-geolocation-service'
+import KeyboardAvoid from '@components/KeyboardAvoid'
 
 const PROFILE_DATA = {
   name: 'Subham Kundu',
@@ -141,7 +142,7 @@ export default function EditHPProfileScreen() {
     <View className='flex-1 bg-white dark:bg-neutral-900'>
       <CustomHeader title='Edit Address' showBackButton onBackPress={() => navigation.goBack()} />
 
-      <ScrollView showsVerticalScrollIndicator={false} className='flex-1'>
+      <KeyboardAvoid showsVerticalScrollIndicator={false} className='flex-1'>
         {/* Profile Picture Section */}
         <View className='items-center gap-4 px-5 py-8'>
           <View className='relative'>
@@ -171,6 +172,7 @@ export default function EditHPProfileScreen() {
                 placeholder='Enter your full name'
                 className='rounded-xl border border-neutral-300 bg-white px-4 py-3 dark:border-neutral-600 dark:bg-neutral-800 dark:text-white'
                 placeholderTextColor={scheme === 'dark' ? '#9ca3af' : '#9ca3af'}
+                style={SEMIBOLD}
               />
             </View>
             <View>
@@ -183,6 +185,7 @@ export default function EditHPProfileScreen() {
                 placeholder='Enter your email address'
                 className='rounded-xl border border-neutral-300 bg-white px-4 py-3 dark:border-neutral-600 dark:bg-neutral-800 dark:text-white'
                 placeholderTextColor={scheme === 'dark' ? '#9ca3af' : '#9ca3af'}
+                style={SEMIBOLD}
               />
             </View>
 
@@ -195,6 +198,7 @@ export default function EditHPProfileScreen() {
                 placeholder='Enter your phone number'
                 className='rounded-xl border border-neutral-300 bg-white px-4 py-3 dark:border-neutral-600 dark:bg-neutral-800 dark:text-white'
                 placeholderTextColor={scheme === 'dark' ? '#9ca3af' : '#9ca3af'}
+                style={SEMIBOLD}
               />
             </View>
 
@@ -214,6 +218,7 @@ export default function EditHPProfileScreen() {
                 placeholder='Pincode'
                 className='rounded-xl border border-neutral-300 bg-white px-4 py-3 dark:border-neutral-600 dark:bg-neutral-800 dark:text-white'
                 placeholderTextColor={scheme === 'dark' ? '#9ca3af' : '#9ca3af'}
+                style={SEMIBOLD}
               />
             </View>
             <View className='flex-1'>
@@ -221,10 +226,9 @@ export default function EditHPProfileScreen() {
               <Press
                 onPress={handleUseLocation}
                 disabled={locationLoading}
-                className=' flex-1 items-center justify-center rounded-xl bg-blue-600 px-4 '
+                className='flex-1 items-center justify-center rounded-xl bg-blue-600 px-4'
               >
-                <Medium className=' flex-row items-center justify-center text-white'>
-                  
+                <Medium className='flex-row items-center justify-center text-white'>
                   {locationLoading ? ' Getting location...' : ' Use my location'}
                 </Medium>
               </Press>
@@ -241,6 +245,7 @@ export default function EditHPProfileScreen() {
                 placeholder='State'
                 className='rounded-xl border border-neutral-300 bg-white px-4 py-3 dark:border-neutral-600 dark:bg-neutral-800 dark:text-white'
                 placeholderTextColor={scheme === 'dark' ? '#9ca3af' : '#9ca3af'}
+                style={SEMIBOLD}
               />
             </View>
             <View className='flex-1'>
@@ -251,6 +256,7 @@ export default function EditHPProfileScreen() {
                 placeholder='City'
                 className='rounded-xl border border-neutral-300 bg-white px-4 py-3 dark:border-neutral-600 dark:bg-neutral-800 dark:text-white'
                 placeholderTextColor={scheme === 'dark' ? '#9ca3af' : '#9ca3af'}
+                style={SEMIBOLD}
               />
             </View>
           </View>
@@ -266,6 +272,7 @@ export default function EditHPProfileScreen() {
               placeholder='House No., Building Name'
               className='rounded-xl border border-neutral-300 bg-white px-4 py-3 dark:border-neutral-600 dark:bg-neutral-800 dark:text-white'
               placeholderTextColor={scheme === 'dark' ? '#9ca3af' : '#9ca3af'}
+              style={SEMIBOLD}
             />
           </View>
 
@@ -280,6 +287,7 @@ export default function EditHPProfileScreen() {
               placeholder='Road name, Area, Colony'
               className='rounded-xl border border-neutral-300 bg-white px-4 py-3 dark:border-neutral-600 dark:bg-neutral-800 dark:text-white'
               placeholderTextColor={scheme === 'dark' ? '#9ca3af' : '#9ca3af'}
+              style={SEMIBOLD}
             />
           </View>
 
@@ -293,10 +301,11 @@ export default function EditHPProfileScreen() {
               placeholder='Road name, Area, Colony'
               className='rounded-xl border border-neutral-300 bg-white px-4 py-3 dark:border-neutral-600 dark:bg-neutral-800 dark:text-white'
               placeholderTextColor={scheme === 'dark' ? '#9ca3af' : '#9ca3af'}
+              style={SEMIBOLD}
             />
           </View>
         </View>
-      </ScrollView>
+      </KeyboardAvoid>
 
       {/* Save Button */}
       <View className='gap-3 border-t border-neutral-200 bg-white px-5 py-4 dark:border-neutral-700 dark:bg-neutral-800'>
