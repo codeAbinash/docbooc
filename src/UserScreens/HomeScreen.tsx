@@ -1,6 +1,6 @@
 import { specialties } from '@/constants'
 import { DoctorCard } from '@components/DoctorCard'
-import Gradient from '@components/Gradient'
+
 import Press from '@components/Press'
 import { PaddingTop } from '@components/SafePadding'
 import Calendar03Icon from '@hugeicons/Calendar03Icon'
@@ -33,11 +33,11 @@ export default function HomeScreen({ navigation }: NavProp) {
 
 function Footer() {
   return (
-    <View className='items-end px-6 pt-5'>
-      <Black className='text text-2xl opacity-40'>{'DocBooc'}</Black>
-      <SemiBold className='text opacity-50'>
-        Crafted with ❤️ in <Bold>India</Bold>
-      </SemiBold>
+    <View className='items-end px-6 pt-10'>
+      <Regular className='text text-3xl opacity-40'>{'DocBooc'}</Regular>
+      <Medium className='text opacity-50'>
+        Crafted with ❤️ for you
+      </Medium>
     </View>
   )
 }
@@ -50,9 +50,10 @@ function Header({ navigation }: NavProp) {
       <View className=''>
         <PaddingTop />
         <View className='flex-1 flex-row px-6 dark:border-card-dark/20'>
-          <View className='flex-1 justify-between pt-4'>
-            <SemiBold className='text text-4xl'>DocBooc</SemiBold>
+          <View className='flex-1 justify-between pt-5'>
+            <Medium className='text text-4xl'>DocBooc</Medium>
             <View>
+              
               <View className='flex-row gap-2'>
                 <Regular className='text text-4xl opacity-50'>Find</Regular>
                 <Medium className='text text-4xl'>Your</Medium>
@@ -62,9 +63,10 @@ function Header({ navigation }: NavProp) {
                 <Regular className='text text-4xl opacity-50'>Doctor</Regular>
               </View>
             </View>
+            
           </View>
 
-          <View className='gap-2 pt-2'>
+          <View className='gap-1.5 pt-2'>
             <Press className='rounded-full bg-white p-4 dark:bg-zinc-900'>
               <NotificationSquareIcon color={scheme === 'dark' ? 'white' : 'black'} size={20} strokeWidth={1.7} />
             </Press>

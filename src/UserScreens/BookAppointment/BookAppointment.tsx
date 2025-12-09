@@ -139,36 +139,20 @@ function LocationCard({ location, isSelected, onPress }: LocationCardProps) {
   const hpName = location.healthcareProvider?.name || 'Unknown Provider'
   const hpAddress =
     `${location.healthcareProvider?.houseNumber} ${location.healthcareProvider?.roadName}, ${location.healthcareProvider?.city || ''}, ${location.healthcareProvider?.state || ''}, ${location.healthcareProvider?.pin || ''}` ||
-    'Address not available'
+    'N/A'
   const timeSlot = location.timeSlots?.[0]
   const startTime = timeSlot?.startTime?.slice(0, 5) || ''
   const endTime = timeSlot?.endTime?.slice(0, 5) || ''
   const maxBookings = timeSlot?.maxBookings || 0
-  const distance = location.distance
-
-  const leftContent = (
-    <>
-      <Medium className='text-xs font-semibold text-neutral-600 dark:text-neutral-400'>Address</Medium>
-      <Medium className='text-sm text-neutral-800 dark:text-neutral-100' numberOfLines={1}>
-        {hpAddress}
-      </Medium>
-    </>
-  )
-
-  const rightContent =
-    maxBookings > 0 ? (
-      <>
-        <Medium className='text-xs font-semibold text-neutral-600 dark:text-neutral-400'>Distance</Medium>
-        <SemiBold className='text-sm text-accent'>{distance || 'N/A'}</SemiBold>
-      </>
-    ) : null
+  const distance = location.distance || 'N/A'
 
   return (
     <HPCards
       title={hpName}
       time={startTime && endTime ? `${startTime} - ${endTime}` : undefined}
-      leftContent={leftContent}
-      rightContent={rightContent}
+      address={hpAddress}
+      distance={distance}
+      q={maxBookings > 0 ? maxBookings.toString() : 'N/A'}
       selected={isSelected}
       onPress={onPress}
     />
