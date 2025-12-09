@@ -1,12 +1,13 @@
 import Button from '@components/Button'
+import { HPCards } from '@components/HPCards'
 import HybridHead from '@components/HybridHead'
 import { PaddingBottom } from '@components/SafePadding'
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import { useQuery } from '@tanstack/react-query'
 import { api } from '@utils/client'
-import { Medium, SemiBold } from '@utils/fonts'
+import { Medium } from '@utils/fonts'
 import { StackNav } from '@utils/types'
-import { useState } from 'react'
+import { useState, useEffect, useMemo, useCallback } from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import { RootStackParamList } from '../../../App'
@@ -14,58 +15,83 @@ import { DateCardContainer } from './components/DateCardContainer'
 
 const BookAppointment = () => {
   const navigation = useNavigation<StackNav>()
-  const route = useRoute<RouteProp<RootStackParamList, 'BookAppointment'>>()
+  const { doctor } = useRoute<RouteProp<RootStackParamList, 'BookAppointment'>>().params
   const [selectedLocationId, setSelectedLocationId] = useState<number | null>(null)
-  const [selectedDate, setSelectedDate] = useState<string>('')
+  const [selectedDate, setSelectedDate] = useState('')
+  const [initialProgress, setInitialProgress] = useState(0)
 
-  const { doctor } = route.params
+  useEffect(() => {
+    const timer = setTimeout(() => setInitialProgress(25), 100)
+    return () => clearTimeout(timer)
+  }, [])
 
-  const { data: availabilityData, isLoading: isLoadingAvailability } = useQuery({
+  const { data: locations = [], isLoading } = useQuery({
     queryKey: ['doctor-availability', doctor.id, selectedDate],
     queryFn: async () => {
-      const response = await (
-        await api.users.doctors.availability.$post({
-          json: {
-            date: selectedDate,
-            doctorId: doctor.id,
-          },
-        })
-      ).json()
-      return response.success ? response.data : []
+      const res = await api.users.doctors.availability.$post({
+        json: { date: selectedDate, doctorId: doctor.id },
+      })
+      const data = await res.json()
+      return data.success ? data.data : []
     },
     enabled: !!selectedDate && !!doctor.id,
   })
 
+  const progress = useMemo(() => 
+    selectedLocationId !== null ? 50 : selectedDate ? 25 : initialProgress,
+    [selectedLocationId, selectedDate, initialProgress]
+  )
+
+  const handleNext = useCallback(() => 
+    navigation.navigate('FamilyMemberSelector'),
+    [navigation]
+  )
+
+  const handleLocationPress = useCallback((idx: number) => 
+    setSelectedLocationId(idx),
+    []
+  )
+
   return (
     <View className='bg flex-1'>
-      <HybridHead title='Book Appointment' showBackButton={true} onBackPress={() => navigation.goBack()} />
+      <HybridHead title='Select Date and Location' showBackButton onBackPress={navigation.goBack}>
+        <View className='px-4'>
+          <DateCardContainer onDateChange={setSelectedDate} />
+        </View>
+      </HybridHead>
+
       <ScrollView
         className='flex-1 px-5'
         contentContainerStyle={{ paddingTop: 20, paddingBottom: 20 }}
         showsVerticalScrollIndicator={false}
         contentContainerClassName='gap-5'
       >
-        <View className='gap-5'>
-          <View>
-            <DoctorCard doctor={doctor} showSelector={false} selected={false} />
-          </View>
-
-          <View className='rounded-2xl bg-white p-5 dark:bg-neutral-800'>
-            <DateCardContainer onDateChange={handleDateChange} />
-          </View>
-        </View>
-
-        {isLoadingAvailability ? (
+        {isLoading ? (
           <View className='items-center justify-center py-10'>
             <ActivityIndicator size='large' color='#3b82f6' />
-            <Medium className='mt-3 text-neutral-600 dark:text-neutral-400'>Loading available locations...</Medium>
+            <Medium className='pt-3 text-neutral-600 dark:text-neutral-400'>Loading available locations...</Medium>
           </View>
         ) : locations.length > 0 ? (
-          <LocationCardContainer
-            locations={locations}
-            selectedLocationId={selectedLocationId}
-            onLocationSelect={handleLocationSelect}
-          />
+          <View className='gap-3'>
+            {locations.map((loc: any, idx: number) => {
+              const hp = loc.healthcareProvider || {}
+              const slot = loc.timeSlots?.[0] || {}
+              const address = `${hp.houseNumber || ''} ${hp.roadName || ''}, ${hp.city || ''}, ${hp.state || ''}, ${hp.pin || ''}`.trim()
+              
+              return (
+                <HPCards
+                  key={loc.scheduleId || idx}
+                  title={hp.name || 'Unknown Provider'}
+                  time={slot.startTime && slot.endTime ? `${slot.startTime.slice(0, 5)} - ${slot.endTime.slice(0, 5)}` : undefined}
+                  address={address || 'N/A'}
+                  distance={loc.distance || 'N/A'}
+                  q={slot.maxBookings > 0 ? slot.maxBookings.toString() : 'N/A'}
+                  selected={selectedLocationId === idx}
+                  onPress={() => handleLocationPress(idx)}
+                />
+              )
+            })}
+          </View>
         ) : selectedDate ? (
           <View className='items-center justify-center rounded-2xl bg-white p-10 dark:bg-neutral-800'>
             <Medium className='text-center text-neutral-600 dark:text-neutral-400'>
@@ -76,73 +102,15 @@ const BookAppointment = () => {
       </ScrollView>
 
       <View className='border-t border-neutral-100 bg-white px-6 py-3 dark:border-neutral-700 dark:bg-neutral-800'>
-        <Button title='Next' onPress={() => navigation.navigate('FamilyMemberSelector')} />
+        <Button
+          title='Next'
+          disabled={selectedLocationId === null}
+          progressFill={progress}
+          onPress={handleNext}
+        />
       </View>
       <PaddingBottom />
     </View>
-  )
-}
-
-interface LocationCardContainerProps {
-  locations: any[]
-  selectedLocationId: number | null
-  onLocationSelect: (selectedId: number) => void
-}
-
-export function LocationCardContainer({ locations, selectedLocationId, onLocationSelect }: LocationCardContainerProps) {
-  console.log(locations)
-  return (
-    <View className='gap-3'>
-      {locations.map((location, index) => (
-        <LocationCard
-          key={location.scheduleId || index}
-          location={location}
-          isSelected={selectedLocationId === index}
-          onPress={() => onLocationSelect(index)}
-        />
-      ))}
-    </View>
-  )
-}
-
-interface LocationData {
-  id: number
-  mainText: string
-  secondaryText: string
-  image: string
-  distance: string
-  isSelected: boolean
-  startTime?: string
-  endTime?: string
-  q?: string
-}
-
-interface LocationCardProps {
-  location: any
-  isSelected: boolean
-  onPress: () => void
-}
-function LocationCard({ location, isSelected, onPress }: LocationCardProps) {
-  const hpName = location.healthcareProvider?.name || 'Unknown Provider'
-  const hpAddress =
-    `${location.healthcareProvider?.houseNumber} ${location.healthcareProvider?.roadName}, ${location.healthcareProvider?.city || ''}, ${location.healthcareProvider?.state || ''}, ${location.healthcareProvider?.pin || ''}` ||
-    'N/A'
-  const timeSlot = location.timeSlots?.[0]
-  const startTime = timeSlot?.startTime?.slice(0, 5) || ''
-  const endTime = timeSlot?.endTime?.slice(0, 5) || ''
-  const maxBookings = timeSlot?.maxBookings || 0
-  const distance = location.distance || 'N/A'
-
-  return (
-    <HPCards
-      title={hpName}
-      time={startTime && endTime ? `${startTime} - ${endTime}` : undefined}
-      address={hpAddress}
-      distance={distance}
-      q={maxBookings > 0 ? maxBookings.toString() : 'N/A'}
-      selected={isSelected}
-      onPress={onPress}
-    />
   )
 }
 

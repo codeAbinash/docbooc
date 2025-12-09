@@ -27,13 +27,13 @@ const FamilyMemberCard = ({ member, isSelected, onSelect }: FamilyMemberCardProp
   return (
     <Press onPress={() => onSelect(member)} className='mb-3' activeScale={0.99}>
       <View
-        className={`flex-row items-center rounded-xl bg-white p-4 dark:bg-zinc-900 ${
+        className={` flex-row items-center rounded-xl bg-white p-4 dark:bg-zinc-900 ${
           isSelected ? 'border-accent' : 'border-transparent'
         }`}
         style={{ borderWidth: 1.5 }}
       >
         <View
-          className={`text mr-3 h-16 w-16 items-center justify-center rounded-full ${
+          className={`text mr-3 h-16 w-16 items-center justify-center rounded-lg ${
             isSelected ? 'bg-accent' : 'bg-gray/20'
           }`}
         >
@@ -49,7 +49,7 @@ const FamilyMemberCard = ({ member, isSelected, onSelect }: FamilyMemberCardProp
 
         <View className='ml-3'>
           <View
-            className={`h-6 w-6 items-center justify-center rounded-full border-2 ${
+            className={` h-6 w-6 items-center justify-center rounded-full border-2 ${
               isSelected ? 'border-accent bg-accent' : 'border-gray bg-transparent'
             }`}
           >

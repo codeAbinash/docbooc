@@ -37,49 +37,49 @@ export const SEMIBOLD = {
   fontFamily: 'MiSansLatin-Semibold',
 }
 
-export function Light({ children, style, ...props }: TextProps) {
+export function Light({ children, style, className, ...props }: TextProps & { className?: string }) {
   return (
-    <Text style={[LIGHT, style]} {...props}>
+    <Text style={[LIGHT, style]} className={className} {...props}>
       {children}
     </Text>
   )
 }
 
-export function Regular({ children, style, ...props }: TextProps) {
+export function Regular({ children, style, className, ...props }: TextProps & { className?: string }) {
   return (
-    <Text style={[REGULAR, style]} {...props}>
+    <Text style={[REGULAR, style]} className={className} {...props}>
       {children}
     </Text>
   )
 }
 
-export function Medium({ children, style, ...props }: TextProps) {
+export function Medium({ children, style, className, ...props }: TextProps & { className?: string }) {
   return (
-    <Text style={[MEDIUM, style]} {...props}>
+    <Text style={[MEDIUM, style]} className={className} {...props}>
       {children}
     </Text>
   )
 }
 
-export function SemiBold({ children, style, ...props }: TextProps) {
+export function SemiBold({ children, style, className, ...props }: TextProps & { className?: string }) {
   return (
-    <Text style={[SEMIBOLD, style]} {...props}>
+    <Text style={[SEMIBOLD, style]} className={className} {...props}>
       {children}
     </Text>
   )
 }
 
-export function Bold({ children, style, ...props }: TextProps) {
+export function Bold({ children, style, className, ...props }: TextProps & { className?: string }) {
   return (
-    <Text style={[BOLD, style]} {...props}>
+    <Text style={[BOLD, style]} className={className} {...props}>
       {children}
     </Text>
   )
 }
 
-export function Black({ children, style, ...props }: TextProps) {
+export function Black({ children, style, className, ...props }: TextProps & { className?: string }) {
   return (
-    <Text style={[BLACK, style]} {...props}>
+    <Text style={[BLACK, style]} className={className} {...props}>
       {children}
     </Text>
   )

@@ -14,7 +14,7 @@ import Search from '@components/Search'
 import DoctorSwitcherModal from '@components/DoctorSwitcherModal'
 
 type HybridHeadProps = {
-  title?: string
+  title?: string | React.ReactNode
   showSearch?: boolean
   onSearchChange?: (query: string) => void
   onSearchToggle?: (isOpen: boolean) => void
@@ -153,8 +153,8 @@ export default function HybridHead({
             </View>
           ) : (
             <>
-              <View className='flex-1 items-center justify-center'>
-                <SemiBold className='text-lg'>{title}</SemiBold>
+              <View className='flex-1 pl-5 items-start justify-center'>
+                {typeof title === 'string' ? <SemiBold className='text-lg'>{title}</SemiBold> : title}
               </View>
               <View className='flex-row items-center gap-2'>
                 {showSearch && (

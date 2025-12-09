@@ -31,7 +31,7 @@ const FamilyMemberSelectorScreen = ({ navigation }: NavProp) => {
 
   return (
     <View className='bg flex-1'>
-      <HybridHead title='Select Family Member' showBackButton={true} onBackPress={() => navigation.goBack()} />
+      <HybridHead title='Select Patient' showBackButton={true} onBackPress={() => navigation.goBack()} />
 
       <View className='flex-1'>
         <ScrollView className='flex-1' contentContainerClassName='px-5 py-3' showsVerticalScrollIndicator={false}>
@@ -47,11 +47,11 @@ const FamilyMemberSelectorScreen = ({ navigation }: NavProp) => {
 
           {/* Add New Member Button */}
           <Press onPress={handleAddMember} activeScale={0.98} className='mb-4'>
-            <View className='card flex-row items-center justify-start rounded-xl border-2 border-dashed border-accent/40 px-5 py-5'>
-              <View className='rounded-full bg-accent/10 p-4'>
+            <View className='card flex-row items-center justify-start rounded-xl border-2 border-dashed border-accent/70 p-4'>
+              <View className='rounded-lg bg-accent/10 p-4'>
                 <PlusSignIcon size={20} color='#3b82f6' variant='stroke-rounded' />
               </View>
-              <Medium className='ml-3 text-base text-accent'>Add New Member</Medium>
+              <Medium className='ml-3 text-base text-accent'>Add New Patient</Medium>
             </View>
           </Press>
 
@@ -67,6 +67,7 @@ const FamilyMemberSelectorScreen = ({ navigation }: NavProp) => {
               }
             }}
             disabled={!selectedMemberId}
+            progressFill={selectedMemberId ? 75 : 50}
           />
         </View>
       </View>
