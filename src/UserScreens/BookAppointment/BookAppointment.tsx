@@ -1,6 +1,4 @@
 import Button from '@components/Button'
-import { DoctorCard } from '@components/DoctorCard'
-import { HPCards } from '@components/HPCards'
 import HybridHead from '@components/HybridHead'
 import { PaddingBottom } from '@components/SafePadding'
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
@@ -37,17 +35,6 @@ const BookAppointment = () => {
     },
     enabled: !!selectedDate && !!doctor.id,
   })
-
-  const locations = availabilityData || []
-
-  const handleLocationSelect = (selectedId: number) => {
-    setSelectedLocationId(selectedId)
-  }
-
-  const handleDateChange = (date: string) => {
-    console.log('Date changed to:', date)
-    setSelectedDate(date)
-  }
 
   return (
     <View className='bg flex-1'>
