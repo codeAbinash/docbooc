@@ -107,7 +107,7 @@ export default function HybridHead({
     <View className='bg-white dark:bg-neutral-800'>
       <PaddingTop />
       {isSearchOpen ? (
-        <View className='px-5 pb-2 pt-3'>
+        <View className='px-6'>
           <Search
             placeholder={searchPlaceholder}
             value={searchQuery}
@@ -117,7 +117,7 @@ export default function HybridHead({
           />
         </View>
       ) : (
-        <View className='flex-row items-center justify-between px-5 py-3'>
+        <View className=' pb-1 flex-row items-center justify-between px-5'>
           <View className='flex-row items-center gap-2'>
             {showBackButton && (
               <TouchableOpacity onPress={handleBackPress} className='rounded-lg bg-neutral-100 p-2 dark:bg-neutral-800'>
@@ -153,8 +153,8 @@ export default function HybridHead({
             </View>
           ) : (
             <>
-              <View className='flex-1 pl-5 items-start justify-center'>
-                {typeof title === 'string' ? <SemiBold className='text-lg'>{title}</SemiBold> : title}
+              <View className=' flex-1 pl-5 items-start justify-center'>
+                {typeof title === 'string' ? <SemiBold className=''>{title}</SemiBold> : title}
               </View>
               <View className='flex-row items-center gap-2'>
                 {showSearch && (
@@ -172,7 +172,7 @@ export default function HybridHead({
         </View>
       )}
       {chipItems && (
-        <View className='bg-white pb-4 dark:bg-neutral-800'>
+        <View className=' bg-white pb-2 dark:bg-neutral-800'>
           <ScrollView
             ref={chipScrollRef}
             horizontal
