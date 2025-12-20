@@ -2,73 +2,115 @@ import Animations from '@assets/animations/animations'
 import Button from '@components/Button'
 import { Lottie } from '@components/Lottie'
 import { PaddingBottom, PaddingTop } from '@components/SafePadding'
-import { Header } from '@/UserScreens/BookAppointment/components/Header'
 import { Bold, Medium, SEMIBOLD, SemiBold } from '@utils/fonts'
 import { NavProp } from '@utils/types'
 import { useColorScheme } from 'nativewind'
-import { StyleSheet, View } from 'react-native'
+import { Pressable, StyleSheet, Text, View } from 'react-native'
 import { OtpInput } from 'react-native-otp-entry'
 import colors from 'tailwindcss/colors'
+import { useState } from 'react'
 
 export default function OTP({ navigation }: NavProp) {
   const { colorScheme } = useColorScheme()
+  const [otp, setOtp] = useState('')
+  const [timeLeft, setTimeLeft] = useState(23)
+
   return (
-    <View className='flex-1'>
-      <View className='flex-1'>
+    <View className='flex-1 bg-white dark:bg-black'>
         <PaddingTop />
-        <Header title='' />
-        <View className='flex-1 gap-10 p-6'>
-          <Lottie source={Animations.lock} />
-          <View className='gap-2'>
-            <Bold className='text text-2xl'>OTP Verification</Bold>
-            <Medium className='text text-base opacity-70'>
-              A verification code has been sent to your mobile number.
-            </Medium>
+    <View className='flex-1 bg-white dark:bg-zinc-950'>
+      <View className='flex-1 px-6 pt-4'>
+        <Pressable onPress={() => navigation.goBack()} className='mb-8 self-end'>
+          <Text className='text-2xl font-bold text-black dark:text-white'>✕</Text>
+        </Pressable>
+
+        <View className='flex-1 gap-6'>
+          <View className='gap-4'>
+            <Bold className='text-2xl text-black dark:text-white'>Enter the OTP we sent you</Bold>
+
+            <View className='flex-row items-start justify-between'>
+              <View className='flex-1 gap-1'>
+                <SemiBold className='text-base text-black dark:text-white'>+91 7479063584</SemiBold>
+                <Medium className='text-sm text-zinc-600 dark:text-zinc-400'>Mobile number</Medium>
+              </View>
+              <Pressable onPress={() => {}}>
+                <Text className='font-semibold text-blue-600 underline'>Edit</Text>
+              </Pressable>
+            </View>
           </View>
-          <OtpInput
-            numberOfDigits={6}
-            focusColor={colorScheme === 'dark' ? colors.zinc[300] : colors.zinc[700]}
-            focusStickBlinkingDuration={500}
-            blurOnFilled
-            hideStick
-            onTextChange={(text) => {}}
-            // onFilled={verifyOtp}
-            textInputProps={{
-              accessibilityLabel: 'One-Time Password',
-              selectionColor: 'transparent',
-              caretHidden: true,
-            }}
-            theme={{
-              containerStyle: styles.container,
-              pinCodeContainerStyle: {
-                borderColor: colorScheme === 'dark' ? colors.zinc[700] : colors.zinc[300],
-                height: 'auto',
-                paddingTop: 14,
-                paddingBottom: 15,
-                width: 50,
-                borderWidth: 1.5,
-              },
-              focusedPinCodeContainerStyle: {
-                borderColor: colorScheme === 'dark' ? '#A3A3A3' : '#4B5563',
-              },
-              filledPinCodeContainerStyle: {
-                borderColor: colorScheme === 'dark' ? '#A3A3A3' : '#4B5563',
-              },
-              pinCodeTextStyle: {
-                ...SEMIBOLD,
-                fontSize: 15,
-                color: colorScheme === 'dark' ? colors.zinc[300] : colors.zinc[700],
-              },
+
+          <View className='gap-4'>
+            <Medium className='text-sm text-zinc-600 dark:text-zinc-400'>Enter OTP (One Time Password)</Medium>
+            <OtpInput
+              numberOfDigits={6}
+              focusColor={colorScheme === 'dark' ? colors.zinc[300] : colors.zinc[700]}
+              focusStickBlinkingDuration={500}
+              blurOnFilled
+              hideStick
+              onTextChange={setOtp}
+              textInputProps={{
+                accessibilityLabel: 'One-Time Password',
+                selectionColor: 'transparent',
+                caretHidden: true,
+              }}
+              theme={{
+                containerStyle: styles.container,
+                pinCodeContainerStyle: {
+                  borderColor: colorScheme === 'dark' ? colors.zinc[700] : colors.zinc[300],
+                  height: 'auto',
+                  paddingTop: 12,
+                  paddingBottom: 12,
+                  width: 48,
+                  borderWidth: 2,
+                  borderRadius: 10,
+                },
+                focusedPinCodeContainerStyle: {
+                  borderColor: colorScheme === 'dark' ? colors.zinc[500] : colors.zinc[700],
+                },
+                filledPinCodeContainerStyle: {
+                  borderColor: colorScheme === 'dark' ? colors.zinc[500] : colors.zinc[700],
+                },
+                pinCodeTextStyle: {
+                  ...SEMIBOLD,
+                  fontSize: 18,
+                  color: colorScheme === 'dark' ? colors.zinc[300] : colors.zinc[900],
+                },
+              }}
+            />
+          </View>
+
+          <Button
+            title='Verify OTP'
+            onPress={() => {
+              if (otp.length === 6) {
+                navigation.navigate('Home')
+              }
             }}
           />
-          {/* <Button title='Verify' onPress={() => navigation.reset({ index: 0, routes: [{ name: 'Home' }] })} /> */}
-          <Button title='Verify' onPress={() => navigation.navigate('Home')} />
-          <SemiBold className='text text-center text-sm opacity-70'>
-            Didn't receive the code? <SemiBold className='text-accent'>Resend OTP</SemiBold>
-          </SemiBold>
+
+          <View className='gap-2'>
+            <Medium className='text-center text-sm text-zinc-600 dark:text-zinc-400'>
+              Didn't get the OTP? Try again in{' '}
+              <Text className='font-semibold text-orange-500'>00:{timeLeft.toString().padStart(2, '0')}</Text>
+            </Medium>
+          </View>
         </View>
-        <PaddingBottom />
+
+        <View className='gap-3 pb-6 pt-4'>
+          <Medium className='text-center text-xs text-zinc-600 dark:text-zinc-400'>
+            By 'logging in' I agree to the
+          </Medium>
+          <View className='flex-row justify-center gap-8'>
+            <Pressable onPress={() => {}}>
+              <Text className='font-semibold text-blue-600 underline'>Terms & Conditions</Text>
+            </Pressable>
+            <Pressable onPress={() => {}}>
+              <Text className='font-semibold text-blue-600 underline'>Privacy Policy</Text>
+            </Pressable>
+          </View>
+        </View>
       </View>
+    </View>
     </View>
   )
 }
@@ -77,5 +119,6 @@ const styles = StyleSheet.create({
   container: {
     marginLeft: 'auto',
     marginRight: 'auto',
+    gap: 12,
   },
 })

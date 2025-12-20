@@ -51,11 +51,13 @@ export default function App() {
             cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
           }}
         >
-          <RootStack.Screen name='Home' component={Home} options={NO_ANIMATION} />
+          <RootStack.Screen name='OTP' component={OTP} />
           <RootStack.Screen name='Splash' component={Splash} options={NO_ANIMATION} />
+          <RootStack.Screen name='Home' component={Home} options={NO_ANIMATION} />
+          
 
           <RootStack.Screen name='Login' component={HPLogin} options={NO_ANIMATION} />
-          <RootStack.Screen name='OTP' component={OTP} />
+          
           <RootStack.Screen name='BookAppointment' component={BookAppointment} />
           <RootStack.Screen name='PatientInfo' component={PatientInfo} />
           <RootStack.Screen name='Welcome' component={WelcomeScreen} />

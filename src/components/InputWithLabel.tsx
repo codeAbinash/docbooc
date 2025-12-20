@@ -5,7 +5,7 @@ import { TextInput, View, type TextInputProps } from 'react-native'
 import colors from 'tailwindcss/colors'
 
 interface InputWithLabelProps extends TextInputProps {
-  label: string
+  label?: string
   isOptional?: boolean
   leftIcon?: React.ReactNode
 }

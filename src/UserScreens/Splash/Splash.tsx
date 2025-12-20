@@ -7,7 +7,7 @@ export default function Splash({ navigation }: NavProp) {
   useEffect(() => {
     setTimeout(() => {
       navigation.replace('Login')
-    }, 0)
+    }, 2000)
   }, [])
 
   return (
