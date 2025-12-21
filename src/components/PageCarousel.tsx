@@ -10,7 +10,7 @@ import Animated, {
 } from 'react-native-reanimated'
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
-const CAROUSEL_HEIGHT = SCREEN_HEIGHT * 0.65
+const CAROUSEL_HEIGHT = SCREEN_HEIGHT * 0.5
 
 type PageCarouselProps = {
   pages: React.ReactNode[]

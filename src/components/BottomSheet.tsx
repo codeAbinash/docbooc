@@ -3,7 +3,7 @@ import { Modal, TouchableOpacity, View, ScrollView, Dimensions, KeyboardAvoiding
 import { H } from '@utils/dimensions'
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window')
-const BOTTOM_SHEET_HEIGHT = SCREEN_HEIGHT * 0.267
+const BOTTOM_SHEET_HEIGHT = SCREEN_HEIGHT * 0.5
 
 type BottomSheetProps = {
   visible: boolean

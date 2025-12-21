@@ -26,21 +26,21 @@ export default function HomeScreen({ navigation }: NavProp) {
       {specialties.map((specialty) => (
         <TopDoctors key={specialty.id} specialty={specialty} />
       ))}
-      <Footer />
+      {/* <Footer /> */}
     </ScrollView>
   )
 }
 
-function Footer() {
-  return (
-    <View className='items-end px-6 pt-10'>
-      <Regular className='text text-3xl opacity-40'>{'DocBooc'}</Regular>
-      <Medium className='text opacity-50'>
-        Crafted with ❤️ for you
-      </Medium>
-    </View>
-  )
-}
+// function Footer() {
+//   return (
+//     <View className='items-start px-6 pt-10'>
+//       <Regular className='text text-3xl opacity-40'>{'DocBooc'}</Regular>
+//       <Medium className='text opacity-50'>
+//         Crafted with ❤️ for you
+//       </Medium>
+//     </View>
+//   )
+// }
 
 function Header({ navigation }: NavProp) {
   const scheme = useColorScheme()
