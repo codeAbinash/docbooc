@@ -43,9 +43,8 @@ export default function Login({ navigation }: NavProp) {
   }, [])
 
   const handleGetOTP = useCallback(() => {
-    // Add your OTP logic here
-    console.log('Get OTP for:', countryCode, mobileNumber)
-  }, [countryCode, mobileNumber])
+    navigation.navigate('OTP', { countryCode, mobileNumber })
+  }, [countryCode, mobileNumber, navigation])
 
   return (
     <KeyboardAvoidingView
@@ -56,9 +55,9 @@ export default function Login({ navigation }: NavProp) {
       <View className='flex-1 bg-white dark:bg-black'>
         <PaddingTop />
 
-        <PageCarousel pages={pages} onPageChange={handlePageChange} showDots />
+        <PageCarousel pages={pages} onPageChange={handlePageChange} showDots carouselHeightRatio={0.7} />
 
-        <BottomSheet visible={true} onClose={() => {}}>
+        <BottomSheet visible={true} onClose={() => {}} heightRatio={0.3}>
           <View className='px-6 py-4'>
             <Bold className='pb-4 text-xl text-black dark:text-white'>Login or create a new account</Bold>
 

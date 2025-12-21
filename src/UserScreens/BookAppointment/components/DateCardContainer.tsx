@@ -219,15 +219,15 @@ export function DateCardContainer({ onDateChange }: DateCardContainerProps) {
   }
 
   return (
-    <View className='gap-3'>
+    <View className=''>
       {/* Date Picker Card */}
-      <View className='overflow-hidden rounded-2xl bg-white dark:bg-neutral-800'>
+      <View className=''>
         {/* Header Section */}
-        <View className='gap-3 p-4'>
+        <View className=' gap-3 px-2 pb-2'>
           
 
           {/* Date Carousel */}
-          <View className='flex-row items-center justify-between'>
+          <View className=' flex-row items-center justify-between'>
             <TouchableOpacity onPress={() => scrollToIndex(-1)} className='rounded-lg p-2'>
               <ArrowRightDoubleIcon
                 size={18}
@@ -266,7 +266,7 @@ export function DateCardContainer({ onDateChange }: DateCardContainerProps) {
         </View>
 
         {/* Info Grid - Day, Month and Year in one row */}
-        <View className='flex-row gap-3 px-4 pb-4'>
+        <View className=' flex-row gap-3 px-1 pb-4'>
           {/* <TouchableOpacity
             className='flex-1 gap-1 rounded-lg bg-neutral-50 p-3 dark:bg-neutral-700'
             activeOpacity={0.7}

@@ -43,7 +43,7 @@ const BookAppointment = () => {
   )
 
   const handleNext = useCallback(() => 
-    navigation.navigate('FamilyMemberSelector'),
+    navigation.navigate('FamilyMemberSelectorScreen'),
     [navigation]
   )
 
@@ -61,15 +61,15 @@ const BookAppointment = () => {
       </HybridHead>
 
       <ScrollView
-        className='flex-1 px-5'
-        contentContainerStyle={{ paddingTop: 20, paddingBottom: 20 }}
+        className='flex-1 px-5 py-4'
+        // contentContainerStyle={{ paddingTop: 10, paddingBottom: 20 }}
         showsVerticalScrollIndicator={false}
-        contentContainerClassName='gap-5'
+        contentContainerClassName=''
       >
         {isLoading ? (
           <View className='items-center justify-center py-10'>
             <ActivityIndicator size='large' color='#3b82f6' />
-            <Medium className='pt-3 text-neutral-600 dark:text-neutral-400'>Loading available locations...</Medium>
+            <Medium className=' text-neutral-600 dark:text-neutral-400'>Loading available locations...</Medium>
           </View>
         ) : locations.length > 0 ? (
           <View className='gap-3'>

@@ -1,24 +1,70 @@
 import Button from '@components/Button'
-import CustomHeader from '@components/CustomHeader'
+import HybridHead from '@components/HybridHead'
 import Press from '@components/Press'
+import BottomSheetCustom from '@components/BottomSheetCustom'
 import { PaddingBottom } from '@components/SafePadding'
-import Slider from '@components/Slider/Slider'
 import { useNavigation } from '@react-navigation/native'
 import RadioGenderSelector, { Gender } from '@/UserScreens/PatientInfo/RadioGenderSelector'
 import { Medium, SemiBold } from '@utils/fonts'
 import { StackNav } from '@utils/types'
 import { useState } from 'react'
-import { ScrollView, TextInput, View, useColorScheme } from 'react-native'
+import { ScrollView, TextInput, View, useColorScheme, Dimensions } from 'react-native'
+import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker'
+import Calendar03Icon from '@hugeicons/Calendar03Icon'
+import Colors from '@utils/colors'
+
+const { height: SCREEN_HEIGHT } = Dimensions.get('window')
 
 const PatientInfo = ({}: {}) => {
   const navigation = useNavigation<StackNav>()
   const scheme = useColorScheme()
+
   const [name, setName] = useState('')
   const [selectedGender, setSelectedGender] = useState<Gender>()
-  const [age, setAge] = useState('')
+  const [dob, setDob] = useState(new Date())
+  const [showDatePicker, setShowDatePicker] = useState(false)
   const [mobile, setMobile] = useState('')
+  const [otp, setOtp] = useState('')
+  const [showOtpSheet, setShowOtpSheet] = useState(false)
   const [isFamilyMember, setIsFamilyMember] = useState(false)
   const [relationName, setRelationName] = useState('')
+
+  const handleDateChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
+    if (event.type === 'set' && selectedDate) {
+      setDob(selectedDate)
+    }
+    setShowDatePicker(false)
+  }
+
+  const formatDate = (date: Date) => {
+    const day = String(date.getDate()).padStart(2, '0')
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const year = date.getFullYear()
+    return `${day}/${month}/${year}`
+  }
+
+  const handleSendOtp = () => {
+    if (mobile.trim().length === 0) {
+      return
+    }
+    setShowOtpSheet(true)
+    setOtp('')
+    // TODO: Call OTP API
+  }
+
+  const handleOtpChange = (text: string) => {
+    const numericText = text.replace(/[^0-9]/g, '')
+    if (numericText.length <= 5) {
+      setOtp(numericText)
+    }
+  }
+
+  const handleVerifyOtp = () => {
+    if (otp.length === 5) {
+      // TODO: Call verify OTP API
+      setShowOtpSheet(false)
+    }
+  }
 
   const handleContinue = () => {
     if (isFamilyMember) {
@@ -29,81 +75,99 @@ const PatientInfo = ({}: {}) => {
   }
 
   return (
-    <View className='flex-1 bg-neutral-100 dark:bg-neutral-900'>
-      <CustomHeader title='Patient Information' showBackButton onBackPress={() => navigation.goBack()} />
+    <View className='flex-1 bg-white dark:bg-neutral-900'>
+      <HybridHead title='Patient Information' showBackButton onBackPress={() => navigation.goBack()} />
 
       <ScrollView showsVerticalScrollIndicator={false} className='flex-1'>
         {/* Form Section */}
         <View className='gap-4 px-5 py-6'>
-          {/* Name */}
+          {/* Full Name (Required) */}
           <View>
-            <Medium className='mb-2 text-sm text-neutral-600 dark:text-neutral-400'>Full Name (Required) *</Medium>
+            <Medium className='mb-2 text-sm text-neutral-700 dark:text-neutral-300'>Full Name (Required) *</Medium>
             <TextInput
               value={name}
               onChangeText={setName}
               placeholder='Enter your full name'
-              className='rounded-xl border border-neutral-300 bg-white px-4 py-3 dark:border-neutral-600 dark:bg-neutral-800 dark:text-white'
+              className='rounded-xl border border-neutral-300 bg-white px-4 py-3 text-neutral-900 dark:border-neutral-600 dark:bg-neutral-800 dark:text-white'
               placeholderTextColor={scheme === 'dark' ? '#9ca3af' : '#d1d5db'}
             />
           </View>
 
-          {/* Gender */}
+          {/* Gender (Required) */}
           <View>
-            <Medium className='mb-2 text-sm text-neutral-600 dark:text-neutral-400'>Gender (Required) *</Medium>
+            <Medium className='mb-2 text-sm text-neutral-700 dark:text-neutral-300'>Gender (Required) *</Medium>
             <RadioGenderSelector selectedGender={selectedGender} onGenderChange={setSelectedGender} />
           </View>
 
-          {/* Age */}
+          {/* Date of Birth (Required) */}
           <View>
-            <Medium className='mb-2 text-sm text-neutral-600 dark:text-neutral-400'>Age (Required) *</Medium>
-            <TextInput
-              value={age}
-              onChangeText={setAge}
-              placeholder='Enter your age'
-              keyboardType='numeric'
-              className='rounded-xl border border-neutral-300 bg-white px-4 py-3 dark:border-neutral-600 dark:bg-neutral-800 dark:text-white'
-              placeholderTextColor={scheme === 'dark' ? '#9ca3af' : '#d1d5db'}
-            />
+            <Medium className='mb-2 text-sm text-neutral-700 dark:text-neutral-300'>Date of Birth (Required) *</Medium>
+            <Press
+              onPress={() => setShowDatePicker(true)}
+              className='flex-row items-center gap-3 rounded-xl border border-neutral-300 bg-white px-4 py-3 dark:border-neutral-600 dark:bg-neutral-800'
+            >
+              <Calendar03Icon size={20} color={Colors.accent} strokeWidth={1.5} />
+              <Medium className='flex-1 text-neutral-900 dark:text-white'>{formatDate(dob)}</Medium>
+            </Press>
+            {showDatePicker && (
+              <DateTimePicker
+                value={dob}
+                mode='date'
+                display='spinner'
+                onChange={handleDateChange}
+                maximumDate={new Date()}
+              />
+            )}
           </View>
 
-          {/* Mobile */}
+          {/* Mobile Number (Required) */}
           <View>
-            <Medium className='mb-2 text-sm text-neutral-600 dark:text-neutral-400'>Mobile Number (Required) *</Medium>
-            <TextInput
-              value={mobile}
-              onChangeText={setMobile}
-              keyboardType='phone-pad'
-              placeholder='Enter your mobile number'
-              className='rounded-xl border border-neutral-300 bg-white px-4 py-3 dark:border-neutral-600 dark:bg-neutral-800 dark:text-white'
-              placeholderTextColor={scheme === 'dark' ? '#9ca3af' : '#d1d5db'}
-            />
+            <Medium className='mb-2 text-sm text-neutral-700 dark:text-neutral-300'>Mobile Number (Required) *</Medium>
+            <View className='flex-row gap-3'>
+              <TextInput
+                value={mobile}
+                onChangeText={setMobile}
+                keyboardType='phone-pad'
+                placeholder='Enter your mobile number'
+                className='flex-1 rounded-xl border border-neutral-300 bg-white px-4 py-3 text-neutral-900 dark:border-neutral-600 dark:bg-neutral-800 dark:text-white'
+                placeholderTextColor={scheme === 'dark' ? '#9ca3af' : '#d1d5db'}
+              />
+              <Press
+                onPress={handleSendOtp}
+                disabled={mobile.trim().length === 0}
+                className='items-center justify-center rounded-xl border border-blue-600 bg-blue-600 px-4 py-3 disabled:border-neutral-300 disabled:bg-neutral-300'
+              >
+                <Medium className='text-white disabled:text-neutral-500'>Send OTP</Medium>
+              </Press>
+            </View>
           </View>
 
-          {/* Family Member Toggle */}
+          {/* Save as Family Member */}
           <View>
             <Press
               onPress={() => setIsFamilyMember(!isFamilyMember)}
-              className='flex-row items-center justify-between rounded-xl border border-neutral-300 bg-white px-4 py-3 dark:border-neutral-600 dark:bg-neutral-800'
+              className='flex-row items-center gap-3 rounded-xl border border-neutral-300 bg-white px-4 py-3 dark:border-neutral-600 dark:bg-neutral-800'
             >
-              <Medium className='text-neutral-900 dark:text-white'>Save as Family Member</Medium>
               <View
-                className={`h-6 w-11 rounded-full ${isFamilyMember ? 'bg-blue-600' : 'bg-neutral-300'}`}
-                style={{ justifyContent: 'center' }}
+                className={`h-5 w-5 items-center justify-center rounded-md border-2 ${
+                  isFamilyMember ? 'border-blue-600 bg-blue-600' : 'border-neutral-400 dark:border-neutral-600'
+                }`}
               >
-                <View className={`h-5 w-5 rounded-full bg-white ${isFamilyMember ? 'ml-5' : 'ml-0.5'}`} />
+                {isFamilyMember && <View className='rounded-xs h-2 w-2 bg-white' />}
               </View>
+              <Medium className='text-neutral-900 dark:text-white'>Save as Family Member</Medium>
             </Press>
           </View>
 
           {/* Relation (Conditional) */}
           {isFamilyMember && (
             <View>
-              <Medium className='mb-2 text-sm text-neutral-600 dark:text-neutral-400'>Relation (Required) *</Medium>
+              <Medium className='mb-2 text-sm text-neutral-700 dark:text-neutral-300'>Relation (Required) *</Medium>
               <TextInput
                 value={relationName}
                 onChangeText={setRelationName}
-                placeholder='e.g., Father, Mother, Son, Daughter'
-                className='rounded-xl border border-neutral-300 bg-white px-4 py-3 dark:border-neutral-600 dark:bg-neutral-800 dark:text-white'
+                placeholder='Father, Mother, Son, Daughter...'
+                className='rounded-xl border border-neutral-300 bg-white px-4 py-3 text-neutral-900 dark:border-neutral-600 dark:bg-neutral-800 dark:text-white'
                 placeholderTextColor={scheme === 'dark' ? '#9ca3af' : '#d1d5db'}
               />
             </View>
@@ -116,12 +180,41 @@ const PatientInfo = ({}: {}) => {
         {isFamilyMember ? (
           <Button title='Save Family Member' onPress={handleContinue} />
         ) : (
-          <View className='gap-3 '>
-                  <Button title='Confirm Booking' progressFill={100} onPress={() => navigation.navigate('Complete')} />
-                </View>
+          <Button title='Confirm Booking' progressFill={100} onPress={() => navigation.navigate('Complete')} />
         )}
       </View>
       <PaddingBottom />
+
+      {/* OTP Bottom Sheet */}
+      <BottomSheetCustom visible={showOtpSheet} onClose={() => setShowOtpSheet(false)} height={SCREEN_HEIGHT * 0.3}>
+        <View className='gap-4 px-5 py-6'>
+          <SemiBold className='text-lg text-neutral-900 dark:text-white'>Enter OTP</SemiBold>
+          <Medium className='text-sm text-neutral-600 dark:text-neutral-400'>
+            We've sent a 5-digit OTP to {mobile}
+          </Medium>
+
+          <View>
+            <Medium className='mb-2 text-sm text-neutral-700 dark:text-neutral-300'>Enter OTP (5 digits) *</Medium>
+            <TextInput
+              value={otp}
+              onChangeText={handleOtpChange}
+              placeholder='00000'
+              keyboardType='numeric'
+              maxLength={5}
+              autoFocus
+              className='rounded-xl border border-neutral-300 bg-white px-4 py-3 text-center text-3xl tracking-widest text-neutral-900 dark:border-neutral-600 dark:bg-neutral-800 dark:text-white'
+              placeholderTextColor={scheme === 'dark' ? '#9ca3af' : '#d1d5db'}
+            />
+          </View>
+
+          <View className='mt-4 gap-3'>
+            <Button title='Verify OTP' onPress={handleVerifyOtp} disabled={otp.length !== 5} />
+            <Press onPress={() => setShowOtpSheet(false)} className='items-center rounded-lg py-3'>
+              <Medium className='text-blue-600 dark:text-blue-400'>Cancel</Medium>
+            </Press>
+          </View>
+        </View>
+      </BottomSheetCustom>
     </View>
   )
 }

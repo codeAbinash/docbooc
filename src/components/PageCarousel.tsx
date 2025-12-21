@@ -10,13 +10,14 @@ import Animated, {
 } from 'react-native-reanimated'
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
-const CAROUSEL_HEIGHT = SCREEN_HEIGHT * 0.5
 
 type PageCarouselProps = {
   pages: React.ReactNode[]
   onPageChange?: (index: number) => void
   showDots?: boolean
   onSkip?: () => void
+  carouselHeight?: number
+  carouselHeightRatio?: number
 }
 
 // Memoized Dot component to prevent unnecessary re-renders
@@ -41,9 +42,17 @@ const Dot = memo(
 
 Dot.displayName = 'Dot'
 
-function PageCarousel({ pages, onPageChange, showDots = true, onSkip }: PageCarouselProps) {
+function PageCarousel({
+  pages,
+  onPageChange,
+  showDots = true,
+  onSkip,
+  carouselHeight,
+  carouselHeightRatio = 0.5,
+}: PageCarouselProps) {
   const scrollX = useSharedValue(0)
   const [currentPage, setCurrentPage] = React.useState(0)
+  const sheetHeight = carouselHeight ?? SCREEN_HEIGHT * carouselHeightRatio
 
   const handlePageChange = useCallback(
     (pageIndex: number) => {
@@ -64,7 +73,7 @@ function PageCarousel({ pages, onPageChange, showDots = true, onSkip }: PageCaro
   })
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { height: sheetHeight }]}>
       <Animated.ScrollView
         horizontal
         pagingEnabled
@@ -74,7 +83,7 @@ function PageCarousel({ pages, onPageChange, showDots = true, onSkip }: PageCaro
         decelerationRate='fast'
       >
         {pages.map((page, index) => (
-          <View key={index} style={styles.page}>
+          <View key={index} style={[styles.page, { height: sheetHeight, width: SCREEN_WIDTH }]}>
             {page}
           </View>
         ))}
@@ -93,7 +102,6 @@ function PageCarousel({ pages, onPageChange, showDots = true, onSkip }: PageCaro
           <View style={styles.topLeftDots}>
             {pages.map((_, index) => {
               let size = 10
-              
 
               return (
                 <View
@@ -123,11 +131,10 @@ function PageCarousel({ pages, onPageChange, showDots = true, onSkip }: PageCaro
 
 const styles = StyleSheet.create({
   container: {
-    height: CAROUSEL_HEIGHT,
+    flex: 0,
   },
   page: {
     width: SCREEN_WIDTH,
-    height: CAROUSEL_HEIGHT,
   },
   dotsContainer: {
     position: 'absolute',

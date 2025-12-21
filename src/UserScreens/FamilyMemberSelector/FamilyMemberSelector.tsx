@@ -7,7 +7,7 @@ import { Medium } from '@utils/fonts'
 import { NavProp } from '@utils/types'
 import React from 'react'
 import { ScrollView, View } from 'react-native'
-import FamilyMemberCard, { FamilyMember } from './FamilyMemberSelector/FamilyMemberCard'
+import FamilyMemberCard, { FamilyMember } from '@/UserScreens/FamilyMemberSelector/FamilyMemberCard'
 import Button from '@components/Button'
 
 const mockFamilyMembers: FamilyMember[] = [
@@ -34,7 +34,7 @@ const FamilyMemberSelectorScreen = ({ navigation }: NavProp) => {
       <HybridHead title='Select Patient' showBackButton={true} onBackPress={() => navigation.goBack()} />
 
       <View className='flex-1'>
-        <ScrollView className='flex-1' contentContainerClassName='px-5 py-3' showsVerticalScrollIndicator={false}>
+        <ScrollView className='flex-1' contentContainerClassName='px-5 py-4' showsVerticalScrollIndicator={false}>
           {/* Family Members List */}
           {mockFamilyMembers.map((member) => (
             <FamilyMemberCard

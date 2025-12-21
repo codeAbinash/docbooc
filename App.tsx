@@ -7,7 +7,7 @@ import { CardStyleInterpolators, createStackNavigator, StackNavigationOptions } 
 import AppointmentDetails from '@/UserScreens/AppointmentDetails/AppointmentDetails'
 import BookAppointment from '@/UserScreens/BookAppointment/BookAppointment'
 import Complete from '@/UserScreens/Complete'
-import FamilyMemberSelectorScreen from '@/UserScreens/FamilyMemberSelector'
+import FamilyMemberSelectorScreen from '@/UserScreens/FamilyMemberSelector/FamilyMemberSelector'
 import HPLogin from '@/UserScreens/Login/Login'
 import OTP from '@/UserScreens/Login/OTP'
 import PatientInfo from '@/UserScreens/PatientInfo/PatientInfo'
@@ -51,17 +51,20 @@ export default function App() {
             cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
           }}
         >
-          <RootStack.Screen name='Home' component={Home} options={NO_ANIMATION} />
-          <RootStack.Screen name='OTP' component={OTP} />
           <RootStack.Screen name='Splash' component={Splash} options={NO_ANIMATION} />
-          <RootStack.Screen name='Login' component={HPLogin} options={NO_ANIMATION} />         
-          <RootStack.Screen name='BookAppointment' component={BookAppointment} />
-          <RootStack.Screen name='PatientInfo' component={PatientInfo} />
-          <RootStack.Screen name='Welcome' component={WelcomeScreen} />
-          <RootStack.Screen name='FamilyMemberSelector' component={FamilyMemberSelectorScreen} />
-          <RootStack.Screen name='VerifyBeforeBooking' component={VerifyBeforeBooking} />
-          <RootStack.Screen name='AppointmentDetails' component={AppointmentDetails} />
-          <RootStack.Screen name='Complete' component={Complete} />
+          <RootStack.Screen name='Home' component={Home} options={SMOOTH_ANIMATION} />
+          <RootStack.Screen name='Login' component={HPLogin} options={SMOOTH_ANIMATION} />
+          <RootStack.Screen name='OTP' component={OTP} options={SMOOTH_ANIMATION} />
+          <RootStack.Screen name='BookAppointment' component={BookAppointment} options={SMOOTH_ANIMATION} />
+          <RootStack.Screen name='PatientInfo' component={PatientInfo} options={SMOOTH_ANIMATION} />
+          <RootStack.Screen
+            name='FamilyMemberSelectorScreen'
+            component={FamilyMemberSelectorScreen}
+            options={SMOOTH_ANIMATION}
+          />
+          <RootStack.Screen name='VerifyBeforeBooking' component={VerifyBeforeBooking} options={SMOOTH_ANIMATION} />
+          <RootStack.Screen name='AppointmentDetails' component={AppointmentDetails} options={SMOOTH_ANIMATION} />
+          <RootStack.Screen name='Complete' component={Complete} options={SMOOTH_ANIMATION} />
         </RootStack.Navigator>
       </NavigationContainer>
     </QueryClientProvider>
@@ -89,10 +92,10 @@ export type RootStackParamList = {
     }
   }
   PatientInfo: undefined
-  FamilyMemberSelector: undefined
+  FamilyMemberSelectorScreen: undefined
   Complete: undefined
   Login: undefined
-  OTP: undefined
+  OTP: { countryCode?: string; mobileNumber?: string }
   Doctors: undefined
   VerifyBeforeBooking: undefined
   Appointments: undefined

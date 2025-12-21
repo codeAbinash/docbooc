@@ -17,54 +17,7 @@ import { ActivityIndicator, FlatList, TextInput, TouchableOpacity, View, Animate
 import { ScrollView } from 'react-native-gesture-handler'
 import { DoctorCard } from '../../components/DoctorCard'
 
-const AnimatedTitle = ({
-  text,
-  onAnimationComplete,
-}: {
-  text: string | undefined
-  onAnimationComplete?: () => void
-}) => {
-  const [displayText, setDisplayText] = useState('')
 
-  useEffect(() => {
-    if (!text) return
-
-    let isMounted = true
-
-    const animate = async () => {
-      // Phase 1: Appear letter by letter
-      for (let i = 0; i < text.length; i++) {
-        if (!isMounted) return
-        setDisplayText(text.slice(0, i + 1))
-        await new Promise((resolve) => setTimeout(resolve, 80))
-      }
-
-      // Phase 2: Wait for 3 seconds
-      if (!isMounted) return
-      await new Promise((resolve) => setTimeout(resolve, 3000))
-
-      // Phase 3: Disappear letter by letter from right to left
-      for (let i = text.length - 1; i >= 0; i--) {
-        if (!isMounted) return
-        setDisplayText(text.slice(0, i))
-        await new Promise((resolve) => setTimeout(resolve, 80))
-      }
-
-      // Animation complete - call callback
-      if (isMounted && onAnimationComplete) {
-        onAnimationComplete()
-      }
-    }
-
-    animate()
-
-    return () => {
-      isMounted = false
-    }
-  }, [text, onAnimationComplete])
-
-  return <SemiBold className='text-lg'>{displayText}</SemiBold>
-}
 
 export const ALL_SPECIALTY = { id: 0, name: 'All', icon: Doctor01Icon }
 
@@ -113,7 +66,7 @@ const Doctors = ({ route }: any) => {
     <View className='flex-1'>
       <HybridHead
         showBackButton={true}
-        title={<AnimatedTitle text={titles[titleIndex]} onAnimationComplete={handleAnimationComplete} />}
+        title={'Select doctor'}
         showSearch={true}
         searchPlaceholder='Search doctors, specialties...'
         chipItems={allItems}

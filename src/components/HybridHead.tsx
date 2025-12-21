@@ -7,7 +7,7 @@ import UserSwitchIcon from '@hugeicons/UserSwitchIcon'
 import ArrowLeft01Icon from '@hugeicons/ArrowLeft01Icon'
 import Colors from '@utils/colors'
 import { useColorScheme } from 'nativewind'
-import { SemiBold, Medium } from '@utils/fonts'
+import { SemiBold, Medium, Regular } from '@utils/fonts'
 import { PaddingTop } from '@components/SafePadding'
 import Chip from '@components/Chip'
 import Search from '@components/Search'
@@ -117,10 +117,10 @@ export default function HybridHead({
           />
         </View>
       ) : (
-        <View className=' pb-1 flex-row items-center justify-between px-5'>
+        <View className=' flex-row items-center justify-between px-5 pb-4 dark:border-neutral-700'>
           <View className='flex-row items-center gap-2'>
             {showBackButton && (
-              <TouchableOpacity onPress={handleBackPress} className='rounded-lg bg-neutral-100 p-2 dark:bg-neutral-800'>
+              <TouchableOpacity onPress={handleBackPress} className='rounded-md bg-neutral-100 p-2 dark:bg-neutral-800'>
                 <ArrowLeft01Icon
                   size={26}
                   color={colorScheme === 'dark' ? Colors.text.dark : Colors.text.DEFAULT}
@@ -153,8 +153,8 @@ export default function HybridHead({
             </View>
           ) : (
             <>
-              <View className=' flex-1 pl-5 items-start justify-center'>
-                {typeof title === 'string' ? <SemiBold className=''>{title}</SemiBold> : title}
+              <View className='flex-1 items-start justify-center py-2 pl-3'>
+                {typeof title === 'string' ? <Medium className='text-lg'>{title}</Medium> : title}
               </View>
               <View className='flex-row items-center gap-2'>
                 {showSearch && (
@@ -172,11 +172,11 @@ export default function HybridHead({
         </View>
       )}
       {chipItems && (
-        <View className=' bg-white pb-2 dark:bg-neutral-800'>
+        <View className='border-b border-neutral-200 bg-white pb-4 dark:bg-neutral-800'>
           <ScrollView
             ref={chipScrollRef}
             horizontal
-            contentContainerClassName='gap-3 px-5 pt-2'
+            contentContainerClassName=' px-5'
             showsHorizontalScrollIndicator={false}
           >
             {chipItems.map((item) => (

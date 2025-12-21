@@ -38,7 +38,7 @@ export function HPCards({
     <TouchableOpacity
       activeOpacity={0.7}
       onPress={onPress}
-      className={`overflow-hidden rounded-2xl border bg-white dark:bg-neutral-800 ${selected ? 'border-blue-600' : 'border-neutral-200 dark:border-neutral-700'}`}
+      className={`overflow-hidden rounded-xl border bg-white dark:bg-neutral-800 ${selected ? 'border-blue-600' : 'border-neutral-200 dark:border-neutral-700'}`}
       {...rest}
     >
       <HPCardsInternal
@@ -116,32 +116,26 @@ function HPCardsInternal({
       </View>
 
       {/* Address Section */}
-      <View className='flex-row gap-3'>
-        
-        <View className='flex-80 gap-1 rounded-lg bg-zinc-100 p-3 dark:bg-amber-900/20'>
-        <Medium className='text-xs font-semibold text-zinc-700 dark:text-blue-400'>Address</Medium>
-        <Medium className='text-xs text-zinc-900 dark:text-amber-100' numberOfLines={2}>
+      <View className='flex-1 gap-1 rounded-lg bg-neutral-100 p-3 dark:bg-amber-900/20'>
+        <Medium className='text-xs font-semibold text-blue-700 dark:text-blue-400'>Address</Medium>
+        <Medium className='text-xs text-blue-900 dark:text-amber-100' numberOfLines={2}>
           {address}
         </Medium>
       </View>
 
-          <View className='flex-20 gap-1 rounded-lg bg-blue-50 p-3 dark:bg-blue-900/20'>
-          <Medium className='text-xs font-semibold text-blue-700 dark:text-blue-400'>Distance</Medium>
-          <SemiBold className='text-sm text-blue-900 dark:text-blue-200'>{distance}</SemiBold>
-        </View>
-      </View>
-      
-
       {/* Info Grid - 3 Columns */}
       <View className='flex-row gap-3'>
-        
-          <View className='flex-1 gap-1 rounded-lg bg-blue-50 p-3 dark:bg-blue-900/20'>
+        {time && (
+          <View className='flex-1 gap-1 rounded-lg bg-neutral-100 p-3 dark:bg-blue-900/20'>
             <Medium className='text-xs font-semibold text-blue-700 dark:text-blue-400'>Time Slot</Medium>
             <SemiBold className='text-sm text-blue-900 dark:text-blue-200'>{time}</SemiBold>
           </View>
-      
+        )}
 
-        
+        <View className='flex-1 gap-1 rounded-lg bg-blue-50 p-3 dark:bg-blue-900/20'>
+          <Medium className='text-xs font-semibold text-blue-700 dark:text-blue-400'>Distance</Medium>
+          <SemiBold className='text-sm text-blue-900 dark:text-blue-200'>{distance}</SemiBold>
+        </View>
         <View className='flex-1 gap-1 rounded-lg bg-blue-50 p-3 dark:bg-blue-900/20'>
           <Medium className='text-xs font-semibold text-blue-700 dark:text-blue-400'>Queue</Medium>
           <SemiBold className='text-sm text-blue-900 dark:text-blue-200'>Q{q}</SemiBold>
