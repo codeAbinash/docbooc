@@ -79,7 +79,7 @@ export default function Login({ navigation }: NavProp) {
             <SemiBold className='pb-4 text-xl text-black dark:text-white'>Login or create a new account</SemiBold>
 
             <View
-              className='flex-row gap-2  border border-gray-300 bg-white dark:border-gray-600 dark:bg-gray-900'
+              className=' flex-row gap-2  border border-gray-300 bg-white dark:border-gray-600 dark:bg-gray-900'
               style={validationError ? { borderColor: '#DC2626' } : {}}
             >
               <View className='w-20 items-center justify-center px-3 py-3'>
@@ -102,9 +102,9 @@ export default function Login({ navigation }: NavProp) {
               />
             </View>
 
-            {validationError && <Medium className='pt-2 text-sm text-red-600'>{validationError}</Medium>}
+            {validationError && <Medium className='text-sm text-red-600'>{validationError}</Medium>}
 
-            <Button title='Get OTP' className='pt-6 rounded-xl' onPress={handleGetOTP} />
+            <Button title='Get OTP' className='pt-4  ' onPress={handleGetOTP} />
           </View>
           <View className=' gap-2 pb-8 pt-2'>
                     <Medium className='text-center text-xs text-zinc-600 dark:text-zinc-400'>
