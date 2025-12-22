@@ -58,7 +58,7 @@ const FamilyMemberSelectorScreen = ({ navigation }: NavProp) => {
           <View className='h-6' />
         </ScrollView>
 
-        <View className='px-5 pb-2 pt-2'>
+        <View className=' bg-white px-5 py-3 dark:border-neutral-700 dark:bg-neutral-800'>
           <Button
             title='Continue'
             onPress={() => {

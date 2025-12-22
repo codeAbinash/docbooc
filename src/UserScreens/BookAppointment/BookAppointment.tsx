@@ -103,7 +103,7 @@ const BookAppointment = () => {
         ) : null}
       </ScrollView>
 
-      <View className=' bg-white px-6 py-3 dark:border-neutral-700 dark:bg-neutral-800'>
+      <View className=' bg-white px-5 py-3 dark:border-neutral-700 dark:bg-neutral-800'>
         <Button
           title='Next'
           disabled={selectedLocationId === null}

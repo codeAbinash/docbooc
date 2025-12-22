@@ -33,7 +33,10 @@ function AppointmentCard({ appointment, onPress }: AppointmentCardProps) {
   const dark = colorScheme === 'dark'
 
   return (
-    <Press onPress={onPress} className='overflow-hidden rounded-2xl bg-white p-5 shadow-sm dark:bg-neutral-800'>
+    <Press
+      onPress={onPress}
+      className='overflow-hidden rounded-2xl border border-neutral-300 bg-white p-5 dark:bg-neutral-800'
+    >
       {/* Status Badge */}
       <View className='mb-3 flex-row items-center justify-between'>
         <View
@@ -173,24 +176,36 @@ export default function Appointments() {
   return (
     <View className='flex-1 bg-white dark:bg-neutral-900'>
       <HybridHead title='My Appointments' showBackButton={true} />
-      <View className='flex-row gap-2 bg-white px-5 pb-4 border-b border-neutral-200  dark:bg-neutral-900'>
-        {tabLabels.map((label, index) => (
-          <Press
-            key={index}
-            onPress={() => setActiveTab(index)}
-            className={`flex-1 rounded-lg py-4 ${
-              activeTab === index ? 'bg-accent' : 'bg-neutral-100 dark:bg-neutral-800'
-            }`}
-          >
-            <Medium
-              className={`text-center text-sm ${
-                activeTab === index ? 'text-white' : 'text-neutral-600 dark:text-neutral-400'
-              }`}
+      <View className='flex-row gap-2 border-b border-neutral-300 bg-white px-5 pb-4 dark:bg-neutral-900'>
+        {tabLabels.map((label, index) => {
+          const isActive = activeTab === index
+
+          let backgroundColor = '#f3f4f6'
+          let textColor = '#4b5563'
+
+          if (isActive) {
+            if (index === 0) {
+              backgroundColor = '#f97316'
+              textColor = '#ffffff'
+            } else {
+              backgroundColor = '#209928'
+              textColor = '#ffffff'
+            }
+          }
+
+          return (
+            <Press
+              key={index}
+              onPress={() => setActiveTab(index)}
+              className='flex-1 rounded-lg py-4'
+              style={{ backgroundColor }}
             >
-              {label}
-            </Medium>
-          </Press>
-        ))}
+              <Medium className='text-center text-sm' style={{ color: textColor }}>
+                {label}
+              </Medium>
+            </Press>
+          )
+        })}
       </View>
 
       <ScrollView

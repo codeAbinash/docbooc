@@ -34,7 +34,7 @@ export function DoctorCard({
     <TouchableOpacity
       activeOpacity={0.7}
       onPress={onPress}
-      className={` overflow-hidden rounded-lg border bg-white dark:bg-neutral-800 ${selected ? 'border-blue-600' : 'border-neutral-200 dark:border-neutral-700'}`}
+      className={` overflow-hidden rounded-lg border  bg-white dark:bg-neutral-800 ${selected ? 'border-blue-600' : 'border-neutral-200 dark:border-neutral-700'}`}
       {...rest}
     >
       <DoctorCardInternal

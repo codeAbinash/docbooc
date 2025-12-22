@@ -57,12 +57,12 @@ const VerifyBeforeBooking = () => {
     <View className='bg flex-1'>
       <HybridHead title='Review Appointment' showBackButton={true} onBackPress={() => navigation.goBack()} />
 
-      <ScrollView className='flex-1' contentContainerClassName='pb-6' showsVerticalScrollIndicator={false}>
-        <View className='gap-4 px-5 pt-2'>
+      <ScrollView className='flex-1 bg-white border-t border-neutral-300' contentContainerClassName='pb-6' showsVerticalScrollIndicator={false}>
+        <View className='gap-4 px-5 pt-4'>
           {/* Appointment Details Card */}
-          <View className='overflow-hidden rounded-lg border border-neutral-100 bg-white dark:border-neutral-700 dark:bg-zinc-900'>
+          <View className='overflow-hidden rounded-lg border border-neutral-300 bg-white dark:border-neutral-700 dark:bg-zinc-900'>
             {/* Header with Icon */}
-            <View className='border-b border-neutral-200 px-4 py-3 dark:border-neutral-700'>
+            <View className='border-b border-neutral-300 px-4 py-3 dark:border-neutral-700'>
               <View className='flex-row items-center gap-3'>
                 <View className='rounded-md bg-blue-100/50 p-2 dark:bg-blue-900/20'>
                   <Calendar01Icon size={20} color='#3b82f6' strokeWidth={2} />
@@ -151,9 +151,9 @@ const VerifyBeforeBooking = () => {
           </View>
 
           {/* Payment Card */}
-          <View className='overflow-hidden rounded-lg border border-neutral-200 bg-white dark:border-neutral-700 dark:bg-zinc-900'>
+          <View className='overflow-hidden rounded-lg border border-neutral-300 bg-white dark:border-neutral-700 dark:bg-zinc-900'>
             {/* Header with Icon */}
-            <View className='border-b border-neutral-200 px-4 py-3 dark:border-neutral-700'>
+            <View className='border-b border-neutral-300 px-4 py-3 dark:border-neutral-700'>
               <View className='flex-row items-center gap-3'>
                 <View className='rounded-md bg-green-100/50 p-2 dark:bg-green-900/20'>
                   <Calendar01Icon size={20} color='#16a34a' strokeWidth={2} />
@@ -190,14 +190,14 @@ const VerifyBeforeBooking = () => {
           </View>
 
           {/* Important Notes */}
-          <View className='overflow-hidden rounded-lg border border-neutral-200 bg-white dark:border-neutral-700 dark:bg-zinc-900'>
+          <View className='overflow-hidden rounded-lg border border-neutral-300 bg-white dark:border-neutral-700 dark:bg-zinc-900'>
             {/* Header with Icon */}
-            <View className='border-b border-neutral-200 px-4 py-3 dark:border-neutral-700'>
+            <View className='border-b border-neutral-300 px-4 py-3 dark:border-neutral-700'>
               <View className='flex-row items-center gap-3'>
                 <View className='rounded-md bg-blue-100/50 p-2 dark:bg-blue-900/20'>
                   <Calendar01Icon size={20} color='#3b82f6' strokeWidth={2} />
                 </View>
-                <SemiBold className='text-base text-neutral-900 dark:text-white'>Important Notes</SemiBold>
+                <SemiBold className='text-base text-neutral-900 dark:text-white'>DocBooc Commitment</SemiBold>
               </View>
             </View>
 
@@ -213,7 +213,7 @@ const VerifyBeforeBooking = () => {
                 <View className='flex-row items-start gap-2'>
                   <Medium className='text-base text-neutral-600 dark:text-neutral-400'>•</Medium>
                   <Medium className='flex-1 text-base text-neutral-700 dark:text-neutral-300'>
-                    Bring ID & medical reports
+                    Confirmed instantly upon doorstep verification
                   </Medium>
                 </View>
                 <View className='flex-row items-start gap-2'>
@@ -222,6 +222,13 @@ const VerifyBeforeBooking = () => {
                     Queue numbers may change
                   </Medium>
                 </View>
+                <View className='flex-row items-start gap-2'>
+                  <Medium className='text-base text-neutral-600 dark:text-neutral-400'>•</Medium>
+                  <Medium className='flex-1 text-base text-neutral-700 dark:text-neutral-300'>
+                    24/7 Call support available
+                  </Medium>
+                </View>
+                
               </View>
             </View>
           </View>
@@ -229,7 +236,7 @@ const VerifyBeforeBooking = () => {
       </ScrollView>
 
       {/* Button to Confirm Appointment */}
-      <View className='gap-3 px-5 pb-5 pt-5'>
+      <View className=' bg-white px-5 py-3 dark:border-neutral-700 dark:bg-neutral-800'>
         
         <Button  title='Confirm Booking' progressFill={100} onPress={() => navigation.navigate('Complete')} />
       </View>
