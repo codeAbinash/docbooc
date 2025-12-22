@@ -112,7 +112,7 @@ export default function HybridHead({
   }
 
   return (
-    <View className='bg-white dark:bg-neutral-800'>
+    <View className='bg-white  dark:bg-neutral-800'>
       <PaddingTop />
       {isSearchOpen ? (
         <View className='px-6'>
@@ -161,7 +161,7 @@ export default function HybridHead({
             </View>
           ) : (
             <>
-              <View className='flex-1 items-start justify-center py-2 pl-3'>
+              <View className='flex-1  items-start justify-center py-2 pl-3'>
                 {typeof title === 'string' ? <Medium className='text-lg'>{title}</Medium> : title}
               </View>
               <View className='flex-row items-center gap-2'>

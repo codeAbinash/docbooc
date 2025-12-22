@@ -43,10 +43,12 @@ const LIGHT_INACTIVE_COLOR = colors.zinc[600]
 
 const styles = StyleSheet.create({
   container: {
-    borderTopWidth: 0,
+    borderTopWidth: 1,
+    borderTopColor: colors.neutral[200],
   },
   containerDark: {
     borderTopWidth: 1,
+    borderTopColor: colors.zinc[800],
   },
   tabBarRow: {
     flexDirection: 'row',

@@ -27,11 +27,7 @@ export default function BottomSheet({
 }: BottomSheetProps) {
   const sheetHeight = height ?? SCREEN_HEIGHT * heightRatio
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
-      style={{ flex: 1, justifyContent: 'flex-end' }}
-    >
+    
       <View className='flex-1 justify-end bg-black/50'>
         <TouchableOpacity activeOpacity={1} className='flex-1' onPress={onClose} />
         <View style={{ height: sheetHeight, backgroundColor }} className='shadow-lg'>
@@ -46,6 +42,6 @@ export default function BottomSheet({
           </ScrollView>
         </View>
       </View>
-    </KeyboardAvoidingView>
+    
   )
 }

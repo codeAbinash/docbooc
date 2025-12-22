@@ -1,36 +1,34 @@
-import React, { useState } from 'react'
-import { Keyboard, KeyboardAvoidingView, Platform, ScrollViewProps } from 'react-native'
-import { ScrollView } from 'react-native-gesture-handler'
+import React, { useState, useEffect } from 'react'
+import { Keyboard, KeyboardAvoidingView, Platform, ViewProps } from 'react-native'
 
-interface KeyboardAvoidingContainerProps extends ScrollViewProps {}
+interface KeyboardAvoidingContainerProps extends ViewProps {}
 
-export default function KeyboardAvoid(props: KeyboardAvoidingContainerProps) {
+export default function KeyboardAvoid({ children, style, ...props }: KeyboardAvoidingContainerProps) {
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false)
-  React.useEffect(() => {
-    const keyboardShowListener = Keyboard.addListener('keyboardDidShow', () => {
+
+  useEffect(() => {
+    const showListener = Keyboard.addListener('keyboardDidShow', () => {
       setIsKeyboardVisible(true)
     })
-    const keyboardHideListener = Keyboard.addListener('keyboardDidHide', () => {
+    const hideListener = Keyboard.addListener('keyboardDidHide', () => {
       setIsKeyboardVisible(false)
     })
+
     return () => {
-      keyboardShowListener.remove()
-      keyboardHideListener.remove()
+      showListener.remove()
+      hideListener.remove()
     }
   }, [])
+
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1 }}
+      style={[{ flex: 1 }, style]}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 10}
       enabled={isKeyboardVisible}
+      {...props}
     >
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}
-        keyboardShouldPersistTaps='always'
-        {...props}
-      ></ScrollView>
+      {children}
     </KeyboardAvoidingView>
   )
 }

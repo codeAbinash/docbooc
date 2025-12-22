@@ -219,7 +219,7 @@ export function DateCardContainer({ onDateChange }: DateCardContainerProps) {
   }
 
   return (
-    <View className=''>
+    <View className='border-b border-neutral-200 px-5'>
       {/* Date Picker Card */}
       <View className=''>
         {/* Header Section */}

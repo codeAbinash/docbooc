@@ -4,8 +4,10 @@ import PageCarousel from '@components/PageCarousel'
 import BottomSheet from '@components/BottomSheet'
 import { Bold, Medium, SemiBold } from '@utils/fonts'
 import { NavProp } from '@utils/types'
+
 import { useState, useMemo, useCallback, useRef } from 'react'
 import { View, TextInput, Text, KeyboardAvoidingView, Platform, Keyboard, Pressable } from 'react-native'
+import KeyboardAvoid from '@components/KeyboardAvoid'
 
 export default function Login({ navigation }: NavProp) {
   const [currentPage, setCurrentPage] = useState(0)
@@ -60,14 +62,10 @@ export default function Login({ navigation }: NavProp) {
   }, [navigation])
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={0}
-      style={{ flex: 1 }}
-    >
+    
       <View className='flex-1 bg-white dark:bg-black'>
         <PaddingTop />
-
+        
         <PageCarousel
           pages={pages}
           onPageChange={handlePageChange}
@@ -75,7 +73,7 @@ export default function Login({ navigation }: NavProp) {
           carouselHeightRatio={0.7}
           onSkip={handleSkip}
         />
-
+        <KeyboardAvoid>
         <BottomSheet visible={true} onClose={() => {}} heightRatio={0.3}>
           <View className='px-6 py-4'>
             <SemiBold className='pb-4 text-xl text-black dark:text-white'>Login or create a new account</SemiBold>
@@ -122,10 +120,10 @@ export default function Login({ navigation }: NavProp) {
                     </View>
                   </View>
         </BottomSheet>
-        
+        </KeyboardAvoid>
 
         <PaddingBottom />
       </View>
-    </KeyboardAvoidingView>
+    
   )
 }

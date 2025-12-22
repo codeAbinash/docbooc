@@ -2,9 +2,8 @@ import Calendar03Icon from '@assets/icons/hugeicons/Calendar03Icon'
 import Doctor01Icon from '@assets/icons/hugeicons/Doctor01Icon'
 import PatientIcon from '@assets/icons/hugeicons/PatientIcon'
 import Time04Icon from '@assets/icons/hugeicons/Time04Icon'
+import HybridHead from '@components/HybridHead'
 import Press from '@components/Press'
-import { PaddingTop } from '@components/SafePadding'
-import { Tabs } from '@components/Tabs'
 import { useNavigation } from '@react-navigation/native'
 import Colors from '@utils/colors'
 import { Medium, SemiBold } from '@utils/fonts'
@@ -172,17 +171,33 @@ export default function Appointments() {
   }
 
   return (
-    <View className='bg flex-1'>
-      <PaddingTop />
-      <View className='px-5 pt-3'>
-        <Tabs tabs={tabLabels} activeTab={activeTab} onTabChange={setActiveTab} />
+    <View className='flex-1 bg-white dark:bg-neutral-900'>
+      <HybridHead title='My Appointments' showBackButton={true} />
+      <View className='flex-row gap-2 bg-white px-5 pb-4 border-b border-neutral-200  dark:bg-neutral-900'>
+        {tabLabels.map((label, index) => (
+          <Press
+            key={index}
+            onPress={() => setActiveTab(index)}
+            className={`flex-1 rounded-lg py-4 ${
+              activeTab === index ? 'bg-accent' : 'bg-neutral-100 dark:bg-neutral-800'
+            }`}
+          >
+            <Medium
+              className={`text-center text-sm ${
+                activeTab === index ? 'text-white' : 'text-neutral-600 dark:text-neutral-400'
+              }`}
+            >
+              {label}
+            </Medium>
+          </Press>
+        ))}
       </View>
 
       <ScrollView
         className='flex-1 px-5'
-        contentContainerStyle={{ paddingTop: 20, paddingBottom: 20 }}
+        contentContainerStyle={{ paddingTop: 16, paddingBottom: 20 }}
         showsVerticalScrollIndicator={false}
-        contentContainerClassName='gap-5'
+        contentContainerClassName='gap-4'
       >
         {filteredAppointments.length > 0 ? (
           filteredAppointments.map((appointment) => (

@@ -37,12 +37,11 @@ const Doctors = ({ route }: any) => {
     useCallback(() => {
       if (route?.params?.openSearch) {
         setIsSearchOpen(true)
-        navigate.setParams({ openSearch: false })
       }
       return () => {
         setIsSearchOpen(false)
       }
-    }, [route?.params?.openSearch, navigate]),
+    }, [route?.params?.openSearch]),
   )
 
   const allItems = [ALL_SPECIALTY, ...specialties]
@@ -83,7 +82,7 @@ const Doctors = ({ route }: any) => {
         searchOpen={isSearchOpen}
       />
 
-      <View className='flex-1 bg-neutral-100 dark:bg-neutral-900'>
+      <View className='flex-1 bg-white dark:bg-neutral-900'>
         {isLoading ? (
           <View className='flex-1 items-center justify-center'>
             <ActivityIndicator size='large' color={Colors.accent} />

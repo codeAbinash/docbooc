@@ -14,6 +14,7 @@ import { Black, Bold, Medium, Regular, SemiBold } from '@utils/fonts'
 import { NavProp, StackNav } from '@utils/types'
 import { ScrollView, TouchableOpacity, useColorScheme, View, useWindowDimensions } from 'react-native'
 import UpcomingScheduleCard from './UpcomingScheduleCard'
+import { fa } from 'zod/v4/locales'
 
 export default function HomeScreen({ navigation }: NavProp) {
   const { width } = useWindowDimensions()
@@ -174,7 +175,7 @@ function TopDoctors({ specialty }: TopDoctorsProps) {
         <View style={{ width: 375, marginRight: 16 }}>
           <DoctorCard
             doctor={mockDoctor}
-            onPress={() => navigation.navigate('BookAppointment' as any)}
+            // onPress={() => navigation.navigate('BookAppointment' as any)}
             showSelector={false}
             showBookButton={true}
             onAdd={() => navigation.navigate('BookAppointment' as any)}
@@ -183,7 +184,7 @@ function TopDoctors({ specialty }: TopDoctorsProps) {
         <View style={{ width: 375, marginRight: 16 }}>
           <DoctorCard
             doctor={mockDoctor}
-            onPress={() => navigation.navigate('BookAppointment' as any)}
+            // onPress={() => navigation.navigate('BookAppointment' as any)}
             showSelector={false}
             showBookButton={true}
             onAdd={() => navigation.navigate('BookAppointment' as any)}
@@ -192,7 +193,7 @@ function TopDoctors({ specialty }: TopDoctorsProps) {
         <View style={{ width: 375, marginRight: 16 }}>
           <DoctorCard
             doctor={mockDoctor}
-            onPress={() => navigation.navigate('BookAppointment' as any)}
+            // onPress={() => navigation.navigate('BookAppointment' as any)}
             showSelector={false}
             showBookButton={true}
             onAdd={() => navigation.navigate('BookAppointment' as any)}
@@ -201,7 +202,7 @@ function TopDoctors({ specialty }: TopDoctorsProps) {
         <View style={{ width: 375, marginRight: 16 }}>
           <DoctorCard
             doctor={mockDoctor}
-            onPress={() => navigation.navigate('BookAppointment' as any)}
+            // onPress={() => navigation.navigate('BookAppointment' as any)}
             showSelector={false}
             showBookButton={true}
             onAdd={() => navigation.navigate('BookAppointment' as any)}

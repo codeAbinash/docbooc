@@ -87,10 +87,10 @@ const PatientInfo = ({}: {}) => {
   }
 
   return (
-    <View className='flex-1 bg-white dark:bg-neutral-900'>
+    <View className='flex-1  bg-white dark:bg-neutral-900'>
       <HybridHead title='Patient Information' showBackButton onBackPress={() => navigation.goBack()} />
 
-      <ScrollView showsVerticalScrollIndicator={false} className='flex-1'>
+      <ScrollView showsVerticalScrollIndicator={false} className='flex-1 border-t border-neutral-200'>
         {/* Form Section */}
         <View className='gap-4 px-5 py-6'>
           {/* Full Name (Required) */}

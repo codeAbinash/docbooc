@@ -53,12 +53,14 @@ const BookAppointment = () => {
   )
 
   return (
-    <View className='bg flex-1'>
+    <View className='bg-white flex-1'>
       <HybridHead title='Select Date and Location' showBackButton onBackPress={navigation.goBack}>
-        <View className='px-4'>
+        <View className=''>
           <DateCardContainer onDateChange={setSelectedDate} />
         </View>
       </HybridHead>
+
+      
 
       <ScrollView
         className='flex-1 px-5 py-4'
@@ -101,7 +103,7 @@ const BookAppointment = () => {
         ) : null}
       </ScrollView>
 
-      <View className='border-t border-neutral-100 bg-white px-6 py-3 dark:border-neutral-700 dark:bg-neutral-800'>
+      <View className=' bg-white px-6 py-3 dark:border-neutral-700 dark:bg-neutral-800'>
         <Button
           title='Next'
           disabled={selectedLocationId === null}
