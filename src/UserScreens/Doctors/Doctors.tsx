@@ -17,8 +17,6 @@ import { ActivityIndicator, FlatList, TextInput, TouchableOpacity, View, Animate
 import { ScrollView } from 'react-native-gesture-handler'
 import { DoctorCard } from '../../components/DoctorCard'
 
-
-
 export const ALL_SPECIALTY = { id: 0, name: 'All', icon: Doctor01Icon }
 
 const Doctors = ({ route }: any) => {
@@ -26,6 +24,7 @@ const Doctors = ({ route }: any) => {
   const [selected, setSelected] = useState<number>(0)
   const [searchQuery, setSearchQuery] = useState('')
   const [titleIndex, setTitleIndex] = useState(0)
+  const [isSearchOpen, setIsSearchOpen] = useState(route?.params?.openSearch || false)
   const scrollViewRef = useRef<ScrollView>(null)
 
   const titles = ['DocBook', 'Search Doctors', 'Find Your Specialist Doctor', 'Book Appointments Easily']
@@ -36,8 +35,14 @@ const Doctors = ({ route }: any) => {
 
   useFocusEffect(
     useCallback(() => {
-      // No-op
-    }, []),
+      if (route?.params?.openSearch) {
+        setIsSearchOpen(true)
+        navigate.setParams({ openSearch: false })
+      }
+      return () => {
+        setIsSearchOpen(false)
+      }
+    }, [route?.params?.openSearch, navigate]),
   )
 
   const allItems = [ALL_SPECIALTY, ...specialties]
@@ -74,6 +79,8 @@ const Doctors = ({ route }: any) => {
         onChipSelect={setSelected}
         chipScrollRef={scrollViewRef}
         onSearchChange={setSearchQuery}
+        onSearchToggle={setIsSearchOpen}
+        searchOpen={isSearchOpen}
       />
 
       <View className='flex-1 bg-neutral-100 dark:bg-neutral-900'>

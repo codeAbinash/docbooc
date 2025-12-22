@@ -12,41 +12,49 @@ export const specialties = [
     id: 1,
     name: 'General Physician',
     icon: Medicine02Icon,
+    description: 'General health checkups and common illnesses',
   },
   {
     id: 2,
     name: 'Cardiologist',
     icon: Cardiogram02Icon,
+    description: 'Heart diseases and cardiovascular conditions',
   },
   {
     id: 3,
     name: 'Orthopedist',
     icon: Bone02Icon,
+    description: 'Bones, joints and musculoskeletal injuries',
   },
   {
     id: 4,
     name: 'Gastroenterologist',
     icon: DigestionIcon,
+    description: 'Digestive system and GI tract disorders',
   },
   {
     id: 5,
     name: 'Neurologist',
     icon: Brain01Icon,
+    description: 'Brain, nervous system and neurological conditions',
   },
   {
     id: 6,
     name: 'Psychiatrist',
     icon: PatientIcon,
+    description: 'Mental health and psychological disorders',
   },
   {
     id: 7,
     name: 'Gynecologist',
     icon: FemaleSymbolIcon,
+    description: "Women's reproductive health and obstetrics",
   },
   {
     id: 8,
     name: 'Dermatologist',
     icon: DoNotTouch01Icon,
+    description: 'Skin conditions and dermatological issues',
   },
 ]
 

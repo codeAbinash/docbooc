@@ -10,20 +10,30 @@ import { useRoute, RouteProp } from '@react-navigation/native'
 import { RootStackParamList } from '../../../App'
 import { OtpInput } from 'react-native-otp-entry'
 import colors from 'tailwindcss/colors'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 export default function OTP({ navigation }: NavProp) {
   const { colorScheme } = useColorScheme()
   const [otp, setOtp] = useState('')
-  const [timeLeft, setTimeLeft] = useState(23)
+  const [timeLeft, setTimeLeft] = useState(30)
   const route = useRoute<RouteProp<RootStackParamList, 'OTP'>>()
   const { countryCode = '+91', mobileNumber = '' } = route.params ?? {}
+
+  useEffect(() => {
+    if (timeLeft <= 0) return
+    const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000)
+    return () => clearTimeout(timer)
+  }, [timeLeft])
+
+  const handleResendOtp = () => {
+    setTimeLeft(30)
+  }
 
   return (
     <View className='flex-1 bg-white dark:bg-black'>
       <PaddingTop />
       <View className='flex-1 bg-white dark:bg-zinc-950'>
-        <View className='flex-1 px-6 pt-4'>
+        <View className='flex-1 px-5'>
           <Pressable onPress={() => navigation.goBack()} className='mb-8 self-end'>
             <Text className='text-2xl font-bold text-black dark:text-white'>✕</Text>
           </Pressable>
@@ -39,7 +49,7 @@ export default function OTP({ navigation }: NavProp) {
                   </SemiBold>
                   <Medium className='text-sm text-zinc-600 dark:text-zinc-400'>Mobile number</Medium>
                 </View>
-                <Pressable onPress={() => {}}>
+                <Pressable onPress={() => navigation.goBack()}>
                   <Text className='font-semibold text-blue-600 underline'>Edit</Text>
                 </Pressable>
               </View>
@@ -88,14 +98,20 @@ export default function OTP({ navigation }: NavProp) {
             <Button title='Verify OTP' onPress={() => navigation.reset({ index: 0, routes: [{ name: 'Home' }] })} />
 
             <View className='gap-2'>
-              <Medium className='text-center text-sm text-zinc-600 dark:text-zinc-400'>
-                Didn't get the OTP? Try again in{' '}
-                <Text className='font-semibold text-orange-500'>00:{timeLeft.toString().padStart(2, '0')}</Text>
-              </Medium>
+              {timeLeft > 0 ? (
+                <Medium className='text-center text-sm text-zinc-600 dark:text-zinc-400'>
+                  Didn't get the OTP? Try again in{' '}
+                  <Text className='font-semibold text-orange-500'>00:{timeLeft.toString().padStart(2, '0')}</Text>
+                </Medium>
+              ) : (
+                <Pressable onPress={handleResendOtp} className='items-center'>
+                  <Text className='font-semibold text-blue-600 underline'>Resend OTP</Text>
+                </Pressable>
+              )}
             </View>
           </View>
 
-          <View className='gap-3 pb-6 pt-4'>
+          <View className='gap-2 pb-8 pt-4'>
             <Medium className='text-center text-xs text-zinc-600 dark:text-zinc-400'>
               By 'logging in' I agree to the
             </Medium>

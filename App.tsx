@@ -7,6 +7,7 @@ import { CardStyleInterpolators, createStackNavigator, StackNavigationOptions } 
 import AppointmentDetails from '@/UserScreens/AppointmentDetails/AppointmentDetails'
 import BookAppointment from '@/UserScreens/BookAppointment/BookAppointment'
 import Complete from '@/UserScreens/Complete'
+import Departments from '@/UserScreens/Departments'
 import FamilyMemberSelectorScreen from '@/UserScreens/FamilyMemberSelector/FamilyMemberSelector'
 import HPLogin from '@/UserScreens/Login/Login'
 import OTP from '@/UserScreens/Login/OTP'
@@ -55,6 +56,7 @@ export default function App() {
           <RootStack.Screen name='Home' component={Home} options={SMOOTH_ANIMATION} />
           <RootStack.Screen name='Login' component={HPLogin} options={SMOOTH_ANIMATION} />
           <RootStack.Screen name='OTP' component={OTP} options={SMOOTH_ANIMATION} />
+          <RootStack.Screen name='Departments' component={Departments} options={SMOOTH_ANIMATION} />
           <RootStack.Screen name='BookAppointment' component={BookAppointment} options={SMOOTH_ANIMATION} />
           <RootStack.Screen name='PatientInfo' component={PatientInfo} options={SMOOTH_ANIMATION} />
           <RootStack.Screen
@@ -76,6 +78,7 @@ export type RootStackParamList = {
   Home: undefined
   Welcome: undefined
   Slide: undefined
+  Departments: undefined
   BookAppointment: {
     doctor: {
       id: string

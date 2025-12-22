@@ -53,7 +53,6 @@ function Header({ navigation }: NavProp) {
           <View className='flex-1 justify-between pt-5'>
             <Medium className='text text-4xl'>DocBooc</Medium>
             <View>
-              
               <View className='flex-row gap-2'>
                 <Regular className='text text-4xl opacity-50'>Find</Regular>
                 <Medium className='text text-4xl'>Your</Medium>
@@ -63,7 +62,6 @@ function Header({ navigation }: NavProp) {
                 <Regular className='text text-4xl opacity-50'>Doctor</Regular>
               </View>
             </View>
-            
           </View>
 
           <View className='gap-1.5 pt-2'>
@@ -110,7 +108,7 @@ const SearchDoctorByDept = () => {
     <View className='px-5 pb-5 pt-10'>
       <View className='flex-row items-center justify-between pb-5'>
         <SemiBold className='text text-base'>Search doctor by department</SemiBold>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Departments' as any)}>
           <Medium className='text-base text-blue-600'>See All</Medium>
         </TouchableOpacity>
       </View>

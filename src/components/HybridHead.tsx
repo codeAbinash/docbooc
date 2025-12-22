@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useState, useEffect } from 'react'
 import { View, TouchableOpacity } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import { useNavigation } from '@react-navigation/native'
@@ -19,6 +19,7 @@ type HybridHeadProps = {
   onSearchChange?: (query: string) => void
   onSearchToggle?: (isOpen: boolean) => void
   searchPlaceholder?: string
+  searchOpen?: boolean
   children?: React.ReactNode
   chipItems?: Array<{ id: number; name: string; icon: any }>
   selectedChipId?: number
@@ -43,6 +44,7 @@ export default function HybridHead({
   onSearchChange,
   onSearchToggle,
   searchPlaceholder = 'Search...',
+  searchOpen = false,
   children,
   chipItems,
   selectedChipId,
@@ -59,7 +61,7 @@ export default function HybridHead({
   const { colorScheme } = useColorScheme()
   const navigation = useNavigation()
   const [searchQuery, setSearchQuery] = useState('')
-  const [isSearchOpen, setIsSearchOpen] = useState(false)
+  const [isSearchOpen, setIsSearchOpen] = useState(searchOpen)
   const [showDoctorModal, setShowDoctorModal] = useState(false)
   const [currentDoctor, setCurrentDoctor] = useState(
     doctorInfo || {
@@ -68,6 +70,12 @@ export default function HybridHead({
       specialty: 'Cardiologist',
     },
   )
+
+  useEffect(() => {
+    if (searchOpen) {
+      setIsSearchOpen(true)
+    }
+  }, [searchOpen])
 
   const handleSearchChange = (text: string) => {
     setSearchQuery(text)
@@ -117,7 +125,7 @@ export default function HybridHead({
           />
         </View>
       ) : (
-        <View className=' flex-row items-center justify-between px-5 pb-4 dark:border-neutral-700'>
+        <View className='flex-row items-center justify-between px-5 pb-4 dark:border-neutral-700'>
           <View className='flex-row items-center gap-2'>
             {showBackButton && (
               <TouchableOpacity onPress={handleBackPress} className='rounded-md bg-neutral-100 p-2 dark:bg-neutral-800'>

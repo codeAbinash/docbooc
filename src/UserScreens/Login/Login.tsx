@@ -4,13 +4,15 @@ import PageCarousel from '@components/PageCarousel'
 import BottomSheet from '@components/BottomSheet'
 import { Bold, Medium, SemiBold } from '@utils/fonts'
 import { NavProp } from '@utils/types'
-import { useState, useMemo, useCallback } from 'react'
-import { View, TextInput, Text, KeyboardAvoidingView, Platform } from 'react-native'
+import { useState, useMemo, useCallback, useRef } from 'react'
+import { View, TextInput, Text, KeyboardAvoidingView, Platform, Keyboard, Pressable } from 'react-native'
 
 export default function Login({ navigation }: NavProp) {
   const [currentPage, setCurrentPage] = useState(0)
   const [countryCode, setCountryCode] = useState('+91')
   const [mobileNumber, setMobileNumber] = useState('')
+  const [validationError, setValidationError] = useState('')
+  const inputRef = useRef<TextInput>(null)
 
   // Memoize pages to prevent recreation on every render
   const pages = useMemo(
@@ -36,15 +38,26 @@ export default function Login({ navigation }: NavProp) {
     setCurrentPage(page)
   }, [])
 
-  const handleMobileNumberChange = useCallback((text: string) => {
-    // Only allow numbers
-    const cleaned = text.replace(/[^0-9]/g, '')
-    setMobileNumber(cleaned)
-  }, [])
-
   const handleGetOTP = useCallback(() => {
+    if (mobileNumber.length === 0) {
+      Keyboard.dismiss()
+      setTimeout(() => {
+        inputRef.current?.focus()
+      }, 200)
+      setValidationError('')
+      return
+    }
+    if (mobileNumber.length !== 10) {
+      setValidationError('Enter a valid number')
+      return
+    }
+    setValidationError('')
     navigation.navigate('OTP', { countryCode, mobileNumber })
   }, [countryCode, mobileNumber, navigation])
+
+  const handleSkip = useCallback(() => {
+    navigation.reset({ index: 0, routes: [{ name: 'Home' }] })
+  }, [navigation])
 
   return (
     <KeyboardAvoidingView
@@ -55,20 +68,34 @@ export default function Login({ navigation }: NavProp) {
       <View className='flex-1 bg-white dark:bg-black'>
         <PaddingTop />
 
-        <PageCarousel pages={pages} onPageChange={handlePageChange} showDots carouselHeightRatio={0.7} />
+        <PageCarousel
+          pages={pages}
+          onPageChange={handlePageChange}
+          showDots
+          carouselHeightRatio={0.7}
+          onSkip={handleSkip}
+        />
 
         <BottomSheet visible={true} onClose={() => {}} heightRatio={0.3}>
           <View className='px-6 py-4'>
-            <Bold className='pb-4 text-xl text-black dark:text-white'>Login or create a new account</Bold>
+            <SemiBold className='pb-4 text-xl text-black dark:text-white'>Login or create a new account</SemiBold>
 
-            <View className='flex-row gap-2 rounded-lg border border-gray-300 bg-white dark:border-gray-600 dark:bg-gray-900'>
+            <View
+              className='flex-row gap-2  border border-gray-300 bg-white dark:border-gray-600 dark:bg-gray-900'
+              style={validationError ? { borderColor: '#DC2626' } : {}}
+            >
               <View className='w-20 items-center justify-center px-3 py-3'>
                 <SemiBold className='text-xl text-black dark:text-white'>{countryCode}</SemiBold>
               </View>
               <View className='w-px bg-gray-300 dark:bg-gray-600' />
               <TextInput
+                ref={inputRef}
                 value={mobileNumber}
-                onChangeText={handleMobileNumberChange}
+                onChangeText={(text) => {
+                  const cleaned = text.replace(/[^0-9]/g, '')
+                  setMobileNumber(cleaned)
+                  if (validationError) setValidationError('')
+                }}
                 placeholder='Mobile number'
                 keyboardType='phone-pad'
                 maxLength={10}
@@ -77,9 +104,25 @@ export default function Login({ navigation }: NavProp) {
               />
             </View>
 
-            <Button title='Get OTP' className='pt-6' onPress={handleGetOTP} />
+            {validationError && <Medium className='pt-2 text-sm text-red-600'>{validationError}</Medium>}
+
+            <Button title='Get OTP' className='pt-6 rounded-xl' onPress={handleGetOTP} />
           </View>
+          <View className='gap-2 pb-8 pt-4'>
+                    <Medium className='text-center text-xs text-zinc-600 dark:text-zinc-400'>
+                      By 'logging in' I agree to the
+                    </Medium>
+                    <View className='flex-row justify-center gap-8'>
+                      <Pressable onPress={() => {}}>
+                        <Text className='font-semibold text-blue-600 underline'>Terms & Conditions</Text>
+                      </Pressable>
+                      <Pressable onPress={() => {}}>
+                        <Text className='font-semibold text-blue-600 underline'>Privacy Policy</Text>
+                      </Pressable>
+                    </View>
+                  </View>
         </BottomSheet>
+        
 
         <PaddingBottom />
       </View>
