@@ -106,11 +106,11 @@ export default function Login({ navigation }: NavProp) {
 
             <Button title='Get OTP' className='pt-6 rounded-xl' onPress={handleGetOTP} />
           </View>
-          <View className='gap-2 pb-8 pt-4'>
+          <View className=' gap-2 pb-8 pt-2'>
                     <Medium className='text-center text-xs text-zinc-600 dark:text-zinc-400'>
                       By 'logging in' I agree to the
                     </Medium>
-                    <View className='flex-row justify-center gap-8'>
+                    <View className=' flex-row items-center justify-center gap-8'>
                       <Pressable onPress={() => {}}>
                         <Text className='font-semibold text-blue-600 underline'>Terms & Conditions</Text>
                       </Pressable>

@@ -66,7 +66,9 @@ function Header({ navigation }: NavProp) {
           </View>
 
           <View className='gap-1.5 pt-2'>
-            <Press className='rounded-full bg-white p-4 dark:bg-zinc-900'>
+            <Press 
+            onPress={() => navigation.navigate('Login' as any)}
+            className='rounded-full bg-white p-4 dark:bg-zinc-900'>
               <NotificationSquareIcon color={scheme === 'dark' ? 'white' : 'black'} size={20} strokeWidth={1.7} />
             </Press>
             <Press className='rounded-full bg-white p-4 dark:bg-zinc-900'>
