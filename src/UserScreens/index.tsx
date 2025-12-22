@@ -44,7 +44,7 @@ const LIGHT_INACTIVE_COLOR = colors.zinc[600]
 const styles = StyleSheet.create({
   container: {
     borderTopWidth: 1,
-    borderTopColor: colors.neutral[200],
+    borderTopColor: colors.neutral[300],
   },
   containerDark: {
     borderTopWidth: 1,

@@ -33,7 +33,7 @@ const FamilyMemberSelectorScreen = ({ navigation }: NavProp) => {
     <View className='bg-white  flex-1'>
       <HybridHead title='Select Patient' showBackButton={true} onBackPress={() => navigation.goBack()} />
 
-      <View className='flex-1 border-t border-neutral-200'>
+      <View className='flex-1 border-t border-neutral-300'>
         <ScrollView className='flex-1' contentContainerClassName='px-5 py-4' showsVerticalScrollIndicator={false}>
           {/* Family Members List */}
           {mockFamilyMembers.map((member) => (

@@ -180,7 +180,7 @@ export default function HybridHead({
         </View>
       )}
       {chipItems && (
-        <View className='border-b border-neutral-200 bg-white pb-4 dark:bg-neutral-800'>
+        <View className=' bg-white pb-4 dark:bg-neutral-800'>
           <ScrollView
             ref={chipScrollRef}
             horizontal

@@ -89,7 +89,7 @@ const Doctors = ({ route }: any) => {
           </View>
         ) : (
           <FlatList
-            className='flex-1 pt-4'
+            className='border-t border-neutral-300 flex-1 pt-4'
             contentContainerClassName='px-5 pb-10'
             data={filteredDoctors}
             renderItem={({ item }) => (

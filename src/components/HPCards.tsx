@@ -117,8 +117,8 @@ function HPCardsInternal({
 
       {/* Address Section */}
       <View className='flex-1 gap-1 rounded-lg bg-neutral-100 p-3 dark:bg-amber-900/20'>
-        <Medium className='text-xs font-semibold text-blue-700 dark:text-blue-400'>Address</Medium>
-        <Medium className='text-xs text-blue-900 dark:text-amber-100' numberOfLines={2}>
+        <Medium className='text-xs font-semibold text-neutral-800 dark:text-blue-400'>Address</Medium>
+        <Medium className='text-sm text-neutral-800 dark:text-amber-100' numberOfLines={2}>
           {address}
         </Medium>
       </View>
