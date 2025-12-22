@@ -176,7 +176,7 @@ export default function Appointments() {
   return (
     <View className='flex-1 bg-white dark:bg-neutral-900'>
       <HybridHead title='My Appointments' showBackButton={true} />
-      <View className='flex-row gap-2 border-b border-neutral-300 bg-white px-5 pb-4 dark:bg-neutral-900'>
+      <View className='flex-row gap-2 border-b border-neutral-300 bg-white px-5 py-4 dark:bg-neutral-900'>
         {tabLabels.map((label, index) => {
           const isActive = activeTab === index
 

@@ -34,15 +34,15 @@ export const Search = ({
   return (
     <View>
       {showSearch ? (
-        <View className='flex-row items-center gap-1 pb-4'>
-          <View className=' flex-1 flex-row items-center gap-1  px-2 py-2  dark:border-neutral-700 dark:bg-neutral-800'>
-            <Search01Icon
+        <View className=' flex-row items-center '>
+          <View className=' flex-1 flex-row items-center   px-2 py-1 dark:border-neutral-700 dark:bg-neutral-800'>
+            {/* <Search01Icon
               size={24}
               color={colorScheme === 'dark' ? Colors.text.dark : Colors.text.DEFAULT}
               strokeWidth={2}
-            />
+            /> */}
             <TextInput
-              className='flex-1 text-lg text-neutral-900 dark:text-white'
+              className='flex-1  text-xl text-neutral-900 dark:text-white'
               style={{ paddingVertical: 0 }}
               placeholder={placeholder}
               placeholderTextColor={colorScheme === 'dark' ? '#9ca3af' : '#6b7280'}
@@ -53,13 +53,13 @@ export const Search = ({
           </View>
           <TouchableOpacity
             onPress={toggleSearch}
-            className='rounded-lg  bg-neutral-100 p-2 dark:bg-neutral-800'
+            className='rounded-lg  bg p-1 dark:bg-neutral-800'
           >
-            <Cancel01Icon size={26} color={Colors.accent} strokeWidth={2} />
+            <Cancel01Icon size={28} color={Colors.accent} strokeWidth={2} />
           </TouchableOpacity>
         </View>
       ) : (
-        <TouchableOpacity onPress={toggleSearch} className=' rounded-lg p-2 dark:bg-neutral-800'>
+        <TouchableOpacity onPress={toggleSearch} className=' rounded-lg p-1 dark:bg-neutral-800'>
           <Search01Icon
             size={26}
             color={colorScheme === 'dark' ? Colors.text.dark : Colors.text.DEFAULT}

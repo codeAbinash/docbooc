@@ -61,15 +61,15 @@ export default function AppointmentDetails() {
   }
 
   return (
-    <View className='bg flex-1'>
+    <View className='bg-white flex-1'>
       <HybridHead title='Appointment Details' showBackButton={true} onBackPress={() => navigation.goBack()} />
 
       <ScrollView className='flex-1' contentContainerClassName='pb-6' showsVerticalScrollIndicator={false}>
-        <View className='gap-4 px-5 pt-2'>
+        <View className='gap-4 px-5 pt-4'>
           {/* Appointment Details Card */}
-          <View className='overflow-hidden rounded-lg border border-neutral-200 bg-white dark:border-neutral-700 dark:bg-zinc-900'>
+          <View className='overflow-hidden rounded-3xl border border-neutral-300 bg-white dark:border-neutral-700 dark:bg-zinc-900'>
             {/* Header with Icon */}
-            <View className='border-b border-neutral-200 px-4 py-3 dark:border-neutral-700'>
+            <View className='border-b border-neutral-300 px-4 py-3 dark:border-neutral-700'>
               <View className='flex-row items-center justify-between'>
                 <View className='flex-row items-center gap-3'>
                   <View className='rounded-md bg-blue-100/50 p-2 dark:bg-blue-900/20'>
@@ -194,7 +194,7 @@ export default function AppointmentDetails() {
 
           {/* Verification Code Card - Only for Provisional */}
           {status === 'provisional' && (
-            <View className='overflow-hidden rounded-2xl border-2 border-blue-600 bg-white dark:border-blue-400 dark:bg-zinc-900'>
+            <View className='overflow-hidden rounded-3xl border-2 border-blue-600 bg-white dark:border-blue-400 dark:bg-zinc-900'>
               <View className='flex-row items-center gap-4 bg-blue-50 p-4 dark:bg-blue-900/20'>
                 <View className='flex-1 gap-1'>
                   <Medium className='text-xs font-semibold text-neutral-600 dark:text-neutral-400'>
@@ -202,7 +202,7 @@ export default function AppointmentDetails() {
                   </Medium>
                   <SemiBold className='text-3xl text-blue-600 dark:text-blue-400'>1234</SemiBold>
                 </View>
-                <View className='items-center gap-1 rounded-lg bg-blue-600 p-3 dark:bg-blue-700'>
+                <View className='items-center gap-1 rounded-xl bg-blue-600 p-3 dark:bg-blue-700'>
                   <Medium className='text-xs text-blue-100'>Show at</Medium>
                   <SemiBold className='text-xs text-white'>Reception</SemiBold>
                 </View>
@@ -211,7 +211,7 @@ export default function AppointmentDetails() {
           )}
 
           {/* Payment Card */}
-          <View className='overflow-hidden rounded-lg border border-neutral-200 bg-white dark:border-neutral-700 dark:bg-zinc-900'>
+          <View className='overflow-hidden rounded-3xl border border-neutral-300 bg-white dark:border-neutral-700 dark:bg-zinc-900'>
             {/* Header with Icon */}
             <View className='border-b border-neutral-200 px-4 py-3 dark:border-neutral-700'>
               <View className='flex-row items-center gap-3'>
@@ -250,7 +250,7 @@ export default function AppointmentDetails() {
           </View>
 
           {/* Important Notes */}
-          <View className='overflow-hidden rounded-lg border border-neutral-200 bg-white dark:border-neutral-700 dark:bg-zinc-900'>
+          <View className='overflow-hidden rounded-3xl border border-neutral-300 bg-white dark:border-neutral-700 dark:bg-zinc-900'>
             {/* Header with Icon */}
             <View className='border-b border-neutral-200 px-4 py-3 dark:border-neutral-700'>
               <View className='flex-row items-center gap-3'>

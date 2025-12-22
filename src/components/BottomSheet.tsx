@@ -29,8 +29,8 @@ export default function BottomSheet({
   return (
     
       <View className='flex-1 justify-end bg-black/50'>
-        <TouchableOpacity activeOpacity={1} className='flex-1' onPress={onClose} />
-        <View style={{ height: sheetHeight, backgroundColor }} className='shadow-lg'>
+        <TouchableOpacity activeOpacity={1} className=' flex-1' onPress={onClose} />
+        <View style={{ height: sheetHeight, backgroundColor }} className='border-t border-neutral-300  dark:border-zinc-700'>
           {showHandle && (
             <View className='items-center py-2'>
               <View className='h-1 w-12 rounded-full bg-gray-300' />

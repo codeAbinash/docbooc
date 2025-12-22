@@ -22,12 +22,12 @@ const Chip = memo(({ label, icon: IconComponent, isActive = false, onPress, vari
     () => ({
       bgStyle:
         variant === 'deepAccent'
-          ? 'bg-accent'
+          ? 'bg-accent '
           : variant === 'transparentAccent'
-            ? 'bg-accent/10'
+            ? 'bg-accent/10 '
             : isActive
-              ? 'bg-accent/15'
-              : 'bg-white dark:bg-neutral-900',
+              ? 'bg-accent/15 '
+              : 'bg-white  dark:bg-neutral-900',
       color:
         variant === 'deepAccent'
           ? Colors.text.dark
@@ -38,10 +38,10 @@ const Chip = memo(({ label, icon: IconComponent, isActive = false, onPress, vari
     [variant, isActive, dark],
   )
 
-  const TextComponent = isHighlighted ? SemiBold : Medium
+  const TextComponent = isHighlighted ? Medium : Medium
 
   return (
-    <TouchableOpacity onPress={onPress} className={`flex-row items-end justify-start gap-2 rounded-md px-5 py-4 ${bgStyle}`}>
+    <TouchableOpacity onPress={onPress} className={`flex-row items-end justify-start gap-2 rounded-full  px-5 py-3 ${bgStyle}`}>
       <IconComponent color={color} size={20} strokeWidth={2} />
       <TextComponent style={{ color }}>{label}</TextComponent>
     </TouchableOpacity>

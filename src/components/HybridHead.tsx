@@ -7,7 +7,7 @@ import UserSwitchIcon from '@hugeicons/UserSwitchIcon'
 import ArrowLeft01Icon from '@hugeicons/ArrowLeft01Icon'
 import Colors from '@utils/colors'
 import { useColorScheme } from 'nativewind'
-import { SemiBold, Medium, Regular } from '@utils/fonts'
+import { SemiBold, Medium, Regular, Bold } from '@utils/fonts'
 import { PaddingTop } from '@components/SafePadding'
 import Chip from '@components/Chip'
 import Search from '@components/Search'
@@ -115,7 +115,7 @@ export default function HybridHead({
     <View className='bg-white  dark:bg-neutral-800'>
       <PaddingTop />
       {isSearchOpen ? (
-        <View className='px-6'>
+        <View className='px-5'>
           <Search
             placeholder={searchPlaceholder}
             value={searchQuery}
@@ -125,12 +125,12 @@ export default function HybridHead({
           />
         </View>
       ) : (
-        <View className='flex-row items-center justify-between px-5 pb-4 dark:border-neutral-700'>
+        <View className=' flex-row items-center justify-between pl-3 pr-5 dark:border-neutral-700'>
           <View className='flex-row items-center gap-2'>
             {showBackButton && (
-              <TouchableOpacity onPress={handleBackPress} className='rounded-md bg-neutral-100 p-2 dark:bg-neutral-800'>
+              <TouchableOpacity onPress={handleBackPress} className=' dark:bg-neutral-800'>
                 <ArrowLeft01Icon
-                  size={26}
+                  size={30}
                   color={colorScheme === 'dark' ? Colors.text.dark : Colors.text.DEFAULT}
                   strokeWidth={2}
                 />
@@ -161,8 +161,8 @@ export default function HybridHead({
             </View>
           ) : (
             <>
-              <View className='flex-1  items-start justify-center py-2 pl-3'>
-                {typeof title === 'string' ? <Medium className='text-lg'>{title}</Medium> : title}
+              <View className=' flex-1  items-start justify-center py-1   pl-1'>
+                {typeof title === 'string' ? <Medium className='text-2xl'>{title}</Medium> : title}
               </View>
               <View className='flex-row items-center gap-2'>
                 {showSearch && (
@@ -180,7 +180,7 @@ export default function HybridHead({
         </View>
       )}
       {chipItems && (
-        <View className=' bg-white pb-4 dark:bg-neutral-800'>
+        <View className=' bg-white py-3  dark:bg-neutral-800'>
           <ScrollView
             ref={chipScrollRef}
             horizontal

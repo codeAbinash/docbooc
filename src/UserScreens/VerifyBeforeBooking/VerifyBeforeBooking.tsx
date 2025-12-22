@@ -57,17 +57,17 @@ const VerifyBeforeBooking = () => {
     <View className='bg flex-1'>
       <HybridHead title='Review Appointment' showBackButton={true} onBackPress={() => navigation.goBack()} />
 
-      <ScrollView className='flex-1 bg-white border-t border-neutral-300' contentContainerClassName='pb-6' showsVerticalScrollIndicator={false}>
+      <ScrollView className='flex-1 bg-white ' contentContainerClassName='pb-6' showsVerticalScrollIndicator={false}>
         <View className='gap-4 px-5 pt-4'>
           {/* Appointment Details Card */}
-          <View className='overflow-hidden rounded-lg border border-neutral-300 bg-white dark:border-neutral-700 dark:bg-zinc-900'>
+          <View className='overflow-hidden rounded-3xl border border-neutral-300 bg-white dark:border-neutral-700 dark:bg-zinc-900'>
             {/* Header with Icon */}
             <View className='border-b border-neutral-300 px-4 py-3 dark:border-neutral-700'>
               <View className='flex-row items-center gap-3'>
                 <View className='rounded-md bg-blue-100/50 p-2 dark:bg-blue-900/20'>
                   <Calendar01Icon size={20} color='#3b82f6' strokeWidth={2} />
                 </View>
-                <SemiBold className='text-base text-neutral-900 dark:text-white'>Appointment Details</SemiBold>
+                <SemiBold className='text-lg text-neutral-900 dark:text-white'>Appointment Details</SemiBold>
               </View>
             </View>
 
@@ -151,14 +151,14 @@ const VerifyBeforeBooking = () => {
           </View>
 
           {/* Payment Card */}
-          <View className='overflow-hidden rounded-lg border border-neutral-300 bg-white dark:border-neutral-700 dark:bg-zinc-900'>
+          <View className='overflow-hidden rounded-3xl border border-neutral-300 bg-white dark:border-neutral-700 dark:bg-zinc-900'>
             {/* Header with Icon */}
             <View className='border-b border-neutral-300 px-4 py-3 dark:border-neutral-700'>
               <View className='flex-row items-center gap-3'>
                 <View className='rounded-md bg-green-100/50 p-2 dark:bg-green-900/20'>
                   <Calendar01Icon size={20} color='#16a34a' strokeWidth={2} />
                 </View>
-                <SemiBold className='text-base text-neutral-900 dark:text-white'>Payment Summary</SemiBold>
+                <SemiBold className='text-lg text-neutral-900 dark:text-white'>Payment Summary</SemiBold>
               </View>
             </View>
 
@@ -190,14 +190,14 @@ const VerifyBeforeBooking = () => {
           </View>
 
           {/* Important Notes */}
-          <View className='overflow-hidden rounded-lg border border-neutral-300 bg-white dark:border-neutral-700 dark:bg-zinc-900'>
+          <View className='overflow-hidden rounded-3xl border border-neutral-300 bg-white dark:border-neutral-700 dark:bg-zinc-900'>
             {/* Header with Icon */}
             <View className='border-b border-neutral-300 px-4 py-3 dark:border-neutral-700'>
               <View className='flex-row items-center gap-3'>
                 <View className='rounded-md bg-blue-100/50 p-2 dark:bg-blue-900/20'>
                   <Calendar01Icon size={20} color='#3b82f6' strokeWidth={2} />
                 </View>
-                <SemiBold className='text-base text-neutral-900 dark:text-white'>DocBooc Commitment</SemiBold>
+                <SemiBold className='text-lg text-neutral-900 dark:text-white'>Important notes</SemiBold>
               </View>
             </View>
 

@@ -8,6 +8,8 @@ import Animated, {
   Extrapolate,
   runOnJS,
 } from 'react-native-reanimated'
+import { Lottie } from './Lottie'
+import Animations from '@assets/animations/animations'
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
 
@@ -18,6 +20,7 @@ type PageCarouselProps = {
   onSkip?: () => void
   carouselHeight?: number
   carouselHeightRatio?: number
+  showAnimations?: boolean
 }
 
 // Memoized Dot component to prevent unnecessary re-renders
@@ -49,10 +52,17 @@ function PageCarousel({
   onSkip,
   carouselHeight,
   carouselHeightRatio = 0.5,
+  showAnimations = true,
 }: PageCarouselProps) {
   const scrollX = useSharedValue(0)
   const [currentPage, setCurrentPage] = React.useState(0)
   const sheetHeight = carouselHeight ?? SCREEN_HEIGHT * carouselHeightRatio
+
+  const animationArray = [
+    { animation: Animations.motorcycle, name: 'motorcycle' },
+    { animation: Animations.motorcycle, name: 'motorcycle' },
+    { animation: Animations.motorcycle, name: 'motorcycle' },
+  ]
 
   const handlePageChange = useCallback(
     (pageIndex: number) => {
@@ -82,11 +92,23 @@ function PageCarousel({
         showsHorizontalScrollIndicator={false}
         decelerationRate='fast'
       >
-        {pages.map((page, index) => (
-          <View key={index} style={[styles.page, { height: sheetHeight, width: SCREEN_WIDTH }]}>
-            {page}
-          </View>
-        ))}
+        {showAnimations && animationArray.length > 0
+          ? animationArray.map((item, index) => (
+              <View key={index} style={[styles.page, { height: sheetHeight, width: SCREEN_WIDTH }]}>
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                  <Lottie
+                    source={item.animation}
+                    loop
+                    style={{ width: SCREEN_WIDTH * 0.8, height: sheetHeight * 0.7 }}
+                  />
+                </View>
+              </View>
+            ))
+          : pages.map((page, index) => (
+              <View key={index} style={[styles.page, { height: sheetHeight, width: SCREEN_WIDTH }]}>
+                {page}
+              </View>
+            ))}
       </Animated.ScrollView>
 
       {/* {showDots && (

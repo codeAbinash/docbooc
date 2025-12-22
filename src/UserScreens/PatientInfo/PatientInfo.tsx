@@ -5,7 +5,7 @@ import BottomSheetCustom from '@components/BottomSheetCustom'
 import { PaddingBottom } from '@components/SafePadding'
 import { useNavigation } from '@react-navigation/native'
 import RadioGenderSelector, { Gender } from '@/UserScreens/PatientInfo/RadioGenderSelector'
-import { Medium, SemiBold } from '@utils/fonts'
+import { Bold, Medium, SemiBold } from '@utils/fonts'
 import { StackNav } from '@utils/types'
 import { useState } from 'react'
 import { useRef } from 'react'
@@ -90,9 +90,11 @@ const PatientInfo = ({}: {}) => {
     <View className='flex-1  bg-white dark:bg-neutral-900'>
       <HybridHead title='Patient Information' showBackButton onBackPress={() => navigation.goBack()} />
 
-      <ScrollView showsVerticalScrollIndicator={false} className='flex-1 border-t border-neutral-200'>
+      <ScrollView showsVerticalScrollIndicator={false} className='flex-1 '>
+
+        
         {/* Form Section */}
-        <View className='gap-4 px-5 py-6'>
+        <View className='gap-4 px-6 py-5'>
           {/* Full Name (Required) */}
           <View>
             <Medium className='mb-2 text-sm text-neutral-700 dark:text-neutral-300'>Full Name (Required) *</Medium>

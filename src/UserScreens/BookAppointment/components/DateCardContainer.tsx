@@ -2,7 +2,7 @@ import ArrowRightDoubleIcon from '@assets/icons/hugeicons/ArrowRightDoubleIcon'
 import Calendar01Icon from '@assets/icons/hugeicons/Calendar01Icon'
 import { Medium, SemiBold } from '@utils/fonts'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { FlatList, TouchableOpacity, View, Modal, ScrollView, Animated, Easing } from 'react-native'
+import { FlatList, TouchableOpacity, View } from 'react-native'
 
 const monthNames = [
   'January',
@@ -25,7 +25,7 @@ const getDateInfo = (index: number) => {
   date.setDate(date.getDate() + index)
   return {
     date: date.getDate().toString().padStart(2, '0'),
-    day: dayNames[date.getDay()],
+    day: dayNames[date.getDay()] as string,
     month: date.getMonth(),
     year: date.getFullYear(),
   }
@@ -38,11 +38,7 @@ interface DateCardContainerProps {
 export function DateCardContainer({ onDateChange }: DateCardContainerProps) {
   const [currentIndex, setCurrentIndex] = useState(1)
   const [containerWidth, setContainerWidth] = useState(0)
-  const [showMonthDropdown, setShowMonthDropdown] = useState(false)
-  const [showYearDropdown, setShowYearDropdown] = useState(false)
   const flatListRef = useRef<FlatList>(null)
-  const slideAnim = useRef(new Animated.Value(400)).current
-  const yearSlideAnim = useRef(new Animated.Value(400)).current
 
   const currentYear = new Date().getFullYear()
   const upcomingYears = [currentYear, currentYear + 1]
@@ -59,42 +55,6 @@ export function DateCardContainer({ onDateChange }: DateCardContainerProps) {
       }
     }
   }, [currentIndex])
-
-  useEffect(() => {
-    if (showMonthDropdown) {
-      Animated.timing(slideAnim, {
-        toValue: 0,
-        duration: 400,
-        easing: Easing.out(Easing.cubic),
-        useNativeDriver: true,
-      }).start()
-    } else {
-      Animated.timing(slideAnim, {
-        toValue: 400,
-        duration: 300,
-        easing: Easing.in(Easing.cubic),
-        useNativeDriver: true,
-      }).start()
-    }
-  }, [showMonthDropdown])
-
-  useEffect(() => {
-    if (showYearDropdown) {
-      Animated.timing(yearSlideAnim, {
-        toValue: 0,
-        duration: 400,
-        easing: Easing.out(Easing.cubic),
-        useNativeDriver: true,
-      }).start()
-    } else {
-      Animated.timing(yearSlideAnim, {
-        toValue: 400,
-        duration: 300,
-        easing: Easing.in(Easing.cubic),
-        useNativeDriver: true,
-      }).start()
-    }
-  }, [showYearDropdown])
 
   const handleScroll = useCallback(
     (event: any) => {
@@ -125,18 +85,21 @@ export function DateCardContainer({ onDateChange }: DateCardContainerProps) {
       return (
         <View style={{ width: containerWidth }} className='items-center justify-center'>
           <View className='gap-2'>
-            <Medium
-              className='text-center text-sm text-neutral-600 dark:text-neutral-400'
-              style={{ opacity: isActive ? 1 : 0.4 }}
-            >
-              {dateInfo.day}
-            </Medium>
+
+            
+            
             <SemiBold
-              className='text-center text-5xl text-neutral-900 dark:text-white'
+              className=' text-center text-4xl text-neutral-900 dark:text-white'
               style={{ opacity: isActive ? 1 : 0.3 }}
             >
               {dateInfo.date}
             </SemiBold>
+            <Medium
+              className='text-center text-sm text-neutral-600 dark:text-neutral-400'
+              style={{ opacity: isActive ? 1 : 0.4 }}
+            >
+              {monthNames[dateInfo.month]}
+            </Medium>
           </View>
         </View>
       )
@@ -153,262 +116,88 @@ export function DateCardContainer({ onDateChange }: DateCardContainerProps) {
     [containerWidth],
   )
 
+  // <SemiBold className='text-base text-neutral-900 dark:text-white'>{formatDateDisplay(currentDate)}</SemiBold>
+
   const currentDate = getDateInfo(currentIndex)
 
-  const isMonthDisabled = (monthIndex: number): boolean => {
-    const today = new Date()
-    const currentMonth = today.getMonth()
-    const currentYear = today.getFullYear()
-    const selectedYear = currentDate.year
-
-    // If year is in the past, disable all months
-    if (selectedYear < currentYear) return true
-
-    // If year is current, disable past months
-    if (selectedYear === currentYear && monthIndex < currentMonth) return true
-
-    return false
-  }
-
-  const handleMonthSelect = (monthIndex: number) => {
-    const currentDateInfo = getDateInfo(currentIndex)
-    const currentDateObj = new Date(currentDateInfo.year, currentDateInfo.month, parseInt(currentDateInfo.date))
-    const targetDate = new Date(currentDateObj.getFullYear(), monthIndex, 1)
-
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
-
-    const diffTime = targetDate.getTime() - today.getTime()
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-
-    if (diffDays >= 0 && diffDays < 365) {
-      scrollToIndex(diffDays - currentIndex)
-    }
-
-    setShowMonthDropdown(false)
-  }
-
-  const handleYearSelect = (year: number) => {
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
-
-    const currentYear = today.getFullYear()
-    const currentMonth = today.getMonth()
-    const currentDay = today.getDate()
-
-    // If selecting current year, use current month. Otherwise, use January (month 0)
-    const targetMonth = year === currentYear ? currentMonth : 0
-
-    // If selecting current year and current month, use tomorrow or today. Otherwise, use 1st of the month
-    let targetDay = 1
-    if (year === currentYear && targetMonth === currentMonth) {
-      targetDay = currentDay + 1 // Next day to ensure it's in the future
-    }
-
-    const targetDate = new Date(year, targetMonth, targetDay)
-
-    // Recalculate diff to ensure it's valid
-    const diffTime = targetDate.getTime() - today.getTime()
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-
-    if (diffDays >= 0 && diffDays < 730) {
-      scrollToIndex(diffDays - currentIndex)
-    }
-
-    setShowYearDropdown(false)
+  const formatDateDisplay = (dateInfo: typeof currentDate) => {
+    const dayShort = dateInfo.day.slice(0, 3)
+    const monthShort = (monthNames[dateInfo.month] ?? 'Jan').slice(0, 3)
+    return `${dayShort}, ${dateInfo.date} ${monthShort}`
   }
 
   return (
-    <View className='border-b border-neutral-300 px-5'>
-      {/* Date Picker Card */}
-      <View className=''>
-        {/* Header Section */}
-        <View className=' gap-3 px-2 pb-2'>
-          
+    <View className='border-b border-neutral-300 px-5 pt-4 pb-2 dark:border-neutral-600'>
+      {/* Date Header */}
+      {/* <View className='mb-4 flex-row items-center gap-2'>
+        <Calendar01Icon size={24} color='#9ca3af' strokeWidth={2} />
+        <SemiBold className='text-base text-neutral-900 dark:text-white'>{formatDateDisplay(currentDate)}</SemiBold>
+      </View> */}
 
-          {/* Date Carousel */}
-          <View className=' flex-row items-center justify-between'>
-            <TouchableOpacity onPress={() => scrollToIndex(-1)} className='rounded-lg p-2'>
-              <ArrowRightDoubleIcon
-                size={18}
-                color='#3b82f6'
-                strokeWidth={2.5}
-                style={{ transform: [{ rotateY: '180deg' }] }}
-              />
-            </TouchableOpacity>
-            <View className='flex-1' onLayout={(e) => setContainerWidth(e.nativeEvent.layout.width)}>
-              {containerWidth > 0 && (
-                <FlatList
-                  ref={flatListRef}
-                  data={Array.from({ length: 365 }, (_, i) => i)}
-                  renderItem={renderItem}
-                  keyExtractor={(item) => item.toString()}
-                  horizontal
-                  pagingEnabled
-                  showsHorizontalScrollIndicator={false}
-                  onScroll={handleScroll}
-                  scrollEventThrottle={16}
-                  decelerationRate={0.7}
-                  getItemLayout={getItemLayout}
-                  initialNumToRender={3}
-                  maxToRenderPerBatch={5}
-                  windowSize={5}
-                  removeClippedSubviews={true}
-                  initialScrollIndex={1}
-                  onScrollToIndexFailed={() => {}}
-                />
-              )}
-            </View>
-            <TouchableOpacity onPress={() => scrollToIndex(1)} className='rounded-lg p-2'>
-              <ArrowRightDoubleIcon size={18} color='#3b82f6' strokeWidth={2.5} />
-            </TouchableOpacity>
-          </View>
+      {/* Date Carousel and Quick Select Buttons in One Row */}
+      <View className='flex-row items-center gap-3'>
+        {/* Left Arrow */}
+        <TouchableOpacity onPress={() => scrollToIndex(-1)} className='rounded-lg p-2'>
+          <ArrowRightDoubleIcon
+            size={18}
+            color='#3b82f6'
+            strokeWidth={2.5}
+            style={{ transform: [{ rotateY: '180deg' }] }}
+          />
+        </TouchableOpacity>
+
+        {/* Carousel */}
+        <View className='flex-1' onLayout={(e) => setContainerWidth(e.nativeEvent.layout.width)}>
+          {containerWidth > 0 && (
+            <FlatList
+              ref={flatListRef}
+              
+              data={Array.from({ length: 90 }, (_, i) => i)}
+              renderItem={renderItem}
+              keyExtractor={(item) => item.toString()}
+              horizontal
+              pagingEnabled
+              showsHorizontalScrollIndicator={false}
+              onScroll={handleScroll}
+              scrollEventThrottle={16}
+              decelerationRate={0.7}
+              getItemLayout={getItemLayout}
+              initialNumToRender={3}
+              maxToRenderPerBatch={5}
+              windowSize={5}
+              removeClippedSubviews={true}
+              initialScrollIndex={1}
+              onScrollToIndexFailed={() => {}}
+            />
+          )}
         </View>
 
-        {/* Info Grid - Day, Month and Year in one row */}
-        <View className=' flex-row gap-3 px-1 pb-4'>
-          {/* <TouchableOpacity
-            className='flex-1 gap-1 rounded-lg bg-neutral-50 p-3 dark:bg-neutral-700'
-            activeOpacity={0.7}
-            disabled
-          >
-            <Medium className='text-xs font-semibold text-neutral-700 dark:text-neutral-400'>Day</Medium>
-            <SemiBold className='text-sm text-neutral-900 dark:text-neutral-200'>
-              {currentDate && currentDate.day}
-            </SemiBold>
-          </TouchableOpacity> */}
+        {/* Right Arrow */}
+        <TouchableOpacity onPress={() => scrollToIndex(1)} className='rounded-lg p-2'>
+          <ArrowRightDoubleIcon size={18} color='#3b82f6' strokeWidth={2.5} />
+        </TouchableOpacity>
 
+        {/* Quick Select Buttons */}
+        <View className='flex-row gap-2'>
           <TouchableOpacity
-            onPress={() => setShowMonthDropdown(true)}
-            className='flex-1 gap-1 rounded-lg bg-blue-50 p-3 dark:bg-blue-900/20'
-            activeOpacity={0.7}
+            onPress={() => scrollToIndex(0 - currentIndex)}
+            className='rounded-lg border border-neutral-300 px-3 py-2 dark:border-neutral-600'
           >
-            <Medium className='text-xs font-semibold text-blue-700 dark:text-blue-400'>Month</Medium>
-            <SemiBold className='text-sm text-blue-900 dark:text-blue-200'>
-              {currentDate && monthNames[currentDate.month]?.slice(0, 3)}
-            </SemiBold>
+            <Medium className='text-xs text-neutral-700 dark:text-neutral-300'>Today</Medium>
           </TouchableOpacity>
-
           <TouchableOpacity
-            onPress={() => setShowYearDropdown(true)}
-            className='flex-1 gap-1 rounded-lg bg-emerald-50 p-3 dark:bg-emerald-900/20'
-            activeOpacity={0.7}
+            onPress={() => scrollToIndex(1 - currentIndex)}
+            className='rounded-lg border border-neutral-300 px-3 py-2 dark:border-neutral-600'
           >
-            <Medium className='text-xs font-semibold text-emerald-700 dark:text-emerald-400'>Year</Medium>
-            <SemiBold className='text-sm text-emerald-900 dark:text-emerald-200'>{currentDate.year}</SemiBold>
+            <Medium className='text-xs text-neutral-700 dark:text-neutral-300'>Tomorrow</Medium>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => scrollToIndex(2 - currentIndex)}
+            className='rounded-lg border border-neutral-300 px-3 py-2 dark:border-neutral-600'
+          >
+            <Medium className='text-xs text-neutral-700 dark:text-neutral-300'>Day After</Medium>
           </TouchableOpacity>
         </View>
-
-        {/* Modals */}
-        <Modal
-          visible={showMonthDropdown}
-          transparent
-          animationType='none'
-          onRequestClose={() => setShowMonthDropdown(false)}
-        >
-          <TouchableOpacity
-            activeOpacity={1}
-            onPress={() => setShowMonthDropdown(false)}
-            className='flex-1 justify-end bg-black/50'
-          >
-            <Animated.View
-              style={{
-                transform: [{ translateY: slideAnim }],
-              }}
-              className='gap-5 rounded-t-3xl bg-white p-6 dark:bg-neutral-800'
-            >
-              <View className='items-center gap-2'>
-                <View className='h-1.5 w-12 rounded-full bg-neutral-300 dark:bg-neutral-600' />
-                <SemiBold className='text-2xl text-neutral-900 dark:text-white'>Select Month</SemiBold>
-              </View>
-
-              <View className='flex-row flex-wrap gap-2'>
-                {monthNames.map((month, index) => {
-                  const disabled = isMonthDisabled(index)
-                  return (
-                    <TouchableOpacity
-                      key={index}
-                      onPress={() => {
-                        if (!disabled) handleMonthSelect(index)
-                      }}
-                      disabled={disabled}
-                      className={`min-w-20 flex-1 overflow-hidden rounded-lg py-3 ${
-                        disabled
-                          ? 'bg-neutral-200 dark:bg-neutral-600'
-                          : currentDate.month === index
-                            ? 'bg-blue-500 dark:bg-blue-600'
-                            : 'bg-neutral-100 dark:bg-neutral-700'
-                      }`}
-                    >
-                      <SemiBold
-                        className={`text-center text-xs font-bold ${
-                          disabled
-                            ? 'text-neutral-400 dark:text-neutral-500'
-                            : currentDate.month === index
-                              ? 'text-white dark:text-white'
-                              : 'text-neutral-600 dark:text-neutral-400'
-                        }`}
-                      >
-                        {month.slice(0, 3).toUpperCase()}
-                      </SemiBold>
-                    </TouchableOpacity>
-                  )
-                })}
-              </View>
-            </Animated.View>
-          </TouchableOpacity>
-        </Modal>
-
-        <Modal
-          visible={showYearDropdown}
-          transparent
-          animationType='none'
-          onRequestClose={() => setShowYearDropdown(false)}
-        >
-          <TouchableOpacity
-            activeOpacity={1}
-            onPress={() => setShowYearDropdown(false)}
-            className='flex-1 justify-end bg-black/50'
-          >
-            <Animated.View
-              style={{
-                transform: [{ translateY: yearSlideAnim }],
-              }}
-              className='gap-5 rounded-t-3xl bg-white p-6 dark:bg-neutral-800'
-            >
-              <View className='items-center gap-2'>
-                <View className='h-1.5 w-12 rounded-full bg-neutral-300 dark:bg-neutral-600' />
-                <SemiBold className='text-2xl text-neutral-900 dark:text-white'>Select Year</SemiBold>
-              </View>
-
-              <View className='flex-row gap-2'>
-                {upcomingYears.map((year) => (
-                  <TouchableOpacity
-                    key={year}
-                    onPress={() => {
-                      handleYearSelect(year)
-                    }}
-                    className={`flex-1 overflow-hidden rounded-lg py-3 ${
-                      currentDate.year === year
-                        ? 'bg-emerald-500 dark:bg-emerald-600'
-                        : 'bg-neutral-100 dark:bg-neutral-700'
-                    }`}
-                  >
-                    <SemiBold
-                      className={`text-center text-sm font-bold ${
-                        currentDate.year === year
-                          ? 'text-white dark:text-white'
-                          : 'text-neutral-600 dark:text-neutral-400'
-                      }`}
-                    >
-                      {year}
-                    </SemiBold>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            </Animated.View>
-          </TouchableOpacity>
-        </Modal>
       </View>
     </View>
   )

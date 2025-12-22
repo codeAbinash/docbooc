@@ -33,7 +33,7 @@ const FamilyMemberSelectorScreen = ({ navigation }: NavProp) => {
     <View className='bg-white  flex-1'>
       <HybridHead title='Select Patient' showBackButton={true} onBackPress={() => navigation.goBack()} />
 
-      <View className='flex-1 border-t border-neutral-300'>
+      <View className='flex-1 '>
         <ScrollView className='flex-1' contentContainerClassName='px-5 py-4' showsVerticalScrollIndicator={false}>
           {/* Family Members List */}
           {mockFamilyMembers.map((member) => (
@@ -47,8 +47,8 @@ const FamilyMemberSelectorScreen = ({ navigation }: NavProp) => {
 
           {/* Add New Member Button */}
           <Press onPress={handleAddMember} activeScale={0.98} className='mb-4'>
-            <View className='card flex-row items-center justify-start rounded-xl border-2 border-dashed border-accent/70 p-4'>
-              <View className='rounded-lg bg-accent/10 p-4'>
+            <View className='bg-accent/10  flex-row items-center justify-start rounded-3xl border-2 border-dashed border-accent/70 p-4'>
+              <View className='rounded-2xl bg-white p-5'>
                 <PlusSignIcon size={20} color='#3b82f6' variant='stroke-rounded' />
               </View>
               <Medium className='ml-3 text-base text-accent'>Add New Patient</Medium>

@@ -82,14 +82,14 @@ const Doctors = ({ route }: any) => {
         searchOpen={isSearchOpen}
       />
 
-      <View className='flex-1 bg-white dark:bg-neutral-900'>
+      <View className='flex-1  bg-white dark:bg-neutral-900'>
         {isLoading ? (
           <View className='flex-1 items-center justify-center'>
             <ActivityIndicator size='large' color={Colors.accent} />
           </View>
         ) : (
           <FlatList
-            className='border-t border-neutral-300 flex-1 pt-4'
+            className=' flex-1 pt-3'
             contentContainerClassName='px-5 pb-10'
             data={filteredDoctors}
             renderItem={({ item }) => (
