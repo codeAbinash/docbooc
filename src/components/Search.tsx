@@ -5,6 +5,7 @@ import Search01Icon from '@hugeicons/Search01Icon'
 import Colors from '@utils/colors'
 import { useColorScheme } from 'nativewind'
 
+
 interface SearchProps {
   placeholder?: string
   value: string
@@ -33,14 +34,11 @@ export const Search = ({
 
   return (
     <View>
+      
       {showSearch ? (
-        <View className=' flex-row items-center '>
-          <View className=' flex-1 flex-row items-center   px-2 py-1 dark:border-neutral-700 dark:bg-neutral-800'>
-            {/* <Search01Icon
-              size={24}
-              color={colorScheme === 'dark' ? Colors.text.dark : Colors.text.DEFAULT}
-              strokeWidth={2}
-            /> */}
+        <View className=' flex-row items-center  '>
+          <View className=' flex-1 flex-row items-center  px-2 py-1 '>
+            
             <TextInput
               className='flex-1  text-xl text-neutral-900 dark:text-white'
               style={{ paddingVertical: 0 }}
@@ -53,7 +51,7 @@ export const Search = ({
           </View>
           <TouchableOpacity
             onPress={toggleSearch}
-            className='rounded-lg  bg p-1 dark:bg-neutral-800'
+            className='rounded-full bg p-1 dark:bg-neutral-800'
           >
             <Cancel01Icon size={28} color={Colors.accent} strokeWidth={2} />
           </TouchableOpacity>
@@ -61,7 +59,7 @@ export const Search = ({
       ) : (
         <TouchableOpacity onPress={toggleSearch} className=' rounded-lg p-1 dark:bg-neutral-800'>
           <Search01Icon
-            size={26}
+            size={28}
             color={colorScheme === 'dark' ? Colors.text.dark : Colors.text.DEFAULT}
             strokeWidth={2}
           />

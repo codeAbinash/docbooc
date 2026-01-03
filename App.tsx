@@ -14,7 +14,7 @@ import OTP from '@/UserScreens/Login/OTP'
 import PatientInfo from '@/UserScreens/PatientInfo/PatientInfo'
 import Splash from '@/UserScreens/Splash/Splash'
 import VerifyBeforeBooking from '@/UserScreens/VerifyBeforeBooking/VerifyBeforeBooking'
-import WelcomeScreen from '@/UserScreens/WelcomeScreen'
+
 import { Dimensions, useColorScheme } from 'react-native'
 import Home from './src/UserScreens'
 import { QueryClientProvider } from '@tanstack/react-query'
@@ -52,7 +52,7 @@ export default function App() {
             cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
           }}
         >
-          <RootStack.Screen name='Splash' component={Splash} options={NO_ANIMATION} />
+          <RootStack.Screen name='Splash' component={Splash} options={SMOOTH_ANIMATION} />
           <RootStack.Screen name='Home' component={Home} options={SMOOTH_ANIMATION} />
           <RootStack.Screen name='Login' component={HPLogin} options={SMOOTH_ANIMATION} />
           <RootStack.Screen name='OTP' component={OTP} options={SMOOTH_ANIMATION} />

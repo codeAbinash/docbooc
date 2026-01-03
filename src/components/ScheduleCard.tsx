@@ -19,6 +19,8 @@ type ScheduleCardProps = {
   onDelete?: (id: string) => void
   onDeleteDay?: (scheduleDayId: string) => void
   onSelectSchedule?: (scheduleKey: string, slotIndex: number) => void
+  showSelector?: boolean
+  selectedKey?: string | null
 }
 
 const CONFIG = {
@@ -42,14 +44,25 @@ const CONFIG = {
   },
 }
 
-export default function ScheduleCard({ type, schedules, onDelete, onDeleteDay, onSelectSchedule }: ScheduleCardProps) {
+export default function ScheduleCard({
+  type,
+  schedules,
+  onDelete,
+  onDeleteDay,
+  onSelectSchedule,
+  showSelector = true,
+  selectedKey: externalSelectedKey = null,
+}: ScheduleCardProps) {
   const config = CONFIG[type]
   const { colorScheme } = useColorScheme()
-  const [selectedKey, setSelectedKey] = useState<string | null>(null)
+  const [internalSelectedKey, setInternalSelectedKey] = useState<string | null>(null)
+  const selectedKey = externalSelectedKey !== null ? externalSelectedKey : internalSelectedKey
 
   const handleSelection = (scheduleKey: string, slotIndex: number) => {
-    const newKey = selectedKey === scheduleKey ? null : scheduleKey
-    setSelectedKey(newKey)
+    if (externalSelectedKey === null) {
+      const newKey = internalSelectedKey === scheduleKey ? null : scheduleKey
+      setInternalSelectedKey(newKey)
+    }
     onSelectSchedule?.(scheduleKey, slotIndex)
   }
 
@@ -110,7 +123,7 @@ export default function ScheduleCard({ type, schedules, onDelete, onDeleteDay, o
   return (
     <View className='gap-4'>
       {/* Card with Heading and Rows */}
-      <View className='overflow-hidden rounded-lg border border-neutral-200 bg-white dark:border-neutral-700 dark:bg-zinc-900'>
+      <View className='overflow-hidden rounded-3xl border border-neutral-200 bg-white dark:border-neutral-700 dark:bg-zinc-900'>
         {/* Heading */}
         <View className='border-b border-neutral-200 px-3 py-3 dark:border-neutral-700'>
           <View className='flex-row items-center gap-2'>
@@ -123,7 +136,7 @@ export default function ScheduleCard({ type, schedules, onDelete, onDeleteDay, o
         {/* Table Header */}
         <View className='border-b border-neutral-200 bg-neutral-50/50 px-5 py-2 dark:border-neutral-700 dark:bg-neutral-800/30'>
           <View className='flex-row items-center gap-2'>
-            <View className='mr-2 w-6' />
+            {showSelector && <View className='mr-2 w-6' />}
             <View style={{ flex: 0.5, minWidth: 80 }}>
               <Medium className='text-sm font-semibold text-neutral-600 dark:text-neutral-400'>Frequency</Medium>
             </View>
@@ -156,20 +169,22 @@ export default function ScheduleCard({ type, schedules, onDelete, onDeleteDay, o
                   >
                     <View className='flex-row items-center gap-2 px-4 py-4'>
                       {/* HeroUI-inspired Radio Button */}
-                      <TouchableOpacity
-                        onPress={() => handleSelection(schedule.key, slotIndex)}
-                        className='mr-2 w-7 items-center justify-center'
-                      >
-                        <View
-                          className={`h-6 w-6 items-center justify-center rounded-full border-2 ${
-                            selectedKey === schedule.key
-                              ? 'border-blue-600 bg-blue-600'
-                              : 'border-neutral-300 bg-white dark:border-neutral-600 dark:bg-zinc-800'
-                          }`}
+                      {showSelector && (
+                        <TouchableOpacity
+                          onPress={() => handleSelection(schedule.key, slotIndex)}
+                          className='mr-2 w-7 items-center justify-center'
                         >
-                          {selectedKey === schedule.key && <View className='h-2.5 w-2.5 rounded-full bg-white' />}
-                        </View>
-                      </TouchableOpacity>
+                          <View
+                            className={`h-6 w-6 items-center justify-center rounded-full border-2 ${
+                              selectedKey === schedule.key
+                                ? 'border-blue-600 bg-blue-600'
+                                : 'border-neutral-300 bg-white dark:border-neutral-600 dark:bg-zinc-800'
+                            }`}
+                          >
+                            {selectedKey === schedule.key && <View className='h-2.5 w-2.5 rounded-full bg-white' />}
+                          </View>
+                        </TouchableOpacity>
+                      )}
                       {/* Frequency Column */}
                       <View style={{ flex: 0.5, minWidth: 80 }}>
                         <Medium className='text-sm text-neutral-700 dark:text-neutral-300' numberOfLines={1}>

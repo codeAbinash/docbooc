@@ -1,8 +1,6 @@
 import { specialties } from '@/constants'
-import { ALL_SPECIALTY } from '@/UserScreens/Doctors/Doctors'
-import Chip from '@components/Chip'
+import Doctor01Icon from '@hugeicons/Doctor01Icon'
 import { DoctorCard } from '@components/DoctorCard'
-import Gradient from '@components/Gradient'
 import HybridHead from '@components/HybridHead'
 import { useNavigation } from '@react-navigation/native'
 import { useQuery } from '@tanstack/react-query'
@@ -10,66 +8,75 @@ import { hpApi } from '@utils/client'
 import Colors from '@utils/colors'
 import { HPStackNav } from '@utils/types'
 import { useCallback, useMemo, useRef, useState } from 'react'
-import { ActivityIndicator, FlatList, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, FlatList, TouchableOpacity, View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
+
+export const ALL_SPECIALTY = { id: 0, name: 'All', icon: Doctor01Icon }
 
 const HPScheduleDoctors = () => {
   const navigate = useNavigation<HPStackNav>()
-  const [selected, setSelected] = useState(0)
-  const [selectedDoctorId, setSelectedDoctorId] = useState<string | null>(null)
+  const [selected, setSelected] = useState<number>(0)
   const [searchQuery, setSearchQuery] = useState('')
   const scrollViewRef = useRef<ScrollView>(null)
 
-  const { data: doctorsData, isLoading } = useQuery({
+  const allItems = [ALL_SPECIALTY, ...specialties]
+
+  const { data: doctorsResponse, isLoading } = useQuery({
     queryKey: ['doctors'],
     queryFn: async () => (await hpApi.doctors.all.$get()).json(),
   })
 
-  const doctors = doctorsData?.data || []
-  const selectedDoctor = doctors.find((d) => d.id === selectedDoctorId)
-  const allItems = [ALL_SPECIALTY, ...specialties]
+  const doctors = useMemo(() => doctorsResponse?.data || [], [doctorsResponse])
 
   const filteredDoctors = useMemo(() => {
-    if (!searchQuery) return doctors
-    const query = searchQuery.toLowerCase()
-    return doctors.filter(
-      (d) => d.name.toLowerCase().includes(query) || d.specialization?.toLowerCase().includes(query),
-    )
-  }, [doctors, searchQuery])
-
-  const handleSpecialtySelect = (id: number) => {
-    setSelected(id)
-  }
+    let result = selected
+      ? doctors.filter((doctor) => doctor.specialization === specialties.find((s) => s.id === selected)?.name)
+      : doctors
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase()
+      result = result.filter(
+        (d) => d.name.toLowerCase().includes(query) || d.specialization?.toLowerCase().includes(query),
+      )
+    }
+    return result
+  }, [selected, searchQuery, doctors])
 
   return (
     <View className='flex-1'>
       <HybridHead
-        title='Schedule Doctors'
-        searchPlaceholder='Search doctors, specialties...'
-        onSearchChange={setSearchQuery}
         showMenu={true}
+        title='Schedule Doctors'
         showSearch={true}
+        searchPlaceholder='Search doctors, specialties...'
         chipItems={allItems}
         selectedChipId={selected}
-        onChipSelect={handleSpecialtySelect}
+        onChipSelect={setSelected}
         chipScrollRef={scrollViewRef}
+        onSearchChange={setSearchQuery}
       />
 
-      <View className='flex-1 bg-neutral-100 dark:bg-neutral-900'>
+      <View className='flex-1 bg-white dark:bg-neutral-900'>
         {isLoading ? (
           <View className='flex-1 items-center justify-center'>
             <ActivityIndicator size='large' color={Colors.accent} />
           </View>
         ) : (
           <FlatList
-            className='flex-1 pt-4'
+            className='flex-1 pt-2'
             contentContainerClassName='px-5 pb-10'
             data={filteredDoctors}
             renderItem={({ item }) => (
               <DoctorCard
                 doctor={item}
-                selected={selectedDoctorId === item.id}
-                onPress={() => setSelectedDoctorId(item.id)}
+                showSelector={false}
+                selected={false}
+                onPress={() =>
+                  item.specialization &&
+                  navigate.navigate('HPDoctorScheduler', {
+                    doctorId: item.id,
+                    doctorName: item.name,
+                  })
+                }
               />
             )}
             keyExtractor={(item) => item.id.toString()}
@@ -77,29 +84,6 @@ const HPScheduleDoctors = () => {
             showsVerticalScrollIndicator={false}
           />
         )}
-      </View>
-
-      <View className='bg-white px-6 pb-10 pt-4 dark:bg-neutral-800'>
-        <TouchableOpacity
-          disabled={!selectedDoctorId}
-          activeOpacity={0.7}
-          onPress={() => {
-            if (selectedDoctor) {
-              navigate.navigate('HPDoctorScheduler', {
-                doctorId: selectedDoctor.id,
-                doctorName: selectedDoctor.name,
-              })
-            }
-          }}
-          className='overflow-hidden rounded-xl'
-        >
-          <Gradient
-            colors={selectedDoctorId ? undefined : ['#d1d5db', '#d1d5db']}
-            className='flex-row items-center justify-center px-6 py-4'
-          >
-            <Text className='text-center text-base font-semibold text-white'>Continue</Text>
-          </Gradient>
-        </TouchableOpacity>
       </View>
     </View>
   )

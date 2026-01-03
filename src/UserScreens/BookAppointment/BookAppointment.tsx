@@ -107,7 +107,7 @@ const BookAppointment = () => {
         <Button
           title='Next'
           disabled={selectedLocationId === null}
-          progressFill={progress}
+          
           onPress={handleNext}
         />
       </View>

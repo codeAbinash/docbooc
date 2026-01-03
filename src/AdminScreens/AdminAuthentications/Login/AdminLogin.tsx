@@ -3,7 +3,7 @@ import Button from '@components/Button'
 import InputWithLabel from '@components/InputWithLabel'
 import KeyboardAvoid from '@components/KeyboardAvoid'
 import { PaddingBottom, PaddingTop } from '@components/SafePadding'
-import { TC_and_PP } from '@components/TC_and_PP'
+
 import { useMutation } from '@tanstack/react-query'
 import { client } from '@utils/client'
 import { Black, Bold, Medium, SemiBold } from '@utils/fonts'
@@ -91,7 +91,7 @@ export default function AdminLogin({ navigation }: AdminNavProp) {
               </SemiBold>
             </View>
           </View>
-          <TC_and_PP />
+         
         </View>
       </View>
       <PaddingBottom />

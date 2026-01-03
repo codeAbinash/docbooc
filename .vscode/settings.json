@@ -3,8 +3,11 @@
   "typescript.preferences.autoImportFileExcludePatterns": ["react-native-reanimated/lib/typescript/*"],
   "typescript.experimental.useTsgo": false,
   "files.exclude": {
-    "**/AdminScreens": true,
-    "**/HPScreens": true,
+    "**/AdminScreens": false,
+    "**/HPScreens": false,
+    "**/UserScreens": true,  
+
+    
 
   }
 }

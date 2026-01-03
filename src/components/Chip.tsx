@@ -41,7 +41,7 @@ const Chip = memo(({ label, icon: IconComponent, isActive = false, onPress, vari
   const TextComponent = isHighlighted ? Medium : Medium
 
   return (
-    <TouchableOpacity onPress={onPress} className={`flex-row items-end justify-start gap-2 rounded-full  px-5 py-3 ${bgStyle}`}>
+    <TouchableOpacity onPress={onPress} className={`flex-row  items-end justify-start gap-2 rounded-full  px-5 py-3 ${bgStyle}`}>
       <IconComponent color={color} size={20} strokeWidth={2} />
       <TextComponent style={{ color }}>{label}</TextComponent>
     </TouchableOpacity>

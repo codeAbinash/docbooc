@@ -34,7 +34,7 @@ export function DoctorCard({
     <TouchableOpacity
       activeOpacity={0.7}
       onPress={onPress}
-      className={` overflow-hidden rounded-lg border  bg-white dark:bg-neutral-800 ${selected ? 'border-blue-600' : 'border-neutral-200 dark:border-neutral-700'}`}
+      className={` overflow-hidden rounded-3xl border  bg-white dark:bg-neutral-800 ${selected ? 'border-blue-600' : 'border-neutral-200 dark:border-neutral-700'}`}
       {...rest}
     >
       <DoctorCardInternal
@@ -82,7 +82,7 @@ function DoctorCardInternal({
 
   return (
     <>
-      <View className='flex-row items-start gap-3 p-4 dark:bg-neutral-800'>
+      <View className='flex-row  items-start gap-3 p-3 dark:bg-neutral-800'>
         <Image
           source={{
             uri: 'https://st4.depositphotos.com/7877830/25337/v/450/depositphotos_253374286-stock-illustration-vector-illustration-male-doctor-avatar.jpg',
@@ -119,7 +119,7 @@ function DoctorCardInternal({
 
       <View className=' border-b border-neutral-200 dark:border-neutral-700' />
 
-      <View className='flex-row items-end gap-3 p-4 dark:bg-neutral-800'>
+      <View className='flex-row items-end gap-3 p-3 dark:bg-neutral-800'>
         <View className='flex-1 gap-1 rounded-lg bg-neutral-100 p-3 dark:bg-neutral-700'>
           <Medium className='text-xs font-semibold text-neutral-600 dark:text-neutral-400'>Qualification</Medium>
           {qualifications.length > 0 ? (

@@ -1,4 +1,4 @@
-import CustomHeader from '@components/CustomHeader'
+import HybridHead from '@components/HybridHead'
 import Chip from '@components/Chip'
 import Press from '@components/Press'
 import Tick02Icon from '@hugeicons/Tick02Icon'
@@ -121,18 +121,17 @@ const HPDoctorScheduler = () => {
   }
 
   return (
-    <View className='bg flex-1'>
-      <CustomHeader
+    <View className='bg-white flex-1 '>
+      <HybridHead
         title={doctorName}
-        showBackButton
-        onBackPress={() => navigation.goBack()}
+        showBackButton={true}
         rightElement={
-          <Press className='size-12 items-center justify-center rounded-xl bg-green-500/15' onPress={handleReview}>
-            <Tick02Icon size={25} strokeWidth={2} color={colors.green[600]} />
+          <Press className='p-1 items-center justify-center  rounded-md bg-green-500/15' onPress={handleReview}>
+            <Tick02Icon size={28} strokeWidth={2} color={colors.green[600]} />
           </Press>
         }
       />
-      <View className='flex-row items-center justify-center gap-5 bg-white px-5 py-2 dark:bg-neutral-900'>
+      <View className='flex-row  items-center justify-between gap-5 pb-4 bg-white px-5 py-2 dark:bg-neutral-900'>
         {tabLabels.map((label, index) => (
           <Chip
             key={label}

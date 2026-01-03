@@ -55,10 +55,10 @@ const HPAddPatients = () => {
         showMenu={true}
         showDoctorInfo={false}
       />
-      <View className='flex-1 bg-neutral-100 dark:bg-neutral-900'>
+      <View className='flex-1 bg-white dark:bg-neutral-900'>
         <FlatList
           className='flex-1'
-          contentContainerClassName='px-5 pb-10 pt-4'
+          contentContainerClassName='px-5 pb-10 pt-3'
           data={filteredDoctors}
           renderItem={({ item }) => (
             <DoctorCard

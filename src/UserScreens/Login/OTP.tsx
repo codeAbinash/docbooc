@@ -111,21 +111,24 @@ export default function OTP({ navigation }: NavProp) {
             </View>
           </View>
 
-          <View className='gap-2 pb-8 pt-4'>
-            <Medium className='text-center text-xs text-zinc-600 dark:text-zinc-400'>
+          <View className=' flex items-center justify-center gap-2 pb-6 pt-2'>
+            <View>
+              <Medium className='text-center text-xs text-zinc-600 dark:text-zinc-400'>
               By 'logging in' I agree to the
             </Medium>
-            <View className='flex-row justify-center gap-8'>
+
+            </View>
+            
+            <View className='flex-row items-center justify-center gap-8'>
               <Pressable onPress={() => {}}>
                 <Text className='font-semibold text-blue-600 underline'>Terms & Conditions</Text>
               </Pressable>
-              <Pressable onPress={() => {}}>
-                <Text className='font-semibold text-blue-600 underline'>Privacy Policy</Text>
-              </Pressable>
+              
             </View>
           </View>
         </View>
       </View>
+      <PaddingBottom />
     </View>
   )
 }

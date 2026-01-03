@@ -238,7 +238,7 @@ const VerifyBeforeBooking = () => {
       {/* Button to Confirm Appointment */}
       <View className=' bg-white px-5 py-3 dark:border-neutral-700 dark:bg-neutral-800'>
         
-        <Button  title='Confirm Booking' progressFill={100} onPress={() => navigation.navigate('Complete')} />
+        <Button  title='Confirm Booking'  onPress={() => navigation.navigate('Complete')} />
       </View>
       <PaddingBottom />
     </View>

@@ -50,16 +50,16 @@ export default function HPApp() {
             cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
           }}
         >
-          <RootStack.Screen name='HPSplash' component={HPSplash} options={NO_ANIMATION} />
-          <RootStack.Screen name='HPHome' component={HPHome} options={NO_ANIMATION} />
-          <RootStack.Screen name='HPLogin' component={HPLogin} />
-          <RootStack.Screen name='HPSignup' component={HPSignup} />
-          <RootStack.Screen name='HPOTP' component={HPOTP} options={NO_ANIMATION} />
-          <RootStack.Screen name='HPDoctorScheduler' component={HPDoctorScheduler} />
-          <RootStack.Screen name='HPScheduleReview' component={HPScheduleReview} />
-          <RootStack.Screen name='HPDoctorScheduleDetails' component={HPDoctorScheduleDetails} />
-          <RootStack.Screen name='EditHPProfile' component={EditHPProfileScreen} />
-          <RootStack.Screen name='DoctorModel' component={AdminAddDoctor} />
+          <RootStack.Screen name='HPSplash' component={HPSplash} options={SMOOTH_ANIMATION} />
+          <RootStack.Screen name='HPLogin' component={HPLogin} options={SMOOTH_ANIMATION}/>
+          <RootStack.Screen name='HPSignup' component={HPSignup} options={SMOOTH_ANIMATION}/>
+          <RootStack.Screen name='HPHome' component={HPHome} options={SMOOTH_ANIMATION} />
+          <RootStack.Screen name='HPOTP' component={HPOTP} options={SMOOTH_ANIMATION} />
+          <RootStack.Screen name='HPDoctorScheduler' component={HPDoctorScheduler} options={SMOOTH_ANIMATION}/>
+          <RootStack.Screen name='HPScheduleReview' component={HPScheduleReview} options={SMOOTH_ANIMATION}/>
+          <RootStack.Screen name='HPDoctorScheduleDetails' component={HPDoctorScheduleDetails} options={SMOOTH_ANIMATION}/>
+          <RootStack.Screen name='EditHPProfile' component={EditHPProfileScreen} options={SMOOTH_ANIMATION}/>
+          <RootStack.Screen name='DoctorModel' component={AdminAddDoctor} options={SMOOTH_ANIMATION}/>
         </RootStack.Navigator>
       </NavigationContainer>
     </QueryClientProvider>

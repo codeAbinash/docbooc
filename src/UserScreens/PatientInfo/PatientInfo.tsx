@@ -206,7 +206,7 @@ const PatientInfo = ({}: {}) => {
         {isFamilyMember ? (
           <Button title='Save Family Member' onPress={handleContinue} />
         ) : (
-          <Button title='Confirm Booking' progressFill={100} onPress={() => navigation.navigate('Complete')} />
+          <Button title='Confirm Booking'  onPress={() => navigation.navigate('Complete')} />
         )}
       </View>
       <PaddingBottom />

@@ -21,7 +21,7 @@ const DRAWER_ITEMS = [
   { name: "Today's Appointments", icon: Calendar01Icon, navigationName: 'Appointments' },
   { name: 'Upcoming Appointments', icon: Calendar03Icon, navigationName: 'UpcomingAppointments' },
   { name: 'Schedule Doctors', icon: TimeScheduleIcon, navigationName: 'ScheduleDoctors' },
-  { name: 'View Doctors', icon: UserIcon, navigationName: 'ViewDoctors' },
+  { name: 'My Doctors', icon: UserIcon, navigationName: 'ViewDoctors' },
   { name: 'Add Patients', icon: PatientIcon, navigationName: 'AddPatients' },
   { name: 'Settings', icon: NotificationSquareIcon, navigationName: 'Settings' },
 ]
@@ -36,55 +36,45 @@ export default function CustomDrawer(props: any) {
     <View className='flex-1' style={{ backgroundColor: colors.background }}>
       <DrawerContentScrollView
         {...props}
-        contentContainerStyle={{ paddingTop: insets.top + 16 }}
+        contentContainerStyle={{ paddingTop: insets.top + 24 }}
         showsVerticalScrollIndicator={false}
       >
-        <View className='' style={{ paddingBottom: 32 }}>
-          <View
-            className='flex-row items-center gap-4 rounded-xl px-5 py-3'
-            style={{
-              backgroundColor: Colors.accent + '15',
-              borderWidth: 1.5,
-              borderColor: Colors.accent + '30',
-            }}
-          >
-            <ProfilePicture name='Health Point' size='md' />
-            <View className='flex-1'>
-              <SemiBold className='text-lg' style={{ color: colors.text }}>
-                Health Point
-              </SemiBold>
+        <View style={{ paddingHorizontal: 16, paddingBottom: 32 }}>
+          <View className='flex-row items-center gap-2'>
+            <View className='size-8 items-center justify-center rounded-lg' style={{ backgroundColor: Colors.accent }}>
+              <SemiBold className='text-lg text-white'>ℑ</SemiBold>
             </View>
-            <Press onPress={() => {}} className='rounded-lg p-2' style={{ backgroundColor: Colors.accent + '20' }}>
-              <PlusSignIcon size={20} color={Colors.accent} strokeWidth={1.8} />
-            </Press>
+            <SemiBold className='text-xl' style={{ color: colors.text }}>
+              Jiban Surakha 
+            </SemiBold>
           </View>
         </View>
 
-        <View>
-          <View className='gap-4'>
-            {DRAWER_ITEMS.filter((item) => item.navigationName !== 'Settings').map((item) => {
+        <View style={{ paddingHorizontal: 8 }}>
+          <View className='gap-2'>
+            {DRAWER_ITEMS.map((item) => {
               const isActive = currentRoute === item.navigationName
               const Icon = item.icon
               return (
                 <Press
                   key={item.name}
                   onPress={() => navigation.navigate(item.navigationName)}
-                  className='flex-row items-center gap-4 rounded-xl px-4 py-4'
+                  className='flex-row items-center gap-3 rounded-lg px-4 py-3'
                   style={{
-                    backgroundColor: isActive ? Colors.accent : 'transparent',
+                    backgroundColor: isActive ? Colors.accent + '15' : 'transparent',
                   }}
                 >
-                  <View className='size-6 items-center justify-center'>
-                    <Icon size={24} color={isActive ? 'white' : colors.text} strokeWidth={1.8} />
+                  <View className='size-5 items-center justify-center'>
+                    <Icon size={20} color={isActive ? Colors.accent : colors.text} strokeWidth={1.5} />
                   </View>
-                  <Medium
+                  <Regular
                     className='flex-1 text-base'
                     style={{
-                      color: isActive ? 'white' : colors.text,
+                      color: isActive ? Colors.accent : colors.text,
                     }}
                   >
                     {item.name}
-                  </Medium>
+                  </Regular>
                 </Press>
               )
             })}
@@ -93,53 +83,25 @@ export default function CustomDrawer(props: any) {
       </DrawerContentScrollView>
 
       <View
-        className='border-neutral-300 pt-2 dark:border-neutral-700'
         style={{
           paddingBottom: insets.bottom + 16,
+          paddingHorizontal: 8,
         }}
       >
-        <View className='gap-4'>
-          {DRAWER_ITEMS.filter((item) => item.navigationName === 'Settings').map((item) => {
-            const isActive = currentRoute === item.navigationName
-            const Icon = item.icon
-            return (
-              <Press
-                key={item.name}
-                onPress={() => navigation.navigate(item.navigationName)}
-                className='flex-row items-center gap-4 rounded-xl px-4 py-4'
-                style={{
-                  backgroundColor: isActive ? Colors.accent : 'transparent',
-                }}
-              >
-                <View className='size-6 items-center justify-center'>
-                  <Icon size={24} color={isActive ? 'white' : colors.text} strokeWidth={1.8} />
-                </View>
-                <SemiBold
-                  className='flex-1 text-base'
-                  style={{
-                    color: isActive ? 'white' : colors.text,
-                  }}
-                >
-                  {item.name}
-                </SemiBold>
-              </Press>
-            )
-          })}
-          <Press
-            onPress={() => handleLogout(() => logout('HPLogin'))}
-            className='flex-row items-center gap-4 rounded-xl px-4 py-4'
-            style={{
-              backgroundColor: '#ef444415',
-            }}
-          >
-            <View className='size-6 items-center justify-center'>
-              <Logout05Icon size={24} color='#ef4444' strokeWidth={1.8} />
-            </View>
-            <SemiBold className='flex-1 text-base' style={{ color: '#ef4444' }}>
-              Logout
-            </SemiBold>
-          </Press>
-        </View>
+        <Press
+          onPress={() => handleLogout(() => logout('HPLogin'))}
+          className='flex-row items-center gap-3 rounded-lg px-4 py-3'
+          style={{
+            backgroundColor: '#ef444410',
+          }}
+        >
+          <View className='size-5 items-center justify-center'>
+            <Logout05Icon size={20} color='#ef4444' strokeWidth={1.5} />
+          </View>
+          <Regular className='flex-1 text-base' style={{ color: '#ef4444' }}>
+            Logout
+          </Regular>
+        </Press>
       </View>
     </View>
   )

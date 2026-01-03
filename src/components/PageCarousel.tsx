@@ -1,5 +1,6 @@
 import React, { memo, useCallback } from 'react'
 import { View, Dimensions, StyleSheet, Pressable, Text } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Animated, {
   useSharedValue,
   useAnimatedScrollHandler,
@@ -18,9 +19,9 @@ type PageCarouselProps = {
   onPageChange?: (index: number) => void
   showDots?: boolean
   onSkip?: () => void
-  carouselHeight?: number
   carouselHeightRatio?: number
   showAnimations?: boolean
+  showSkip?: boolean
 }
 
 // Memoized Dot component to prevent unnecessary re-renders
@@ -50,13 +51,14 @@ function PageCarousel({
   onPageChange,
   showDots = true,
   onSkip,
-  carouselHeight,
-  carouselHeightRatio = 0.5,
+  carouselHeightRatio = 0.6,
   showAnimations = true,
+  showSkip = true,
 }: PageCarouselProps) {
+  const insets = useSafeAreaInsets()
   const scrollX = useSharedValue(0)
   const [currentPage, setCurrentPage] = React.useState(0)
-  const sheetHeight = carouselHeight ?? SCREEN_HEIGHT * carouselHeightRatio
+  const sheetHeight = (SCREEN_HEIGHT - insets.top) * carouselHeightRatio
 
   const animationArray = [
     { animation: Animations.motorcycle, name: 'motorcycle' },
@@ -91,6 +93,7 @@ function PageCarousel({
         onScroll={scrollHandler}
         showsHorizontalScrollIndicator={false}
         decelerationRate='fast'
+        style={{ height: '100%' }}
       >
         {showAnimations && animationArray.length > 0
           ? animationArray.map((item, index) => (
@@ -143,9 +146,11 @@ function PageCarousel({
           </View>
         )}
 
-        <Pressable onPress={onSkip || (() => {})} style={styles.skipButton}>
-          <Text style={styles.skipText}>Skip</Text>
-        </Pressable>
+        {showSkip && (
+          <Pressable onPress={onSkip || (() => {})} style={styles.skipButton}>
+            <Text style={styles.skipText}>Skip</Text>
+          </Pressable>
+        )}
       </View>
     </View>
   )

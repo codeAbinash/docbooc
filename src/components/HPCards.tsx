@@ -38,7 +38,7 @@ export function HPCards({
     <TouchableOpacity
       activeOpacity={0.7}
       onPress={onPress}
-      className={`overflow-hidden rounded-xl border bg-white dark:bg-neutral-800 ${selected ? 'border-blue-600' : 'border-neutral-200 dark:border-neutral-700'}`}
+      className={`overflow-hidden rounded-3xl border bg-white dark:bg-neutral-800 ${selected ? 'border-blue-600' : 'border-neutral-200 dark:border-neutral-700'}`}
       {...rest}
     >
       <HPCardsInternal
@@ -92,7 +92,7 @@ function HPCardsInternal({
       <View className='flex-row items-start gap-3'>
         <View>
           {icon && <View className='pt-0.5'>{icon}</View>}
-          <Image source={{ uri: image || DEFAULT_PP_IMAGE }} className='size-16 rounded-xl' resizeMode='cover' />
+          <Image source={{ uri: image || DEFAULT_PP_IMAGE }} className='size-16 rounded-2xl' resizeMode='cover' />
         </View>
 
         <View className='flex-1 gap-1'>
@@ -103,10 +103,10 @@ function HPCardsInternal({
         {showSelector && (
           <View className='w-7 items-center justify-center'>
             <View
-              className={`h-6 w-6 items-center justify-center rounded-full border-2 ${
+              className={`h-6 w-6 items-center justify-center rounded-full ${
                 selected
                   ? 'border-blue-600 bg-blue-600'
-                  : 'border-neutral-300 bg-white dark:border-neutral-600 dark:bg-zinc-800'
+                  : ' border-neutral-300 bg-white dark:border-neutral-600 dark:bg-zinc-800'
               }`}
             >
               {selected && <View className='h-2.5 w-2.5 rounded-full bg-white' />}
@@ -126,7 +126,7 @@ function HPCardsInternal({
       {/* Info Grid - 3 Columns */}
       <View className='flex-row gap-3'>
         {time && (
-          <View className='flex-1 gap-1 rounded-lg bg-neutral-100 p-3 dark:bg-blue-900/20'>
+          <View className='flex-1 gap-1 rounded-lg bg-blue-50 p-3 dark:bg-blue-900/20'>
             <Medium className='text-xs font-semibold text-blue-700 dark:text-blue-400'>Time Slot</Medium>
             <SemiBold className='text-sm text-blue-900 dark:text-blue-200'>{time}</SemiBold>
           </View>

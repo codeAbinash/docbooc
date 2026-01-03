@@ -1,5 +1,5 @@
 import { queryClient } from '@/query'
-import CustomHeader from '@components/CustomHeader'
+import HybridHead from '@components/HybridHead'
 import popupStore from '@/zustand/popupStore'
 import FabIcon from '@components/FabIcon'
 import { PaddingBottom, PaddingTop } from '@components/SafePadding'
@@ -200,8 +200,8 @@ export default function HPDoctorScheduleDetails({ navigation, route }: HPNavProp
   const schedules = groupSchedules((scheduleData?.data as Schedule[]) || [])
 
   return (
-    <View className='bg flex-1'>
-      <CustomHeader
+    <View className='flex-1 bg-white'>
+      <HybridHead
         title='Schedule Details'
         showBackButton
         onBackPress={() => navigation.goBack()}
@@ -253,10 +253,14 @@ export default function HPDoctorScheduleDetails({ navigation, route }: HPNavProp
               <ScheduleCard
                 type='weekly'
                 schedules={schedules.weekly}
+                selectedKey={selectedSchedule?.key}
                 onSelectSchedule={(key, slotIndex) => {
-                  setSelectedSchedule(
-                    schedules.weekly.find((s) => s.key === key) as { key: string; id: string; scheduleDayId?: string },
-                  )
+                  const schedule = schedules.weekly.find((s) => s.key === key)
+                  if (selectedSchedule?.key === key) {
+                    setSelectedSchedule(null)
+                  } else {
+                    setSelectedSchedule(schedule as { key: string; id: string; scheduleDayId?: string })
+                  }
                 }}
               />
             )}
@@ -264,10 +268,14 @@ export default function HPDoctorScheduleDetails({ navigation, route }: HPNavProp
               <ScheduleCard
                 type='daily'
                 schedules={schedules.daily}
+                selectedKey={selectedSchedule?.key}
                 onSelectSchedule={(key, slotIndex) => {
-                  setSelectedSchedule(
-                    schedules.daily.find((s) => s.key === key) as { key: string; id: string; scheduleDayId?: string },
-                  )
+                  const schedule = schedules.daily.find((s) => s.key === key)
+                  if (selectedSchedule?.key === key) {
+                    setSelectedSchedule(null)
+                  } else {
+                    setSelectedSchedule(schedule as { key: string; id: string; scheduleDayId?: string })
+                  }
                 }}
               />
             )}
@@ -275,10 +283,14 @@ export default function HPDoctorScheduleDetails({ navigation, route }: HPNavProp
               <ScheduleCard
                 type='monthly'
                 schedules={schedules.monthly}
+                selectedKey={selectedSchedule?.key}
                 onSelectSchedule={(key, slotIndex) => {
-                  setSelectedSchedule(
-                    schedules.monthly.find((s) => s.key === key) as { key: string; id: string; scheduleDayId?: string },
-                  )
+                  const schedule = schedules.monthly.find((s) => s.key === key)
+                  if (selectedSchedule?.key === key) {
+                    setSelectedSchedule(null)
+                  } else {
+                    setSelectedSchedule(schedule as { key: string; id: string; scheduleDayId?: string })
+                  }
                 }}
               />
             )}

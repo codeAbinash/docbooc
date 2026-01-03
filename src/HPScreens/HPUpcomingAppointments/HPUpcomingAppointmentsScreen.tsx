@@ -4,10 +4,11 @@ import Calendar03Icon from '@hugeicons/Calendar03Icon'
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker'
 import Colors from '@utils/colors'
 import { SemiBold } from '@utils/fonts'
-import { memo, useCallback, useState } from 'react'
-import { FlatList, Platform, TouchableOpacity, View } from 'react-native'
+import { memo, useCallback, useMemo, useState, useEffect } from 'react'
+import { FlatList, Platform, TouchableOpacity, View, Keyboard, KeyboardAvoidingView } from 'react-native'
 import PatientCard from '../components/PatientCard'
 import HybridHead from '@components/HybridHead'
+import KeyboardAvoid from '@components/KeyboardAvoid'
 
 const SAMPLE_PATIENTS = [
   { id: '1', name: 'John Smith', age: 45, gender: 'Male' as const, queuePosition: 1, status: 'confirmed' as const },
@@ -47,15 +48,13 @@ const formatDate = (date: Date) => {
   const yesterday = new Date(today)
   yesterday.setDate(yesterday.getDate() - 1)
 
-  if (date.toDateString() === today.toDateString()) {
-    return 'Today'
-  } else if (date.toDateString() === tomorrow.toDateString()) {
-    return 'Tomorrow'
-  } else if (date.toDateString() === yesterday.toDateString()) {
-    return 'Yesterday'
-  } else {
-    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-  }
+  const dateString = date.toDateString()
+
+  if (dateString === today.toDateString()) return 'Today'
+  if (dateString === tomorrow.toDateString()) return 'Tomorrow'
+  if (dateString === yesterday.toDateString()) return 'Yesterday'
+
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
 }
 
 const SearchAndDateBar = memo(function SearchAndDateBar({
@@ -66,8 +65,10 @@ const SearchAndDateBar = memo(function SearchAndDateBar({
   onToggleDatePicker,
   onDateChange,
 }: SearchAndDateBarProps) {
+  const formattedDate = useMemo(() => formatDate(selectedDate), [selectedDate])
+
   return (
-    <View className='bg-white px-5 py-3 dark:bg-neutral-900'>
+    <View className='border-t border-b border-neutral-200 bg-white px-5 py-3 dark:bg-neutral-900'>
       <View className='flex-row gap-3'>
         <View className='flex-1'>
           <Search value={searchQuery} onChangeText={onSearchChange} placeholder='Search patients...' />
@@ -75,23 +76,21 @@ const SearchAndDateBar = memo(function SearchAndDateBar({
         <TouchableOpacity
           onPress={onToggleDatePicker}
           activeOpacity={0.7}
-          className='flex-row items-center gap-2 rounded-xl bg-accent/15 px-4'
+          className='flex-row items-center  gap-2 rounded-lg bg-accent/15 px-3'
         >
-          <Calendar03Icon color={Colors.accent} size={18} strokeWidth={2} />
-          <SemiBold style={{ color: Colors.accent, fontSize: 13 }}>{formatDate(selectedDate)}</SemiBold>
+          <Calendar03Icon color={Colors.accent} size={20} strokeWidth={2} />
+          <SemiBold style={{ color: Colors.accent, fontSize: 15 }}>{formattedDate}</SemiBold>
         </TouchableOpacity>
       </View>
+
       {showDatePicker && (
-        <View className='mt-3'>
-          <DateTimePicker
-            value={selectedDate}
-            mode='date'
-            onChange={onDateChange}
-            display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-          />
-        </View>
+        <DateTimePicker
+          value={selectedDate}
+          mode='date'
+          onChange={onDateChange}
+          display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+        />
       )}
-      <PaddingBottom />
     </View>
   )
 })
@@ -100,6 +99,21 @@ const HPUpcomingAppointmentsScreen = memo(function HPUpcomingAppointmentsScreenC
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedDate, setSelectedDate] = useState(new Date())
   const [showDatePicker, setShowDatePicker] = useState(false)
+  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false)
+
+  useEffect(() => {
+    const showListener = Keyboard.addListener('keyboardDidShow', () => {
+      setIsKeyboardVisible(true)
+    })
+    const hideListener = Keyboard.addListener('keyboardDidHide', () => {
+      setIsKeyboardVisible(false)
+    })
+
+    return () => {
+      showListener.remove()
+      hideListener.remove()
+    }
+  }, [])
 
   const handleToggleDatePicker = useCallback(() => {
     setShowDatePicker((prev) => !prev)
@@ -114,8 +128,9 @@ const HPUpcomingAppointmentsScreen = memo(function HPUpcomingAppointmentsScreenC
     }
   }, [])
 
-  const filteredPatients = SAMPLE_PATIENTS.filter((patient) =>
-    patient.name.toLowerCase().includes(searchQuery.toLowerCase()),
+  const filteredPatients = useMemo(
+    () => SAMPLE_PATIENTS.filter((patient) => patient.name.toLowerCase().includes(searchQuery.toLowerCase())),
+    [searchQuery],
   )
 
   const renderPatientCard = useCallback(
@@ -125,32 +140,42 @@ const HPUpcomingAppointmentsScreen = memo(function HPUpcomingAppointmentsScreenC
     [],
   )
 
+  const keyExtractor = useCallback((item: (typeof SAMPLE_PATIENTS)[0]) => item.id, [])
+
   const ListFooterComponent = useCallback(() => <PaddingBottom />, [])
 
   return (
-    <View className='bg flex-1'>
-      <HybridHead searchPlaceholder='Search doctors, specialties...' showMenu={true} showDoctorInfo={true} />
-      <View className='flex-1'>
-        <FlatList
-          data={filteredPatients}
-          renderItem={renderPatientCard}
-          keyExtractor={(item) => item.id}
-          contentContainerClassName='pb-16 pt-5 px-5'
-          showsVerticalScrollIndicator={false}
-          ListFooterComponent={ListFooterComponent}
-        />
+    <KeyboardAvoid>
+      <View className='flex-1 bg-white'>
+        <HybridHead showMenu={true} showDoctorInfo={true} />
+        <View className='flex-1 pt-2'>
+          <FlatList
+            data={filteredPatients}
+            renderItem={renderPatientCard}
+            keyExtractor={keyExtractor}
+            contentContainerClassName='pb-16 pt-4 px-5'
+            showsVerticalScrollIndicator={false}
+            ListFooterComponent={ListFooterComponent}
+            removeClippedSubviews={true}
+            maxToRenderPerBatch={10}
+            updateCellsBatchingPeriod={50}
+            initialNumToRender={8}
+            windowSize={5}
+          />
+        </View>
+        <View className=' absolute bottom-0 left-0 right-0 bg-white dark:bg-neutral-900'>
+          <SearchAndDateBar
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            selectedDate={selectedDate}
+            showDatePicker={showDatePicker}
+            onToggleDatePicker={handleToggleDatePicker}
+            onDateChange={handleDateChange}
+          />
+          {!isKeyboardVisible && <PaddingBottom />}
+        </View>
       </View>
-      <View className='absolute bottom-0 left-0 right-0 bg-white shadow-xl dark:bg-neutral-900'>
-        <SearchAndDateBar
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-          selectedDate={selectedDate}
-          showDatePicker={showDatePicker}
-          onToggleDatePicker={handleToggleDatePicker}
-          onDateChange={handleDateChange}
-        />
-      </View>
-    </View>
+    </KeyboardAvoid>
   )
 })
 

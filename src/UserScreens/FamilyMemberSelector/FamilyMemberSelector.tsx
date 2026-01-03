@@ -67,7 +67,7 @@ const FamilyMemberSelectorScreen = ({ navigation }: NavProp) => {
               }
             }}
             disabled={!selectedMemberId}
-            progressFill={selectedMemberId ? 75 : 50}
+           
           />
         </View>
       </View>

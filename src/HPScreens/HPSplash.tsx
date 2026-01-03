@@ -1,6 +1,6 @@
 import authStore from '@/zustand/authStore'
 import { navigationStore } from '@/zustand/navigationStore'
-import { hpApi } from '@utils/client'
+
 import { Medium } from '@utils/fonts'
 import { HPNavProp } from '@utils/types'
 import { useEffect } from 'react'
@@ -12,12 +12,13 @@ export default function HPSplash({ navigation }: HPNavProp) {
 
   useEffect(() => {
     setNavigation(navigation)
-  }, [navigation, setNavigation])
 
-  useEffect(() => {
-    if (!token) navigation.replace('HPLogin')
-    else navigation.replace('HPHome')
-  }, [navigation, token])
+    const timer = setTimeout(() => {
+      navigation.replace(token ? 'HPHome' : 'HPLogin')
+    }, 2000)
+
+    return () => clearTimeout(timer)
+  }, [navigation, token, setNavigation])
 
   return (
     <View className='flex-1 items-center justify-center'>

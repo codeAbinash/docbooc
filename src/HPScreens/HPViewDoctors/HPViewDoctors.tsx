@@ -62,7 +62,7 @@ const HPViewDoctors = () => {
   return (
     <>
       <HybridHead
-        title='View Doctors'
+        title='My Schedules'
         searchPlaceholder='Search doctors, specialties...'
         onSearchChange={setSearchQuery}
         showMenu={true}
@@ -72,14 +72,14 @@ const HPViewDoctors = () => {
         onChipSelect={handleSpecialtySelect}
         chipScrollRef={scrollViewRef}
       />
-      <View className='flex-1 bg-neutral-100 dark:bg-neutral-900'>
+      <View className='flex-1 bg-white dark:bg-neutral-900'>
         {isLoading ? (
           <View className='flex-1 items-center justify-center'>
             <ActivityIndicator size='large' color={Colors.accent} />
           </View>
         ) : (
           <FlatList
-            className='mt-4 flex-1'
+            className='flex-1 pt-2'
             contentContainerClassName='px-5 pb-10'
             data={filteredDoctors}
             renderItem={({ item }) => (

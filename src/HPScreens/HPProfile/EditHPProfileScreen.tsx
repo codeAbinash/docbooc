@@ -2,7 +2,7 @@ import { DEFAULT_PP_IMAGE } from '@/constants'
 import popupStore from '@/zustand/popupStore'
 import PlusSignIcon from '@assets/icons/hugeicons/PlusSignIcon'
 import Button from '@components/Button'
-import CustomHeader from '@components/CustomHeader'
+import HybridHead from '@components/HybridHead'
 import KeyboardAvoid from '@components/KeyboardAvoid'
 import Press from '@components/Press'
 import { useNavigation } from '@react-navigation/native'
@@ -11,8 +11,9 @@ import { hpApi } from '@utils/client'
 import { Medium, SEMIBOLD } from '@utils/fonts'
 import { HPStackNav } from '@utils/types'
 import { useEffect, useState } from 'react'
-import { ActivityIndicator, Image, PermissionsAndroid, TextInput, View, useColorScheme } from 'react-native'
+import { ActivityIndicator, Image, PermissionsAndroid, ScrollView, TextInput, View, useColorScheme } from 'react-native'
 import { goodZodErrorMessage } from '../utils/goodZodError'
+import { PaddingBottom } from '@components/SafePadding'
 
 const requestLocationPermission = async () => {
   try {
@@ -171,7 +172,7 @@ export default function EditHPProfileScreen() {
   if (isLoading) {
     return (
       <View className='flex-1 bg-white dark:bg-neutral-900'>
-        <CustomHeader title='Edit Address' showBackButton onBackPress={() => navigation.goBack()} />
+        <HybridHead title='Edit Address' />
         <View className='flex-1 items-center justify-center'>
           <ActivityIndicator size='large' color='#2563eb' />
           <Medium className='mt-4 text-neutral-600 dark:text-neutral-400'>Loading profile...</Medium>
@@ -181,12 +182,13 @@ export default function EditHPProfileScreen() {
   }
 
   return (
+    
     <View className='flex-1 bg-white dark:bg-neutral-900'>
-      <CustomHeader title='Edit Address' showBackButton onBackPress={() => navigation.goBack()} />
-
-      <KeyboardAvoid showsVerticalScrollIndicator={false} className='flex-1'>
+      <HybridHead title='Edit Address' showBackButton />
+<KeyboardAvoid>
+      <ScrollView showsVerticalScrollIndicator={false}>
         {/* Profile Picture Section */}
-        <View className='items-center gap-4 px-5 py-8'>
+        <View className='items-center gap-4 px-5  py-5'>
           <View className='relative'>
             <Image
               source={{ uri: profileImage || DEFAULT_PP_IMAGE }}
@@ -203,22 +205,31 @@ export default function EditHPProfileScreen() {
         </View>
 
         {/* Form Section */}
-        <View className='gap-4 px-5 pb-6'>
-          {/* Name and Phone */}
-          <View className='gap-3'>
-            <View>
-              <Medium className='mb-2 text-sm text-neutral-600 dark:text-neutral-400'>Full Name (Required) *</Medium>
+        
+        <View className='gap-5 px-6 pb-6'>
+          
+          {/* Personal Information Card */}
+          <View className='rounded-2xl border border-neutral-200 bg-white p-5 dark:border-neutral-700 dark:bg-neutral-800'>
+            <Medium className='mb-4 text-base font-semibold text-neutral-900 dark:text-white'>
+              Personal Information
+            </Medium>
+
+            {/* Name */}
+            <View className='mb-4'>
+              <Medium className='mb-2 text-xs text-neutral-600 dark:text-neutral-400'>Full Name (Required) *</Medium>
               <TextInput
                 value={name}
                 onChangeText={setName}
                 placeholder='Enter your full name'
-                className='rounded-xl border border-neutral-300 bg-white px-4 py-3 dark:border-neutral-600 dark:bg-neutral-800 dark:text-white'
+                className='rounded-lg border border-neutral-300 bg-white px-3 py-2.5 text-sm dark:border-neutral-600 dark:bg-neutral-700 dark:text-white'
                 placeholderTextColor={scheme === 'dark' ? '#9ca3af' : '#9ca3af'}
                 style={SEMIBOLD}
               />
             </View>
-            <View>
-              <Medium className='mb-2 text-sm text-neutral-600 dark:text-neutral-400'>
+
+            {/* Email */}
+            <View className='mb-4'>
+              <Medium className='mb-2 text-xs text-neutral-600 dark:text-neutral-400'>
                 Email Address (Required) *
               </Medium>
               <TextInput
@@ -227,137 +238,140 @@ export default function EditHPProfileScreen() {
                 placeholder='Enter your email address'
                 keyboardType='email-address'
                 autoCapitalize='none'
-                className='rounded-xl border border-neutral-300 bg-white px-4 py-3 dark:border-neutral-600 dark:bg-neutral-800 dark:text-white'
+                className='rounded-lg border border-neutral-300 bg-white px-3 py-2.5 text-sm dark:border-neutral-600 dark:bg-neutral-700 dark:text-white'
                 placeholderTextColor={scheme === 'dark' ? '#9ca3af' : '#9ca3af'}
                 style={SEMIBOLD}
               />
             </View>
 
-            <View>
-              <Medium className='mb-2 text-sm text-neutral-600 dark:text-neutral-400'>Phone number (Required) *</Medium>
+            {/* Phone */}
+            <View className='mb-3'>
+              <Medium className='mb-2 text-xs text-neutral-600 dark:text-neutral-400'>Phone Number (Required) *</Medium>
               <TextInput
                 value={phone}
                 onChangeText={setPhone}
                 keyboardType='phone-pad'
                 placeholder='Enter your phone number'
-                className='rounded-xl border border-neutral-300 bg-white px-4 py-3 dark:border-neutral-600 dark:bg-neutral-800 dark:text-white'
+                className='rounded-lg border border-neutral-300 bg-white px-3 py-2.5 text-sm dark:border-neutral-600 dark:bg-neutral-700 dark:text-white'
                 placeholderTextColor={scheme === 'dark' ? '#9ca3af' : '#9ca3af'}
                 style={SEMIBOLD}
               />
             </View>
 
-            <Press className='py-2'>
-              <Medium className='text-base text-blue-600'>+ Add Alternate Phone Number</Medium>
-            </Press>
+            
           </View>
 
-          {/* Pincode and Location */}
-          <View className='flex-row gap-3'>
-            <View className='flex-1'>
-              <Medium className='mb-2 text-sm text-neutral-600 dark:text-neutral-400'>Pincode (Required) *</Medium>
+          {/* Address Card */}
+          <View className='rounded-2xl border border-neutral-200 bg-white p-5 dark:border-neutral-700 dark:bg-neutral-800'>
+            <Medium className='mb-4 text-base font-semibold text-neutral-900 dark:text-white'>Address</Medium>
+
+            {/* Pincode and Location */}
+            <View className='mb-4 flex-row gap-3'>
+              <View className='flex-1'>
+                <Medium className='mb-2 text-xs text-neutral-600 dark:text-neutral-400'>Pincode (Required) *</Medium>
+                <TextInput
+                  value={pincode}
+                  onChangeText={setPincode}
+                  keyboardType='number-pad'
+                  placeholder='Pincode'
+                  className='rounded-lg border border-neutral-300 bg-white px-3 py-2.5 text-sm dark:border-neutral-600 dark:bg-neutral-700 dark:text-white'
+                  placeholderTextColor={scheme === 'dark' ? '#9ca3af' : '#9ca3af'}
+                  style={SEMIBOLD}
+                />
+              </View>
+              <View className='flex-1'>
+                <Medium className='mb-2 text-xs text-neutral-600 dark:text-neutral-400'></Medium>
+                <Press disabled={locationLoading} className='flex-1 items-center justify-center rounded-lg bg-blue-600'>
+                  <Medium className='text-xs text-white'>{locationLoading ? 'Getting...' : 'Location'}</Medium>
+                </Press>
+              </View>
+            </View>
+
+            {/* State and City */}
+            <View className='mb-4 flex-row gap-3'>
+              <View className='flex-1'>
+                <Medium className='mb-2 text-xs text-neutral-600 dark:text-neutral-400'>State (Required) *</Medium>
+                <TextInput
+                  value={state}
+                  onChangeText={setState}
+                  placeholder='State'
+                  className='rounded-lg border border-neutral-300 bg-white px-3 py-2.5 text-sm dark:border-neutral-600 dark:bg-neutral-700 dark:text-white'
+                  placeholderTextColor={scheme === 'dark' ? '#9ca3af' : '#9ca3af'}
+                  style={SEMIBOLD}
+                />
+              </View>
+              <View className='flex-1'>
+                <Medium className='mb-2 text-xs text-neutral-600 dark:text-neutral-400'>City (Required) *</Medium>
+                <TextInput
+                  value={city}
+                  onChangeText={setCity}
+                  placeholder='City'
+                  className='rounded-lg border border-neutral-300 bg-white px-3 py-2.5 text-sm dark:border-neutral-600 dark:bg-neutral-700 dark:text-white'
+                  placeholderTextColor={scheme === 'dark' ? '#9ca3af' : '#9ca3af'}
+                  style={SEMIBOLD}
+                />
+              </View>
+            </View>
+
+            {/* House No */}
+            <View className='mb-4'>
+              <Medium className='mb-2 text-xs text-neutral-600 dark:text-neutral-400'>
+                House No., Building Name (Required) *
+              </Medium>
               <TextInput
-                value={pincode}
-                onChangeText={setPincode}
-                keyboardType='number-pad'
-                placeholder='Pincode'
-                className='rounded-xl border border-neutral-300 bg-white px-4 py-3 dark:border-neutral-600 dark:bg-neutral-800 dark:text-white'
+                value={houseNo}
+                onChangeText={setHouseNo}
+                placeholder='House No., Building Name'
+                className='rounded-lg border border-neutral-300 bg-white px-3 py-2.5 text-sm dark:border-neutral-600 dark:bg-neutral-700 dark:text-white'
                 placeholderTextColor={scheme === 'dark' ? '#9ca3af' : '#9ca3af'}
                 style={SEMIBOLD}
               />
             </View>
-            <View className='flex-1'>
-              <Medium className='mb-2 text-sm text-neutral-600 dark:text-neutral-400'></Medium>
-              <Press
-                disabled={locationLoading}
-                className='flex-1 items-center justify-center rounded-xl bg-blue-600 px-4'
-              >
-                <Medium className='flex-row items-center justify-center text-white'>
-                  {locationLoading ? ' Getting location...' : ' Use my location'}
-                </Medium>
-              </Press>
-            </View>
-          </View>
 
-          {/* State and City */}
-          <View className='flex-row gap-3'>
-            <View className='flex-1'>
-              <Medium className='mb-2 text-sm text-neutral-600 dark:text-neutral-400'>State (Required) *</Medium>
+            {/* Road Name */}
+            <View className='mb-4'>
+              <Medium className='mb-2 text-xs text-neutral-600 dark:text-neutral-400'>
+                Road Name, Area, Colony (Required) *
+              </Medium>
               <TextInput
-                value={state}
-                onChangeText={setState}
-                placeholder='State'
-                className='rounded-xl border border-neutral-300 bg-white px-4 py-3 dark:border-neutral-600 dark:bg-neutral-800 dark:text-white'
+                value={roadName}
+                onChangeText={setRoadName}
+                placeholder='Road name, Area, Colony'
+                className='rounded-lg border border-neutral-300 bg-white px-3 py-2.5 text-sm dark:border-neutral-600 dark:bg-neutral-700 dark:text-white'
                 placeholderTextColor={scheme === 'dark' ? '#9ca3af' : '#9ca3af'}
                 style={SEMIBOLD}
               />
             </View>
-            <View className='flex-1'>
-              <Medium className='mb-2 text-sm text-neutral-600 dark:text-neutral-400'>City (Required) *</Medium>
+
+            {/* Landmark */}
+            <View>
+              <Medium className='mb-2 text-xs text-neutral-600 dark:text-neutral-400'>Landmark (Required) *</Medium>
               <TextInput
-                value={city}
-                onChangeText={setCity}
-                placeholder='City'
-                className='rounded-xl border border-neutral-300 bg-white px-4 py-3 dark:border-neutral-600 dark:bg-neutral-800 dark:text-white'
+                value={landmark}
+                onChangeText={setLandmark}
+                placeholder='Nearby landmark'
+                className='rounded-lg border border-neutral-300 bg-white px-3 py-2.5 text-sm dark:border-neutral-600 dark:bg-neutral-700 dark:text-white'
                 placeholderTextColor={scheme === 'dark' ? '#9ca3af' : '#9ca3af'}
                 style={SEMIBOLD}
               />
             </View>
           </View>
-
-          {/* House No */}
-          <View>
-            <Medium className='mb-2 text-sm text-neutral-600 dark:text-neutral-400'>
-              House No., Building Name (Required) *
-            </Medium>
-            <TextInput
-              value={houseNo}
-              onChangeText={setHouseNo}
-              placeholder='House No., Building Name'
-              className='rounded-xl border border-neutral-300 bg-white px-4 py-3 dark:border-neutral-600 dark:bg-neutral-800 dark:text-white'
-              placeholderTextColor={scheme === 'dark' ? '#9ca3af' : '#9ca3af'}
-              style={SEMIBOLD}
-            />
-          </View>
-
-          {/* Road Name */}
-          <View>
-            <Medium className='mb-2 text-sm text-neutral-600 dark:text-neutral-400'>
-              Road name, Area, Colony (Required) *
-            </Medium>
-            <TextInput
-              value={roadName}
-              onChangeText={setRoadName}
-              placeholder='Road name, Area, Colony'
-              className='rounded-xl border border-neutral-300 bg-white px-4 py-3 dark:border-neutral-600 dark:bg-neutral-800 dark:text-white'
-              placeholderTextColor={scheme === 'dark' ? '#9ca3af' : '#9ca3af'}
-              style={SEMIBOLD}
-            />
-          </View>
-
-          {/* Landmark */}
-
-          <View>
-            <Medium className='mb-2 text-sm text-neutral-600 dark:text-neutral-400'>Landmark (Required) *</Medium>
-            <TextInput
-              value={landmark}
-              onChangeText={setLandmark}
-              placeholder='Road name, Area, Colony'
-              className='rounded-xl border border-neutral-300 bg-white px-4 py-3 dark:border-neutral-600 dark:bg-neutral-800 dark:text-white'
-              placeholderTextColor={scheme === 'dark' ? '#9ca3af' : '#9ca3af'}
-              style={SEMIBOLD}
-            />
-          </View>
+          
         </View>
-      </KeyboardAvoid>
+        
+      </ScrollView>
+</KeyboardAvoid>
 
       {/* Save Button */}
-      <View className='gap-3 border-t border-neutral-200 bg-white px-5 py-4 dark:border-neutral-700 dark:bg-neutral-800'>
+      <View className='gap-3 bg-white px-5 pt-3 dark:border-neutral-700 dark:bg-neutral-800'>
         <Button
           title={updateMutation.isPending ? 'Saving...' : 'Save Address'}
           onPress={handleSave}
           disabled={updateMutation.isPending}
         />
+        <PaddingBottom/>
       </View>
     </View>
+    
   )
 }

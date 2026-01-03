@@ -1,4 +1,4 @@
-import CustomHeader from '@components/CustomHeader'
+import HybridHead from '@components/HybridHead'
 import popupStore from '@/zustand/popupStore'
 import Button from '@components/Button'
 import { PaddingBottom, PaddingTop } from '@components/SafePadding'
@@ -112,17 +112,17 @@ const HPScheduleReview = () => {
   const scheduleType = (scheduleData.scheduleType || 'daily') as 'daily' | 'weekly' | 'monthly'
 
   return (
-    <View className='bg flex-1'>
-      <CustomHeader title={doctorName} showBackButton onBackPress={() => navigation.goBack()} />
+    <View className='flex-1 bg-white'>
+      <HybridHead title={doctorName} showBackButton onBackPress={() => navigation.goBack()} />
       <View className='flex-1'>
         <ScrollView className='flex-1' showsVerticalScrollIndicator={false}>
           <View className='gap-6 p-5'>
-            <ScheduleCard type={scheduleType} schedules={schedules} />
+            <ScheduleCard type={scheduleType} schedules={schedules} showSelector={false} />
           </View>
         </ScrollView>
-        <View className='px-6 pb-2 pt-2'>
+        <View className='px-5 py-3'>
           <Button
-            title={isPending ? 'Sending...' : 'Send for Review'}
+            title={isPending ? 'Sending...' : 'Submit for Review'}
             onPress={handleSendForReview}
             disabled={isPending}
           />

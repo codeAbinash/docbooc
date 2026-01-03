@@ -6,7 +6,6 @@ import HPTodaysAppointmentsScreen from './HPTodaysAppointments/HPTodaysAppointme
 import HPUpcomingAppointmentsScreen from './HPUpcomingAppointments/HPUpcomingAppointmentsScreen'
 import HPViewDoctors from './HPViewDoctors/HPViewDoctors'
 import HPProfileScreen from './HPProfile/HPProfileScreen'
-import AdminAddDoctors from '../AdminScreens/AdminAddDoctors'
 
 const Drawer = createDrawerNavigator()
 
@@ -23,10 +22,9 @@ export default function App() {
     >
       <Drawer.Screen name='Appointments' component={HPTodaysAppointmentsScreen} />
       <Drawer.Screen name='UpcomingAppointments' component={HPUpcomingAppointmentsScreen} />
-      <Drawer.Screen name='ScheduleDoctors' component={HPScheduleDoctors} />
+      <Drawer.Screen name='ScheduleDoctors' component={HPScheduleDoctors}  />
       <Drawer.Screen name='ViewDoctors' component={HPViewDoctors} />
       <Drawer.Screen name='AddPatients' component={HPAddPatients} />
-
       <Drawer.Screen name='Settings' component={HPProfileScreen} />
     </Drawer.Navigator>
   )

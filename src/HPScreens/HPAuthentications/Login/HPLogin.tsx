@@ -5,14 +5,15 @@ import InputWithLabel from '@components/InputWithLabel'
 import BottomSheet from '@components/BottomSheet'
 import PageCarousel from '@components/PageCarousel'
 import { PaddingBottom, PaddingTop } from '@components/SafePadding'
-import { TC_and_PP } from '@components/TC_and_PP'
+
 import { useMutation } from '@tanstack/react-query'
 import { client, updateClientHeader } from '@utils/client'
 import { Black, Bold, Medium, SemiBold } from '@utils/fonts'
 import { secureLs } from '@utils/storage'
 import { HPNavProp } from '@utils/types'
 import { useState, useMemo, useCallback } from 'react'
-import { View } from 'react-native'
+import { Pressable, Text, View } from 'react-native'
+import KeyboardAvoid from '@components/KeyboardAvoid'
 
 export default function HPLogin({ navigation }: HPNavProp) {
   const { setToken } = authStore()
@@ -98,18 +99,19 @@ export default function HPLogin({ navigation }: HPNavProp) {
     <View className='flex-1 bg-white dark:bg-black'>
       <PaddingTop />
 
-      <PageCarousel pages={pages} onPageChange={handlePageChange} showDots />
-
-      <BottomSheet visible={true} onClose={() => {}}>
-        <View className='gap-6 px-6 py-4'>
-          <View className='gap-2'>
+      <PageCarousel pages={pages} onPageChange={handlePageChange} showDots showSkip={false} carouselHeightRatio={0.55} />
+<KeyboardAvoid>
+      <BottomSheet visible={true} onClose={() => {}} heightRatio={0.4}>
+        
+        <View className='gap-4 px-8 py-4 '>
+          <View className=''>
             <Bold className='text-2xl text-black dark:text-white'>Login to Console</Bold>
             <Medium className='text-sm text-gray-600 dark:text-gray-400'>
               Enter your credentials to access your dashboard
             </Medium>
           </View>
 
-          <View className='gap-5'>
+          <View className='gap-3'>
             <InputWithLabel
               label='Email'
               placeholder='Enter your email address'
@@ -128,22 +130,34 @@ export default function HPLogin({ navigation }: HPNavProp) {
             />
           </View>
 
-          <Button
-            title={loginMutation.isPending ? 'Logging in...' : 'Login'}
-            onPress={handleLogin}
-            disabled={loginMutation.isPending}
-          />
+          <View className='gap-2 pt-4' >
+            <Button
+              title={loginMutation.isPending ? 'Logging in...' : 'Login'}
+              onPress={handleLogin}
+              disabled={loginMutation.isPending}
+            />
 
-          <SemiBold className='text-center text-sm text-gray-600 dark:text-gray-400'>
-            Don't have an account?{' '}
-            <SemiBold className='text-accent' onPress={() => navigation.navigate('HPSignup')}>
-              Sign Up
-            </SemiBold>
-          </SemiBold>
-
-          <TC_and_PP />
+            <Medium className='text-center text-base text-gray-600 dark:text-gray-400'>
+              Don't have an account?{' '}
+              <SemiBold className='text-accent' onPress={() => navigation.navigate('HPSignup')}>
+                Register
+              </SemiBold>
+            </Medium>
+          </View>
+         
         </View>
       </BottomSheet>
+</KeyboardAvoid>
+
+      <View className='flex items-center justify-center pt-3 pb-3'>
+        <Medium className='text-center text-xs text-zinc-600 dark:text-zinc-400'>By 'logging in' I agree to the</Medium>
+
+        <View className='flex-row items-center justify-center gap-8'>
+          <Pressable onPress={() => {}}>
+            <Text className='font-semibold text-blue-600 underline'>Terms of Service & Privacy Policy</Text>
+          </Pressable>
+        </View>
+      </View>
 
       <PaddingBottom />
     </View>

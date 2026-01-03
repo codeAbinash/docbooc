@@ -153,26 +153,26 @@ export default function Weekly({ onScheduleChange }: WeeklyProps) {
   }
 
   return (
-    <ScrollView className='flex-1' contentContainerClassName='px-5 py-4 pt-2 gap-6'>
-      <View className='rounded-2xl bg-white p-4 dark:bg-neutral-800'>
+    <ScrollView className='flex-1' contentContainerClassName='px-5 gap-4'>
+      <View className='rounded-2xl bg-white p-4  border border-neutral-400   dark:bg-neutral-800'>
         <View className='mb-4 flex-row items-center justify-between'>
           <View className='flex-row items-center'>
             <View className='mr-3 rounded-lg p-1 dark:border-blue-800/30 dark:bg-blue-900/20'>
               <Calendar01Icon size={28} color='#3b82f6' strokeWidth={2} />
             </View>
-            <SemiBold className='text-base text-neutral-800 dark:text-neutral-200'>Weekly Schedule</SemiBold>
+            <SemiBold className='text-base  text-neutral-800 dark:text-neutral-200'>Weekly Schedule</SemiBold>
           </View>
           <Medium className='text-xs text-neutral-500'>{selectedDays.length} days selected</Medium>
         </View>
 
         <View className='flex-row justify-between'>
           {DAYS.map((day) => (
-            <TouchableOpacity key={day} onPress={() => toggleDay(day)} activeOpacity={0.7} className='items-center'>
+            <TouchableOpacity key={day} onPress={() => toggleDay(day)} activeOpacity={0.7} className=' items-center'>
               <View
-                className={`mb-1.5 h-11 w-11 items-center justify-center rounded-lg ${
+                className={` h-12 w-12 items-center justify-center  rounded-lg ${
                   selectedDays.includes(day)
-                    ? 'bg-blue-100 dark:bg-blue-900/30'
-                    : 'border-2 border-neutral-100 dark:border-neutral-700'
+                    ? 'bg-blue-100  dark:bg-blue-900/30'
+                    : 'border border-neutral-400 dark:border-neutral-700'
                 }`}
               >
                 <SemiBold
@@ -185,16 +185,7 @@ export default function Weekly({ onScheduleChange }: WeeklyProps) {
                   {CHAR_DAYS[day]}
                 </SemiBold>
               </View>
-              {/* <Medium
-                className={`text-xs ${
-                  selectedDays.includes(day)
-                    ? 'text-blue-600 dark:text-blue-400'
-                    : 'text-neutral-500 dark:text-neutral-400'
-                }`}
-              >
-                {SHORT_DAYS[day]}
-              </Medium> */}
-            </TouchableOpacity>
+               </TouchableOpacity>
           ))}
         </View>
       </View>
@@ -204,8 +195,11 @@ export default function Weekly({ onScheduleChange }: WeeklyProps) {
         if (!daySchedule) return null
 
         return (
-          <View key={day} className='overflow-hidden rounded-2xl bg-white dark:bg-neutral-800'>
-            <View className='border-b border-neutral-100 p-4 dark:border-neutral-700'>
+          <View
+            key={day}
+            className='overflow-hidden rounded-2xl border border-neutral-400  bg-white dark:border-neutral-700 dark:bg-neutral-800'
+          >
+            <View className='border-b  border-neutral-400 p-4 dark:border-neutral-700'>
               <View className='flex-row items-center justify-between'>
                 <View className='flex-row items-center gap-3'>
                   <View className='rounded-lg bg-blue-100/50 p-2.5 dark:bg-blue-900/20'>
@@ -231,59 +225,75 @@ export default function Weekly({ onScheduleChange }: WeeklyProps) {
             <View>
               {daySchedule.slots.map((slot, index) => (
                 <View key={slot.id}>
-                  {index > 0 && <View className='h-[1px] bg-neutral-100 dark:bg-neutral-700' />}
-                  <View className='p-4'>
-                    <View className='mb-4 flex-row items-center justify-between'>
-                      <View className='flex-row items-center gap-3'>
-                        <View>
-                          <Medium>
-                            <View className='size-10 items-center justify-center rounded-lg bg-accent/10'>
-                              <SemiBold className='text-center text-xl text-accent'>
-                                {(index + 1).toString().padStart(2, '0')}
-                              </SemiBold>
-                            </View>
-                          </Medium>
+                  {index > 0 && <View className='h-[1px] bg-neutral-300 dark:bg-neutral-700' />}
+                  <View className={`flex-row`}>
+                    
+                    <View className='flex-1 p-4'>
+                      <View className='mb-4 flex-row items-center justify-between'>
+                        <View className='flex-row items-center gap-3'>
+                          <View>
+                            <Medium>
+                              <View className='size-10 items-center justify-center rounded-lg bg-accent/10'>
+                                <SemiBold className='text-center text-xl text-accent'>
+                                  {(index + 1).toString().padStart(2, '0')}
+                                </SemiBold>
+                              </View>
+                            </Medium>
+                          </View>
+                          <View>
+                            <SemiBold className='text-base text-neutral-800 dark:text-neutral-200'>
+                              Slot {index + 1}
+                            </SemiBold>
+                            <Medium className='text-xs text-neutral-500 dark:text-neutral-400'>
+                              {slot.startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} -{' '}
+                              {slot.endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                            </Medium>
+                          </View>
                         </View>
-                        <View>
-                          <SemiBold className='text text-lg'>Slot {index + 1}</SemiBold>
+                        <TouchableOpacity
+                          onPress={() => daySchedule.slots.length > 1 && removeTimeSlot(day, slot.id)}
+                          activeOpacity={0.7}
+                          className={`items-center rounded-lg p-2 ${
+                            daySchedule.slots.length > 1
+                              ? 'bg-red-100/50 dark:border-red-800/30 dark:bg-red-900/20'
+                              : 'bg-neutral-100/50 dark:bg-neutral-700/20'
+                          }`}
+                        >
+                          <Cancel01Icon size={20} color={daySchedule.slots.length > 1 ? '#ef4444' : '#9ca3af'} />
+                        </TouchableOpacity>
+                      </View>
+                      <View className='gap-3'>
+                        <View className='flex-row gap-3'>
+                          <TimeButton
+                            slot={slot}
+                            type='start'
+                            onTogglePicker={(id, type) => togglePicker(day, id, type)}
+                            onTimeChange={(id, type, event, date) => updateTime(day, id, type, event, date)}
+                          />
+                          <TimeButton
+                            slot={slot}
+                            type='end'
+                            onTogglePicker={(id, type) => togglePicker(day, id, type)}
+                            onTimeChange={(id, type, event, date) => updateTime(day, id, type, event, date)}
+                          />
                         </View>
-                      </View>
-                      <TouchableOpacity
-                        onPress={() => daySchedule.slots.length > 1 && removeTimeSlot(day, slot.id)}
-                        activeOpacity={0.7}
-                        className={`items-center rounded-lg p-2 ${
-                          daySchedule.slots.length > 1
-                            ? 'bg-red-100/50 dark:border-red-800/30 dark:bg-red-900/20'
-                            : 'bg-neutral-100/50 dark:bg-neutral-700/20'
-                        }`}
-                      >
-                        <Cancel01Icon size={20} color={daySchedule.slots.length > 1 ? '#ef4444' : '#9ca3af'} />
-                      </TouchableOpacity>
-                    </View>
-                    <View className='gap-3'>
-                      <View className='flex-row gap-3'>
-                        <TimeButton
-                          slot={slot}
-                          type='start'
-                          onTogglePicker={(id, type) => togglePicker(day, id, type)}
-                          onTimeChange={(id, type, event, date) => updateTime(day, id, type, event, date)}
-                        />
-                        <TimeButton
-                          slot={slot}
-                          type='end'
-                          onTogglePicker={(id, type) => togglePicker(day, id, type)}
-                          onTimeChange={(id, type, event, date) => updateTime(day, id, type, event, date)}
-                        />
-                      </View>
-                      <View>
-                        <Medium className='mb-2 text-xs text-neutral-600 dark:text-neutral-400'>Max Bookings</Medium>
-                        <TextInput
-                          value={slot.maxBookings.toString()}
-                          onChangeText={(value) => updateMaxBookings(day, slot.id, value)}
-                          keyboardType='number-pad'
-                          maxLength={3}
-                          className='rounded-lg border border-neutral-200 bg-white px-4 py-3 text-center text-lg text-neutral-800 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-200'
-                        />
+                        <View className='flex-row items-center gap-3'>
+                          <View className='flex-1'>
+                            <Medium className='text-xs text-neutral-500 dark:text-neutral-400'>Max Bookings</Medium>
+                            <Medium className='text-xs text-neutral-400 dark:text-neutral-500'>
+                              Number of patients can visit during this slot
+                            </Medium>
+                          </View>
+                          <View className='w-1/2'>
+                            <TextInput
+                              value={slot.maxBookings.toString()}
+                              onChangeText={(value) => updateMaxBookings(day, slot.id, value)}
+                              keyboardType='number-pad'
+                              maxLength={3}
+                              className='rounded-lg border border-neutral-200 bg-white px-4 py-3 text-center text-lg text-neutral-800 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-200'
+                            />
+                          </View>
+                        </View>
                       </View>
                     </View>
                   </View>

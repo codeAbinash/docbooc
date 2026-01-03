@@ -331,7 +331,7 @@ export const doctors = [
   },
 ]
 
-export const PRIVACY_POLICY_URL = 'https://example.com/privacy-policy'
+
 export const TERMS_OF_SERVICE_URL = 'https://example.com/terms-of-service'
 
-export const DEFAULT_PP_IMAGE = 'https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png'
+export const DEFAULT_PP_IMAGE = 'https://st4.depositphotos.com/7877830/25337/v/450/depositphotos_253374286-stock-illustration-vector-illustration-male-doctor-avatar.jpg'

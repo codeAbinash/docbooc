@@ -62,10 +62,10 @@ const Status = memo(({ status }: { status?: 'provisional' | 'confirmed' }) => {
   const style = config[status]
 
   return (
-    <View className={`rounded-lg border px-2 py-0.5 ${style.bg} ${style.border}`}>
+    <View className={` px-1 py-1 ${style.bg} ${style.border}`}>
       <View className='flex-row items-center gap-0.5'>
-        <Medium className={`text-[10px] ${style.text}`}>{style.icon}</Medium>
-        <Medium className={`text-[10px] capitalize ${style.text}`}>{status}</Medium>
+        {/* <Medium className={`text-xs ${style.text}`}>{style.icon}</Medium> */}
+        <Medium className={`text-xs capitalize ${style.text}`}>{status}</Medium>
       </View>
     </View>
   )
@@ -93,12 +93,12 @@ const PatientCard = memo(
     onMoveToOngoing,
     hideActions = false,
   }: PatientCardProps) => (
-    <View className='mb-3 rounded-[19px] bg-white dark:bg-zinc-900'>
+    <View className='mb-3 rounded-[19px] bg-white border border-neutral-200 dark:bg-zinc-900'>
       <TouchableOpacity onPress={hideActions ? undefined : () => onToggle(patient.id)} className='p-3.5'>
         <View className='flex-row'>
           <QueueNumber number={patient.queuePosition} />
           <View className='flex-1'>
-            <View className='flex-row items-start justify-between'>
+            <View className='flex-row items-start  justify-between'>
               <View className='mr-3 flex-1'>
                 <PatientInfo name={patient.name} gender={patient.gender} age={patient.age} />
               </View>
