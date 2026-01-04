@@ -15,6 +15,13 @@ import { DateCardContainer } from '@/components/DateCardContainer'
 import authStore from '@/zustand/authStore'
 import { useBookingStore } from '@/zustand/bookingStore'
 
+const formatTo12Hour = (time: string): string => {
+  const [hours, minutes] = time.split(':').map(Number)
+  const period = (hours ?? 0) >= 12 ? 'PM' : 'AM'
+  const displayHours = (hours ?? 0) % 12 || 12
+  return `${displayHours}:${String(minutes).padStart(2, '0')} ${period}`
+}
+
 const BookAppointment = () => {
   const navigation = useNavigation<StackNav>()
   const { doctor } = useRoute<RouteProp<RootStackParamList, 'BookAppointment'>>().params
@@ -101,7 +108,7 @@ const BookAppointment = () => {
                   title={hp.name || 'Unknown Provider'}
                   time={
                     slot.startTime && slot.endTime
-                      ? `${slot.startTime.slice(0, 5)} - ${slot.endTime.slice(0, 5)}`
+                      ? `${formatTo12Hour(slot.startTime)} - ${formatTo12Hour(slot.endTime)}`
                       : undefined
                   }
                   address={address || 'N/A'}

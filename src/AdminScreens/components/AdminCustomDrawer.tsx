@@ -6,6 +6,7 @@ import TaskDone01Icon from '@hugeicons/TaskDone01Icon'
 import UserCheck01Icon from '@hugeicons/UserCheck01Icon'
 import Doctor01Icon from '@hugeicons/Doctor01Icon'
 import PatientIcon from '@hugeicons/PatientIcon'
+import Building02Icon from '@hugeicons/PlusSignIcon'
 import { DrawerContentScrollView } from '@react-navigation/drawer'
 import { useTheme } from '@react-navigation/native'
 import Colors from '@utils/colors'
@@ -17,6 +18,7 @@ import ProfilePicture from '../../components/ProfilePicture'
 
 const DRAWER_ITEMS = [
   { name: 'Add Doctors', icon: PlusSignIcon, navigationName: 'AdminAddDoctors' },
+  { name: 'Add Departments', icon: Building02Icon, navigationName: 'AdminAddDepartments' },
   { name: 'Approve Schedules', icon: TaskDone01Icon, navigationName: 'AdminApproveSchedules' },
   { name: 'Approve Bookings', icon: UserCheck01Icon, navigationName: 'AdminApproveBookings' },
   { name: 'View HPs', icon: Doctor01Icon, navigationName: 'AdminViewHPs' },

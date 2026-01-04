@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react'
 import { ScrollView, View } from 'react-native'
 
 import Button from '@components/Button'
-import CustomHeader from '@components/CustomHeader'
+import HybridHead from '@components/HybridHead'
 import Press from '@components/Press'
 
 import popupStore from '@/zustand/popupStore'
@@ -274,9 +274,9 @@ export default function AdminAddDoctor() {
   const isDark = colorScheme === 'dark'
 
   return (
-    <View className='bg flex-1'>
-      <CustomHeader
-        title={isEditing ? 'Edit Doctor' : "Doctor's Information"}
+    <View className='bg-white flex-1'>
+      <HybridHead
+        title={isEditing ? 'Edit Doctor' : 'Add Doctor'}
         showBackButton
         onBackPress={() => navigation.goBack()}
       />

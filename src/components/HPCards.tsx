@@ -124,21 +124,23 @@ function HPCardsInternal({
       </View>
 
       {/* Info Grid - 3 Columns */}
-      <View className='flex-row gap-2'>
+      <View className='flex-row flex-1 gap-2'>
         {time && (
-          <View className='flex-1 gap-1 rounded-bl-2xl bg-blue-50 p-2 dark:bg-blue-900/20'>
+          <View className='flex-1 gap-1 rounded-xl bg-blue-50 p-2 dark:bg-blue-900/20'>
             <Medium className='text-xs font-semibold text-blue-700 dark:text-blue-400'>Time Slot</Medium>
             <SemiBold className='text-sm text-blue-900 dark:text-blue-200'>{time}</SemiBold>
           </View>
         )}
 
-        <View className='flex-1 gap-1  bg-blue-50 p-2 dark:bg-blue-900/20'>
+        <View className='flex-row flex-1 gap-2'>
+          <View className='flex-1 gap-1 rounded-xl bg-blue-50 p-2 dark:bg-blue-900/20'>
           <Medium className='text-xs font-semibold text-blue-700 dark:text-blue-400'>Distance</Medium>
           <SemiBold className='text-sm text-blue-900 dark:text-blue-200'>{distance}</SemiBold>
         </View>
-        <View className='flex-1 gap-1 rounded-br-2xl bg-blue-50 p-2 dark:bg-blue-900/20'>
+        <View className='flex-1 gap-1 rounded-xl bg-blue-50 p-2 dark:bg-blue-900/20'>
           <Medium className='text-xs font-semibold text-blue-700 dark:text-blue-400'>Queue</Medium>
           <SemiBold className='text-sm text-blue-900 dark:text-blue-200'>Q{q}</SemiBold>
+        </View>
         </View>
       </View>
     </View>

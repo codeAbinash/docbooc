@@ -10,7 +10,7 @@ import { AdminStackNav } from '@utils/types'
 import { useColorScheme } from 'nativewind'
 import { useCallback, useMemo, useState } from 'react'
 import { ActivityIndicator, Alert, FlatList, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import AppBar from '@components/AppBar'
+import HybridHead from '@components/HybridHead'
 
 const AdminAddDoctors = () => {
   const navigation = useNavigation<AdminStackNav>()
@@ -73,55 +73,15 @@ const AdminAddDoctors = () => {
 
   return (
     <View className='flex-1'>
-      <AppBar>
-        <View className='flex-1 flex-row items-center justify-between gap-3'>
-          {showSearch ? (
-            <>
-              <View className='flex-1 pl-3'>
-                <View className='flex-row items-center gap-2 rounded-lg border border-neutral-200 bg-white px-4 dark:border-neutral-700 dark:bg-neutral-800'>
-                  <Search01Icon
-                    size={20}
-                    color={colorScheme === 'dark' ? Colors.text.dark : Colors.text.DEFAULT}
-                    strokeWidth={2}
-                  />
-                  <TextInput
-                    className='flex-1 py-2.5 text-neutral-900 dark:text-white'
-                    placeholder='Search doctors, specialties...'
-                    placeholderTextColor={colorScheme === 'dark' ? '#9ca3af' : '#6b7280'}
-                    value={searchQuery}
-                    onChangeText={setSearchQuery}
-                    autoFocus
-                  />
-                </View>
-              </View>
-              <TouchableOpacity onPress={toggleSearch} className='rounded-lg bg-neutral-100 p-2 dark:bg-neutral-800'>
-                <Cancel01Icon size={26} color={Colors.accent} strokeWidth={2} />
-              </TouchableOpacity>
-            </>
-          ) : (
-            <>
-              <View className='flex-1 items-center justify-center'>
-                <Text className='text-lg font-semibold text-neutral-900 dark:text-white'>Add Doctors</Text>
-              </View>
-              <View className='flex-row gap-2'>
-                <TouchableOpacity onPress={toggleSearch} className='rounded-lg bg-neutral-100 p-2 dark:bg-neutral-800'>
-                  <Search01Icon
-                    size={26}
-                    color={colorScheme === 'dark' ? Colors.text.dark : Colors.text.DEFAULT}
-                    strokeWidth={2}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => navigation.navigate('AdminAddDoctor')}
-                  className='rounded-lg bg-accent p-2'
-                >
-                  <PlusSignIcon size={26} color={Colors.text.dark} strokeWidth={2} />
-                </TouchableOpacity>
-              </View>
-            </>
-          )}
-        </View>
-      </AppBar>
+      <HybridHead
+        title='Add Doctors'
+        showMenu={true}
+        rightElement={
+          <TouchableOpacity onPress={() => navigation.navigate('AdminAddDoctor')} className='rounded-lg bg-accent p-2'>
+            <PlusSignIcon size={26} color={Colors.text.dark} strokeWidth={2} />
+          </TouchableOpacity>
+        }
+      />
       <View className='flex-1 bg-neutral-100 dark:bg-neutral-900'>
         {isLoading ? (
           <View className='flex-1 items-center justify-center'>
