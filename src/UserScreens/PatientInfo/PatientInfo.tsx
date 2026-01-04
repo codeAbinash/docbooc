@@ -3,7 +3,7 @@ import HybridHead from '@components/HybridHead'
 import Press from '@components/Press'
 import BottomSheetCustom from '@components/BottomSheetCustom'
 import { PaddingBottom } from '@components/SafePadding'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useRoute } from '@react-navigation/native'
 import RadioGenderSelector, { Gender } from '@/UserScreens/PatientInfo/RadioGenderSelector'
 import { Bold, Medium, SemiBold } from '@utils/fonts'
 import { StackNav } from '@utils/types'
@@ -18,7 +18,11 @@ const { height: SCREEN_HEIGHT } = Dimensions.get('window')
 
 const PatientInfo = ({}: {}) => {
   const navigation = useNavigation<StackNav>()
+  const route = useRoute()
   const scheme = useColorScheme()
+
+  const isFromFamilyMemberSelector = (route.params as any)?.fromFamilyMember === true
+  const isFromSetupProfile = (route.params as any)?.fromSetupProfile === true
 
   const [name, setName] = useState('')
   const [selectedGender, setSelectedGender] = useState<Gender>()
@@ -82,17 +86,15 @@ const PatientInfo = ({}: {}) => {
     if (isFamilyMember) {
       navigation.goBack()
     } else {
-      navigation.navigate('Complete')
+      navigation.navigate('VerifyBeforeBooking')
     }
   }
 
   return (
-    <View className='flex-1  bg-white dark:bg-neutral-900'>
+    <View className='flex-1 bg-white dark:bg-neutral-900'>
       <HybridHead title='Patient Information' showBackButton onBackPress={() => navigation.goBack()} />
 
-      <ScrollView showsVerticalScrollIndicator={false} className='flex-1 '>
-
-        
+      <ScrollView showsVerticalScrollIndicator={false} className='flex-1'>
         {/* Form Section */}
         <View className='gap-4 px-6 py-5'>
           {/* Full Name (Required) */}
@@ -135,55 +137,61 @@ const PatientInfo = ({}: {}) => {
           </View>
 
           {/* Mobile Number (Required) */}
-          <View>
-            <Medium className='mb-2 text-sm text-neutral-700 dark:text-neutral-300'>Mobile Number (Required) *</Medium>
-            <View className='flex-row gap-3'>
-              <TextInput
-                ref={mobileRef}
-                value={mobile}
-                onChangeText={(text) => {
-                  const cleaned = text.replace(/[^0-9]/g, '')
-                  setMobile(cleaned.slice(0, 10))
-                  if (mobileValidationError) setMobileValidationError('')
-                }}
-                keyboardType='phone-pad'
-                placeholder='Enter your mobile number'
-                maxLength={10}
-                className='flex-1 rounded-xl border bg-white px-4 py-3 text-neutral-900 dark:bg-neutral-800 dark:text-white'
-                style={[
-                  {
-                    borderColor: mobileValidationError ? '#DC2626' : scheme === 'dark' ? '#525252' : '#d1d5db',
-                    borderWidth: 1,
-                  },
-                ]}
-                placeholderTextColor={scheme === 'dark' ? '#9ca3af' : '#d1d5db'}
-              />
-              <Press
-                onPress={handleSendOtp}
-                className='items-center justify-center rounded-xl border border-blue-600 bg-blue-600 px-4 py-3'
-              >
-                <Medium className='text-white disabled:text-neutral-500'>Send OTP</Medium>
-              </Press>
+          {!isFromSetupProfile && (
+            <View>
+              <Medium className='mb-2 text-sm text-neutral-700 dark:text-neutral-300'>
+                Mobile Number (Required) *
+              </Medium>
+              <View className='flex-row gap-3'>
+                <TextInput
+                  ref={mobileRef}
+                  value={mobile}
+                  onChangeText={(text) => {
+                    const cleaned = text.replace(/[^0-9]/g, '')
+                    setMobile(cleaned.slice(0, 10))
+                    if (mobileValidationError) setMobileValidationError('')
+                  }}
+                  keyboardType='phone-pad'
+                  placeholder='Enter your mobile number'
+                  maxLength={10}
+                  className='flex-1 rounded-xl border bg-white px-4 py-3 text-neutral-900 dark:bg-neutral-800 dark:text-white'
+                  style={[
+                    {
+                      borderColor: mobileValidationError ? '#DC2626' : scheme === 'dark' ? '#525252' : '#d1d5db',
+                      borderWidth: 1,
+                    },
+                  ]}
+                  placeholderTextColor={scheme === 'dark' ? '#9ca3af' : '#d1d5db'}
+                />
+                <Press
+                  onPress={handleSendOtp}
+                  className='items-center justify-center rounded-xl border border-blue-600 bg-blue-600 px-4 py-3'
+                >
+                  <Medium className='text-white disabled:text-neutral-500'>Send OTP</Medium>
+                </Press>
+              </View>
+              {mobileValidationError && <Medium className='pt-2 text-sm text-red-600'>{mobileValidationError}</Medium>}
             </View>
-            {mobileValidationError && <Medium className='pt-2 text-sm text-red-600'>{mobileValidationError}</Medium>}
-          </View>
+          )}
 
           {/* Save as Family Member */}
-          <View>
-            <Press
-              onPress={() => setIsFamilyMember(!isFamilyMember)}
-              className='flex-row items-center gap-3 rounded-xl border border-neutral-300 bg-white px-4 py-3 dark:border-neutral-600 dark:bg-neutral-800'
-            >
-              <View
-                className={`h-6 w-6 items-center justify-center rounded-full border-2 ${
-                  isFamilyMember ? 'border-blue-600 bg-blue-600' : 'border-neutral-400 dark:border-neutral-600'
-                }`}
+          {isFromFamilyMemberSelector && !isFromSetupProfile && (
+            <View>
+              <Press
+                onPress={() => setIsFamilyMember(!isFamilyMember)}
+                className='flex-row items-center gap-3 rounded-xl border border-neutral-300 bg-white px-4 py-3 dark:border-neutral-600 dark:bg-neutral-800'
               >
-                {isFamilyMember && <View className='rounded-full h-3 w-3 bg-white' />}
-              </View>
-              <Medium className='text-neutral-900 dark:text-white'>Save as Family Member</Medium>
-            </Press>
-          </View>
+                <View
+                  className={`h-6 w-6 items-center justify-center rounded-full border-2 ${
+                    isFamilyMember ? 'border-blue-600 bg-blue-600' : 'border-neutral-400 dark:border-neutral-600'
+                  }`}
+                >
+                  {isFamilyMember && <View className='h-3 w-3 rounded-full bg-white' />}
+                </View>
+                <Medium className='text-neutral-900 dark:text-white'>Save as Family Member</Medium>
+              </Press>
+            </View>
+          )}
 
           {/* Relation (Conditional) */}
           {isFamilyMember && (
@@ -206,7 +214,7 @@ const PatientInfo = ({}: {}) => {
         {isFamilyMember ? (
           <Button title='Save Family Member' onPress={handleContinue} />
         ) : (
-          <Button title='Confirm Booking'  onPress={() => navigation.navigate('Complete')} />
+          <Button title='Review appointment' onPress={() => navigation.navigate('VerifyBeforeBooking')} />
         )}
       </View>
       <PaddingBottom />

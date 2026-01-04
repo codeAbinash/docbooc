@@ -70,7 +70,7 @@ const Doctors = ({ route }: any) => {
     <View className='flex-1'>
       <HybridHead
         showBackButton={true}
-        title={'Select doctor'}
+        title={'Doctors'}
         showSearch={true}
         searchPlaceholder='Search doctors, specialties...'
         chipItems={allItems}

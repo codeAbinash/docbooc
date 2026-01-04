@@ -1,9 +1,9 @@
 import Press from '@components/Press'
 import { PaddingBottom } from '@components/SafePadding'
-import Slider from '@components/Slider/Slider'
+
 import PlusSignIcon from '@hugeicons/PlusSignIcon'
 import HybridHead from '@components/HybridHead'
-import { Medium } from '@utils/fonts'
+import { Medium, SemiBold } from '@utils/fonts'
 import { NavProp } from '@utils/types'
 import React from 'react'
 import { ScrollView, View } from 'react-native'
@@ -11,10 +11,10 @@ import FamilyMemberCard, { FamilyMember } from '@/UserScreens/FamilyMemberSelect
 import Button from '@components/Button'
 
 const mockFamilyMembers: FamilyMember[] = [
-  { id: '1', name: 'John Smith', relationship: 'Myself' },
-  { id: '2', name: 'Sarah Smith', relationship: 'Wife' },
-  { id: '3', name: 'Emily Smith', relationship: 'Daughter' },
-  { id: '4', name: 'Robert Smith', relationship: 'Father' },
+  { id: '1', name: '', relationship: 'Myself' },
+  { id: '2', name: 'Sarah Smith', relationship: 'Wife', age: 28, gender: 'Female' },
+  { id: '3', name: 'Emily Smith', relationship: 'Daughter', age: 5, gender: 'Female' },
+  { id: '4', name: 'Robert Smith', relationship: 'Father', age: 62, gender: 'Male' },
 ]
 
 const FamilyMemberSelectorScreen = ({ navigation }: NavProp) => {
@@ -26,28 +26,53 @@ const FamilyMemberSelectorScreen = ({ navigation }: NavProp) => {
   }
 
   const handleAddMember = () => {
-    navigation.navigate('PatientInfo')
+    navigation.navigate('PatientInfo' as any, { fromFamilyMember: true })
+  }
+
+  const handleSetupProfile = () => {
+    navigation.navigate('PatientInfo' as any, { fromSetupProfile: true })
   }
 
   return (
-    <View className='bg-white  flex-1'>
+    <View className='flex-1 bg-white'>
       <HybridHead title='Select Patient' showBackButton={true} onBackPress={() => navigation.goBack()} />
 
-      <View className='flex-1 '>
+      <View className='flex-1'>
         <ScrollView className='flex-1' contentContainerClassName='px-5 py-4' showsVerticalScrollIndicator={false}>
           {/* Family Members List */}
-          {mockFamilyMembers.map((member) => (
-            <FamilyMemberCard
-              key={member.id}
-              member={member}
-              isSelected={selectedMemberId === member.id}
-              onSelect={handleSelectMember}
-            />
-          ))}
+          {mockFamilyMembers.map((member) => {
+            const displayMember = {
+              ...member,
+              name:
+                member.relationship === 'Myself' && !member.name?.trim()
+                  ? 'Setup your profile to continue '
+                  : member.name,
+            }
+
+            const hasSetupMessage = member.relationship === 'Myself' && !member.name?.trim()
+
+            return (
+              <FamilyMemberCard
+                key={member.id}
+                member={displayMember}
+                isSelected={selectedMemberId === member.id}
+                onSelect={handleSelectMember}
+                onNameClick={hasSetupMessage ? handleSetupProfile : undefined}
+                showSelector={!hasSetupMessage}
+              />
+            )
+          })}
+          <View className='flex-row items-center gap-3 py-4 pb-6'>
+            <View className='h-px flex-1 bg-neutral-300' />
+            <View className='rounded-full bg-accent/10 px-4 py-2'>
+              <SemiBold className='text-xs text-accent'>OR</SemiBold>
+            </View>
+            <View className='h-px flex-1 bg-neutral-300' />
+          </View>
 
           {/* Add New Member Button */}
-          <Press onPress={handleAddMember} activeScale={0.98} className='mb-4'>
-            <View className='bg-accent/10  flex-row items-center justify-start rounded-3xl border-2 border-dashed border-accent/70 p-4'>
+          <Press onPress={handleAddMember} activeScale={0.98} className=''>
+            <View className='flex-row items-center justify-start rounded-3xl border-2 border-dashed border-accent/70 bg-accent/10 p-4'>
               <View className='rounded-2xl bg-white p-5'>
                 <PlusSignIcon size={20} color='#3b82f6' variant='stroke-rounded' />
               </View>
@@ -58,16 +83,15 @@ const FamilyMemberSelectorScreen = ({ navigation }: NavProp) => {
           <View className='h-6' />
         </ScrollView>
 
-        <View className=' bg-white px-5 py-3 dark:border-neutral-700 dark:bg-neutral-800'>
+        <View className='bg-white px-5 py-3 dark:border-neutral-700 dark:bg-neutral-800'>
           <Button
-            title='Continue'
+            title='Review Appointment'
             onPress={() => {
               if (selectedMemberId) {
                 navigation.navigate('VerifyBeforeBooking')
               }
             }}
             disabled={!selectedMemberId}
-           
           />
         </View>
       </View>

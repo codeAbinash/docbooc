@@ -54,7 +54,7 @@ const BookAppointment = () => {
 
   return (
     <View className='bg-white flex-1'>
-      <HybridHead title='Select Date and Location' showBackButton onBackPress={navigation.goBack}>
+      <HybridHead title='Date and Location' showBackButton onBackPress={navigation.goBack}>
         <View className=''>
           <DateCardContainer onDateChange={setSelectedDate} />
         </View>
@@ -63,7 +63,7 @@ const BookAppointment = () => {
       
 
       <ScrollView
-        className='flex-1  px-5 py-4'
+        className='flex-1   px-5 '
         // contentContainerStyle={{ paddingTop: 10, paddingBottom: 20 }}
         showsVerticalScrollIndicator={false}
         contentContainerClassName=''
@@ -74,7 +74,7 @@ const BookAppointment = () => {
             <Medium className=' text-neutral-600 dark:text-neutral-400'>Loading available locations...</Medium>
           </View>
         ) : locations.length > 0 ? (
-          <View className='gap-3 pb-6'>
+          <View className='gap-5 py-5 '>
             {locations.map((loc: any, idx: number) => {
               const hp = loc.healthcareProvider || {}
               const slot = loc.timeSlots?.[0] || {}
