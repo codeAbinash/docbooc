@@ -34,7 +34,6 @@ export default function OTP({ navigation }: NavProp) {
         })
       ).json(),
     onSuccess: (data) => {
-      console.log(data)
       if (!data.success) return ToastAndroid.show('Invalid OTP, please try again.', ToastAndroid.SHORT)
       if (data.data?.token) setToken(data.data.token)
       ToastAndroid.show('OTP verified successfully!', ToastAndroid.SHORT)

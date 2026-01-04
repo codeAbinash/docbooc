@@ -1,19 +1,13 @@
 import { specialties } from '@/constants'
-import Chip from '@components/Chip'
-import { PaddingTop } from '@components/SafePadding'
 import HybridHead from '@components/HybridHead'
-import Cancel01Icon from '@hugeicons/Cancel01Icon'
 import Doctor01Icon from '@hugeicons/Doctor01Icon'
-import Search01Icon from '@hugeicons/Search01Icon'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import { useQuery } from '@tanstack/react-query'
-import { hpApi } from '@utils/client'
+import { api } from '@utils/client'
 import Colors from '@utils/colors'
-import { SemiBold } from '@utils/fonts'
 import { StackNav } from '@utils/types'
-import { useColorScheme } from 'nativewind'
-import { useCallback, useMemo, useRef, useState, useEffect } from 'react'
-import { ActivityIndicator, FlatList, TextInput, TouchableOpacity, View, Animated } from 'react-native'
+import { useCallback, useMemo, useRef, useState } from 'react'
+import { ActivityIndicator, FlatList, View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import { DoctorCard } from '../../components/DoctorCard'
 
@@ -48,7 +42,7 @@ const Doctors = ({ route }: any) => {
 
   const { data: doctorsResponse, isLoading } = useQuery({
     queryKey: ['doctors'],
-    queryFn: async () => (await hpApi.doctors.all.$get()).json(),
+    queryFn: async () => await (await api.users.doctors.$get()).json(),
   })
 
   const doctors = useMemo(() => doctorsResponse?.data || [], [doctorsResponse])
@@ -82,14 +76,14 @@ const Doctors = ({ route }: any) => {
         searchOpen={isSearchOpen}
       />
 
-      <View className='flex-1  bg-white dark:bg-neutral-900'>
+      <View className='flex-1 bg-white dark:bg-neutral-900'>
         {isLoading ? (
           <View className='flex-1 items-center justify-center'>
             <ActivityIndicator size='large' color={Colors.accent} />
           </View>
         ) : (
           <FlatList
-            className=' flex-1 pt-3'
+            className='flex-1 pt-3'
             contentContainerClassName='px-5 pb-10'
             data={filteredDoctors}
             renderItem={({ item }) => (
