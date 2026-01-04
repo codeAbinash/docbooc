@@ -1,14 +1,16 @@
 import Press from '@components/Press'
 import { PaddingBottom } from '@components/SafePadding'
 
-import PlusSignIcon from '@hugeicons/PlusSignIcon'
+import FamilyMemberCard, { FamilyMember } from '@/UserScreens/FamilyMemberSelector/FamilyMemberCard'
+import Button from '@components/Button'
 import HybridHead from '@components/HybridHead'
+import PlusSignIcon from '@hugeicons/PlusSignIcon'
+import { useQuery } from '@tanstack/react-query'
+import { api } from '@utils/client'
 import { Medium, SemiBold } from '@utils/fonts'
 import { NavProp } from '@utils/types'
 import React from 'react'
-import { ScrollView, View } from 'react-native'
-import FamilyMemberCard, { FamilyMember } from '@/UserScreens/FamilyMemberSelector/FamilyMemberCard'
-import Button from '@components/Button'
+import { ActivityIndicator, ScrollView, View } from 'react-native'
 
 const mockFamilyMembers: FamilyMember[] = [
   { id: '1', name: '', relationship: 'Myself' },
@@ -17,12 +19,27 @@ const mockFamilyMembers: FamilyMember[] = [
   { id: '4', name: 'Robert Smith', relationship: 'Father', age: 62, gender: 'Male' },
 ]
 
+const calcAge = (dob?: string) => {
+  if (!dob) return undefined
+  const b = new Date(dob)
+  if (isNaN(b.getTime())) return undefined
+  const now = new Date()
+  let age = now.getFullYear() - b.getFullYear()
+  const m = now.getMonth() - b.getMonth()
+  if (m < 0 || (m === 0 && now.getDate() < b.getDate())) age--
+  return age
+}
+
 const FamilyMemberSelectorScreen = ({ navigation }: NavProp) => {
   const [selectedMemberId, setSelectedMemberId] = React.useState<string | null>(null)
 
+  const { data: profile, isPending } = useQuery({
+    queryKey: ['profile'],
+    queryFn: async () => await (await api.users.profile.$get()).json(),
+  })
+
   const handleSelectMember = (member: FamilyMember) => {
     setSelectedMemberId(member.id)
-    console.log('Selected member:', member)
   }
 
   const handleAddMember = () => {
@@ -33,6 +50,29 @@ const FamilyMemberSelectorScreen = ({ navigation }: NavProp) => {
     navigation.navigate('PatientInfo' as any, { fromSetupProfile: true })
   }
 
+  const myName = profile?.data?.user.name ?? ''
+  const myDOB = profile?.data?.user.dateOfBirth
+  const myAge = calcAge(myDOB as string)
+  const gender = profile?.data?.user.gender
+
+  const normalizeGender = (g?: string | null): FamilyMember['gender'] | undefined => {
+    if (!g) return undefined
+    const s = g.trim().toLowerCase()
+    if (s === 'male') return 'Male'
+    if (s === 'female') return 'Female'
+    return 'Other'
+  }
+
+  const myGender = normalizeGender(gender)
+
+  if (isPending) {
+    return (
+      <View className='flex-1 items-center justify-center bg-white'>
+        <ActivityIndicator size='large' color='#3b82f6' />
+      </View>
+    )
+  }
+
   return (
     <View className='flex-1 bg-white'>
       <HybridHead title='Select Patient' showBackButton={true} onBackPress={() => navigation.goBack()} />
@@ -41,15 +81,16 @@ const FamilyMemberSelectorScreen = ({ navigation }: NavProp) => {
         <ScrollView className='flex-1' contentContainerClassName='px-5 py-4' showsVerticalScrollIndicator={false}>
           {/* Family Members List */}
           {mockFamilyMembers.map((member) => {
+            const isMyself = member.relationship === 'Myself'
+
             const displayMember = {
               ...member,
-              name:
-                member.relationship === 'Myself' && !member.name?.trim()
-                  ? 'Setup your profile to continue '
-                  : member.name,
+              name: isMyself ? (myName.trim() ? myName : 'Setup your profile to continue') : member.name,
+              age: isMyself ? (myAge ?? member.age) : member.age,
+              gender: isMyself ? (myGender ?? member.gender) : member.gender,
             }
 
-            const hasSetupMessage = member.relationship === 'Myself' && !member.name?.trim()
+            const hasSetupMessage = isMyself && (!myName.trim() || !myDOB)
 
             return (
               <FamilyMemberCard

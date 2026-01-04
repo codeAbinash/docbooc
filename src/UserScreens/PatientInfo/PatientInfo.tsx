@@ -1,18 +1,19 @@
+import RadioGenderSelector, { Gender } from '@/UserScreens/PatientInfo/RadioGenderSelector'
+import BottomSheetCustom from '@components/BottomSheetCustom'
 import Button from '@components/Button'
 import HybridHead from '@components/HybridHead'
 import Press from '@components/Press'
-import BottomSheetCustom from '@components/BottomSheetCustom'
 import { PaddingBottom } from '@components/SafePadding'
-import { useNavigation, useRoute } from '@react-navigation/native'
-import RadioGenderSelector, { Gender } from '@/UserScreens/PatientInfo/RadioGenderSelector'
-import { Bold, Medium, SemiBold } from '@utils/fonts'
-import { StackNav } from '@utils/types'
-import { useState } from 'react'
-import { useRef } from 'react'
-import { ScrollView, TextInput, View, useColorScheme, Dimensions, Keyboard } from 'react-native'
-import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker'
 import Calendar03Icon from '@hugeicons/Calendar03Icon'
+import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker'
+import { useNavigation, useRoute } from '@react-navigation/native'
+import { useMutation } from '@tanstack/react-query'
+import { api } from '@utils/client'
 import Colors from '@utils/colors'
+import { Medium, SemiBold } from '@utils/fonts'
+import { StackNav } from '@utils/types'
+import { useRef, useState } from 'react'
+import { Dimensions, Keyboard, ScrollView, TextInput, ToastAndroid, View, useColorScheme } from 'react-native'
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window')
 
@@ -35,6 +36,25 @@ const PatientInfo = ({}: {}) => {
   const [relationName, setRelationName] = useState('')
   const [mobileValidationError, setMobileValidationError] = useState('')
   const mobileRef = useRef<TextInput>(null)
+
+  const { mutate, isPending } = useMutation({
+    mutationKey: ['send-otp'],
+    mutationFn: async () =>
+      await (
+        await api.users.profile.$put({
+          json: {
+            dateOfBirth: dob.toISOString().split('T')[0],
+            name,
+            gender: selectedGender,
+          },
+        })
+      ).json(),
+    onSuccess: (data) => {
+      if (!data.success) return ToastAndroid.show('Failed to save profile', ToastAndroid.LONG)
+      ToastAndroid.show('Profile saved successfully', ToastAndroid.SHORT)
+      navigation.navigate('VerifyBeforeBooking')
+    },
+  })
 
   const handleDateChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
     if (event.type === 'set' && selectedDate) {
@@ -90,6 +110,9 @@ const PatientInfo = ({}: {}) => {
     }
   }
 
+  function saveProfileAndGoNext() {
+    mutate()
+  }
   return (
     <View className='flex-1 bg-white dark:bg-neutral-900'>
       <HybridHead title='Patient Information' showBackButton onBackPress={() => navigation.goBack()} />
@@ -214,7 +237,11 @@ const PatientInfo = ({}: {}) => {
         {isFamilyMember ? (
           <Button title='Save Family Member' onPress={handleContinue} />
         ) : (
-          <Button title='Review appointment' onPress={() => navigation.navigate('VerifyBeforeBooking')} />
+          <Button
+            title={isPending ? 'Saving...' : 'Save & Continue'}
+            onPress={saveProfileAndGoNext}
+            disabled={isPending}
+          />
         )}
       </View>
       <PaddingBottom />

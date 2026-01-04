@@ -44,7 +44,7 @@ const FamilyMemberCard = ({
         style={{ borderWidth: 1.5 }}
       >
         <View
-          className={`text  mr-3 h-16 w-16 items-center justify-center rounded-2xl ${
+          className={`text mr-3 h-16 w-16 items-center justify-center rounded-2xl ${
             isSelected ? 'bg-accent' : 'bg-gray/20'
           }`}
         >
@@ -54,16 +54,18 @@ const FamilyMemberCard = ({
         <View className='flex-1'>
           <SemiBold className={`mb-1 text-lg ${isSelected ? 'text-blue-700' : 'text'}`}>{member.relationship}</SemiBold>
           <Press onPress={onNameClick} disabled={!onNameClick}>
-            <View className='flex-row  items-center gap-2'>
+            <View className='flex-row items-center gap-2'>
               <View className='flex-1'>
                 <Medium
                   className={`text-sm font-semibold ${onNameClick ? 'text-accent' : isSelected ? 'text-blue-700' : 'text-black'}`}
                 >
                   {member.name}
                 </Medium>
-                {(member.age || member.gender) && !onNameClick && (
+                {(member.age !== undefined || member.gender) && !onNameClick && (
                   <Medium className={`mt-1 text-xs font-semibold ${isSelected ? 'text-blue-700' : 'text-black'}`}>
-                    {[member.age && `${member.age}y`, member.gender].filter(Boolean).join(' • ')}
+                    {[member.age !== undefined ? `${member.age}y` : undefined, member.gender]
+                      .filter(Boolean)
+                      .join(' • ')}
                   </Medium>
                 )}
               </View>

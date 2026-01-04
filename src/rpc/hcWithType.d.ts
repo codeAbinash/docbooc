@@ -544,14 +544,10 @@ declare const client: {
     api: {
         v1: {
             hp: {
-                auth: {
-                    "verify-email": import("hono/client").ClientRequest<{
-                        $post: {
-                            input: {
-                                json: {
-                                    email: string;
-                                };
-                            };
+                doctors: {
+                    "my-doctors": import("hono/client").ClientRequest<{
+                        $get: {
+                            input: {};
                             output: {
                                 success: false;
                                 message: string;
@@ -559,19 +555,25 @@ declare const client: {
                                 error: null;
                             };
                             outputFormat: "json";
-                            status: 400;
+                            status: 401;
                         } | {
-                            input: {
-                                json: {
-                                    email: string;
-                                };
-                            };
+                            input: {};
                             output: {
                                 success: true;
                                 message: string;
                                 data: {
-                                    email: string;
-                                } | undefined;
+                                    id: string;
+                                    name: string;
+                                    email: string | null;
+                                    contactNumber: string | null;
+                                    gender: string | null;
+                                    department: string | null;
+                                    degrees: string | null;
+                                    experience: number | null;
+                                    specialization: string | null;
+                                    createdAt: string;
+                                    verified: boolean | null;
+                                }[] | undefined;
                                 error: null;
                             };
                             outputFormat: "json";
@@ -739,10 +741,14 @@ declare const client: {
     api: {
         v1: {
             hp: {
-                doctors: {
-                    "my-doctors": import("hono/client").ClientRequest<{
-                        $get: {
-                            input: {};
+                auth: {
+                    "verify-email": import("hono/client").ClientRequest<{
+                        $post: {
+                            input: {
+                                json: {
+                                    email: string;
+                                };
+                            };
                             output: {
                                 success: false;
                                 message: string;
@@ -750,25 +756,19 @@ declare const client: {
                                 error: null;
                             };
                             outputFormat: "json";
-                            status: 401;
+                            status: 400;
                         } | {
-                            input: {};
+                            input: {
+                                json: {
+                                    email: string;
+                                };
+                            };
                             output: {
                                 success: true;
                                 message: string;
                                 data: {
-                                    id: string;
-                                    name: string;
-                                    email: string | null;
-                                    contactNumber: string | null;
-                                    gender: string | null;
-                                    department: string | null;
-                                    degrees: string | null;
-                                    experience: number | null;
-                                    specialization: string | null;
-                                    createdAt: string;
-                                    verified: boolean | null;
-                                }[] | undefined;
+                                    email: string;
+                                } | undefined;
                                 error: null;
                             };
                             outputFormat: "json";
@@ -1472,6 +1472,7 @@ declare const client: {
                                 user: {
                                     id: string;
                                     phone: string;
+                                    gender: "female" | "male" | "other" | null;
                                     name: string | null;
                                     email: string | null;
                                     dateOfBirth: string | null;
@@ -1959,117 +1960,6 @@ declare const client: {
     api: {
         v1: {
             users: {
-                doctors: import("hono/client").ClientRequest<{
-                    $get: {
-                        input: {};
-                        output: {
-                            success: true;
-                            message: string;
-                            data: {
-                                id: string;
-                                name: string;
-                                email: string | null;
-                                contactNumber: string | null;
-                                gender: string | null;
-                                department: string | null;
-                                degrees: string | null;
-                                experience: number | null;
-                                specialization: string | null;
-                                createdAt: string;
-                                verified: boolean | null;
-                            }[] | undefined;
-                            error: null;
-                        };
-                        outputFormat: "json";
-                        status: 200;
-                    };
-                }>;
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            users: {
-                doctors: {
-                    availability: import("hono/client").ClientRequest<{
-                        $post: {
-                            input: {
-                                json: {
-                                    doctorId: string;
-                                    date: string;
-                                };
-                            };
-                            output: {
-                                success: false;
-                                message: string;
-                                data: null;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 404;
-                        } | {
-                            input: {
-                                json: {
-                                    doctorId: string;
-                                    date: string;
-                                };
-                            };
-                            output: {
-                                success: false;
-                                message: string;
-                                data: import("hono/utils/types").JSONValue;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 500;
-                        } | {
-                            input: {
-                                json: {
-                                    doctorId: string;
-                                    date: string;
-                                };
-                            };
-                            output: {
-                                success: true;
-                                message: string;
-                                data: {
-                                    scheduleId: string;
-                                    scheduleType: "daily" | "monthly" | "weekly";
-                                    healthcareProvider: {
-                                        id: string;
-                                        name: string;
-                                        email: string;
-                                        contactNumber: string | null;
-                                        city: string | null;
-                                        state: string | null;
-                                        pin: string | null;
-                                        houseNumber: string | null;
-                                        roadName: string | null;
-                                        landmark: string | null;
-                                        profileImage: string | null;
-                                    };
-                                    timeSlots: {
-                                        scheduleDayId: string;
-                                        startTime: string;
-                                        endTime: string;
-                                        maxBookings: number;
-                                    }[];
-                                }[] | undefined;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 200;
-                        };
-                    }>;
-                };
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            users: {
                 members: import("hono/client").ClientRequest<{
                     $get: {
                         input: {};
@@ -2226,6 +2116,117 @@ declare const client: {
     api: {
         v1: {
             users: {
+                doctors: import("hono/client").ClientRequest<{
+                    $get: {
+                        input: {};
+                        output: {
+                            success: true;
+                            message: string;
+                            data: {
+                                id: string;
+                                name: string;
+                                email: string | null;
+                                contactNumber: string | null;
+                                gender: string | null;
+                                department: string | null;
+                                degrees: string | null;
+                                experience: number | null;
+                                specialization: string | null;
+                                createdAt: string;
+                                verified: boolean | null;
+                            }[] | undefined;
+                            error: null;
+                        };
+                        outputFormat: "json";
+                        status: 200;
+                    };
+                }>;
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            users: {
+                doctors: {
+                    availability: import("hono/client").ClientRequest<{
+                        $post: {
+                            input: {
+                                json: {
+                                    doctorId: string;
+                                    date: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: null;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 404;
+                        } | {
+                            input: {
+                                json: {
+                                    doctorId: string;
+                                    date: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: import("hono/utils/types").JSONValue;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 500;
+                        } | {
+                            input: {
+                                json: {
+                                    doctorId: string;
+                                    date: string;
+                                };
+                            };
+                            output: {
+                                success: true;
+                                message: string;
+                                data: {
+                                    scheduleId: string;
+                                    scheduleType: "daily" | "monthly" | "weekly";
+                                    healthcareProvider: {
+                                        id: string;
+                                        name: string;
+                                        email: string;
+                                        contactNumber: string | null;
+                                        city: string | null;
+                                        state: string | null;
+                                        pin: string | null;
+                                        houseNumber: string | null;
+                                        roadName: string | null;
+                                        landmark: string | null;
+                                        profileImage: string | null;
+                                    };
+                                    timeSlots: {
+                                        scheduleDayId: string;
+                                        startTime: string;
+                                        endTime: string;
+                                        maxBookings: number;
+                                    }[];
+                                }[] | undefined;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 200;
+                        };
+                    }>;
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            users: {
                 profile: import("hono/client").ClientRequest<{
                     $get: {
                         input: {};
@@ -2256,6 +2257,7 @@ declare const client: {
                                 user: {
                                     id: string;
                                     name: string | null;
+                                    gender: "female" | "male" | "other" | null;
                                     phone: string;
                                     email: string | null;
                                     dateOfBirth: string | null;
@@ -2276,6 +2278,7 @@ declare const client: {
                                 email?: string | undefined;
                                 dateOfBirth?: string | undefined;
                                 profilePicture?: string | undefined;
+                                gender?: "female" | "male" | "other" | undefined;
                             };
                         };
                         output: {
@@ -2293,6 +2296,7 @@ declare const client: {
                                 email?: string | undefined;
                                 dateOfBirth?: string | undefined;
                                 profilePicture?: string | undefined;
+                                gender?: "female" | "male" | "other" | undefined;
                             };
                         };
                         output: {
@@ -2310,6 +2314,7 @@ declare const client: {
                                 email?: string | undefined;
                                 dateOfBirth?: string | undefined;
                                 profilePicture?: string | undefined;
+                                gender?: "female" | "male" | "other" | undefined;
                             };
                         };
                         output: {
@@ -2321,6 +2326,7 @@ declare const client: {
                                     name: string | null;
                                     phone: string;
                                     email: string | null;
+                                    gender: "female" | "male" | "other" | null;
                                     dateOfBirth: string | null;
                                     profilePicture: string | null;
                                     createdAt: string;
@@ -2884,14 +2890,10 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
     api: {
         v1: {
             hp: {
-                auth: {
-                    "verify-email": import("hono/client").ClientRequest<{
-                        $post: {
-                            input: {
-                                json: {
-                                    email: string;
-                                };
-                            };
+                doctors: {
+                    "my-doctors": import("hono/client").ClientRequest<{
+                        $get: {
+                            input: {};
                             output: {
                                 success: false;
                                 message: string;
@@ -2899,19 +2901,25 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 error: null;
                             };
                             outputFormat: "json";
-                            status: 400;
+                            status: 401;
                         } | {
-                            input: {
-                                json: {
-                                    email: string;
-                                };
-                            };
+                            input: {};
                             output: {
                                 success: true;
                                 message: string;
                                 data: {
-                                    email: string;
-                                } | undefined;
+                                    id: string;
+                                    name: string;
+                                    email: string | null;
+                                    contactNumber: string | null;
+                                    gender: string | null;
+                                    department: string | null;
+                                    degrees: string | null;
+                                    experience: number | null;
+                                    specialization: string | null;
+                                    createdAt: string;
+                                    verified: boolean | null;
+                                }[] | undefined;
                                 error: null;
                             };
                             outputFormat: "json";
@@ -3079,10 +3087,14 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
     api: {
         v1: {
             hp: {
-                doctors: {
-                    "my-doctors": import("hono/client").ClientRequest<{
-                        $get: {
-                            input: {};
+                auth: {
+                    "verify-email": import("hono/client").ClientRequest<{
+                        $post: {
+                            input: {
+                                json: {
+                                    email: string;
+                                };
+                            };
                             output: {
                                 success: false;
                                 message: string;
@@ -3090,25 +3102,19 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 error: null;
                             };
                             outputFormat: "json";
-                            status: 401;
+                            status: 400;
                         } | {
-                            input: {};
+                            input: {
+                                json: {
+                                    email: string;
+                                };
+                            };
                             output: {
                                 success: true;
                                 message: string;
                                 data: {
-                                    id: string;
-                                    name: string;
-                                    email: string | null;
-                                    contactNumber: string | null;
-                                    gender: string | null;
-                                    department: string | null;
-                                    degrees: string | null;
-                                    experience: number | null;
-                                    specialization: string | null;
-                                    createdAt: string;
-                                    verified: boolean | null;
-                                }[] | undefined;
+                                    email: string;
+                                } | undefined;
                                 error: null;
                             };
                             outputFormat: "json";
@@ -3812,6 +3818,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 user: {
                                     id: string;
                                     phone: string;
+                                    gender: "female" | "male" | "other" | null;
                                     name: string | null;
                                     email: string | null;
                                     dateOfBirth: string | null;
@@ -4299,117 +4306,6 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
     api: {
         v1: {
             users: {
-                doctors: import("hono/client").ClientRequest<{
-                    $get: {
-                        input: {};
-                        output: {
-                            success: true;
-                            message: string;
-                            data: {
-                                id: string;
-                                name: string;
-                                email: string | null;
-                                contactNumber: string | null;
-                                gender: string | null;
-                                department: string | null;
-                                degrees: string | null;
-                                experience: number | null;
-                                specialization: string | null;
-                                createdAt: string;
-                                verified: boolean | null;
-                            }[] | undefined;
-                            error: null;
-                        };
-                        outputFormat: "json";
-                        status: 200;
-                    };
-                }>;
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            users: {
-                doctors: {
-                    availability: import("hono/client").ClientRequest<{
-                        $post: {
-                            input: {
-                                json: {
-                                    doctorId: string;
-                                    date: string;
-                                };
-                            };
-                            output: {
-                                success: false;
-                                message: string;
-                                data: null;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 404;
-                        } | {
-                            input: {
-                                json: {
-                                    doctorId: string;
-                                    date: string;
-                                };
-                            };
-                            output: {
-                                success: false;
-                                message: string;
-                                data: import("hono/utils/types").JSONValue;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 500;
-                        } | {
-                            input: {
-                                json: {
-                                    doctorId: string;
-                                    date: string;
-                                };
-                            };
-                            output: {
-                                success: true;
-                                message: string;
-                                data: {
-                                    scheduleId: string;
-                                    scheduleType: "daily" | "monthly" | "weekly";
-                                    healthcareProvider: {
-                                        id: string;
-                                        name: string;
-                                        email: string;
-                                        contactNumber: string | null;
-                                        city: string | null;
-                                        state: string | null;
-                                        pin: string | null;
-                                        houseNumber: string | null;
-                                        roadName: string | null;
-                                        landmark: string | null;
-                                        profileImage: string | null;
-                                    };
-                                    timeSlots: {
-                                        scheduleDayId: string;
-                                        startTime: string;
-                                        endTime: string;
-                                        maxBookings: number;
-                                    }[];
-                                }[] | undefined;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 200;
-                        };
-                    }>;
-                };
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            users: {
                 members: import("hono/client").ClientRequest<{
                     $get: {
                         input: {};
@@ -4566,6 +4462,117 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
     api: {
         v1: {
             users: {
+                doctors: import("hono/client").ClientRequest<{
+                    $get: {
+                        input: {};
+                        output: {
+                            success: true;
+                            message: string;
+                            data: {
+                                id: string;
+                                name: string;
+                                email: string | null;
+                                contactNumber: string | null;
+                                gender: string | null;
+                                department: string | null;
+                                degrees: string | null;
+                                experience: number | null;
+                                specialization: string | null;
+                                createdAt: string;
+                                verified: boolean | null;
+                            }[] | undefined;
+                            error: null;
+                        };
+                        outputFormat: "json";
+                        status: 200;
+                    };
+                }>;
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            users: {
+                doctors: {
+                    availability: import("hono/client").ClientRequest<{
+                        $post: {
+                            input: {
+                                json: {
+                                    doctorId: string;
+                                    date: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: null;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 404;
+                        } | {
+                            input: {
+                                json: {
+                                    doctorId: string;
+                                    date: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: import("hono/utils/types").JSONValue;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 500;
+                        } | {
+                            input: {
+                                json: {
+                                    doctorId: string;
+                                    date: string;
+                                };
+                            };
+                            output: {
+                                success: true;
+                                message: string;
+                                data: {
+                                    scheduleId: string;
+                                    scheduleType: "daily" | "monthly" | "weekly";
+                                    healthcareProvider: {
+                                        id: string;
+                                        name: string;
+                                        email: string;
+                                        contactNumber: string | null;
+                                        city: string | null;
+                                        state: string | null;
+                                        pin: string | null;
+                                        houseNumber: string | null;
+                                        roadName: string | null;
+                                        landmark: string | null;
+                                        profileImage: string | null;
+                                    };
+                                    timeSlots: {
+                                        scheduleDayId: string;
+                                        startTime: string;
+                                        endTime: string;
+                                        maxBookings: number;
+                                    }[];
+                                }[] | undefined;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 200;
+                        };
+                    }>;
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            users: {
                 profile: import("hono/client").ClientRequest<{
                     $get: {
                         input: {};
@@ -4596,6 +4603,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 user: {
                                     id: string;
                                     name: string | null;
+                                    gender: "female" | "male" | "other" | null;
                                     phone: string;
                                     email: string | null;
                                     dateOfBirth: string | null;
@@ -4616,6 +4624,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 email?: string | undefined;
                                 dateOfBirth?: string | undefined;
                                 profilePicture?: string | undefined;
+                                gender?: "female" | "male" | "other" | undefined;
                             };
                         };
                         output: {
@@ -4633,6 +4642,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 email?: string | undefined;
                                 dateOfBirth?: string | undefined;
                                 profilePicture?: string | undefined;
+                                gender?: "female" | "male" | "other" | undefined;
                             };
                         };
                         output: {
@@ -4650,6 +4660,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 email?: string | undefined;
                                 dateOfBirth?: string | undefined;
                                 profilePicture?: string | undefined;
+                                gender?: "female" | "male" | "other" | undefined;
                             };
                         };
                         output: {
@@ -4661,6 +4672,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                     name: string | null;
                                     phone: string;
                                     email: string | null;
+                                    gender: "female" | "male" | "other" | null;
                                     dateOfBirth: string | null;
                                     profilePicture: string | null;
                                     createdAt: string;

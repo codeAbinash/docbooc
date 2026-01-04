@@ -12,6 +12,7 @@ import { ActivityIndicator, View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import { RootStackParamList } from '../../../App'
 import { DateCardContainer } from '@/components/DateCardContainer'
+import authStore from '@/zustand/authStore'
 
 const BookAppointment = () => {
   const navigation = useNavigation<StackNav>()
@@ -19,6 +20,7 @@ const BookAppointment = () => {
   const [selectedLocationId, setSelectedLocationId] = useState<number | null>(null)
   const [selectedDate, setSelectedDate] = useState('')
   const [initialProgress, setInitialProgress] = useState(0)
+  const token = authStore((state) => state.token)
 
   useEffect(() => {
     const timer = setTimeout(() => setInitialProgress(25), 100)
@@ -42,7 +44,10 @@ const BookAppointment = () => {
     [selectedLocationId, selectedDate, initialProgress],
   )
 
-  const handleNext = useCallback(() => navigation.navigate('FamilyMemberSelectorScreen'), [navigation])
+  const handleNext = useCallback(() => {
+    if (token) navigation.navigate('FamilyMemberSelectorScreen')
+    else navigation.navigate('Login')
+  }, [navigation])
 
   const handleLocationPress = useCallback((idx: number) => setSelectedLocationId(idx), [])
 
