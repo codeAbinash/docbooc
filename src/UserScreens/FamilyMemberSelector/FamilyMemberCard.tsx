@@ -1,6 +1,7 @@
 import { Medium, SemiBold } from '@utils/fonts'
 import { View } from 'react-native'
 import Press from '../../components/Press'
+import ArrowRight01Icon from '@hugeicons/ArrowRightDoubleIcon'
 
 export type FamilyMember = {
   id: string
@@ -43,7 +44,7 @@ const FamilyMemberCard = ({
         style={{ borderWidth: 1.5 }}
       >
         <View
-          className={`text mr-3 h-16 w-16 items-center justify-center rounded-2xl ${
+          className={`text  mr-3 h-16 w-16 items-center justify-center rounded-2xl ${
             isSelected ? 'bg-accent' : 'bg-gray/20'
           }`}
         >
@@ -53,17 +54,20 @@ const FamilyMemberCard = ({
         <View className='flex-1'>
           <SemiBold className={`mb-1 text-lg ${isSelected ? 'text-blue-700' : 'text'}`}>{member.relationship}</SemiBold>
           <Press onPress={onNameClick} disabled={!onNameClick}>
-            <View>
-              <Medium
-                className={`text-sm font-semibold ${onNameClick ? 'text-accent' : isSelected ? 'text-blue-700' : 'text-black'}`}
-              >
-                {member.name}
-              </Medium>
-              {(member.age || member.gender) && !onNameClick && (
-                <Medium className={`mt-1 text-xs font-semibold ${isSelected ? 'text-blue-700' : 'text-black'}`}>
-                  {[member.age && `${member.age}y`, member.gender].filter(Boolean).join(' • ')}
+            <View className='flex-row  items-center gap-2'>
+              <View className='flex-1'>
+                <Medium
+                  className={`text-sm font-semibold ${onNameClick ? 'text-accent' : isSelected ? 'text-blue-700' : 'text-black'}`}
+                >
+                  {member.name}
                 </Medium>
-              )}
+                {(member.age || member.gender) && !onNameClick && (
+                  <Medium className={`mt-1 text-xs font-semibold ${isSelected ? 'text-blue-700' : 'text-black'}`}>
+                    {[member.age && `${member.age}y`, member.gender].filter(Boolean).join(' • ')}
+                  </Medium>
+                )}
+              </View>
+              {onNameClick && <ArrowRight01Icon size={18} color='#3b82f6' variant='stroke-standard' />}
             </View>
           </Press>
         </View>
