@@ -37,33 +37,24 @@ const BookAppointment = () => {
     enabled: !!selectedDate && !!doctor.id,
   })
 
-  const progress = useMemo(() => 
-    selectedLocationId !== null ? 50 : selectedDate ? 25 : initialProgress,
-    [selectedLocationId, selectedDate, initialProgress]
+  const progress = useMemo(
+    () => (selectedLocationId !== null ? 50 : selectedDate ? 25 : initialProgress),
+    [selectedLocationId, selectedDate, initialProgress],
   )
 
-  const handleNext = useCallback(() => 
-    navigation.navigate('FamilyMemberSelectorScreen'),
-    [navigation]
-  )
+  const handleNext = useCallback(() => navigation.navigate('FamilyMemberSelectorScreen'), [navigation])
 
-  const handleLocationPress = useCallback((idx: number) => 
-    setSelectedLocationId(idx),
-    []
-  )
+  const handleLocationPress = useCallback((idx: number) => setSelectedLocationId(idx), [])
 
   return (
-    <View className='bg-white flex-1'>
-      <HybridHead title='Date and Location' showBackButton onBackPress={navigation.goBack}>
-        <View className=''>
-          <DateCardContainer onDateChange={setSelectedDate} />
-        </View>
-      </HybridHead>
-
-      
+    <View className='flex-1 bg-white'>
+      <HybridHead title='Date and Location' showBackButton onBackPress={navigation.goBack}></HybridHead>
+      <View className='w-full'>
+        <DateCardContainer onDateChange={setSelectedDate} />
+      </View>
 
       <ScrollView
-        className='flex-1   px-5 '
+        className='flex-1 px-5'
         // contentContainerStyle={{ paddingTop: 10, paddingBottom: 20 }}
         showsVerticalScrollIndicator={false}
         contentContainerClassName=''
@@ -71,20 +62,25 @@ const BookAppointment = () => {
         {isLoading ? (
           <View className='items-center justify-center py-10'>
             <ActivityIndicator size='large' color='#3b82f6' />
-            <Medium className=' text-neutral-600 dark:text-neutral-400'>Loading available locations...</Medium>
+            <Medium className='text-neutral-600 dark:text-neutral-400'>Loading available locations...</Medium>
           </View>
         ) : locations.length > 0 ? (
-          <View className='gap-5 py-5 '>
+          <View className='gap-5 py-5'>
             {locations.map((loc: any, idx: number) => {
               const hp = loc.healthcareProvider || {}
               const slot = loc.timeSlots?.[0] || {}
-              const address = `${hp.houseNumber || ''} ${hp.roadName || ''}, ${hp.city || ''}, ${hp.state || ''}, ${hp.pin || ''}`.trim()
-              
+              const address =
+                `${hp.houseNumber || ''} ${hp.roadName || ''}, ${hp.city || ''}, ${hp.state || ''}, ${hp.pin || ''}`.trim()
+
               return (
                 <HPCards
                   key={loc.scheduleId || idx}
                   title={hp.name || 'Unknown Provider'}
-                  time={slot.startTime && slot.endTime ? `${slot.startTime.slice(0, 5)} - ${slot.endTime.slice(0, 5)}` : undefined}
+                  time={
+                    slot.startTime && slot.endTime
+                      ? `${slot.startTime.slice(0, 5)} - ${slot.endTime.slice(0, 5)}`
+                      : undefined
+                  }
                   address={address || 'N/A'}
                   distance={loc.distance || 'N/A'}
                   q={slot.maxBookings > 0 ? slot.maxBookings.toString() : 'N/A'}
@@ -103,13 +99,8 @@ const BookAppointment = () => {
         ) : null}
       </ScrollView>
 
-      <View className=' bg-white px-5 py-3 dark:border-neutral-700 dark:bg-neutral-800'>
-        <Button
-          title='Next'
-          disabled={selectedLocationId === null}
-          
-          onPress={handleNext}
-        />
+      <View className='bg-white px-5 py-3 dark:border-neutral-700 dark:bg-neutral-800'>
+        <Button title='Next' disabled={selectedLocationId === null} onPress={handleNext} />
       </View>
       <PaddingBottom />
     </View>

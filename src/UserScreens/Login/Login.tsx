@@ -107,7 +107,7 @@ export default function Login({ navigation }: NavProp) {
               <Button title='Get OTP' onPress={handleGetOTP} />
             </View>
 
-            <View className='flex items-center justify-center gap-2 pt-12'>
+            <View className='flex items-center justify-center gap-2 pt-5'>
               <View>
                 <Medium className='text-center text-xs text-zinc-600 dark:text-zinc-400'>
                   By 'logging in' I agree to the

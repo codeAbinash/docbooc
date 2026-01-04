@@ -76,22 +76,22 @@ function StickyAppBar({ navigation, scrollY }: { navigation: NavProp['navigation
       }}
     >
       <PaddingTop />
-      <View className='flex-row items-center gap-3 justify-between px-6 py-3'>
+      <View className='flex-row items-center justify-between gap-3 px-6 py-3'>
         <Medium className='text-4xl'>DocBooc</Medium>
-        
-        <View className='flex-row items-center gap-3 justify-between'>
+
+        <View className='flex-row items-center justify-between gap-3'>
           <Press
-          onPress={() => navigation.navigate('Login' as any)}
-          className='rounded-lg border border-gray-200 bg-gray-50 p-2.5 dark:border-zinc-700 dark:bg-zinc-900'
-        >
-          <NotificationSquareIcon color={scheme === 'dark' ? '#fff' : '#333'} size={18} strokeWidth={1.7} />
-        </Press>
-        <Press
-          onPress={() => navigation.navigate('Login' as any)}
-          className='rounded-lg border border-gray-200 bg-gray-50 p-2.5 dark:border-zinc-700 dark:bg-zinc-900'
-        >
-          <Search01Icon color={scheme === 'dark' ? '#999' : '#666'} size={18} strokeWidth={1.7} />
-        </Press>
+            onPress={() => navigation.navigate('Login' as any)}
+            className='rounded-lg border border-gray-200 bg-gray-50 p-2.5 dark:border-zinc-700 dark:bg-zinc-900'
+          >
+            <NotificationSquareIcon color={scheme === 'dark' ? '#fff' : '#333'} size={18} strokeWidth={1.7} />
+          </Press>
+          <Press
+            onPress={() => navigation.navigate('Login' as any)}
+            className='rounded-lg border border-gray-200 bg-gray-50 p-2.5 dark:border-zinc-700 dark:bg-zinc-900'
+          >
+            <Search01Icon color={scheme === 'dark' ? '#999' : '#666'} size={18} strokeWidth={1.7} />
+          </Press>
         </View>
       </View>
     </Animated.View>
@@ -220,6 +220,7 @@ interface TopDoctorsProps {
 }
 
 function TopDoctors({ specialty }: TopDoctorsProps) {
+  const { width } = useWindowDimensions()
   const navigation = useNavigation<StackNav>()
 
   const mockDoctor = {
@@ -228,6 +229,8 @@ function TopDoctors({ specialty }: TopDoctorsProps) {
     department: 'Diabetes Specialist',
     experience: 5,
   }
+
+  const cardWidth = width - 40
 
   return (
     <View className='gap-5 py-5'>
@@ -243,38 +246,38 @@ function TopDoctors({ specialty }: TopDoctorsProps) {
         contentContainerClassName='px-5'
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
+        pagingEnabled={true}
+        snapToInterval={cardWidth + 16}
+        snapToAlignment='start'
+        decelerationRate='fast'
       >
-        <View style={{ width: 375, marginRight: 16 }}>
+        <View style={{ width: cardWidth, marginRight: 16 }}>
           <DoctorCard
             doctor={mockDoctor}
-            // onPress={() => navigation.navigate('BookAppointment' as any)}
             showSelector={false}
             showBookButton={true}
             onAdd={() => navigation.navigate('BookAppointment' as any)}
           />
         </View>
-        <View style={{ width: 375, marginRight: 16 }}>
+        <View style={{ width: cardWidth, marginRight: 16 }}>
           <DoctorCard
             doctor={mockDoctor}
-            // onPress={() => navigation.navigate('BookAppointment' as any)}
             showSelector={false}
             showBookButton={true}
             onAdd={() => navigation.navigate('BookAppointment' as any)}
           />
         </View>
-        <View style={{ width: 375, marginRight: 16 }}>
+        <View style={{ width: cardWidth, marginRight: 16 }}>
           <DoctorCard
             doctor={mockDoctor}
-            // onPress={() => navigation.navigate('BookAppointment' as any)}
             showSelector={false}
             showBookButton={true}
             onAdd={() => navigation.navigate('BookAppointment' as any)}
           />
         </View>
-        <View style={{ width: 375, marginRight: 16 }}>
+        <View style={{ width: cardWidth, marginRight: 16 }}>
           <DoctorCard
             doctor={mockDoctor}
-            // onPress={() => navigation.navigate('BookAppointment' as any)}
             showSelector={false}
             showBookButton={true}
             onAdd={() => navigation.navigate('BookAppointment' as any)}

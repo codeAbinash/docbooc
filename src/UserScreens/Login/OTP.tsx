@@ -5,7 +5,7 @@ import { PaddingBottom, PaddingTop } from '@components/SafePadding'
 import { Bold, Medium, SEMIBOLD, SemiBold } from '@utils/fonts'
 import { NavProp } from '@utils/types'
 import { useColorScheme } from 'nativewind'
-import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native'
 import { useRoute, RouteProp } from '@react-navigation/native'
 import { RootStackParamList } from '../../../App'
 import { OtpInput } from 'react-native-otp-entry'
@@ -14,10 +14,13 @@ import { useState, useEffect } from 'react'
 
 export default function OTP({ navigation }: NavProp) {
   const { colorScheme } = useColorScheme()
+  const { width } = useWindowDimensions()
   const [otp, setOtp] = useState('')
   const [timeLeft, setTimeLeft] = useState(30)
   const route = useRoute<RouteProp<RootStackParamList, 'OTP'>>()
   const { countryCode = '+91', mobileNumber = '' } = route.params ?? {}
+
+  const otpBoxWidth = Math.floor((width - 40 - 60) / 6)
 
   useEffect(() => {
     if (timeLeft <= 0) return
@@ -70,13 +73,17 @@ export default function OTP({ navigation }: NavProp) {
                   caretHidden: true,
                 }}
                 theme={{
-                  containerStyle: styles.container,
+                  containerStyle: {
+                    marginLeft: 'auto',
+                    marginRight: 'auto',
+                    gap: 8,
+                  },
                   pinCodeContainerStyle: {
                     borderColor: colorScheme === 'dark' ? colors.zinc[700] : colors.zinc[300],
                     height: 'auto',
                     paddingTop: 12,
                     paddingBottom: 12,
-                    width: 48,
+                    width: otpBoxWidth,
                     borderWidth: 2,
                     borderRadius: 10,
                   },
@@ -111,19 +118,17 @@ export default function OTP({ navigation }: NavProp) {
             </View>
           </View>
 
-          <View className=' flex items-center justify-center gap-2  pb-3'>
+          <View className='flex items-center justify-center gap-2 pb-3'>
             <View>
               <Medium className='text-center text-xs text-zinc-600 dark:text-zinc-400'>
-              By 'logging in' I agree to the
-            </Medium>
-
+                By 'logging in' I agree to the
+              </Medium>
             </View>
-            
+
             <View className='flex-row items-center justify-center gap-8'>
               <Pressable onPress={() => {}}>
                 <Text className='font-semibold text-blue-600 underline'>Terms & Conditions</Text>
               </Pressable>
-              
             </View>
           </View>
         </View>
@@ -137,6 +142,6 @@ const styles = StyleSheet.create({
   container: {
     marginLeft: 'auto',
     marginRight: 'auto',
-    gap: 12,
+    gap: 8,
   },
 })

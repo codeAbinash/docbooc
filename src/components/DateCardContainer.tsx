@@ -83,18 +83,19 @@ export function DateCardContainer({ onDateChange }: DateCardContainerProps) {
       const isActive = currentIndex === index
 
       return (
-        <View style={{ width: containerWidth }} className='items-center  justify-center'>
-          <View className=' flex-row items-end justify-center gap-2'>
-
+        <View style={{ width: containerWidth }} className='items-center justify-center px-2'>
+          <View className='flex-row items-end justify-center gap-2'>
             <SemiBold
-              className=' text-center text-3xl text-neutral-900 dark:text-white'
+              className='text-center text-3xl text-neutral-900 dark:text-white'
               style={{ opacity: isActive ? 1 : 0.3 }}
+              numberOfLines={1}
             >
               {dateInfo.date}
             </SemiBold>
             <Medium
-              className='text-center text-base text-neutral-600 pb-1 dark:text-neutral-400'
+              className='pb-1 text-center text-base text-neutral-600 dark:text-neutral-400'
               style={{ opacity: isActive ? 1 : 0.4 }}
+              numberOfLines={1}
             >
               {monthNames[dateInfo.month]}
             </Medium>
@@ -125,18 +126,11 @@ export function DateCardContainer({ onDateChange }: DateCardContainerProps) {
   }
 
   return (
-    <View className='border-b  border-neutral-300 px-6 pt-4 pb-4 dark:border-neutral-600'>
-      
-
+    <View className='border-b border-neutral-300 px-6 pb-4 pt-4 dark:border-neutral-600'>
       {/* Date Carousel and Quick Select Buttons in One Row */}
-      <View className='flex-row items-center gap-3'>
-       
-        <TouchableOpacity  className='rounded-lg pl-1'>
-          <Calendar01Icon
-            size={25}
-            
-            strokeWidth={2}
-          />
+      <View className='flex-row items-center gap-2'>
+        <TouchableOpacity className='rounded-lg pl-1'>
+          <Calendar01Icon size={25} strokeWidth={2} />
         </TouchableOpacity>
 
         {/* Carousel */}
@@ -144,7 +138,6 @@ export function DateCardContainer({ onDateChange }: DateCardContainerProps) {
           {containerWidth > 0 && (
             <FlatList
               ref={flatListRef}
-              
               data={Array.from({ length: 90 }, (_, i) => i)}
               renderItem={renderItem}
               keyExtractor={(item) => item.toString()}
@@ -174,19 +167,19 @@ export function DateCardContainer({ onDateChange }: DateCardContainerProps) {
         <View className='flex-row gap-2'>
           <TouchableOpacity
             onPress={() => scrollToIndex(0 - currentIndex)}
-            className='rounded-lg border border-neutral-300 px-3 py-2 dark:border-neutral-600'
+            className='rounded-lg border border-neutral-300 px-2 py-2 dark:border-neutral-600'
           >
             <Medium className='text-xs text-neutral-700 dark:text-neutral-300'>Today</Medium>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => scrollToIndex(1 - currentIndex)}
-            className='rounded-lg border border-neutral-300 px-3 py-2 dark:border-neutral-600'
+            className='rounded-lg border border-neutral-300 px-2 py-2 dark:border-neutral-600'
           >
             <Medium className='text-xs text-neutral-700 dark:text-neutral-300'>Tomorrow</Medium>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => scrollToIndex(2 - currentIndex)}
-            className='rounded-lg border border-neutral-300 px-3 py-2 dark:border-neutral-600'
+            className='rounded-lg border border-neutral-300 px-2 py-2 dark:border-neutral-600'
           >
             <Medium className='text-xs text-neutral-700 dark:text-neutral-300'>Day After</Medium>
           </TouchableOpacity>
