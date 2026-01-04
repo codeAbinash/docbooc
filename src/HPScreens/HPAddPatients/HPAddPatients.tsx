@@ -1,79 +1,115 @@
-import { doctors, specialties } from '@/constants'
-import { ALL_SPECIALTY } from '@/UserScreens/Doctors/Doctors'
-
-import { DoctorCard } from '@components/DoctorCard'
+import { specialties } from '@/constants'
+import Chip from '@components/Chip'
+import { PaddingTop } from '@components/SafePadding'
 import HybridHead from '@components/HybridHead'
-import { useNavigation } from '@react-navigation/native'
-import { HPStackNav } from '@utils/types'
-import { useMemo, useRef, useState } from 'react'
-import { FlatList, View } from 'react-native'
+import Cancel01Icon from '@hugeicons/Cancel01Icon'
+import Doctor01Icon from '@hugeicons/Doctor01Icon'
+import Search01Icon from '@hugeicons/Search01Icon'
+import { useFocusEffect, useNavigation } from '@react-navigation/native'
+import { useQuery } from '@tanstack/react-query'
+import { hpApi } from '@utils/client'
+import Colors from '@utils/colors'
+import { SemiBold } from '@utils/fonts'
+import { HPStackNav, StackNav } from '@utils/types'
+import { useColorScheme } from 'nativewind'
+import { useCallback, useMemo, useRef, useState, useEffect } from 'react'
+import { ActivityIndicator, FlatList, TextInput, TouchableOpacity, View, Animated } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
+import { DoctorCard } from '../../components/DoctorCard'
 
-const HPAddPatients = () => {
+export const ALL_SPECIALTY = { id: 0, name: 'All', icon: Doctor01Icon }
+
+const HPAddPatients = ({ route }: any) => {
   const navigate = useNavigation<HPStackNav>()
-  const [selected, setSelected] = useState(0)
-  const scrollViewRef = useRef<ScrollView>(null)
-  const [showSearch, setShowSearch] = useState(false)
+  const [selected, setSelected] = useState<number>(0)
   const [searchQuery, setSearchQuery] = useState('')
+  const [titleIndex, setTitleIndex] = useState(0)
+  const [isSearchOpen, setIsSearchOpen] = useState(route?.params?.openSearch || false)
+  const scrollViewRef = useRef<ScrollView>(null)
 
-  const toggleSearch = (isOpen: boolean) => {
-    setShowSearch(isOpen)
-    if (isOpen) setSearchQuery('')
-  }
+  const titles = ['DocBook', 'Search Doctors', 'Find Your Specialist Doctor', 'Book Appointments Easily']
 
-  const filteredDoctors = useMemo(() => {
-    let filtered = doctors
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase()
-      filtered = filtered.filter(
-        (d) => d.name.toLowerCase().includes(query) || d.specialty.toLowerCase().includes(query),
-      )
-    }
-    if (selected !== 0) {
-      const selectedSpecialty = specialties.find((s) => s.id === selected)
-      if (selectedSpecialty) {
-        filtered = filtered.filter((d) => d.specialty === selectedSpecialty.name)
+  const handleAnimationComplete = useCallback(() => {
+    setTitleIndex((prev) => (prev + 1) % titles.length)
+  }, [titles.length])
+
+  useFocusEffect(
+    useCallback(() => {
+      if (route?.params?.openSearch) {
+        setIsSearchOpen(true)
       }
-    }
-    return filtered
-  }, [searchQuery, selected])
+      return () => {
+        setIsSearchOpen(false)
+      }
+    }, [route?.params?.openSearch]),
+  )
 
   const allItems = [ALL_SPECIALTY, ...specialties]
 
+  const { data: doctorsResponse, isLoading } = useQuery({
+    queryKey: ['doctors'],
+    queryFn: async () => (await hpApi.doctors.all.$get()).json(),
+  })
+
+  const doctors = useMemo(() => doctorsResponse?.data || [], [doctorsResponse])
+
+  const filteredDoctors = useMemo(() => {
+    let result = selected
+      ? doctors.filter((doctor) => doctor.specialization === specialties.find((s) => s.id === selected)?.name)
+      : doctors
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase()
+      result = result.filter(
+        (d) => d.name.toLowerCase().includes(query) || d.specialization?.toLowerCase().includes(query),
+      )
+    }
+    return result
+  }, [selected, searchQuery, doctors])
+
   return (
-    <>
+    <View className='flex-1 '>
       <HybridHead
-        title='Add Patients'
+        showBackButton={true}
+        title={'Select doctor'}
         showSearch={true}
-        onSearchChange={setSearchQuery}
-        onSearchToggle={toggleSearch}
         searchPlaceholder='Search doctors, specialties...'
         chipItems={allItems}
         selectedChipId={selected}
         onChipSelect={setSelected}
         chipScrollRef={scrollViewRef}
-        showMenu={true}
-        showDoctorInfo={false}
+        onSearchChange={setSearchQuery}
+        onSearchToggle={setIsSearchOpen}
+        searchOpen={isSearchOpen}
       />
-      <View className='flex-1 bg-white dark:bg-neutral-900'>
-        <FlatList
-          className='flex-1'
-          contentContainerClassName='px-5 pb-10 pt-3'
-          data={filteredDoctors}
-          renderItem={({ item }) => (
-            <DoctorCard
-              doctor={item}
-              onPress={() =>
-                navigate.navigate('HPDoctorScheduleDetails', { doctorId: item.id.toString(), doctorName: item.name })
-              }
-            />
-          )}
-          keyExtractor={(item) => item.id.toString()}
-          ItemSeparatorComponent={() => <View className='h-4' />}
-          showsVerticalScrollIndicator={false}
-        />
+
+      <View className='flex-1  bg-white dark:bg-neutral-900'>
+        {isLoading ? (
+          <View className='flex-1 items-center justify-center'>
+            <ActivityIndicator size='large' color={Colors.accent} />
+          </View>
+        ) : (
+          <FlatList
+            className=' flex-1 pt-3'
+            contentContainerClassName='px-5 pb-10'
+            data={filteredDoctors}
+            renderItem={({ item }) => (
+              <DoctorCard
+                doctor={item}
+                showSelector={false}
+                selected={false}
+                onPress={() =>
+                  item.specialization &&
+                  navigate.navigate('HPBookAppointment', { doctor: { ...item, specialization: item.specialization } })
+                }
+              />
+            )}
+            keyExtractor={(item) => item.id.toString()}
+            ItemSeparatorComponent={() => <View className='h-4' />}
+            showsVerticalScrollIndicator={false}
+          />
+        )}
       </View>
-    </>
+    </View>
   )
 }
 

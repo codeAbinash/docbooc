@@ -3,7 +3,8 @@ import { RouteProp } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
 import { AdminRootStackParamList } from '../../AdminApp'
 import { RootStackParamList } from '../../App'
-import { HpRootStackParamList } from '../../HPApp'
+import type { HpRootStackParamList } from '../../HPApp'
+export type { HpRootStackParamList }
 
 export type StackNav = StackNavigationProp<RootStackParamList>
 export type HPStackNav = StackNavigationProp<HpRootStackParamList>

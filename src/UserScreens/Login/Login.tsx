@@ -69,74 +69,11 @@ export default function Login({ navigation }: NavProp) {
         pages={pages}
         onPageChange={handlePageChange}
         showDots
-        
-        carouselHeightRatio={0.65}
+        carouselHeightRatio={0.67}
         onSkip={handleSkip}
       />
       <KeyboardAvoid>
-        <BottomSheet visible={true} onClose={() => {}} heightRatio={0.3}>
-          <View className='px-6 py-4'>
-            <SemiBold className='pb-4 text-xl text-black dark:text-white'>Login or create a new account</SemiBold>
-
-            <View
-              className='flex-row gap-2  rounded-xl border border-gray-300 bg-white dark:border-gray-600 dark:bg-gray-900'
-              style={validationError ? { borderColor: '#DC2626' } : {}}
-            >
-              <View className='w-20 items-center justify-center px-3 py-3'>
-                <SemiBold className='text-xl text-black dark:text-white'>{countryCode}</SemiBold>
-              </View>
-              <View className='w-px bg-gray-300 dark:bg-gray-600' />
-              <TextInput
-                ref={inputRef}
-                value={mobileNumber}
-                onChangeText={(text) => {
-                  const cleaned = text.replace(/[^0-9]/g, '')
-                  setMobileNumber(cleaned)
-                  if (validationError) setValidationError('')
-                }}
-                placeholder='Mobile number'
-                keyboardType='phone-pad'
-                maxLength={10}
-                className='flex-1 px-3 py-3 text-xl text-black dark:text-white'
-                placeholderTextColor='#999'
-              />
-            </View>
-
-            {validationError && <Medium className='text-sm text-red-600'>{validationError}</Medium>}
-
-            <View className='pt-4'>
-              <Button title='Get OTP' onPress={handleGetOTP} />
-            </View>
-          </View>
-          <View className=' flex items-center justify-center gap-2 pt-2'>
-            <View>
-              <Medium className='text-center text-xs text-zinc-600 dark:text-zinc-400'>
-              By 'logging in' I agree to the
-            </Medium>
-
-            </View>
-            
-            <View className='flex-row items-center justify-center gap-8'>
-              <Pressable onPress={() => {}}>
-                <Text className='font-semibold text-blue-600 underline'>Terms & Conditions</Text>
-              </Pressable>
-              
-            </View>
-          </View>
-        </BottomSheet>
-        
-      </KeyboardAvoid>
-
-      <PaddingBottom />
-    </View>
-  )
-}
-
-
-
-// Below is the BottomSheet code for OTP Login 
-/*
-<BottomSheet visible={true} onClose={() => {}} heightRatio={0.3}>
+        <BottomSheet visible={true} onClose={() => {}} heightRatio={0.31}>
           <View className='px-6 py-4'>
             <SemiBold className='pb-4 text-xl text-black dark:text-white'>Login or create a new account</SemiBold>
 
@@ -159,7 +96,7 @@ export default function Login({ navigation }: NavProp) {
                 placeholder='Mobile number'
                 keyboardType='phone-pad'
                 maxLength={10}
-                className='flex-1 px-3 py-3 text-xl text-black dark:text-white'
+                className='flex-1 px-3 py-3 text-xl font-bold text-black dark:text-white'
                 placeholderTextColor='#999'
               />
             </View>
@@ -169,19 +106,25 @@ export default function Login({ navigation }: NavProp) {
             <View className='pt-4'>
               <Button title='Get OTP' onPress={handleGetOTP} />
             </View>
-          </View>
-          <View className='gap-2 pb-8 pt-2'>
-            <Medium className='text-center text-xs text-zinc-600 dark:text-zinc-400'>
-              By 'logging in' I agree to the
-            </Medium>
-            <View className='flex-row items-center justify-center gap-8'>
-              <Pressable onPress={() => {}}>
-                <Text className='font-semibold text-blue-600 underline'>Terms & Conditions</Text>
-              </Pressable>
-              <Pressable onPress={() => {}}>
-                <Text className='font-semibold text-blue-600 underline'>Privacy Policy</Text>
-              </Pressable>
+
+            <View className='flex items-center justify-center gap-2 pt-12'>
+              <View>
+                <Medium className='text-center text-xs text-zinc-600 dark:text-zinc-400'>
+                  By 'logging in' I agree to the
+                </Medium>
+              </View>
+
+              <View className='flex-row items-center justify-center gap-8'>
+                <Pressable onPress={() => {}}>
+                  <Text className='font-semibold text-blue-600 underline'>Terms & Conditions</Text>
+                </Pressable>
+              </View>
             </View>
           </View>
         </BottomSheet>
- */
+      </KeyboardAvoid>
+
+      <PaddingBottom />
+    </View>
+  )
+}

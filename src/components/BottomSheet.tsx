@@ -19,7 +19,7 @@ export default function BottomSheet({
   visible,
   onClose,
   children,
-  heightRatio = 0.6,
+  heightRatio = 0.5,
   backgroundColor = 'white',
   showHandle = true,
   snapPoints = [],

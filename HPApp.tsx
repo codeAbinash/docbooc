@@ -1,6 +1,7 @@
 import AdminAddDoctor from '@/AdminScreens/AdminAddDoctor'
 import HPDoctorScheduler from '@components/HPDoctorScheduler'
 import HPScheduleReview from '@components/HPScheduleReview'
+import HPBookAppointment from '@/HPScreens/HPAddPatients/HPBookApointment'
 import HPLogin from '@/HPScreens/HPAuthentications/Login/HPLogin'
 import HPOTP from '@/HPScreens/HPAuthentications/OTP/HPOTP'
 import HPSignup from '@/HPScreens/HPAuthentications/Signup/HPSignup'
@@ -51,15 +52,20 @@ export default function HPApp() {
           }}
         >
           <RootStack.Screen name='HPSplash' component={HPSplash} options={SMOOTH_ANIMATION} />
-          <RootStack.Screen name='HPLogin' component={HPLogin} options={SMOOTH_ANIMATION}/>
-          <RootStack.Screen name='HPSignup' component={HPSignup} options={SMOOTH_ANIMATION}/>
+          <RootStack.Screen name='HPLogin' component={HPLogin} options={SMOOTH_ANIMATION} />
+          <RootStack.Screen name='HPSignup' component={HPSignup} options={SMOOTH_ANIMATION} />
           <RootStack.Screen name='HPHome' component={HPHome} options={SMOOTH_ANIMATION} />
           <RootStack.Screen name='HPOTP' component={HPOTP} options={SMOOTH_ANIMATION} />
-          <RootStack.Screen name='HPDoctorScheduler' component={HPDoctorScheduler} options={SMOOTH_ANIMATION}/>
-          <RootStack.Screen name='HPScheduleReview' component={HPScheduleReview} options={SMOOTH_ANIMATION}/>
-          <RootStack.Screen name='HPDoctorScheduleDetails' component={HPDoctorScheduleDetails} options={SMOOTH_ANIMATION}/>
-          <RootStack.Screen name='EditHPProfile' component={EditHPProfileScreen} options={SMOOTH_ANIMATION}/>
-          <RootStack.Screen name='DoctorModel' component={AdminAddDoctor} options={SMOOTH_ANIMATION}/>
+          <RootStack.Screen name='HPDoctorScheduler' component={HPDoctorScheduler} options={SMOOTH_ANIMATION} />
+          <RootStack.Screen name='HPScheduleReview' component={HPScheduleReview} options={SMOOTH_ANIMATION} />
+          <RootStack.Screen name='HPBookAppointment' component={HPBookAppointment} options={SMOOTH_ANIMATION} />
+          <RootStack.Screen
+            name='HPDoctorScheduleDetails'
+            component={HPDoctorScheduleDetails}
+            options={SMOOTH_ANIMATION}
+          />
+          <RootStack.Screen name='EditHPProfile' component={EditHPProfileScreen} options={SMOOTH_ANIMATION} />
+          <RootStack.Screen name='DoctorModel' component={AdminAddDoctor} options={SMOOTH_ANIMATION} />
         </RootStack.Navigator>
       </NavigationContainer>
     </QueryClientProvider>
@@ -85,6 +91,21 @@ export type HpRootStackParamList = {
     doctorId: string
     doctorName: string
     scheduleData: any
+  }
+  HPBookAppointment: {
+    doctor: {
+      id: string
+      name: string
+      email: string | null
+      contactNumber: string | null
+      gender: string | null
+      department: string | null
+      degrees: string | null
+      experience: number | null
+      specialization: string
+      createdAt: string
+      verified: boolean | null
+    }
   }
   HPDoctorScheduleDetails: {
     doctorId: string

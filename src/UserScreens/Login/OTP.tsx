@@ -111,7 +111,7 @@ export default function OTP({ navigation }: NavProp) {
             </View>
           </View>
 
-          <View className=' flex items-center justify-center gap-2 pb-6 pt-2'>
+          <View className=' flex items-center justify-center gap-2  pb-3'>
             <View>
               <Medium className='text-center text-xs text-zinc-600 dark:text-zinc-400'>
               By 'logging in' I agree to the

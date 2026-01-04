@@ -51,7 +51,7 @@ function PageCarousel({
   onPageChange,
   showDots = true,
   onSkip,
-  carouselHeightRatio = 0.6,
+  carouselHeightRatio = 0.5,
   showAnimations = true,
   showSkip = true,
 }: PageCarouselProps) {
