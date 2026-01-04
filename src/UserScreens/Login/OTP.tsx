@@ -1,16 +1,17 @@
-import Animations from '@assets/animations/animations'
+import authStore from '@/zustand/authStore'
 import Button from '@components/Button'
-import { Lottie } from '@components/Lottie'
 import { PaddingBottom, PaddingTop } from '@components/SafePadding'
+import { RouteProp, useRoute } from '@react-navigation/native'
+import { useMutation } from '@tanstack/react-query'
+import { api } from '@utils/client'
 import { Bold, Medium, SEMIBOLD, SemiBold } from '@utils/fonts'
 import { NavProp } from '@utils/types'
 import { useColorScheme } from 'nativewind'
-import { Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native'
-import { useRoute, RouteProp } from '@react-navigation/native'
-import { RootStackParamList } from '../../../App'
+import { useEffect, useState } from 'react'
+import { Pressable, Text, ToastAndroid, View, useWindowDimensions } from 'react-native'
 import { OtpInput } from 'react-native-otp-entry'
 import colors from 'tailwindcss/colors'
-import { useState, useEffect } from 'react'
+import { RootStackParamList } from '../../../App'
 
 export default function OTP({ navigation }: NavProp) {
   const { colorScheme } = useColorScheme()
@@ -19,6 +20,27 @@ export default function OTP({ navigation }: NavProp) {
   const [timeLeft, setTimeLeft] = useState(30)
   const route = useRoute<RouteProp<RootStackParamList, 'OTP'>>()
   const { countryCode = '+91', mobileNumber = '' } = route.params ?? {}
+  const setToken = authStore((data) => data.setToken)
+
+  const { mutate, isPending } = useMutation({
+    mutationKey: ['verify-otp', otp],
+    mutationFn: async () =>
+      await (
+        await api.users['verify-code'].$post({
+          json: {
+            code: otp,
+            phone: mobileNumber,
+          },
+        })
+      ).json(),
+    onSuccess: (data) => {
+      console.log(data)
+      if (!data.success) return ToastAndroid.show('Invalid OTP, please try again.', ToastAndroid.SHORT)
+      if (data.data?.token) setToken(data.data.token)
+      ToastAndroid.show('OTP verified successfully!', ToastAndroid.SHORT)
+      navigation.reset({ index: 0, routes: [{ name: 'Home' }] })
+    },
+  })
 
   const otpBoxWidth = Math.floor((width - 40 - 60) / 6)
 
@@ -102,7 +124,11 @@ export default function OTP({ navigation }: NavProp) {
               />
             </View>
 
-            <Button title='Verify OTP' onPress={() => navigation.reset({ index: 0, routes: [{ name: 'Home' }] })} />
+            <Button
+              title={isPending ? 'Verifying OTP...' : 'Verify OTP'}
+              onPress={() => mutate()}
+              disabled={isPending || otp.length < 6}
+            />
 
             <View className='gap-2'>
               {timeLeft > 0 ? (
@@ -137,11 +163,3 @@ export default function OTP({ navigation }: NavProp) {
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    gap: 8,
-  },
-})

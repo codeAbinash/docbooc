@@ -1,13 +1,30 @@
-import Button from '@components/Button'
-import { PaddingBottom, PaddingTop } from '@components/SafePadding'
-import PageCarousel from '@components/PageCarousel'
 import BottomSheet from '@components/BottomSheet'
+import Button from '@components/Button'
+import PageCarousel from '@components/PageCarousel'
+import { PaddingBottom, PaddingTop } from '@components/SafePadding'
 import { Bold, Medium, SemiBold } from '@utils/fonts'
 import { NavProp } from '@utils/types'
 
-import { useState, useMemo, useCallback, useRef } from 'react'
-import { View, TextInput, Text, KeyboardAvoidingView, Platform, Keyboard, Pressable } from 'react-native'
 import KeyboardAvoid from '@components/KeyboardAvoid'
+import { useMutation } from '@tanstack/react-query'
+import { client } from '@utils/client'
+import { useCallback, useRef, useState } from 'react'
+import { Pressable, Text, TextInput, ToastAndroid, View } from 'react-native'
+
+const pages = [
+  <View key='page1' className='flex-1 items-center justify-center bg-blue-100 dark:bg-blue-900'>
+    <Bold className='text-3xl text-blue-900 dark:text-blue-100'>Page 1</Bold>
+    <Medium className='pt-4 text-center text-blue-800 dark:text-blue-200'>Swipe to see more pages</Medium>
+  </View>,
+  <View key='page2' className='flex-1 items-center justify-center bg-purple-100 dark:bg-purple-900'>
+    <Bold className='text-3xl text-purple-900 dark:text-purple-100'>Page 2</Bold>
+    <Medium className='pt-4 text-center text-purple-800 dark:text-purple-200'>This is the second page</Medium>
+  </View>,
+  <View key='page3' className='flex-1 items-center justify-center bg-green-100 dark:bg-green-900'>
+    <Bold className='text-3xl text-green-900 dark:text-green-100'>Page 3</Bold>
+    <Medium className='pt-4 text-center text-green-800 dark:text-green-200'>And this is the third page</Medium>
+  </View>,
+]
 
 export default function Login({ navigation }: NavProp) {
   const [currentPage, setCurrentPage] = useState(0)
@@ -17,23 +34,6 @@ export default function Login({ navigation }: NavProp) {
   const inputRef = useRef<TextInput>(null)
 
   // Memoize pages to prevent recreation on every render
-  const pages = useMemo(
-    () => [
-      <View key='page1' className='flex-1 items-center justify-center bg-blue-100 dark:bg-blue-900'>
-        <Bold className='text-3xl text-blue-900 dark:text-blue-100'>Page 1</Bold>
-        <Medium className='pt-4 text-center text-blue-800 dark:text-blue-200'>Swipe to see more pages</Medium>
-      </View>,
-      <View key='page2' className='flex-1 items-center justify-center bg-purple-100 dark:bg-purple-900'>
-        <Bold className='text-3xl text-purple-900 dark:text-purple-100'>Page 2</Bold>
-        <Medium className='pt-4 text-center text-purple-800 dark:text-purple-200'>This is the second page</Medium>
-      </View>,
-      <View key='page3' className='flex-1 items-center justify-center bg-green-100 dark:bg-green-900'>
-        <Bold className='text-3xl text-green-900 dark:text-green-100'>Page 3</Bold>
-        <Medium className='pt-4 text-center text-green-800 dark:text-green-200'>And this is the third page</Medium>
-      </View>,
-    ],
-    [],
-  )
 
   // Memoize callbacks to prevent unnecessary re-renders
   const handlePageChange = useCallback((page: number) => {
@@ -42,24 +42,36 @@ export default function Login({ navigation }: NavProp) {
 
   const handleGetOTP = useCallback(() => {
     if (mobileNumber.length === 0) {
-      Keyboard.dismiss()
-      setTimeout(() => {
-        inputRef.current?.focus()
-      }, 200)
-      setValidationError('')
+      ToastAndroid.show('Please enter mobile number', ToastAndroid.SHORT)
       return
     }
     if (mobileNumber.length !== 10) {
-      setValidationError('Enter a valid number')
+      setValidationError('Mobile number must be 10 digits long')
       return
     }
     setValidationError('')
-    navigation.navigate('OTP', { countryCode, mobileNumber })
+    mutate()
   }, [countryCode, mobileNumber, navigation])
 
   const handleSkip = useCallback(() => {
     navigation.reset({ index: 0, routes: [{ name: 'Home' }] })
   }, [navigation])
+
+  const { mutate, isPending } = useMutation({
+    mutationKey: ['request-otp', mobileNumber],
+    mutationFn: async () =>
+      await (
+        await client.api.v1.users['send-code'].$post({
+          json: {
+            phone: mobileNumber,
+          },
+        })
+      ).json(),
+    onSuccess: (data) => {
+      if (!data.success) return ToastAndroid.show(data.message || 'Failed to send OTP', ToastAndroid.SHORT)
+      navigation.navigate('OTP', { countryCode, mobileNumber })
+    },
+  })
 
   return (
     <View className='flex-1 bg-white dark:bg-black'>
@@ -104,7 +116,7 @@ export default function Login({ navigation }: NavProp) {
             {validationError && <Medium className='text-sm text-red-600'>{validationError}</Medium>}
 
             <View className='pt-4'>
-              <Button title='Get OTP' onPress={handleGetOTP} />
+              <Button title={isPending ? 'Sending OTP...' : 'Get OTP'} onPress={handleGetOTP} disabled={isPending} />
             </View>
 
             <View className='flex items-center justify-center gap-2 pt-5'>

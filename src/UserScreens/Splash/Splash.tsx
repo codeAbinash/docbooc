@@ -1,13 +1,17 @@
+import authStore from '@/zustand/authStore'
 import { Medium } from '@utils/fonts'
 import { NavProp } from '@utils/types'
 import { useEffect } from 'react'
 import { View } from 'react-native'
 
 export default function Splash({ navigation }: NavProp) {
+  const { token } = authStore()
   useEffect(() => {
-    setTimeout(() => {
-      navigation.replace('Login')
-    }, 2000)
+    if (token) {
+      navigation.replace('Home')
+      return
+    }
+    navigation.replace('Login')
   }, [])
 
   return (
