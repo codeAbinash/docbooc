@@ -83,19 +83,17 @@ export function DateCardContainer({ onDateChange }: DateCardContainerProps) {
       const isActive = currentIndex === index
 
       return (
-        <View style={{ width: containerWidth }} className='items-center justify-center'>
-          <View className='gap-2'>
+        <View style={{ width: containerWidth }} className='items-center  justify-center'>
+          <View className=' flex-row items-end justify-center gap-2'>
 
-            
-            
             <SemiBold
-              className=' text-center text-4xl text-neutral-900 dark:text-white'
+              className=' text-center text-3xl text-neutral-900 dark:text-white'
               style={{ opacity: isActive ? 1 : 0.3 }}
             >
               {dateInfo.date}
             </SemiBold>
             <Medium
-              className='text-center text-sm text-neutral-600 dark:text-neutral-400'
+              className='text-center text-base text-neutral-600 pb-1 dark:text-neutral-400'
               style={{ opacity: isActive ? 1 : 0.4 }}
             >
               {monthNames[dateInfo.month]}
@@ -127,22 +125,17 @@ export function DateCardContainer({ onDateChange }: DateCardContainerProps) {
   }
 
   return (
-    <View className='border-b border-neutral-300 px-5 pt-4 pb-2 dark:border-neutral-600'>
-      {/* Date Header */}
-      {/* <View className='mb-4 flex-row items-center gap-2'>
-        <Calendar01Icon size={24} color='#9ca3af' strokeWidth={2} />
-        <SemiBold className='text-base text-neutral-900 dark:text-white'>{formatDateDisplay(currentDate)}</SemiBold>
-      </View> */}
+    <View className='border-b  border-neutral-300 px-6 pt-4 pb-4 dark:border-neutral-600'>
+      
 
       {/* Date Carousel and Quick Select Buttons in One Row */}
       <View className='flex-row items-center gap-3'>
-        {/* Left Arrow */}
-        <TouchableOpacity onPress={() => scrollToIndex(-1)} className='rounded-lg p-2'>
-          <ArrowRightDoubleIcon
-            size={18}
-            color='#3b82f6'
-            strokeWidth={2.5}
-            style={{ transform: [{ rotateY: '180deg' }] }}
+       
+        <TouchableOpacity  className='rounded-lg pl-1'>
+          <Calendar01Icon
+            size={25}
+            
+            strokeWidth={2}
           />
         </TouchableOpacity>
 
@@ -172,10 +165,10 @@ export function DateCardContainer({ onDateChange }: DateCardContainerProps) {
           )}
         </View>
 
-        {/* Right Arrow */}
+        {/* Right Arrow
         <TouchableOpacity onPress={() => scrollToIndex(1)} className='rounded-lg p-2'>
           <ArrowRightDoubleIcon size={18} color='#3b82f6' strokeWidth={2.5} />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         {/* Quick Select Buttons */}
         <View className='flex-row gap-2'>

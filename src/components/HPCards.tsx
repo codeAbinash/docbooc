@@ -87,7 +87,7 @@ function HPCardsInternal({
   showSelector: boolean
 }) {
   return (
-    <View className='gap-3 p-4 dark:bg-neutral-800'>
+    <View className='gap-3 p-3 dark:bg-neutral-800'>
       {/* Header with Image and Title */}
       <View className='flex-row items-start gap-3'>
         <View>
@@ -116,7 +116,7 @@ function HPCardsInternal({
       </View>
 
       {/* Address Section */}
-      <View className='flex-1 gap-1 rounded-lg bg-neutral-100 p-3 dark:bg-amber-900/20'>
+      <View className='flex-1 gap-1 rounded-lg bg-neutral-100 p-2 dark:bg-amber-900/20'>
         <Medium className='text-xs font-semibold text-neutral-800 dark:text-blue-400'>Address</Medium>
         <Medium className='text-sm text-neutral-800 dark:text-amber-100' numberOfLines={2}>
           {address}
@@ -124,19 +124,19 @@ function HPCardsInternal({
       </View>
 
       {/* Info Grid - 3 Columns */}
-      <View className='flex-row gap-3'>
+      <View className='flex-row gap-2'>
         {time && (
-          <View className='flex-1 gap-1 rounded-lg bg-blue-50 p-3 dark:bg-blue-900/20'>
+          <View className='flex-1 gap-1 rounded-bl-2xl bg-blue-50 p-2 dark:bg-blue-900/20'>
             <Medium className='text-xs font-semibold text-blue-700 dark:text-blue-400'>Time Slot</Medium>
             <SemiBold className='text-sm text-blue-900 dark:text-blue-200'>{time}</SemiBold>
           </View>
         )}
 
-        <View className='flex-1 gap-1 rounded-lg bg-blue-50 p-3 dark:bg-blue-900/20'>
+        <View className='flex-1 gap-1  bg-blue-50 p-2 dark:bg-blue-900/20'>
           <Medium className='text-xs font-semibold text-blue-700 dark:text-blue-400'>Distance</Medium>
           <SemiBold className='text-sm text-blue-900 dark:text-blue-200'>{distance}</SemiBold>
         </View>
-        <View className='flex-1 gap-1 rounded-lg bg-blue-50 p-3 dark:bg-blue-900/20'>
+        <View className='flex-1 gap-1 rounded-br-2xl bg-blue-50 p-2 dark:bg-blue-900/20'>
           <Medium className='text-xs font-semibold text-blue-700 dark:text-blue-400'>Queue</Medium>
           <SemiBold className='text-sm text-blue-900 dark:text-blue-200'>Q{q}</SemiBold>
         </View>

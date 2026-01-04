@@ -14,6 +14,7 @@ import OTP from '@/UserScreens/Login/OTP'
 import PatientInfo from '@/UserScreens/PatientInfo/PatientInfo'
 import Splash from '@/UserScreens/Splash/Splash'
 import VerifyBeforeBooking from '@/UserScreens/VerifyBeforeBooking/VerifyBeforeBooking'
+import ProfileScreen from '@/UserScreens/Profile/Profile'
 
 import { Dimensions, useColorScheme } from 'react-native'
 import Home from './src/UserScreens'
@@ -67,6 +68,7 @@ export default function App() {
           <RootStack.Screen name='VerifyBeforeBooking' component={VerifyBeforeBooking} options={SMOOTH_ANIMATION} />
           <RootStack.Screen name='AppointmentDetails' component={AppointmentDetails} options={SMOOTH_ANIMATION} />
           <RootStack.Screen name='Complete' component={Complete} options={SMOOTH_ANIMATION} />
+          <RootStack.Screen name='Profile' component={ProfileScreen} options={SMOOTH_ANIMATION} />
         </RootStack.Navigator>
       </NavigationContainer>
     </QueryClientProvider>
@@ -103,4 +105,5 @@ export type RootStackParamList = {
   VerifyBeforeBooking: undefined
   Appointments: undefined
   AppointmentDetails: { appointmentId: string }
+  Profile: undefined
 }

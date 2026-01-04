@@ -13,6 +13,7 @@ import { TouchableOpacity, View, useColorScheme, type ColorSchemeName, StyleShee
 import colors from 'tailwindcss/colors'
 import Appointments from './Appointments/Appointments'
 import Doctors from './Doctors/Doctors'
+import ProfileScreen from './Profile/Profile'
 
 // Types
 type TabIconProps = {
@@ -67,10 +68,6 @@ const styles = StyleSheet.create({
     opacity: ICON_OPACITY,
   },
 })
-
-// Placeholder components
-const ProfileScreen = memo(() => <View className='bg flex-1' />)
-ProfileScreen.displayName = 'ProfileScreen'
 
 // Screen configurations
 const SCREENS: readonly ScreenConfig[] = [
