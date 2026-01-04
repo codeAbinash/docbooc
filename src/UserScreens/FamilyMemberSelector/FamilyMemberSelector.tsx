@@ -11,6 +11,7 @@ import { Medium, SemiBold } from '@utils/fonts'
 import { NavProp } from '@utils/types'
 import React from 'react'
 import { ActivityIndicator, ScrollView, View } from 'react-native'
+import { useBookingStore } from '@/zustand/bookingStore'
 
 const mockFamilyMembers: FamilyMember[] = [
   { id: '1', name: '', relationship: 'Myself' },
@@ -32,6 +33,7 @@ const calcAge = (dob?: string) => {
 
 const FamilyMemberSelectorScreen = ({ navigation }: NavProp) => {
   const [selectedMemberId, setSelectedMemberId] = React.useState<string | null>(null)
+  const { setSelectedMemberId: setBookingMemberId, setPatientData } = useBookingStore()
 
   const { data: profile, isPending } = useQuery({
     queryKey: ['profile'],
@@ -129,7 +131,21 @@ const FamilyMemberSelectorScreen = ({ navigation }: NavProp) => {
             title='Review Appointment'
             onPress={() => {
               if (selectedMemberId) {
-                navigation.navigate('VerifyBeforeBooking')
+                const selectedMember = mockFamilyMembers.find((m) => m.id === selectedMemberId)
+                if (selectedMember) {
+                  const isMyself = selectedMember.relationship === 'Myself'
+                  const patientData = {
+                    id: selectedMember.id,
+                    name: isMyself ? (myName.trim() ? myName : '') : selectedMember.name,
+                    age: isMyself ? (myAge ?? selectedMember.age) : selectedMember.age,
+                    gender: isMyself ? (myGender ?? selectedMember.gender) : selectedMember.gender,
+                    mobile: '',
+                    relationship: selectedMember.relationship,
+                  }
+                  setBookingMemberId(selectedMemberId)
+                  setPatientData(patientData)
+                  navigation.navigate('VerifyBeforeBooking')
+                }
               }
             }}
             disabled={!selectedMemberId}

@@ -13,6 +13,7 @@ import { ScrollView } from 'react-native-gesture-handler'
 import { RootStackParamList } from '../../../App'
 import { DateCardContainer } from '@/components/DateCardContainer'
 import authStore from '@/zustand/authStore'
+import { useBookingStore } from '@/zustand/bookingStore'
 
 const BookAppointment = () => {
   const navigation = useNavigation<StackNav>()
@@ -21,11 +22,16 @@ const BookAppointment = () => {
   const [selectedDate, setSelectedDate] = useState('')
   const [initialProgress, setInitialProgress] = useState(0)
   const token = authStore((state) => state.token)
+  const { setDoctor, setDate, setLocation } = useBookingStore()
 
   useEffect(() => {
     const timer = setTimeout(() => setInitialProgress(25), 100)
     return () => clearTimeout(timer)
   }, [])
+
+  useEffect(() => {
+    setDoctor(doctor)
+  }, [doctor, setDoctor])
 
   const { data: locations = [], isLoading } = useQuery({
     queryKey: ['doctor-availability', doctor.id, selectedDate],
@@ -45,9 +51,21 @@ const BookAppointment = () => {
   )
 
   const handleNext = useCallback(() => {
+    if (selectedLocationId !== null && locations.length > 0) {
+      const selectedLocation = locations[selectedLocationId]
+      if (selectedLocation) {
+        setDate(selectedDate)
+        setLocation({
+          scheduleId: selectedLocation.scheduleId,
+          scheduleType: selectedLocation.scheduleType,
+          healthcareProvider: selectedLocation.healthcareProvider,
+          timeSlots: selectedLocation.timeSlots,
+        })
+      }
+    }
     if (token) navigation.navigate('FamilyMemberSelectorScreen')
     else navigation.navigate('Login')
-  }, [navigation])
+  }, [navigation, token, selectedLocationId, locations, selectedDate, setDate, setLocation])
 
   const handleLocationPress = useCallback((idx: number) => setSelectedLocationId(idx), [])
 
