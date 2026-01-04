@@ -83,17 +83,19 @@ export function DateCardContainer({ onDateChange }: DateCardContainerProps) {
       const isActive = currentIndex === index
 
       return (
-        <View style={{ width: containerWidth }} className='items-center justify-center px-2'>
-          <View className='flex-row items-end justify-center gap-2'>
-            <SemiBold
-              className='text-center text-3xl text-neutral-900 dark:text-white'
+        <View style={{ width: containerWidth }} className='flex-row gap-4 items-center justify-center px-2'>
+          <Calendar01Icon size={25} strokeWidth={1.5} />
+          <View className='flex-row items-center justify-center gap-1'>
+            
+            <Medium
+              className=' text-center text-2xl text-neutral-900 dark:text-white'
               style={{ opacity: isActive ? 1 : 0.3 }}
               numberOfLines={1}
             >
               {dateInfo.date}
-            </SemiBold>
+            </Medium>
             <Medium
-              className='pb-1 text-center text-base text-neutral-600 dark:text-neutral-400'
+              className=' text-center text-base text-neutral-600 dark:text-neutral-400'
               style={{ opacity: isActive ? 1 : 0.4 }}
               numberOfLines={1}
             >
@@ -129,9 +131,9 @@ export function DateCardContainer({ onDateChange }: DateCardContainerProps) {
     <View className='border-b border-neutral-300 px-6 pb-4 pt-4 dark:border-neutral-600'>
       {/* Date Carousel and Quick Select Buttons in One Row */}
       <View className='flex-row items-center gap-2'>
-        <TouchableOpacity className='rounded-lg pl-1'>
+        {/* <TouchableOpacity className='rounded-lg pl-1'>
           <Calendar01Icon size={25} strokeWidth={2} />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         {/* Carousel */}
         <View className='flex-1' onLayout={(e) => setContainerWidth(e.nativeEvent.layout.width)}>
@@ -158,10 +160,7 @@ export function DateCardContainer({ onDateChange }: DateCardContainerProps) {
           )}
         </View>
 
-        {/* Right Arrow
-        <TouchableOpacity onPress={() => scrollToIndex(1)} className='rounded-lg p-2'>
-          <ArrowRightDoubleIcon size={18} color='#3b82f6' strokeWidth={2.5} />
-        </TouchableOpacity> */}
+        
 
         {/* Quick Select Buttons */}
         <View className='flex-row gap-2'>
