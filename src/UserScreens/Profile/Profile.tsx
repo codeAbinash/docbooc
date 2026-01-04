@@ -1,23 +1,21 @@
-import { PaddingBottom } from '@components/SafePadding'
+import authStore from '@/zustand/authStore'
+import popupStore from '@/zustand/popupStore'
+import ArrowLeft01Icon from '@assets/icons/hugeicons/ArrowLeft01Icon'
+import Call02Icon from '@assets/icons/hugeicons/Call02Icon'
+import Location06Icon from '@assets/icons/hugeicons/Location06Icon'
+import Menu01Icon from '@assets/icons/hugeicons/Menu01Icon'
+import SquareIcon from '@assets/icons/hugeicons/SquareIcon'
+import TaskDone01Icon from '@assets/icons/hugeicons/TaskDone01Icon'
+import { default as ChevronRight01Icon, default as UserCheck01Icon } from '@assets/icons/hugeicons/UserCheck01Icon'
 import HybridHead from '@components/HybridHead'
 import Press from '@components/Press'
-import Location06Icon from '@assets/icons/hugeicons/Location06Icon'
-import Call02Icon from '@assets/icons/hugeicons/Call02Icon'
-import Logout05Icon from '@assets/icons/hugeicons/Logout05Icon'
-import UserIcon from '@assets/icons/hugeicons/UserIcon'
-import Notification01Icon from '@assets/icons/hugeicons/Notification01Icon'
-import TaskDone01Icon from '@assets/icons/hugeicons/TaskDone01Icon'
-import SquareIcon from '@assets/icons/hugeicons/SquareIcon'
-import Menu01Icon from '@assets/icons/hugeicons/Menu01Icon'
-import ArrowLeft01Icon from '@assets/icons/hugeicons/ArrowLeft01Icon'
-import UserCheck01Icon from '@assets/icons/hugeicons/UserCheck01Icon'
-import ChevronRight01Icon from '@assets/icons/hugeicons/UserCheck01Icon'
-import Colors from '@utils/colors'
-import { useState } from 'react'
-import { Image, ScrollView, View, useColorScheme, Switch } from 'react-native'
-import { SemiBold, Regular, Medium } from '@utils/fonts'
+import { PaddingBottom } from '@components/SafePadding'
+import Logout05Icon from '@hugeicons/Logout05Icon'
 import { useNavigation } from '@react-navigation/native'
-import { HPStackNav } from '@utils/types'
+import Colors from '@utils/colors'
+import { Medium, Regular, SemiBold } from '@utils/fonts'
+import { StackNav } from '@utils/types'
+import { Image, ScrollView, View, useColorScheme } from 'react-native'
 
 const PROFILE_DATA = {
   name: 'Rapolu Naveen',
@@ -28,7 +26,22 @@ const PROFILE_DATA = {
 
 export default function ProfileScreen() {
   const scheme = useColorScheme()
-  const navigation = useNavigation<HPStackNav>()
+  const navigation = useNavigation<StackNav>()
+  const { removeToken } = authStore()
+  const alert = popupStore((state) => state.alert)
+
+  const handleLogout = () => {
+    alert('Logout', 'Are you sure you want to logout?', [
+      { text: 'Cancel' },
+      {
+        text: 'Logout',
+        onPress: () => {
+          removeToken()
+          navigation.reset({ index: 0, routes: [{ name: 'Login' }] })
+        },
+      },
+    ])
+  }
 
   return (
     <View className='flex-1 bg-white'>
@@ -166,6 +179,18 @@ export default function ProfileScreen() {
                   <View className='flex-1'>
                     <Medium className='text-xs text-neutral-500 dark:text-neutral-400'>App Settings</Medium>
                     <Medium className='text-sm text-neutral-900 dark:text-white'>Configure app</Medium>
+                  </View>
+                  <ArrowLeft01Icon color={scheme === 'dark' ? '#6b7280' : '#d1d5db'} size={20} strokeWidth={2} />
+                </Press>
+
+                {/* Logout */}
+                <Press onPress={handleLogout} className='flex-row items-center p-2'>
+                  <View className='mr-3 rounded-full bg-red-50 p-2 dark:bg-red-900/20'>
+                    <Logout05Icon size={20} color={scheme === 'dark' ? '#ef4444' : '#ef4444'} />
+                  </View>
+                  <View className='flex-1'>
+                    <Medium className='text-xs text-neutral-500 dark:text-neutral-400'>Logout</Medium>
+                    <Medium className='text-sm text-neutral-900 dark:text-white'>Sign out of your account</Medium>
                   </View>
                   <ArrowLeft01Icon color={scheme === 'dark' ? '#6b7280' : '#d1d5db'} size={20} strokeWidth={2} />
                 </Press>

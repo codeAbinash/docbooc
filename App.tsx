@@ -1,9 +1,6 @@
 import { DarkTheme, DefaultTheme } from '@/themes'
 import './src/global.css'
 
-import { AutoStatusBar } from '@components/StatusBar'
-import { NavigationContainer } from '@react-navigation/native'
-import { CardStyleInterpolators, createStackNavigator, StackNavigationOptions } from '@react-navigation/stack'
 import AppointmentDetails from '@/UserScreens/AppointmentDetails/AppointmentDetails'
 import BookAppointment from '@/UserScreens/BookAppointment/BookAppointment'
 import Complete from '@/UserScreens/Complete'
@@ -12,14 +9,18 @@ import FamilyMemberSelectorScreen from '@/UserScreens/FamilyMemberSelector/Famil
 import HPLogin from '@/UserScreens/Login/Login'
 import OTP from '@/UserScreens/Login/OTP'
 import PatientInfo from '@/UserScreens/PatientInfo/PatientInfo'
+import ProfileScreen from '@/UserScreens/Profile/Profile'
 import Splash from '@/UserScreens/Splash/Splash'
 import VerifyBeforeBooking from '@/UserScreens/VerifyBeforeBooking/VerifyBeforeBooking'
-import ProfileScreen from '@/UserScreens/Profile/Profile'
+import { AutoStatusBar } from '@components/StatusBar'
+import { NavigationContainer } from '@react-navigation/native'
+import { CardStyleInterpolators, createStackNavigator, StackNavigationOptions } from '@react-navigation/stack'
 
+import { Popups } from '@components/Popup'
+import { queryClient } from '@query/index'
+import { QueryClientProvider } from '@tanstack/react-query'
 import { Dimensions, useColorScheme } from 'react-native'
 import Home from './src/UserScreens'
-import { QueryClientProvider } from '@tanstack/react-query'
-import { queryClient } from '@query/index'
 
 const RootStack = createStackNavigator<RootStackParamList>()
 
@@ -46,6 +47,7 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <NavigationContainer theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <Popups />
         <AutoStatusBar scheme={scheme} />
         <RootStack.Navigator
           screenOptions={{

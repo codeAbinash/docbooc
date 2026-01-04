@@ -1,19 +1,19 @@
 import authStore from '@/zustand/authStore'
 import popupStore from '@/zustand/popupStore'
+import BottomSheet from '@components/BottomSheet'
 import Button from '@components/Button'
 import InputWithLabel from '@components/InputWithLabel'
-import BottomSheet from '@components/BottomSheet'
 import PageCarousel from '@components/PageCarousel'
 import { PaddingBottom, PaddingTop } from '@components/SafePadding'
 
+import KeyboardAvoid from '@components/KeyboardAvoid'
 import { useMutation } from '@tanstack/react-query'
-import { client, updateClientHeader } from '@utils/client'
-import { Black, Bold, Medium, SemiBold } from '@utils/fonts'
+import { client } from '@utils/client'
+import { Bold, Medium, SemiBold } from '@utils/fonts'
 import { secureLs } from '@utils/storage'
 import { HPNavProp } from '@utils/types'
-import { useState, useMemo, useCallback } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { Pressable, Text, View } from 'react-native'
-import KeyboardAvoid from '@components/KeyboardAvoid'
 
 export default function HPLogin({ navigation }: HPNavProp) {
   const { setToken } = authStore()
@@ -69,7 +69,6 @@ export default function HPLogin({ navigation }: HPNavProp) {
       if (!data || !data.success || !data.data) return alert('Error', data.message || 'Invalid credentials')
       secureLs.set('token', data.data.token)
       setToken(data.data.token)
-      updateClientHeader(data.data.token)
       navigation.reset({
         index: 0,
         routes: [{ name: 'HPHome' }],
@@ -99,57 +98,61 @@ export default function HPLogin({ navigation }: HPNavProp) {
     <View className='flex-1 bg-white dark:bg-black'>
       <PaddingTop />
 
-      <PageCarousel pages={pages} onPageChange={handlePageChange} showDots showSkip={false} carouselHeightRatio={0.55} />
-<KeyboardAvoid>
-      <BottomSheet visible={true} onClose={() => {}} heightRatio={0.4}>
-        
-        <View className='gap-4 px-8 py-4 '>
-          <View className=''>
-            <Bold className='text-2xl text-black dark:text-white'>Login to Console</Bold>
-            <Medium className='text-sm text-gray-600 dark:text-gray-400'>
-              Enter your credentials to access your dashboard
-            </Medium>
+      <PageCarousel
+        pages={pages}
+        onPageChange={handlePageChange}
+        showDots
+        showSkip={false}
+        carouselHeightRatio={0.55}
+      />
+      <KeyboardAvoid>
+        <BottomSheet visible={true} onClose={() => {}} heightRatio={0.4}>
+          <View className='gap-4 px-8 py-4'>
+            <View className=''>
+              <Bold className='text-2xl text-black dark:text-white'>Login to Console</Bold>
+              <Medium className='text-sm text-gray-600 dark:text-gray-400'>
+                Enter your credentials to access your dashboard
+              </Medium>
+            </View>
+
+            <View className='gap-3'>
+              <InputWithLabel
+                label='Email'
+                placeholder='Enter your email address'
+                value={email}
+                onChangeText={handleEmailChange}
+                keyboardType='email-address'
+                autoCapitalize='none'
+              />
+              <InputWithLabel
+                label='Password'
+                placeholder='Enter your password'
+                value={password}
+                onChangeText={handlePasswordChange}
+                secureTextEntry={__DEV__ ? false : true}
+                autoCapitalize='none'
+              />
+            </View>
+
+            <View className='gap-2 pt-4'>
+              <Button
+                title={loginMutation.isPending ? 'Logging in...' : 'Login'}
+                onPress={handleLogin}
+                disabled={loginMutation.isPending}
+              />
+
+              <Medium className='text-center text-base text-gray-600 dark:text-gray-400'>
+                Don't have an account?{' '}
+                <SemiBold className='text-accent' onPress={() => navigation.navigate('HPSignup')}>
+                  Register
+                </SemiBold>
+              </Medium>
+            </View>
           </View>
+        </BottomSheet>
+      </KeyboardAvoid>
 
-          <View className='gap-3'>
-            <InputWithLabel
-              label='Email'
-              placeholder='Enter your email address'
-              value={email}
-              onChangeText={handleEmailChange}
-              keyboardType='email-address'
-              autoCapitalize='none'
-            />
-            <InputWithLabel
-              label='Password'
-              placeholder='Enter your password'
-              value={password}
-              onChangeText={handlePasswordChange}
-              secureTextEntry={__DEV__ ? false : true}
-              autoCapitalize='none'
-            />
-          </View>
-
-          <View className='gap-2 pt-4' >
-            <Button
-              title={loginMutation.isPending ? 'Logging in...' : 'Login'}
-              onPress={handleLogin}
-              disabled={loginMutation.isPending}
-            />
-
-            <Medium className='text-center text-base text-gray-600 dark:text-gray-400'>
-              Don't have an account?{' '}
-              <SemiBold className='text-accent' onPress={() => navigation.navigate('HPSignup')}>
-                Register
-              </SemiBold>
-            </Medium>
-          </View>
-         
-        </View>
-      </BottomSheet>
-</KeyboardAvoid>
-
-      <View className='flex items-center justify-center pt-3 pb-3'>
+      <View className='flex items-center justify-center pb-3 pt-3'>
         <Medium className='text-center text-xs text-zinc-600 dark:text-zinc-400'>By 'logging in' I agree to the</Medium>
 
         <View className='flex-row items-center justify-center gap-8'>
