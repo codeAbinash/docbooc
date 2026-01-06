@@ -1,3 +1,6 @@
+import { DateCardContainer } from '@/components/DateCardContainer'
+import authStore from '@/zustand/authStore'
+import { useBookingStore } from '@/zustand/bookingStore'
 import Button from '@components/Button'
 import { HPCards } from '@components/HPCards'
 import HybridHead from '@components/HybridHead'
@@ -7,13 +10,10 @@ import { useQuery } from '@tanstack/react-query'
 import { api } from '@utils/client'
 import { Medium } from '@utils/fonts'
 import { StackNav } from '@utils/types'
-import { useState, useEffect, useMemo, useCallback } from 'react'
+import { useEffect, useState } from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import { RootStackParamList } from '../../../App'
-import { DateCardContainer } from '@/components/DateCardContainer'
-import authStore from '@/zustand/authStore'
-import { useBookingStore } from '@/zustand/bookingStore'
 
 const formatTo12Hour = (time: string): string => {
   const [hours, minutes] = time.split(':').map(Number)
@@ -25,16 +25,10 @@ const formatTo12Hour = (time: string): string => {
 const BookAppointment = () => {
   const navigation = useNavigation<StackNav>()
   const { doctor } = useRoute<RouteProp<RootStackParamList, 'BookAppointment'>>().params
-  const [selectedLocationId, setSelectedLocationId] = useState<number | null>(null)
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null)
   const [selectedDate, setSelectedDate] = useState('')
-  const [initialProgress, setInitialProgress] = useState(0)
   const token = authStore((state) => state.token)
   const { setDoctor, setDate, setLocation } = useBookingStore()
-
-  useEffect(() => {
-    const timer = setTimeout(() => setInitialProgress(25), 100)
-    return () => clearTimeout(timer)
-  }, [])
 
   useEffect(() => {
     setDoctor(doctor)
@@ -52,29 +46,22 @@ const BookAppointment = () => {
     enabled: !!selectedDate && !!doctor.id,
   })
 
-  const progress = useMemo(
-    () => (selectedLocationId !== null ? 50 : selectedDate ? 25 : initialProgress),
-    [selectedLocationId, selectedDate, initialProgress],
-  )
+  const selectedLocation = selectedIndex !== null ? locations[selectedIndex] : null
 
-  const handleNext = useCallback(() => {
-    if (selectedLocationId !== null && locations.length > 0) {
-      const selectedLocation = locations[selectedLocationId]
-      if (selectedLocation) {
-        setDate(selectedDate)
-        setLocation({
-          scheduleId: selectedLocation.scheduleId,
-          scheduleType: selectedLocation.scheduleType,
-          healthcareProvider: selectedLocation.healthcareProvider,
-          timeSlots: selectedLocation.timeSlots,
-        })
-      }
+  const handleNext = () => {
+    if (selectedLocation) {
+      console.log(selectedDate)
+      setDate(selectedDate)
+      setLocation({
+        scheduleId: selectedLocation.scheduleId,
+        scheduleType: selectedLocation.scheduleType,
+        healthcareProvider: selectedLocation.healthcareProvider,
+        timeSlots: selectedLocation.timeSlots,
+      })
     }
     if (token) navigation.navigate('FamilyMemberSelectorScreen')
     else navigation.navigate('Login')
-  }, [navigation, token, selectedLocationId, locations, selectedDate, setDate, setLocation])
-
-  const handleLocationPress = useCallback((idx: number) => setSelectedLocationId(idx), [])
+  }
 
   return (
     <View className='flex-1 bg-white'>
@@ -83,12 +70,7 @@ const BookAppointment = () => {
         <DateCardContainer onDateChange={setSelectedDate} />
       </View>
 
-      <ScrollView
-        className='flex-1 px-5'
-        // contentContainerStyle={{ paddingTop: 10, paddingBottom: 20 }}
-        showsVerticalScrollIndicator={false}
-        contentContainerClassName=''
-      >
+      <ScrollView className='flex-1 px-5' showsVerticalScrollIndicator={false} contentContainerClassName=''>
         {isLoading ? (
           <View className='items-center justify-center py-10'>
             <ActivityIndicator size='large' color='#3b82f6' />
@@ -114,8 +96,8 @@ const BookAppointment = () => {
                   address={address || 'N/A'}
                   distance={loc.distance || 'N/A'}
                   q={slot.maxBookings > 0 ? slot.maxBookings.toString() : 'N/A'}
-                  selected={selectedLocationId === idx}
-                  onPress={() => handleLocationPress(idx)}
+                  selected={selectedIndex === idx}
+                  onPress={() => setSelectedIndex(idx)}
                 />
               )
             })}
@@ -130,7 +112,7 @@ const BookAppointment = () => {
       </ScrollView>
 
       <View className='bg-white px-5 py-3 dark:border-neutral-700 dark:bg-neutral-800'>
-        <Button title='Next' disabled={selectedLocationId === null} onPress={handleNext} />
+        <Button title='Next' disabled={!selectedLocation} onPress={handleNext} />
       </View>
       <PaddingBottom />
     </View>

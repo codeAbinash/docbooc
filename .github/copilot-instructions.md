@@ -8,3 +8,7 @@
 - No need to fix formatting related issues.
 
 - You can use `bun ts` for type checking.
+
+- Keep the code clean and readable.
+
+- Maintain the performance of the code.

@@ -1,6 +1,5 @@
-import ArrowRightDoubleIcon from '@assets/icons/hugeicons/ArrowRightDoubleIcon'
 import Calendar01Icon from '@assets/icons/hugeicons/Calendar01Icon'
-import { Medium, SemiBold } from '@utils/fonts'
+import { Medium } from '@utils/fonts'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { FlatList, TouchableOpacity, View } from 'react-native'
 
@@ -47,8 +46,7 @@ export function DateCardContainer({ onDateChange }: DateCardContainerProps) {
     if (onDateChange) {
       const dateInfo = getDateInfo(currentIndex)
       const date = new Date(dateInfo.year, dateInfo.month, parseInt(dateInfo.date))
-      const isoDate = date.toISOString().split('T')[0]
-      console.log(isoDate)
+      const isoDate = date.toLocaleDateString('en-CA')
       if (isoDate) {
         console.log('DateCardContainer: Calling onDateChange with:', isoDate)
         onDateChange(isoDate)
@@ -83,19 +81,18 @@ export function DateCardContainer({ onDateChange }: DateCardContainerProps) {
       const isActive = currentIndex === index
 
       return (
-        <View style={{ width: containerWidth }} className='flex-row gap-4 items-center justify-center px-2'>
+        <View style={{ width: containerWidth }} className='flex-row items-center justify-center gap-4 px-2'>
           <Calendar01Icon size={25} strokeWidth={1.5} />
           <View className='flex-row items-center justify-center gap-1'>
-            
             <Medium
-              className=' text-center text-2xl text-neutral-900 dark:text-white'
+              className='text-center text-2xl text-neutral-900 dark:text-white'
               style={{ opacity: isActive ? 1 : 0.3 }}
               numberOfLines={1}
             >
               {dateInfo.date}
             </Medium>
             <Medium
-              className=' text-center text-base text-neutral-600 dark:text-neutral-400'
+              className='text-center text-base text-neutral-600 dark:text-neutral-400'
               style={{ opacity: isActive ? 1 : 0.4 }}
               numberOfLines={1}
             >
@@ -159,8 +156,6 @@ export function DateCardContainer({ onDateChange }: DateCardContainerProps) {
             />
           )}
         </View>
-
-        
 
         {/* Quick Select Buttons */}
         <View className='flex-row gap-2'>

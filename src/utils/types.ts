@@ -28,3 +28,12 @@ export type Theme = {
 }
 
 export type NU = null | undefined
+
+/**
+ * Utility type to extract the resolved JSON response type from an API function
+ * @example
+ * type ResponseData = ExtractApiType<typeof client.someEndpoint.$get>
+ */
+export type InferApiResponse<T extends (...args: any) => any> = Awaited<
+  ReturnType<Awaited<Awaited<ReturnType<T>>['json']>>
+>

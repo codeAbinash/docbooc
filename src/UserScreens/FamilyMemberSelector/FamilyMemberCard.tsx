@@ -1,20 +1,15 @@
+import ArrowRight01Icon from '@hugeicons/ArrowRightDoubleIcon'
+import { api } from '@utils/client'
 import { Medium, SemiBold } from '@utils/fonts'
+import { InferApiResponse } from '@utils/types'
 import { View } from 'react-native'
 import Press from '../../components/Press'
-import ArrowRight01Icon from '@hugeicons/ArrowRightDoubleIcon'
 
-export type FamilyMember = {
-  id: string
-  name: string
-  relationship: string
-  age?: number
-  gender?: 'Male' | 'Female' | 'Other'
-}
-
+export type Member = NonNullable<InferApiResponse<typeof api.users.members.$get>['data']>[number]
 type FamilyMemberCardProps = {
-  member: FamilyMember
+  member: Member
   isSelected: boolean
-  onSelect: (member: FamilyMember) => void
+  onSelect: (member: Member) => void
   onNameClick?: () => void
   showSelector?: boolean
 }
@@ -48,22 +43,26 @@ const FamilyMemberCard = ({
             isSelected ? 'bg-accent' : 'bg-gray/20'
           }`}
         >
-          <SemiBold className={`text-base ${isSelected ? 'text-white' : 'text'}`}>{getInitials(member.name)}</SemiBold>
+          <SemiBold className={`text-base ${isSelected ? 'text-white' : 'text'}`}>
+            {getInitials(member.name || '')}
+          </SemiBold>
         </View>
 
         <View className='flex-1'>
-          <SemiBold className={`mb-1 text-lg ${isSelected ? 'text-blue-700' : 'text'}`}>{member.relationship}</SemiBold>
+          <SemiBold className={`mb-1 text-lg ${isSelected ? 'text-blue-700' : 'text'}`}>
+            {member.relation || member.name}
+          </SemiBold>
           <Press onPress={onNameClick} disabled={!onNameClick}>
             <View className='flex-row items-center gap-2'>
               <View className='flex-1'>
-                <Medium
-                  className={`text-sm font-semibold ${onNameClick ? 'text-accent' : isSelected ? 'text-blue-700' : 'text-black'}`}
-                >
-                  {member.name}
-                </Medium>
-                {(member.age !== undefined || member.gender) && !onNameClick && (
+                {!member.relation ? (
+                  <Medium
+                    className={`text-sm font-semibold ${onNameClick ? 'text-accent' : isSelected ? 'text-blue-700' : 'text-black'}`}
+                  ></Medium>
+                ) : null}
+                {(member.dob !== undefined || member.gender) && !onNameClick && (
                   <Medium className={`mt-1 text-xs font-semibold ${isSelected ? 'text-blue-700' : 'text-black'}`}>
-                    {[member.age !== undefined ? `${member.age}y` : undefined, member.gender]
+                    {[member.dob !== undefined ? `${member.dob}y` : undefined, member.gender]
                       .filter(Boolean)
                       .join(' • ')}
                   </Medium>

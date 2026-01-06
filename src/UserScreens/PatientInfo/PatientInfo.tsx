@@ -37,22 +37,25 @@ const PatientInfo = ({}: {}) => {
   const [mobileValidationError, setMobileValidationError] = useState('')
   const mobileRef = useRef<TextInput>(null)
 
-  const { mutate, isPending } = useMutation({
-    mutationKey: ['send-otp'],
+  const { mutate: addMember, isPending: isAddingMember } = useMutation({
+    mutationKey: ['add-family-member'],
     mutationFn: async () =>
       await (
-        await api.users.profile.$put({
+        await api.users.members.$post({
           json: {
-            dateOfBirth: dob.toISOString().split('T')[0],
             name,
-            gender: selectedGender,
+            dob: dob.toISOString(),
+            gender: selectedGender!,
+            relation: relationName,
+            phone: mobile,
           },
         })
       ).json(),
     onSuccess: (data) => {
-      if (!data.success) return ToastAndroid.show('Failed to save profile', ToastAndroid.LONG)
-      ToastAndroid.show('Profile saved successfully', ToastAndroid.SHORT)
-      navigation.navigate('VerifyBeforeBooking')
+      console.log(data)
+      if (!data.success) return ToastAndroid.show('Failed to add family member', ToastAndroid.LONG)
+      ToastAndroid.show('Family member added successfully', ToastAndroid.SHORT)
+      navigation.goBack()
     },
   })
 
@@ -102,17 +105,10 @@ const PatientInfo = ({}: {}) => {
     }
   }
 
-  const handleContinue = () => {
-    if (isFamilyMember) {
-      navigation.goBack()
-    } else {
-      navigation.navigate('VerifyBeforeBooking')
-    }
+  function saveProfileAndGoNext() {
+    addMember()
   }
 
-  function saveProfileAndGoNext() {
-    mutate()
-  }
   return (
     <View className='flex-1 bg-white dark:bg-neutral-900'>
       <HybridHead title='Patient Information' showBackButton onBackPress={() => navigation.goBack()} />
@@ -235,12 +231,12 @@ const PatientInfo = ({}: {}) => {
       {/* Action Button */}
       <View className='gap-3 border-t border-neutral-200 bg-white px-5 py-4 dark:border-neutral-700 dark:bg-neutral-800'>
         {isFamilyMember ? (
-          <Button title='Save Family Member' onPress={handleContinue} />
+          <Button title='Save Family Member' onPress={saveProfileAndGoNext} />
         ) : (
           <Button
-            title={isPending ? 'Saving...' : 'Save & Continue'}
+            title={isAddingMember ? 'Saving...' : 'Save & Continue'}
             onPress={saveProfileAndGoNext}
-            disabled={isPending}
+            disabled={isAddingMember}
           />
         )}
       </View>

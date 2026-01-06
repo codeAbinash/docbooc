@@ -1,7 +1,8 @@
 import Press from '@components/Press'
 import { PaddingBottom } from '@components/SafePadding'
 
-import FamilyMemberCard, { FamilyMember } from '@/UserScreens/FamilyMemberSelector/FamilyMemberCard'
+import FamilyMemberCard, { Member } from '@/UserScreens/FamilyMemberSelector/FamilyMemberCard'
+import { useBookingStore } from '@/zustand/bookingStore'
 import Button from '@components/Button'
 import HybridHead from '@components/HybridHead'
 import PlusSignIcon from '@hugeicons/PlusSignIcon'
@@ -9,16 +10,8 @@ import { useQuery } from '@tanstack/react-query'
 import { api } from '@utils/client'
 import { Medium, SemiBold } from '@utils/fonts'
 import { NavProp } from '@utils/types'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { ActivityIndicator, ScrollView, View } from 'react-native'
-import { useBookingStore } from '@/zustand/bookingStore'
-
-const mockFamilyMembers: FamilyMember[] = [
-  { id: '1', name: '', relationship: 'Myself' },
-  { id: '2', name: 'Sarah Smith', relationship: 'Wife', age: 28, gender: 'Female' },
-  { id: '3', name: 'Emily Smith', relationship: 'Daughter', age: 5, gender: 'Female' },
-  { id: '4', name: 'Robert Smith', relationship: 'Father', age: 62, gender: 'Male' },
-]
 
 const calcAge = (dob?: string) => {
   if (!dob) return undefined
@@ -34,13 +27,12 @@ const calcAge = (dob?: string) => {
 const FamilyMemberSelectorScreen = ({ navigation }: NavProp) => {
   const [selectedMemberId, setSelectedMemberId] = React.useState<string | null>(null)
   const { setSelectedMemberId: setBookingMemberId, setPatientData } = useBookingStore()
-
-  const { data: profile, isPending } = useQuery({
-    queryKey: ['profile'],
-    queryFn: async () => await (await api.users.profile.$get()).json(),
+  const { data: membersResponse, isPending: isMembersPending } = useQuery({
+    queryKey: ['members'],
+    queryFn: async () => await (await api.users.members.$get()).json(),
   })
 
-  const handleSelectMember = (member: FamilyMember) => {
+  const handleSelectMember = (member: Member) => {
     setSelectedMemberId(member.id)
   }
 
@@ -52,22 +44,12 @@ const FamilyMemberSelectorScreen = ({ navigation }: NavProp) => {
     navigation.navigate('PatientInfo' as any, { fromSetupProfile: true })
   }
 
-  const myName = profile?.data?.user.name ?? ''
-  const myDOB = profile?.data?.user.dateOfBirth
-  const myAge = calcAge(myDOB as string)
-  const gender = profile?.data?.user.gender
+  useEffect(() => {
+    console.log(membersResponse)
+  }, [membersResponse])
 
-  const normalizeGender = (g?: string | null): FamilyMember['gender'] | undefined => {
-    if (!g) return undefined
-    const s = g.trim().toLowerCase()
-    if (s === 'male') return 'Male'
-    if (s === 'female') return 'Female'
-    return 'Other'
-  }
-
-  const myGender = normalizeGender(gender)
-
-  if (isPending) {
+  const familyMembers = membersResponse?.data || []
+  if (isMembersPending) {
     return (
       <View className='flex-1 items-center justify-center bg-white'>
         <ActivityIndicator size='large' color='#3b82f6' />
@@ -81,23 +63,12 @@ const FamilyMemberSelectorScreen = ({ navigation }: NavProp) => {
 
       <View className='flex-1'>
         <ScrollView className='flex-1' contentContainerClassName='px-5 py-4' showsVerticalScrollIndicator={false}>
-          {/* Family Members List */}
-          {mockFamilyMembers.map((member) => {
-            const isMyself = member.relationship === 'Myself'
-
-            const displayMember = {
-              ...member,
-              name: isMyself ? (myName.trim() ? myName : 'Setup your profile to continue') : member.name,
-              age: isMyself ? (myAge ?? member.age) : member.age,
-              gender: isMyself ? (myGender ?? member.gender) : member.gender,
-            }
-
-            const hasSetupMessage = isMyself && (!myName.trim() || !myDOB)
-
+          {familyMembers?.map((member) => {
+            const hasSetupMessage = !member.name || !member.dob || !member
             return (
               <FamilyMemberCard
                 key={member.id}
-                member={displayMember}
+                member={member}
                 isSelected={selectedMemberId === member.id}
                 onSelect={handleSelectMember}
                 onNameClick={hasSetupMessage ? handleSetupProfile : undefined}
@@ -131,19 +102,10 @@ const FamilyMemberSelectorScreen = ({ navigation }: NavProp) => {
             title='Review Appointment'
             onPress={() => {
               if (selectedMemberId) {
-                const selectedMember = mockFamilyMembers.find((m) => m.id === selectedMemberId)
+                const selectedMember = familyMembers.find((m) => m.id === selectedMemberId)
                 if (selectedMember) {
-                  const isMyself = selectedMember.relationship === 'Myself'
-                  const patientData = {
-                    id: selectedMember.id,
-                    name: isMyself ? (myName.trim() ? myName : '') : selectedMember.name,
-                    age: isMyself ? (myAge ?? selectedMember.age) : selectedMember.age,
-                    gender: isMyself ? (myGender ?? selectedMember.gender) : selectedMember.gender,
-                    mobile: '',
-                    relationship: selectedMember.relationship,
-                  }
                   setBookingMemberId(selectedMemberId)
-                  setPatientData(patientData)
+                  // setPatientData(patientData)
                   navigation.navigate('VerifyBeforeBooking')
                 }
               }
