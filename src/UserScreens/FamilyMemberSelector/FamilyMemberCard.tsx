@@ -5,9 +5,12 @@ import { InferApiResponse } from '@utils/types'
 import { View } from 'react-native'
 import Press from '../../components/Press'
 
+const capitalize = (s?: string | null) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : undefined)
+
 export type Member = NonNullable<InferApiResponse<typeof api.users.members.$get>['data']>[number]
 type FamilyMemberCardProps = {
   member: Member
+  displayName: string
   isSelected: boolean
   onSelect: (member: Member) => void
   onNameClick?: () => void
@@ -16,6 +19,7 @@ type FamilyMemberCardProps = {
 
 const FamilyMemberCard = ({
   member,
+  displayName,
   isSelected,
   onSelect,
   onNameClick,
@@ -44,13 +48,13 @@ const FamilyMemberCard = ({
           }`}
         >
           <SemiBold className={`text-base ${isSelected ? 'text-white' : 'text'}`}>
-            {getInitials(member.name || '')}
+            {getInitials(displayName ?? member.name ?? '')}
           </SemiBold>
         </View>
 
         <View className='flex-1'>
           <SemiBold className={`mb-1 text-lg ${isSelected ? 'text-blue-700' : 'text'}`}>
-            {member.relation || member.name}
+            {member.relation || displayName || member.name}
           </SemiBold>
           <Press onPress={onNameClick} disabled={!onNameClick}>
             <View className='flex-row items-center gap-2'>
@@ -62,7 +66,7 @@ const FamilyMemberCard = ({
                 ) : null}
                 {(member.dob !== undefined || member.gender) && !onNameClick && (
                   <Medium className={`mt-1 text-xs font-semibold ${isSelected ? 'text-blue-700' : 'text-black'}`}>
-                    {[member.dob !== undefined ? `${member.dob}y` : undefined, member.gender]
+                    {[member.dob !== undefined ? `${member.dob}y` : undefined, capitalize(member.gender)]
                       .filter(Boolean)
                       .join(' • ')}
                   </Medium>

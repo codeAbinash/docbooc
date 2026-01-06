@@ -2,7 +2,7 @@ import Press from '@components/Press'
 import { PaddingBottom } from '@components/SafePadding'
 
 import FamilyMemberCard, { Member } from '@/UserScreens/FamilyMemberSelector/FamilyMemberCard'
-import { useBookingStore } from '@/zustand/bookingStore'
+import { BookingAppointmentData, useBookingStore } from '@/zustand/bookingStore'
 import Button from '@components/Button'
 import HybridHead from '@components/HybridHead'
 import PlusSignIcon from '@hugeicons/PlusSignIcon'
@@ -10,7 +10,7 @@ import { useQuery } from '@tanstack/react-query'
 import { api } from '@utils/client'
 import { Medium, SemiBold } from '@utils/fonts'
 import { NavProp } from '@utils/types'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { ActivityIndicator, ScrollView, View } from 'react-native'
 
 const calcAge = (dob?: string) => {
@@ -22,6 +22,33 @@ const calcAge = (dob?: string) => {
   const m = now.getMonth() - b.getMonth()
   if (m < 0 || (m === 0 && now.getDate() < b.getDate())) age--
   return age
+}
+
+const normalizeRelation = (relation?: string | null): string => {
+  if (!relation) return ''
+  const mapping: Record<string, string> = {
+    spouse: 'Spouse',
+    parent: 'Parent',
+    sibling: 'Sibling',
+    child: 'Child',
+    friend: 'Friend',
+    other: 'Other',
+  }
+  return mapping[relation.toLowerCase() as keyof typeof mapping] ?? relation
+}
+
+const mapMemberToPatientData = (member: Member): BookingAppointmentData['patientData'] => {
+  const age = member.dob ? (typeof member.dob === 'string' ? Number(member.dob) : member.dob) : undefined
+  const gender = member.gender ? member.gender.charAt(0).toUpperCase() + member.gender.slice(1) : undefined
+
+  return {
+    id: member.id,
+    name: member.name ?? '',
+    age,
+    gender,
+    mobile: member.phone ?? '',
+    relationship: normalizeRelation(member.relation),
+  }
 }
 
 const FamilyMemberSelectorScreen = ({ navigation }: NavProp) => {
@@ -44,10 +71,6 @@ const FamilyMemberSelectorScreen = ({ navigation }: NavProp) => {
     navigation.navigate('PatientInfo' as any, { fromSetupProfile: true })
   }
 
-  useEffect(() => {
-    console.log(membersResponse)
-  }, [membersResponse])
-
   const familyMembers = membersResponse?.data || []
   if (isMembersPending) {
     return (
@@ -63,16 +86,20 @@ const FamilyMemberSelectorScreen = ({ navigation }: NavProp) => {
 
       <View className='flex-1'>
         <ScrollView className='flex-1' contentContainerClassName='px-5 py-4' showsVerticalScrollIndicator={false}>
-          {familyMembers?.map((member) => {
-            const hasSetupMessage = !member.name || !member.dob || !member
+          {familyMembers?.map((member, index) => {
+            const isMyself = index === 0
+            const needsSetup = isMyself && (!member.name || !member.dob)
+            const displayName = needsSetup ? 'Setup your profile to continue' : undefined
+
             return (
               <FamilyMemberCard
                 key={member.id}
                 member={member}
+                displayName={displayName || ''}
                 isSelected={selectedMemberId === member.id}
                 onSelect={handleSelectMember}
-                onNameClick={hasSetupMessage ? handleSetupProfile : undefined}
-                showSelector={!hasSetupMessage}
+                onNameClick={needsSetup ? handleSetupProfile : undefined}
+                showSelector={!needsSetup}
               />
             )
           })}
@@ -105,7 +132,7 @@ const FamilyMemberSelectorScreen = ({ navigation }: NavProp) => {
                 const selectedMember = familyMembers.find((m) => m.id === selectedMemberId)
                 if (selectedMember) {
                   setBookingMemberId(selectedMemberId)
-                  // setPatientData(patientData)
+                  setPatientData(mapMemberToPatientData(selectedMember))
                   navigation.navigate('VerifyBeforeBooking')
                 }
               }
