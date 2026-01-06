@@ -53,7 +53,7 @@ const BookAppointment = () => {
       console.log(selectedDate)
       setDate(selectedDate)
       setLocation({
-        scheduleId: selectedLocation.scheduleId,
+        scheduleDaysId: selectedLocation.timeSlots?.[0]?.scheduleDayId,
         scheduleType: selectedLocation.scheduleType,
         healthcareProvider: selectedLocation.healthcareProvider,
         timeSlots: selectedLocation.timeSlots,

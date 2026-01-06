@@ -5,12 +5,14 @@ import Time04Icon from '@assets/icons/hugeicons/Time04Icon'
 import HybridHead from '@components/HybridHead'
 import Press from '@components/Press'
 import { useNavigation } from '@react-navigation/native'
+import { useQuery } from '@tanstack/react-query'
+import { api } from '@utils/client'
 import Colors from '@utils/colors'
 import { Medium, SemiBold } from '@utils/fonts'
 import { StackNav } from '@utils/types'
 import { useColorScheme } from 'nativewind'
 import { useState } from 'react'
-import { ScrollView, View } from 'react-native'
+import { ActivityIndicator, ScrollView, View } from 'react-native'
 
 type Appointment = {
   id: string
@@ -115,55 +117,59 @@ function AppointmentCard({ appointment, onPress }: AppointmentCardProps) {
   )
 }
 
-// Sample data
-const appointments: Appointment[] = [
-  {
-    id: '1',
-    patientName: 'Sarah Johnson',
-    doctorName: 'Michael Chen',
-    date: 'Oct 15, 2024',
-    time: '10:30 AM',
-    queueNumber: 5,
-    location: 'Room 201, Cardiology Wing',
-    status: 'provisional',
-  },
-  {
-    id: '2',
-    patientName: 'Robert Wilson',
-    doctorName: 'Emily Rodriguez',
-    date: 'Oct 15, 2024',
-    time: '2:15 PM',
-    queueNumber: 12,
-    location: 'Room 305, General Medicine',
-    status: 'provisional',
-  },
-  {
-    id: '3',
-    patientName: 'Maria Garcia',
-    doctorName: 'David Park',
-    date: 'Oct 14, 2024',
-    time: '9:00 AM',
-    queueNumber: 3,
-    location: 'Room 108, Pediatrics',
-    status: 'confirmed',
-  },
-  {
-    id: '4',
-    patientName: 'James Brown',
-    doctorName: 'Lisa Thompson',
-    date: 'Oct 14, 2024',
-    time: '11:45 AM',
-    queueNumber: 8,
-    location: 'Room 402, Orthopedics',
-    status: 'confirmed',
-  },
-]
+const formatTime = (time?: string | null) => {
+  if (!time) return 'N/A'
+  // If already in 12-hour format with AM/PM, return as-is
+  if (/(AM|PM)$/i.test(time.trim())) return time
+
+  const parts = time.split(':')
+  if (parts.length < 2) return 'N/A'
+
+  const hours = Number(parts[0])
+  const minutes = Number(parts[1])
+
+  if (Number.isNaN(hours) || Number.isNaN(minutes)) return 'N/A'
+
+  const period = hours >= 12 ? 'PM' : 'AM'
+  const displayHours = hours % 12 || 12
+  return `${displayHours}:${String(minutes).padStart(2, '0')} ${period}`
+}
+
+const formatDate = (dateStr: string) => {
+  const date = new Date(dateStr)
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+}
 
 export default function Appointments() {
   const [activeTab, setActiveTab] = useState(0)
   const navigation = useNavigation<StackNav>()
 
+  const { data: bookingsResponse, isLoading } = useQuery({
+    queryKey: ['user-bookings'],
+    queryFn: async () => await (await api.users.booking.all.$get()).json(),
+  })
+
   const tabLabels = ['Provisional', 'Confirmed']
+
+  const appointments: Appointment[] = (bookingsResponse?.data || []).map((booking: any) => {
+    const hp = booking.healthcare_providers
+    const doctor = booking.doctors
+    const member = booking.members
+    const scheduleDay = booking.schedule_days
+
+    const location = [hp?.houseNumber, hp?.roadName, hp?.city, hp?.state].filter(Boolean).join(', ')
+
+    return {
+      id: booking.bookings.id,
+      patientName: member?.name || 'Unknown',
+      doctorName: doctor?.name || 'Unknown',
+      date: formatDate(booking.bookings.date),
+      time: scheduleDay?.startTime ? formatTime(scheduleDay.startTime) : 'N/A',
+      queueNumber: booking.bookings.queueNo || 0,
+      location: location || hp?.name || 'Location not available',
+      status: booking.bookings.bookingStatus === 'confirmed' ? 'confirmed' : 'provisional',
+    }
+  })
 
   const filteredAppointments = appointments.filter((appointment) =>
     activeTab === 0 ? appointment.status === 'provisional' : appointment.status === 'confirmed',
@@ -176,7 +182,7 @@ export default function Appointments() {
   return (
     <View className='flex-1 bg-white dark:bg-neutral-900'>
       <HybridHead title='My Appointments' showBackButton={true} />
-      <View className='flex-row gap-2  bg-white px-5 py-4 dark:bg-neutral-900'>
+      <View className='flex-row gap-2 bg-white px-5 py-4 dark:bg-neutral-900'>
         {tabLabels.map((label, index) => {
           const isActive = activeTab === index
 
@@ -208,13 +214,12 @@ export default function Appointments() {
         })}
       </View>
 
-      <ScrollView
-        className='flex-1 px-5 pt-1'
-        
-        showsVerticalScrollIndicator={false}
-        contentContainerClassName='gap-4'
-      >
-        {filteredAppointments.length > 0 ? (
+      <ScrollView className='flex-1 px-5 pt-1' showsVerticalScrollIndicator={false} contentContainerClassName='gap-4'>
+        {isLoading ? (
+          <View className='mt-20 items-center justify-center'>
+            <ActivityIndicator size='large' color={Colors.accent} />
+          </View>
+        ) : filteredAppointments.length > 0 ? (
           filteredAppointments.map((appointment) => (
             <AppointmentCard
               key={appointment.id}

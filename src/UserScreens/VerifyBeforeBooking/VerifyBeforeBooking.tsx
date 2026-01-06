@@ -21,7 +21,7 @@ const VerifyBeforeBooking = () => {
   const queueNumber = timeSlot?.maxBookings || 'N/A'
   const hp = appointment.location?.healthcareProvider
 
-  console.info(appointment.date, appointment.selectedMemberId, appointment.location?.scheduleId)
+  console.info(appointment.date, appointment.selectedMemberId, appointment.location?.scheduleDaysId)
 
   const { mutate, isPending } = useMutation({
     mutationKey: ['book'],
@@ -31,7 +31,7 @@ const VerifyBeforeBooking = () => {
           json: {
             date: appointment.date,
             memberId: appointment.selectedMemberId,
-            scheduleDaysId: appointment.location?.scheduleId || '',
+            scheduleDaysId: appointment.location?.scheduleDaysId || '',
           },
         })
       ).json(),

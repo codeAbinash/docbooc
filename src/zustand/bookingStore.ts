@@ -15,7 +15,7 @@ export interface BookingAppointmentData {
     verified: boolean | null
   } | null
   location: {
-    scheduleId: string
+    scheduleDaysId?: string
     scheduleType?: string
     healthcareProvider?: {
       id?: string
