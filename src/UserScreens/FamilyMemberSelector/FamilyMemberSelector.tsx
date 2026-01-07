@@ -13,7 +13,7 @@ import { NavProp } from '@utils/types'
 import React from 'react'
 import { ActivityIndicator, ScrollView, View } from 'react-native'
 
-const calcAge = (dob?: string) => {
+const calcAge = (dob?: string | null) => {
   if (!dob) return undefined
   const b = new Date(dob)
   if (isNaN(b.getTime())) return undefined
@@ -38,7 +38,7 @@ const normalizeRelation = (relation?: string | null): string => {
 }
 
 const mapMemberToPatientData = (member: Member): BookingAppointmentData['patientData'] => {
-  const age = member.dob ? (typeof member.dob === 'string' ? Number(member.dob) : member.dob) : undefined
+  const age = calcAge(member.dob)
   const gender = member.gender ? member.gender.charAt(0).toUpperCase() + member.gender.slice(1) : undefined
 
   return {
@@ -88,18 +88,17 @@ const FamilyMemberSelectorScreen = ({ navigation }: NavProp) => {
         <ScrollView className='flex-1' contentContainerClassName='px-5 py-4' showsVerticalScrollIndicator={false}>
           {familyMembers?.map((member, index) => {
             const isMyself = index === 0
-            const needsSetup = isMyself && (!member.name || !member.dob)
-            const displayName = needsSetup ? 'Setup your profile to continue' : undefined
+            const needsSetup = isMyself && (!member.name || !member.dob || !member.gender)
+            // const displayName = needsSetup ? 'Setup your profile to continue' : undefined
 
             return (
               <FamilyMemberCard
                 key={member.id}
                 member={member}
-                displayName={displayName || ''}
                 isSelected={selectedMemberId === member.id}
                 onSelect={handleSelectMember}
                 onNameClick={needsSetup ? handleSetupProfile : undefined}
-                showSelector={!needsSetup}
+                needSetup={needsSetup}
               />
             )
           })}
@@ -126,11 +125,23 @@ const FamilyMemberSelectorScreen = ({ navigation }: NavProp) => {
 
         <View className='bg-white px-5 py-3 dark:border-neutral-700 dark:bg-neutral-800'>
           <Button
-            title='Review Appointment'
+            title={
+              selectedMemberId &&
+              familyMembers.findIndex((m) => m.id === selectedMemberId) === 0 &&
+              (!familyMembers[0]?.name || !familyMembers[0]?.dob || !familyMembers[0]?.gender)
+                ? 'Setup your profile'
+                : 'Review Appointment'
+            }
             onPress={() => {
               if (selectedMemberId) {
                 const selectedMember = familyMembers.find((m) => m.id === selectedMemberId)
-                if (selectedMember) {
+                const selectedIndex = familyMembers.findIndex((m) => m.id === selectedMemberId)
+                const needsSetup =
+                  selectedIndex === 0 && (!selectedMember?.name || !selectedMember?.dob || !selectedMember?.gender)
+
+                if (needsSetup) {
+                  navigation.navigate('PatientInfo' as any, { fromSetupProfile: true })
+                } else if (selectedMember) {
                   setBookingMemberId(selectedMemberId)
                   setPatientData(mapMemberToPatientData(selectedMember))
                   navigation.navigate('VerifyBeforeBooking')

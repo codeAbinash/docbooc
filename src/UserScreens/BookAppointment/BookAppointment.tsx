@@ -74,7 +74,7 @@ const BookAppointment = () => {
         {isLoading ? (
           <View className='items-center justify-center py-10'>
             <ActivityIndicator size='large' color='#3b82f6' />
-            <Medium className='text-neutral-600 dark:text-neutral-400'>Loading available locations...</Medium>
+            <Medium className='text-neutral-600 '>Loading available locations...</Medium>
           </View>
         ) : locations.length > 0 ? (
           <View className='gap-5 py-5'>
@@ -103,16 +103,16 @@ const BookAppointment = () => {
             })}
           </View>
         ) : selectedDate ? (
-          <View className='items-center justify-center rounded-2xl bg-white p-10 dark:bg-neutral-800'>
-            <Medium className='text-center text-neutral-600 dark:text-neutral-400'>
+          <View className='items-center justify-center rounded-2xl bg-white p-10 '>
+            <Medium className='text-center text-neutral-600 '>
               No available locations for selected date
             </Medium>
           </View>
         ) : null}
       </ScrollView>
 
-      <View className='bg-white px-5 py-3 dark:border-neutral-700 dark:bg-neutral-800'>
-        <Button title='Next' disabled={!selectedLocation} onPress={handleNext} />
+      <View className='bg-white px-5 py-3 '>
+        <Button title='Proceed' disabled={!selectedLocation} onPress={handleNext} />
       </View>
       <PaddingBottom />
     </View>
