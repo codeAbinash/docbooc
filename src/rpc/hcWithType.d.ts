@@ -26,11 +26,186 @@ declare const client: {
         v1: {
             admin: {
                 auth: {
-                    login: import("hono/client").ClientRequest<{
+                    logout: import("hono/client").ClientRequest<{
+                        $post: {
+                            input: {};
+                            output: {
+                                success: true;
+                                message: string;
+                                data: null | undefined;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 200;
+                        };
+                    }>;
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            admin: {
+                doctors: import("hono/client").ClientRequest<{
+                    $get: {
+                        input: {};
+                        output: {
+                            success: true;
+                            message: string;
+                            data: {
+                                id: string;
+                                name: string;
+                                email: string | null;
+                                contactNumber: string | null;
+                                gender: string | null;
+                                department: string | null;
+                                degrees: string | null;
+                                experience: number | null;
+                                specialization: string | null;
+                                createdAt: string;
+                                verified: boolean | null;
+                            }[] | undefined;
+                            error: null;
+                        };
+                        outputFormat: "json";
+                        status: 200;
+                    };
+                }>;
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            admin: {
+                doctors: import("hono/client").ClientRequest<{
+                    $post: {
+                        input: {
+                            json: {
+                                name: string;
+                                email?: string | undefined;
+                                contactNumber?: string | undefined;
+                                gender?: "female" | "male" | "other" | undefined;
+                                department?: string | undefined;
+                                degrees?: string | undefined;
+                                experience?: number | undefined;
+                                specialization?: string | undefined;
+                            };
+                        };
+                        output: {
+                            success: true;
+                            message: string;
+                            data: {
+                                contactNumber: string | null;
+                                createdAt: string;
+                                degrees: string | null;
+                                department: string | null;
+                                email: string | null;
+                                experience: number | null;
+                                gender: string | null;
+                                id: string;
+                                name: string;
+                                specialization: string | null;
+                                verified: boolean | null;
+                            } | undefined;
+                            error: null;
+                        };
+                        outputFormat: "json";
+                        status: 200;
+                    };
+                }>;
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            admin: {
+                auth: {
+                    "verify-email": import("hono/client").ClientRequest<{
                         $post: {
                             input: {
                                 json: {
                                     email: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: null;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 400;
+                        } | {
+                            input: {
+                                json: {
+                                    email: string;
+                                };
+                            };
+                            output: {
+                                success: true;
+                                message: string;
+                                data: {
+                                    email: string;
+                                } | undefined;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 200;
+                        };
+                    }>;
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            admin: {
+                auth: {
+                    register: import("hono/client").ClientRequest<{
+                        $post: {
+                            input: {
+                                json: {
+                                    name: string;
+                                    email: string;
+                                    otp: string;
+                                    password: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: null;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 400;
+                        } | {
+                            input: {
+                                json: {
+                                    name: string;
+                                    email: string;
+                                    otp: string;
+                                    password: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: import("hono/utils/types").JSONValue;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 500;
+                        } | {
+                            input: {
+                                json: {
+                                    name: string;
+                                    email: string;
+                                    otp: string;
                                     password: string;
                                 };
                             };
@@ -49,7 +224,19 @@ declare const client: {
                             };
                             outputFormat: "json";
                             status: 200;
-                        } | {
+                        };
+                    }>;
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            admin: {
+                auth: {
+                    login: import("hono/client").ClientRequest<{
+                        $post: {
                             input: {
                                 json: {
                                     email: string;
@@ -79,58 +266,10 @@ declare const client: {
                             };
                             outputFormat: "json";
                             status: 500;
-                        };
-                    }>;
-                };
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            admin: {
-                auth: {
-                    register: import("hono/client").ClientRequest<{
-                        $post: {
-                            input: {
-                                json: {
-                                    name: string;
-                                    email: string;
-                                    otp: string;
-                                    password: string;
-                                };
-                            };
-                            output: {
-                                success: false;
-                                message: string;
-                                data: import("hono/utils/types").JSONValue;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 500;
                         } | {
                             input: {
                                 json: {
-                                    name: string;
                                     email: string;
-                                    otp: string;
-                                    password: string;
-                                };
-                            };
-                            output: {
-                                success: false;
-                                message: string;
-                                data: null;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 400;
-                        } | {
-                            input: {
-                                json: {
-                                    name: string;
-                                    email: string;
-                                    otp: string;
                                     password: string;
                                 };
                             };
@@ -218,81 +357,6 @@ declare const client: {
                         };
                     }>;
                 };
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            admin: {
-                doctors: import("hono/client").ClientRequest<{
-                    $get: {
-                        input: {};
-                        output: {
-                            success: true;
-                            message: string;
-                            data: {
-                                id: string;
-                                name: string;
-                                email: string | null;
-                                contactNumber: string | null;
-                                gender: string | null;
-                                department: string | null;
-                                degrees: string | null;
-                                experience: number | null;
-                                specialization: string | null;
-                                createdAt: string;
-                                verified: boolean | null;
-                            }[] | undefined;
-                            error: null;
-                        };
-                        outputFormat: "json";
-                        status: 200;
-                    };
-                }>;
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            admin: {
-                doctors: import("hono/client").ClientRequest<{
-                    $post: {
-                        input: {
-                            json: {
-                                name: string;
-                                email?: string | undefined;
-                                contactNumber?: string | undefined;
-                                gender?: "female" | "male" | "other" | undefined;
-                                department?: string | undefined;
-                                degrees?: string | undefined;
-                                experience?: number | undefined;
-                                specialization?: string | undefined;
-                            };
-                        };
-                        output: {
-                            success: true;
-                            message: string;
-                            data: {
-                                contactNumber: string | null;
-                                createdAt: string;
-                                degrees: string | null;
-                                department: string | null;
-                                email: string | null;
-                                experience: number | null;
-                                gender: string | null;
-                                id: string;
-                                name: string;
-                                specialization: string | null;
-                                verified: boolean | null;
-                            } | undefined;
-                            error: null;
-                        };
-                        outputFormat: "json";
-                        status: 200;
-                    };
-                }>;
             };
         };
     };
@@ -437,337 +501,11 @@ declare const client: {
                             output: {
                                 success: false;
                                 message: string;
-                                data: import("hono/utils/types").JSONValue;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 500;
-                        } | {
-                            input: {
-                                param: {
-                                    id: string;
-                                };
-                            };
-                            output: {
-                                success: false;
-                                message: string;
                                 data: null;
                                 error: null;
                             };
                             outputFormat: "json";
                             status: 400;
-                        } | {
-                            input: {
-                                param: {
-                                    id: string;
-                                };
-                            };
-                            output: {
-                                success: true;
-                                message: string;
-                                data: null | undefined;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 200;
-                        };
-                    }>;
-                };
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            admin: {
-                auth: {
-                    "verify-email": import("hono/client").ClientRequest<{
-                        $post: {
-                            input: {
-                                json: {
-                                    email: string;
-                                };
-                            };
-                            output: {
-                                success: false;
-                                message: string;
-                                data: null;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 400;
-                        } | {
-                            input: {
-                                json: {
-                                    email: string;
-                                };
-                            };
-                            output: {
-                                success: true;
-                                message: string;
-                                data: {
-                                    email: string;
-                                } | undefined;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 200;
-                        };
-                    }>;
-                };
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            admin: {
-                auth: {
-                    logout: import("hono/client").ClientRequest<{
-                        $post: {
-                            input: {};
-                            output: {
-                                success: true;
-                                message: string;
-                                data: null | undefined;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 200;
-                        };
-                    }>;
-                };
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            hp: {
-                schedules: {
-                    ":id": {
-                        enable: import("hono/client").ClientRequest<{
-                            $post: {
-                                input: {
-                                    param: {
-                                        id: string;
-                                    };
-                                };
-                                output: {
-                                    success: false;
-                                    message: string;
-                                    data: null;
-                                    error: null;
-                                };
-                                outputFormat: "json";
-                                status: 401;
-                            } | {
-                                input: {
-                                    param: {
-                                        id: string;
-                                    };
-                                };
-                                output: {
-                                    success: false;
-                                    message: string;
-                                    data: import("hono/utils/types").JSONValue;
-                                    error: null;
-                                };
-                                outputFormat: "json";
-                                status: 500;
-                            } | {
-                                input: {
-                                    param: {
-                                        id: string;
-                                    };
-                                };
-                                output: {
-                                    success: false;
-                                    message: string;
-                                    data: null;
-                                    error: null;
-                                };
-                                outputFormat: "json";
-                                status: 400;
-                            } | {
-                                input: {
-                                    param: {
-                                        id: string;
-                                    };
-                                };
-                                output: {
-                                    success: true;
-                                    message: string;
-                                    data: null | undefined;
-                                    error: null;
-                                };
-                                outputFormat: "json";
-                                status: 200;
-                            };
-                        }>;
-                    };
-                };
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            hp: {
-                schedules: import("hono/client").ClientRequest<{
-                    $get: {
-                        input: {};
-                        output: {
-                            success: true;
-                            message: string;
-                            data: null | undefined;
-                            error: null;
-                        };
-                        outputFormat: "json";
-                        status: 200;
-                    };
-                }>;
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            hp: {
-                schedules: import("hono/client").ClientRequest<{
-                    $post: {
-                        input: {
-                            json: {
-                                doctorId: string;
-                                scheduleType: "daily" | "monthly" | "weekly";
-                                weekDays?: number[] | undefined;
-                                monthDays?: number[] | undefined;
-                                timeSlots: {
-                                    dayOfWeek?: number | undefined;
-                                    dayOfMonth?: number | undefined;
-                                    startTime: string;
-                                    endTime: string;
-                                    maxBookings: number;
-                                }[];
-                                isActive?: boolean | undefined;
-                            };
-                        };
-                        output: {
-                            success: false;
-                            message: string;
-                            data: null;
-                            error: null;
-                        };
-                        outputFormat: "json";
-                        status: 401;
-                    } | {
-                        input: {
-                            json: {
-                                doctorId: string;
-                                scheduleType: "daily" | "monthly" | "weekly";
-                                weekDays?: number[] | undefined;
-                                monthDays?: number[] | undefined;
-                                timeSlots: {
-                                    dayOfWeek?: number | undefined;
-                                    dayOfMonth?: number | undefined;
-                                    startTime: string;
-                                    endTime: string;
-                                    maxBookings: number;
-                                }[];
-                                isActive?: boolean | undefined;
-                            };
-                        };
-                        output: {
-                            success: false;
-                            message: string;
-                            data: import("hono/utils/types").JSONValue;
-                            error: null;
-                        };
-                        outputFormat: "json";
-                        status: 500;
-                    } | {
-                        input: {
-                            json: {
-                                doctorId: string;
-                                scheduleType: "daily" | "monthly" | "weekly";
-                                weekDays?: number[] | undefined;
-                                monthDays?: number[] | undefined;
-                                timeSlots: {
-                                    dayOfWeek?: number | undefined;
-                                    dayOfMonth?: number | undefined;
-                                    startTime: string;
-                                    endTime: string;
-                                    maxBookings: number;
-                                }[];
-                                isActive?: boolean | undefined;
-                            };
-                        };
-                        output: {
-                            success: false;
-                            message: string;
-                            data: null;
-                            error: null;
-                        };
-                        outputFormat: "json";
-                        status: 400;
-                    } | {
-                        input: {
-                            json: {
-                                doctorId: string;
-                                scheduleType: "daily" | "monthly" | "weekly";
-                                weekDays?: number[] | undefined;
-                                monthDays?: number[] | undefined;
-                                timeSlots: {
-                                    dayOfWeek?: number | undefined;
-                                    dayOfMonth?: number | undefined;
-                                    startTime: string;
-                                    endTime: string;
-                                    maxBookings: number;
-                                }[];
-                                isActive?: boolean | undefined;
-                            };
-                        };
-                        output: {
-                            success: true;
-                            message: string;
-                            data: {
-                                createdAt: string;
-                                daysMask: number | null;
-                                doctorId: string;
-                                hpId: string;
-                                id: string;
-                                scheduleStatus: "active" | "cancelled" | "deleted" | "inactive" | null;
-                                scheduleType: "daily" | "monthly" | "weekly";
-                            } | undefined;
-                            error: null;
-                        };
-                        outputFormat: "json";
-                        status: 200;
-                    };
-                }>;
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            hp: {
-                schedules: {
-                    ":id": import("hono/client").ClientRequest<{
-                        $delete: {
-                            input: {
-                                param: {
-                                    id: string;
-                                };
-                            };
-                            output: {
-                                success: false;
-                                message: string;
-                                data: null;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 401;
                         } | {
                             input: {
                                 param: {
@@ -789,20 +527,6 @@ declare const client: {
                                 };
                             };
                             output: {
-                                success: false;
-                                message: string;
-                                data: null;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 400;
-                        } | {
-                            input: {
-                                param: {
-                                    id: string;
-                                };
-                            };
-                            output: {
                                 success: true;
                                 message: string;
                                 data: null | undefined;
@@ -812,627 +536,6 @@ declare const client: {
                             status: 200;
                         };
                     }>;
-                };
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            hp: {
-                schedules: {
-                    ":id": {
-                        disable: import("hono/client").ClientRequest<{
-                            $post: {
-                                input: {
-                                    param: {
-                                        id: string;
-                                    };
-                                };
-                                output: {
-                                    success: false;
-                                    message: string;
-                                    data: null;
-                                    error: null;
-                                };
-                                outputFormat: "json";
-                                status: 401;
-                            } | {
-                                input: {
-                                    param: {
-                                        id: string;
-                                    };
-                                };
-                                output: {
-                                    success: false;
-                                    message: string;
-                                    data: import("hono/utils/types").JSONValue;
-                                    error: null;
-                                };
-                                outputFormat: "json";
-                                status: 500;
-                            } | {
-                                input: {
-                                    param: {
-                                        id: string;
-                                    };
-                                };
-                                output: {
-                                    success: false;
-                                    message: string;
-                                    data: null;
-                                    error: null;
-                                };
-                                outputFormat: "json";
-                                status: 400;
-                            } | {
-                                input: {
-                                    param: {
-                                        id: string;
-                                    };
-                                };
-                                output: {
-                                    success: true;
-                                    message: string;
-                                    data: null | undefined;
-                                    error: null;
-                                };
-                                outputFormat: "json";
-                                status: 200;
-                            };
-                        }>;
-                    };
-                };
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            hp: {
-                schedules: {
-                    doctor: {
-                        ":doctorId": import("hono/client").ClientRequest<{
-                            $get: {
-                                input: {
-                                    param: {
-                                        doctorId: string;
-                                    };
-                                };
-                                output: {
-                                    success: false;
-                                    message: string;
-                                    data: null;
-                                    error: null;
-                                };
-                                outputFormat: "json";
-                                status: 401;
-                            } | {
-                                input: {
-                                    param: {
-                                        doctorId: string;
-                                    };
-                                };
-                                output: {
-                                    success: false;
-                                    message: string;
-                                    data: import("hono/utils/types").JSONValue;
-                                    error: null;
-                                };
-                                outputFormat: "json";
-                                status: 500;
-                            } | {
-                                input: {
-                                    param: {
-                                        doctorId: string;
-                                    };
-                                };
-                                output: {
-                                    success: false;
-                                    message: string;
-                                    data: null;
-                                    error: null;
-                                };
-                                outputFormat: "json";
-                                status: 400;
-                            } | {
-                                input: {
-                                    param: {
-                                        doctorId: string;
-                                    };
-                                };
-                                output: {
-                                    success: true;
-                                    message: string;
-                                    data: {
-                                        id: string;
-                                        doctorId: string;
-                                        scheduleType: "daily" | "monthly" | "weekly";
-                                        daysMask: number | null;
-                                        scheduleStatus: "active" | "cancelled" | "deleted" | "inactive" | null;
-                                        createdAt: string;
-                                        timeSlots: {
-                                            id: string;
-                                            scheduleId: string;
-                                            day: number | null;
-                                            startTime: string;
-                                            endTime: string;
-                                            maxBookings: number;
-                                        }[];
-                                    }[] | undefined;
-                                    error: null;
-                                };
-                                outputFormat: "json";
-                                status: 200;
-                            };
-                        }>;
-                    };
-                };
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            hp: {
-                schedules: {
-                    day: {
-                        ":scheduleDayId": import("hono/client").ClientRequest<{
-                            $delete: {
-                                input: {
-                                    param: {
-                                        scheduleDayId: string;
-                                    };
-                                };
-                                output: {
-                                    success: false;
-                                    message: string;
-                                    data: null;
-                                    error: null;
-                                };
-                                outputFormat: "json";
-                                status: 401;
-                            } | {
-                                input: {
-                                    param: {
-                                        scheduleDayId: string;
-                                    };
-                                };
-                                output: {
-                                    success: false;
-                                    message: string;
-                                    data: import("hono/utils/types").JSONValue;
-                                    error: null;
-                                };
-                                outputFormat: "json";
-                                status: 500;
-                            } | {
-                                input: {
-                                    param: {
-                                        scheduleDayId: string;
-                                    };
-                                };
-                                output: {
-                                    success: false;
-                                    message: string;
-                                    data: null;
-                                    error: null;
-                                };
-                                outputFormat: "json";
-                                status: 400;
-                            } | {
-                                input: {
-                                    param: {
-                                        scheduleDayId: string;
-                                    };
-                                };
-                                output: {
-                                    success: true;
-                                    message: string;
-                                    data: null | undefined;
-                                    error: null;
-                                };
-                                outputFormat: "json";
-                                status: 200;
-                            };
-                        }>;
-                    };
-                };
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            hp: {
-                doctors: {
-                    all: import("hono/client").ClientRequest<{
-                        $get: {
-                            input: {};
-                            output: {
-                                success: true;
-                                message: string;
-                                data: {
-                                    id: string;
-                                    name: string;
-                                    email: string | null;
-                                    contactNumber: string | null;
-                                    gender: string | null;
-                                    department: string | null;
-                                    degrees: string | null;
-                                    experience: number | null;
-                                    specialization: string | null;
-                                    createdAt: string;
-                                    verified: boolean | null;
-                                }[] | undefined;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 200;
-                        };
-                    }>;
-                };
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            hp: {
-                auth: {
-                    login: import("hono/client").ClientRequest<{
-                        $post: {
-                            input: {
-                                json: {
-                                    email: string;
-                                    password: string;
-                                };
-                            };
-                            output: {
-                                success: false;
-                                message: string;
-                                data: null;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 401;
-                        } | {
-                            input: {
-                                json: {
-                                    email: string;
-                                    password: string;
-                                };
-                            };
-                            output: {
-                                success: true;
-                                message: string;
-                                data: {
-                                    token: string;
-                                    hp: {
-                                        id: string;
-                                        email: string;
-                                        name: string;
-                                    };
-                                } | undefined;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 200;
-                        };
-                    }>;
-                };
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            hp: {
-                auth: {
-                    "verify-email": import("hono/client").ClientRequest<{
-                        $post: {
-                            input: {
-                                json: {
-                                    email: string;
-                                };
-                            };
-                            output: {
-                                success: false;
-                                message: string;
-                                data: null;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 400;
-                        } | {
-                            input: {
-                                json: {
-                                    email: string;
-                                };
-                            };
-                            output: {
-                                success: true;
-                                message: string;
-                                data: {
-                                    email: string;
-                                } | undefined;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 200;
-                        };
-                    }>;
-                };
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            hp: {
-                auth: {
-                    register: import("hono/client").ClientRequest<{
-                        $post: {
-                            input: {
-                                json: {
-                                    name: string;
-                                    email: string;
-                                    otp: string;
-                                    password: string;
-                                };
-                            };
-                            output: {
-                                success: false;
-                                message: string;
-                                data: null;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 400;
-                        } | {
-                            input: {
-                                json: {
-                                    name: string;
-                                    email: string;
-                                    otp: string;
-                                    password: string;
-                                };
-                            };
-                            output: {
-                                success: true;
-                                message: string;
-                                data: {
-                                    token: string;
-                                    hp: {
-                                        id: string;
-                                        name: string;
-                                        email: string;
-                                    };
-                                } | undefined;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 200;
-                        };
-                    }>;
-                };
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            hp: {
-                doctors: {
-                    "my-doctors": import("hono/client").ClientRequest<{
-                        $get: {
-                            input: {};
-                            output: {
-                                success: false;
-                                message: string;
-                                data: null;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 401;
-                        } | {
-                            input: {};
-                            output: {
-                                success: true;
-                                message: string;
-                                data: {
-                                    id: string;
-                                    name: string;
-                                    email: string | null;
-                                    contactNumber: string | null;
-                                    gender: string | null;
-                                    department: string | null;
-                                    degrees: string | null;
-                                    experience: number | null;
-                                    specialization: string | null;
-                                    createdAt: string;
-                                    verified: boolean | null;
-                                }[] | undefined;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 200;
-                        };
-                    }>;
-                };
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            hp: {
-                doctors: {
-                    "*": import("hono/client").ClientRequest<{}>;
-                };
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            hp: {
-                schedules: {
-                    "*": import("hono/client").ClientRequest<{}>;
-                };
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            hp: {
-                profile: import("hono/client").ClientRequest<{
-                    $get: {
-                        input: {};
-                        output: {
-                            success: false;
-                            message: string;
-                            data: null;
-                            error: null;
-                        };
-                        outputFormat: "json";
-                        status: 401;
-                    } | {
-                        input: {};
-                        output: {
-                            success: false;
-                            message: string;
-                            data: null;
-                            error: null;
-                        };
-                        outputFormat: "json";
-                        status: 400;
-                    } | {
-                        input: {};
-                        output: {
-                            success: true;
-                            message: string;
-                            data: {
-                                hp: {
-                                    id: string;
-                                    name: string;
-                                    email: string;
-                                    contactNumber: string | null;
-                                    location: string | null;
-                                    pin: string | null;
-                                    state: string | null;
-                                    city: string | null;
-                                    houseNumber: string | null;
-                                    roadName: string | null;
-                                    landmark: string | null;
-                                    profileImage: string | null;
-                                    createdAt: string;
-                                    verified: boolean | null;
-                                };
-                            } | undefined;
-                            error: null;
-                        };
-                        outputFormat: "json";
-                        status: 200;
-                    };
-                    $put: {
-                        input: {
-                            json: {
-                                name?: string | undefined;
-                                contactNumber?: string | undefined;
-                                location?: string | undefined;
-                                pin?: string | undefined;
-                                state?: string | undefined;
-                                city?: string | undefined;
-                                houseNumber?: string | undefined;
-                                roadName?: string | undefined;
-                                landmark?: string | undefined;
-                                profileImage?: string | undefined;
-                            };
-                        };
-                        output: {
-                            success: false;
-                            message: string;
-                            data: null;
-                            error: null;
-                        };
-                        outputFormat: "json";
-                        status: 401;
-                    } | {
-                        input: {
-                            json: {
-                                name?: string | undefined;
-                                contactNumber?: string | undefined;
-                                location?: string | undefined;
-                                pin?: string | undefined;
-                                state?: string | undefined;
-                                city?: string | undefined;
-                                houseNumber?: string | undefined;
-                                roadName?: string | undefined;
-                                landmark?: string | undefined;
-                                profileImage?: string | undefined;
-                            };
-                        };
-                        output: {
-                            success: false;
-                            message: string;
-                            data: null;
-                            error: null;
-                        };
-                        outputFormat: "json";
-                        status: 400;
-                    } | {
-                        input: {
-                            json: {
-                                name?: string | undefined;
-                                contactNumber?: string | undefined;
-                                location?: string | undefined;
-                                pin?: string | undefined;
-                                state?: string | undefined;
-                                city?: string | undefined;
-                                houseNumber?: string | undefined;
-                                roadName?: string | undefined;
-                                landmark?: string | undefined;
-                                profileImage?: string | undefined;
-                            };
-                        };
-                        output: {
-                            success: true;
-                            message: string;
-                            data: {
-                                hp: {
-                                    id: string;
-                                    name: string;
-                                    email: string;
-                                    contactNumber: string | null;
-                                    location: string | null;
-                                    pin: string | null;
-                                    state: string | null;
-                                    city: string | null;
-                                    houseNumber: string | null;
-                                    roadName: string | null;
-                                    landmark: string | null;
-                                    profileImage: string | null;
-                                    createdAt: string;
-                                    verified: boolean | null;
-                                };
-                            } | undefined;
-                            error: null;
-                        };
-                        outputFormat: "json";
-                        status: 200;
-                    };
-                }>;
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            hp: {
-                profile: {
-                    "*": import("hono/client").ClientRequest<{}>;
                 };
             };
         };
@@ -1441,19 +544,25 @@ declare const client: {
     api: {
         v1: {
             users: {
-                "send-code": import("hono/client").ClientRequest<{
-                    $post: {
-                        input: {
-                            json: {
-                                phone: string;
-                            };
-                        };
+                doctors: import("hono/client").ClientRequest<{
+                    $get: {
+                        input: {};
                         output: {
                             success: true;
                             message: string;
                             data: {
-                                phone: string;
-                            } | undefined;
+                                id: string;
+                                name: string;
+                                email: string | null;
+                                contactNumber: string | null;
+                                gender: string | null;
+                                department: string | null;
+                                degrees: string | null;
+                                experience: number | null;
+                                specialization: string | null;
+                                createdAt: string;
+                                verified: boolean | null;
+                            }[] | undefined;
                             error: null;
                         };
                         outputFormat: "json";
@@ -1482,7 +591,7 @@ declare const client: {
                                 error: null;
                             };
                             outputFormat: "json";
-                            status: 401;
+                            status: 400;
                         } | {
                             input: {
                                 param: {
@@ -1496,7 +605,7 @@ declare const client: {
                                 error: null;
                             };
                             outputFormat: "json";
-                            status: 400;
+                            status: 401;
                         } | {
                             input: {
                                 param: {
@@ -1513,7 +622,9 @@ declare const client: {
                                         memberId: string;
                                         date: string;
                                         queueNo: number | null;
+                                        sharedCode: string | null;
                                         bookingStatus: "cancelled" | "completed" | "confirmed" | "no_show" | "pending" | null;
+                                        visitStatus: "cancelled" | "completed" | "ongoing" | "scheduled" | null;
                                         paymentId: string | null;
                                         createdAt: string;
                                     };
@@ -1573,7 +684,7 @@ declare const client: {
                                         doctorId: string;
                                         scheduleType: "daily" | "monthly" | "weekly";
                                         daysMask: number | null;
-                                        scheduleStatus: "active" | "cancelled" | "deleted" | "inactive" | null;
+                                        scheduleStatus: "active" | "applied" | "approved" | "inactive" | "pending" | "rejected" | null;
                                         createdAt: string;
                                     } | null;
                                 } | undefined;
@@ -1594,6 +705,21 @@ declare const client: {
                 doctors: {
                     availability: import("hono/client").ClientRequest<{
                         $post: {
+                            input: {
+                                json: {
+                                    doctorId: string;
+                                    date: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: null;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 404;
+                        } | {
                             input: {
                                 json: {
                                     doctorId: string;
@@ -1645,56 +771,9 @@ declare const client: {
                             };
                             outputFormat: "json";
                             status: 200;
-                        } | {
-                            input: {
-                                json: {
-                                    doctorId: string;
-                                    date: string;
-                                };
-                            };
-                            output: {
-                                success: false;
-                                message: string;
-                                data: null;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 404;
                         };
                     }>;
                 };
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            users: {
-                doctors: import("hono/client").ClientRequest<{
-                    $get: {
-                        input: {};
-                        output: {
-                            success: true;
-                            message: string;
-                            data: {
-                                id: string;
-                                name: string;
-                                email: string | null;
-                                contactNumber: string | null;
-                                gender: string | null;
-                                department: string | null;
-                                degrees: string | null;
-                                experience: number | null;
-                                specialization: string | null;
-                                createdAt: string;
-                                verified: boolean | null;
-                            }[] | undefined;
-                            error: null;
-                        };
-                        outputFormat: "json";
-                        status: 200;
-                    };
-                }>;
             };
         };
     };
@@ -1761,7 +840,7 @@ declare const client: {
                             error: null;
                         };
                         outputFormat: "json";
-                        status: 401;
+                        status: 400;
                     } | {
                         input: {
                             json: {
@@ -1779,7 +858,7 @@ declare const client: {
                             error: null;
                         };
                         outputFormat: "json";
-                        status: 400;
+                        status: 401;
                     } | {
                         input: {
                             json: {
@@ -1895,6 +974,32 @@ declare const client: {
     api: {
         v1: {
             users: {
+                "send-code": import("hono/client").ClientRequest<{
+                    $post: {
+                        input: {
+                            json: {
+                                phone: string;
+                            };
+                        };
+                        output: {
+                            success: true;
+                            message: string;
+                            data: {
+                                phone: string;
+                            } | undefined;
+                            error: null;
+                        };
+                        outputFormat: "json";
+                        status: 200;
+                    };
+                }>;
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            users: {
                 "verify-code": import("hono/client").ClientRequest<{
                     $post: {
                         input: {
@@ -1962,7 +1067,7 @@ declare const client: {
                             error: null;
                         };
                         outputFormat: "json";
-                        status: 401;
+                        status: 400;
                     } | {
                         input: {
                             json: {
@@ -1978,7 +1083,7 @@ declare const client: {
                             error: null;
                         };
                         outputFormat: "json";
-                        status: 400;
+                        status: 401;
                     } | {
                         input: {
                             json: {
@@ -1999,6 +1104,8 @@ declare const client: {
                                 paymentId: string | null;
                                 queueNo: number | null;
                                 scheduleDaysId: string;
+                                sharedCode: string | null;
+                                visitStatus: "cancelled" | "completed" | "ongoing" | "scheduled" | null;
                             } | undefined;
                             error: null;
                         };
@@ -2037,7 +1144,9 @@ declare const client: {
                                         memberId: string;
                                         date: string;
                                         queueNo: number | null;
+                                        sharedCode: string | null;
                                         bookingStatus: "cancelled" | "completed" | "confirmed" | "no_show" | "pending" | null;
+                                        visitStatus: "cancelled" | "completed" | "ongoing" | "scheduled" | null;
                                         paymentId: string | null;
                                         createdAt: string;
                                     };
@@ -2097,7 +1206,7 @@ declare const client: {
                                         doctorId: string;
                                         scheduleType: "daily" | "monthly" | "weekly";
                                         daysMask: number | null;
-                                        scheduleStatus: "active" | "cancelled" | "deleted" | "inactive" | null;
+                                        scheduleStatus: "active" | "applied" | "approved" | "inactive" | "pending" | "rejected" | null;
                                         createdAt: string;
                                     } | null;
                                 }[] | undefined;
@@ -2131,7 +1240,7 @@ declare const client: {
                                     error: null;
                                 };
                                 outputFormat: "json";
-                                status: 401;
+                                status: 400;
                             } | {
                                 input: {
                                     param: {
@@ -2145,7 +1254,7 @@ declare const client: {
                                     error: null;
                                 };
                                 outputFormat: "json";
-                                status: 400;
+                                status: 401;
                             } | {
                                 input: {
                                     param: {
@@ -2162,7 +1271,9 @@ declare const client: {
                                             memberId: string;
                                             date: string;
                                             queueNo: number | null;
+                                            sharedCode: string | null;
                                             bookingStatus: "cancelled" | "completed" | "confirmed" | "no_show" | "pending" | null;
+                                            visitStatus: "cancelled" | "completed" | "ongoing" | "scheduled" | null;
                                             paymentId: string | null;
                                             createdAt: string;
                                         };
@@ -2210,7 +1321,7 @@ declare const client: {
                                             doctorId: string;
                                             scheduleType: "daily" | "monthly" | "weekly";
                                             daysMask: number | null;
-                                            scheduleStatus: "active" | "cancelled" | "deleted" | "inactive" | null;
+                                            scheduleStatus: "active" | "applied" | "approved" | "inactive" | "pending" | "rejected" | null;
                                             createdAt: string;
                                         } | null;
                                     }[] | undefined;
@@ -2245,7 +1356,7 @@ declare const client: {
                                     error: null;
                                 };
                                 outputFormat: "json";
-                                status: 401;
+                                status: 400;
                             } | {
                                 input: {
                                     param: {
@@ -2259,7 +1370,7 @@ declare const client: {
                                     error: null;
                                 };
                                 outputFormat: "json";
-                                status: 400;
+                                status: 401;
                             } | {
                                 input: {
                                     param: {
@@ -2275,7 +1386,9 @@ declare const client: {
                                         memberId: string;
                                         date: string;
                                         queueNo: number | null;
+                                        sharedCode: string | null;
                                         bookingStatus: "cancelled" | "completed" | "confirmed" | "no_show" | "pending" | null;
+                                        visitStatus: "cancelled" | "completed" | "ongoing" | "scheduled" | null;
                                         paymentId: string | null;
                                         createdAt: string;
                                     } | undefined;
@@ -2304,7 +1417,7 @@ declare const client: {
                             error: null;
                         };
                         outputFormat: "json";
-                        status: 401;
+                        status: 400;
                     } | {
                         input: {};
                         output: {
@@ -2314,7 +1427,7 @@ declare const client: {
                             error: null;
                         };
                         outputFormat: "json";
-                        status: 400;
+                        status: 401;
                     } | {
                         input: {};
                         output: {
@@ -2352,7 +1465,7 @@ declare const client: {
                             error: null;
                         };
                         outputFormat: "json";
-                        status: 401;
+                        status: 400;
                     } | {
                         input: {
                             json: {
@@ -2370,7 +1483,7 @@ declare const client: {
                             error: null;
                         };
                         outputFormat: "json";
-                        status: 400;
+                        status: 401;
                     } | {
                         input: {
                             json: {
@@ -2400,6 +1513,1468 @@ declare const client: {
                         status: 200;
                     };
                 }>;
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
+                auth: {
+                    register: import("hono/client").ClientRequest<{
+                        $post: {
+                            input: {
+                                json: {
+                                    name: string;
+                                    email: string;
+                                    otp: string;
+                                    password: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: null;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 400;
+                        } | {
+                            input: {
+                                json: {
+                                    name: string;
+                                    email: string;
+                                    otp: string;
+                                    password: string;
+                                };
+                            };
+                            output: {
+                                success: true;
+                                message: string;
+                                data: {
+                                    token: string;
+                                    hp: {
+                                        id: string;
+                                        name: string;
+                                        email: string;
+                                    };
+                                } | undefined;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 200;
+                        };
+                    }>;
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
+                bookings: {
+                    ":bookingId": import("hono/client").ClientRequest<{
+                        $get: {
+                            input: {
+                                param: {
+                                    bookingId: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: null;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 401;
+                        } | {
+                            input: {
+                                param: {
+                                    bookingId: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: null;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 404;
+                        } | {
+                            input: {
+                                param: {
+                                    bookingId: string;
+                                };
+                            };
+                            output: {
+                                success: true;
+                                message: string;
+                                data: {
+                                    booking: {
+                                        id: string;
+                                        date: string;
+                                        queueNo: number | null;
+                                        sharedCode: string | null;
+                                        bookingStatus: "cancelled" | "completed" | "confirmed" | "no_show" | "pending" | null;
+                                        visitStatus: "cancelled" | "completed" | "ongoing" | "scheduled" | null;
+                                        createdAt: string;
+                                    };
+                                    scheduleDay: {
+                                        id: string;
+                                        day: number | null;
+                                        startTime: string;
+                                        endTime: string;
+                                        maxBookings: number;
+                                    };
+                                    schedule: {
+                                        id: string;
+                                        scheduleType: "daily" | "monthly" | "weekly";
+                                        scheduleStatus: "active" | "applied" | "approved" | "inactive" | "pending" | "rejected" | null;
+                                    };
+                                    doctor: {
+                                        id: string;
+                                        name: string;
+                                        email: string | null;
+                                        contactNumber: string | null;
+                                        specialization: string | null;
+                                        department: string | null;
+                                        gender: string | null;
+                                        degrees: string | null;
+                                        experience: number | null;
+                                    };
+                                    member: {
+                                        id: string;
+                                        name: string | null;
+                                        gender: "female" | "male" | "other" | null;
+                                        relation: string | null;
+                                        dob: string | null;
+                                        phone: string | null;
+                                    };
+                                    user: {
+                                        id: string;
+                                        phone: string;
+                                        email: string | null;
+                                    };
+                                } | undefined;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 200;
+                        } | {
+                            input: {
+                                param: {
+                                    bookingId: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: import("hono/utils/types").JSONValue;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 500;
+                        };
+                    }>;
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
+                bookings: {
+                    "by-doctor": {
+                        ":doctorId": import("hono/client").ClientRequest<{
+                            $get: {
+                                input: {
+                                    query: {
+                                        date?: string | undefined;
+                                    };
+                                } & {
+                                    param: {
+                                        doctorId: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: null;
+                                    error: null;
+                                };
+                                outputFormat: "json";
+                                status: 401;
+                            } | {
+                                input: {
+                                    query: {
+                                        date?: string | undefined;
+                                    };
+                                } & {
+                                    param: {
+                                        doctorId: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: import("hono/utils/types").JSONValue;
+                                    error: null;
+                                };
+                                outputFormat: "json";
+                                status: 500;
+                            } | {
+                                input: {
+                                    query: {
+                                        date?: string | undefined;
+                                    };
+                                } & {
+                                    param: {
+                                        doctorId: string;
+                                    };
+                                };
+                                output: {
+                                    success: true;
+                                    message: string;
+                                    data: {
+                                        bookingId: string;
+                                        date: string;
+                                        queueNo: number | null;
+                                        bookingStatus: "cancelled" | "completed" | "confirmed" | "no_show" | "pending" | null;
+                                        visitStatus: "cancelled" | "completed" | "ongoing" | "scheduled" | null;
+                                        sharedCode: string | null;
+                                        scheduleDayId: string;
+                                        startTime: string;
+                                        endTime: string;
+                                        maxBookings: number;
+                                        scheduleId: string;
+                                        scheduleType: "daily" | "monthly" | "weekly";
+                                        doctorId: string;
+                                        doctorName: string;
+                                        memberId: string | null;
+                                        memberName: string | null;
+                                        memberPhone: string | null;
+                                    }[] | undefined;
+                                    error: null;
+                                };
+                                outputFormat: "json";
+                                status: 200;
+                            };
+                        }>;
+                    };
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
+                doctors: {
+                    all: import("hono/client").ClientRequest<{
+                        $get: {
+                            input: {};
+                            output: {
+                                success: true;
+                                message: string;
+                                data: {
+                                    id: string;
+                                    name: string;
+                                    email: string | null;
+                                    contactNumber: string | null;
+                                    gender: string | null;
+                                    department: string | null;
+                                    degrees: string | null;
+                                    experience: number | null;
+                                    specialization: string | null;
+                                    createdAt: string;
+                                    verified: boolean | null;
+                                }[] | undefined;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 200;
+                        };
+                    }>;
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
+                doctors: {
+                    "my-doctors": import("hono/client").ClientRequest<{
+                        $get: {
+                            input: {};
+                            output: {
+                                success: false;
+                                message: string;
+                                data: null;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 401;
+                        } | {
+                            input: {};
+                            output: {
+                                success: true;
+                                message: string;
+                                data: {
+                                    id: string;
+                                    name: string;
+                                    email: string | null;
+                                    contactNumber: string | null;
+                                    gender: string | null;
+                                    department: string | null;
+                                    degrees: string | null;
+                                    experience: number | null;
+                                    specialization: string | null;
+                                    createdAt: string;
+                                    verified: boolean | null;
+                                }[] | undefined;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 200;
+                        };
+                    }>;
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
+                schedules: {
+                    ":id": {
+                        disable: import("hono/client").ClientRequest<{
+                            $post: {
+                                input: {
+                                    param: {
+                                        id: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: null;
+                                    error: null;
+                                };
+                                outputFormat: "json";
+                                status: 400;
+                            } | {
+                                input: {
+                                    param: {
+                                        id: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: null;
+                                    error: null;
+                                };
+                                outputFormat: "json";
+                                status: 401;
+                            } | {
+                                input: {
+                                    param: {
+                                        id: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: import("hono/utils/types").JSONValue;
+                                    error: null;
+                                };
+                                outputFormat: "json";
+                                status: 500;
+                            } | {
+                                input: {
+                                    param: {
+                                        id: string;
+                                    };
+                                };
+                                output: {
+                                    success: true;
+                                    message: string;
+                                    data: null | undefined;
+                                    error: null;
+                                };
+                                outputFormat: "json";
+                                status: 200;
+                            };
+                        }>;
+                    };
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
+                schedules: {
+                    day: {
+                        ":scheduleDayId": import("hono/client").ClientRequest<{
+                            $delete: {
+                                input: {
+                                    param: {
+                                        scheduleDayId: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: null;
+                                    error: null;
+                                };
+                                outputFormat: "json";
+                                status: 400;
+                            } | {
+                                input: {
+                                    param: {
+                                        scheduleDayId: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: null;
+                                    error: null;
+                                };
+                                outputFormat: "json";
+                                status: 401;
+                            } | {
+                                input: {
+                                    param: {
+                                        scheduleDayId: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: import("hono/utils/types").JSONValue;
+                                    error: null;
+                                };
+                                outputFormat: "json";
+                                status: 500;
+                            } | {
+                                input: {
+                                    param: {
+                                        scheduleDayId: string;
+                                    };
+                                };
+                                output: {
+                                    success: true;
+                                    message: string;
+                                    data: null | undefined;
+                                    error: null;
+                                };
+                                outputFormat: "json";
+                                status: 200;
+                            };
+                        }>;
+                    };
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
+                auth: {
+                    "verify-email": import("hono/client").ClientRequest<{
+                        $post: {
+                            input: {
+                                json: {
+                                    email: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: null;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 400;
+                        } | {
+                            input: {
+                                json: {
+                                    email: string;
+                                };
+                            };
+                            output: {
+                                success: true;
+                                message: string;
+                                data: {
+                                    email: string;
+                                } | undefined;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 200;
+                        };
+                    }>;
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
+                auth: {
+                    login: import("hono/client").ClientRequest<{
+                        $post: {
+                            input: {
+                                json: {
+                                    email: string;
+                                    password: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: null;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 401;
+                        } | {
+                            input: {
+                                json: {
+                                    email: string;
+                                    password: string;
+                                };
+                            };
+                            output: {
+                                success: true;
+                                message: string;
+                                data: {
+                                    token: string;
+                                    hp: {
+                                        id: string;
+                                        email: string;
+                                        name: string;
+                                    };
+                                } | undefined;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 200;
+                        };
+                    }>;
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
+                schedules: import("hono/client").ClientRequest<{
+                    $get: {
+                        input: {};
+                        output: {
+                            success: true;
+                            message: string;
+                            data: null | undefined;
+                            error: null;
+                        };
+                        outputFormat: "json";
+                        status: 200;
+                    };
+                }>;
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
+                schedules: import("hono/client").ClientRequest<{
+                    $post: {
+                        input: {
+                            json: {
+                                doctorId: string;
+                                scheduleType: "daily" | "monthly" | "weekly";
+                                weekDays?: number[] | undefined;
+                                monthDays?: number[] | undefined;
+                                timeSlots: {
+                                    dayOfWeek?: number | undefined;
+                                    dayOfMonth?: number | undefined;
+                                    startTime: string;
+                                    endTime: string;
+                                    maxBookings: number;
+                                }[];
+                                isActive?: boolean | undefined;
+                            };
+                        };
+                        output: {
+                            success: false;
+                            message: string;
+                            data: null;
+                            error: null;
+                        };
+                        outputFormat: "json";
+                        status: 400;
+                    } | {
+                        input: {
+                            json: {
+                                doctorId: string;
+                                scheduleType: "daily" | "monthly" | "weekly";
+                                weekDays?: number[] | undefined;
+                                monthDays?: number[] | undefined;
+                                timeSlots: {
+                                    dayOfWeek?: number | undefined;
+                                    dayOfMonth?: number | undefined;
+                                    startTime: string;
+                                    endTime: string;
+                                    maxBookings: number;
+                                }[];
+                                isActive?: boolean | undefined;
+                            };
+                        };
+                        output: {
+                            success: false;
+                            message: string;
+                            data: null;
+                            error: null;
+                        };
+                        outputFormat: "json";
+                        status: 401;
+                    } | {
+                        input: {
+                            json: {
+                                doctorId: string;
+                                scheduleType: "daily" | "monthly" | "weekly";
+                                weekDays?: number[] | undefined;
+                                monthDays?: number[] | undefined;
+                                timeSlots: {
+                                    dayOfWeek?: number | undefined;
+                                    dayOfMonth?: number | undefined;
+                                    startTime: string;
+                                    endTime: string;
+                                    maxBookings: number;
+                                }[];
+                                isActive?: boolean | undefined;
+                            };
+                        };
+                        output: {
+                            success: false;
+                            message: string;
+                            data: import("hono/utils/types").JSONValue;
+                            error: null;
+                        };
+                        outputFormat: "json";
+                        status: 500;
+                    } | {
+                        input: {
+                            json: {
+                                doctorId: string;
+                                scheduleType: "daily" | "monthly" | "weekly";
+                                weekDays?: number[] | undefined;
+                                monthDays?: number[] | undefined;
+                                timeSlots: {
+                                    dayOfWeek?: number | undefined;
+                                    dayOfMonth?: number | undefined;
+                                    startTime: string;
+                                    endTime: string;
+                                    maxBookings: number;
+                                }[];
+                                isActive?: boolean | undefined;
+                            };
+                        };
+                        output: {
+                            success: true;
+                            message: string;
+                            data: {
+                                createdAt: string;
+                                daysMask: number | null;
+                                doctorId: string;
+                                hpId: string;
+                                id: string;
+                                scheduleStatus: "active" | "applied" | "approved" | "inactive" | "pending" | "rejected" | null;
+                                scheduleType: "daily" | "monthly" | "weekly";
+                            } | undefined;
+                            error: null;
+                        };
+                        outputFormat: "json";
+                        status: 200;
+                    };
+                }>;
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
+                schedules: {
+                    ":id": import("hono/client").ClientRequest<{
+                        $put: {
+                            input: {
+                                json: {
+                                    doctorId: string;
+                                    scheduleType: "daily" | "monthly" | "weekly";
+                                    weekDays?: number[] | undefined;
+                                    monthDays?: number[] | undefined;
+                                    timeSlots: {
+                                        dayOfWeek?: number | undefined;
+                                        dayOfMonth?: number | undefined;
+                                        startTime: string;
+                                        endTime: string;
+                                        maxBookings: number;
+                                    }[];
+                                    isActive?: boolean | undefined;
+                                };
+                            } & {
+                                param: {
+                                    id: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: null;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 400;
+                        } | {
+                            input: {
+                                json: {
+                                    doctorId: string;
+                                    scheduleType: "daily" | "monthly" | "weekly";
+                                    weekDays?: number[] | undefined;
+                                    monthDays?: number[] | undefined;
+                                    timeSlots: {
+                                        dayOfWeek?: number | undefined;
+                                        dayOfMonth?: number | undefined;
+                                        startTime: string;
+                                        endTime: string;
+                                        maxBookings: number;
+                                    }[];
+                                    isActive?: boolean | undefined;
+                                };
+                            } & {
+                                param: {
+                                    id: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: null;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 401;
+                        } | {
+                            input: {
+                                json: {
+                                    doctorId: string;
+                                    scheduleType: "daily" | "monthly" | "weekly";
+                                    weekDays?: number[] | undefined;
+                                    monthDays?: number[] | undefined;
+                                    timeSlots: {
+                                        dayOfWeek?: number | undefined;
+                                        dayOfMonth?: number | undefined;
+                                        startTime: string;
+                                        endTime: string;
+                                        maxBookings: number;
+                                    }[];
+                                    isActive?: boolean | undefined;
+                                };
+                            } & {
+                                param: {
+                                    id: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: import("hono/utils/types").JSONValue;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 500;
+                        } | {
+                            input: {
+                                json: {
+                                    doctorId: string;
+                                    scheduleType: "daily" | "monthly" | "weekly";
+                                    weekDays?: number[] | undefined;
+                                    monthDays?: number[] | undefined;
+                                    timeSlots: {
+                                        dayOfWeek?: number | undefined;
+                                        dayOfMonth?: number | undefined;
+                                        startTime: string;
+                                        endTime: string;
+                                        maxBookings: number;
+                                    }[];
+                                    isActive?: boolean | undefined;
+                                };
+                            } & {
+                                param: {
+                                    id: string;
+                                };
+                            };
+                            output: {
+                                success: true;
+                                message: string;
+                                data: {
+                                    id: string;
+                                    hpId: string;
+                                    doctorId: string;
+                                    scheduleType: "daily" | "monthly" | "weekly";
+                                    daysMask: number | null;
+                                    scheduleStatus: "active" | "applied" | "approved" | "inactive" | "pending" | "rejected" | null;
+                                    createdAt: string;
+                                    timeSlots: {
+                                        id: string;
+                                        scheduleId: string;
+                                        day: number | null;
+                                        startTime: string;
+                                        endTime: string;
+                                        maxBookings: number;
+                                    }[];
+                                } | undefined;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 200;
+                        };
+                    }>;
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
+                schedules: {
+                    ":id": import("hono/client").ClientRequest<{
+                        $delete: {
+                            input: {
+                                param: {
+                                    id: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: null;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 400;
+                        } | {
+                            input: {
+                                param: {
+                                    id: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: null;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 401;
+                        } | {
+                            input: {
+                                param: {
+                                    id: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: import("hono/utils/types").JSONValue;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 500;
+                        } | {
+                            input: {
+                                param: {
+                                    id: string;
+                                };
+                            };
+                            output: {
+                                success: true;
+                                message: string;
+                                data: null | undefined;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 200;
+                        };
+                    }>;
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
+                schedules: {
+                    ":id": {
+                        enable: import("hono/client").ClientRequest<{
+                            $post: {
+                                input: {
+                                    param: {
+                                        id: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: null;
+                                    error: null;
+                                };
+                                outputFormat: "json";
+                                status: 400;
+                            } | {
+                                input: {
+                                    param: {
+                                        id: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: null;
+                                    error: null;
+                                };
+                                outputFormat: "json";
+                                status: 401;
+                            } | {
+                                input: {
+                                    param: {
+                                        id: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: import("hono/utils/types").JSONValue;
+                                    error: null;
+                                };
+                                outputFormat: "json";
+                                status: 500;
+                            } | {
+                                input: {
+                                    param: {
+                                        id: string;
+                                    };
+                                };
+                                output: {
+                                    success: true;
+                                    message: string;
+                                    data: null | undefined;
+                                    error: null;
+                                };
+                                outputFormat: "json";
+                                status: 200;
+                            };
+                        }>;
+                    };
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
+                schedules: {
+                    doctor: {
+                        ":doctorId": import("hono/client").ClientRequest<{
+                            $get: {
+                                input: {
+                                    param: {
+                                        doctorId: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: null;
+                                    error: null;
+                                };
+                                outputFormat: "json";
+                                status: 400;
+                            } | {
+                                input: {
+                                    param: {
+                                        doctorId: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: null;
+                                    error: null;
+                                };
+                                outputFormat: "json";
+                                status: 401;
+                            } | {
+                                input: {
+                                    param: {
+                                        doctorId: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: import("hono/utils/types").JSONValue;
+                                    error: null;
+                                };
+                                outputFormat: "json";
+                                status: 500;
+                            } | {
+                                input: {
+                                    param: {
+                                        doctorId: string;
+                                    };
+                                };
+                                output: {
+                                    success: true;
+                                    message: string;
+                                    data: {
+                                        id: string;
+                                        doctorId: string;
+                                        scheduleType: "daily" | "monthly" | "weekly";
+                                        daysMask: number | null;
+                                        scheduleStatus: "active" | "applied" | "approved" | "inactive" | "pending" | "rejected" | null;
+                                        createdAt: string;
+                                        timeSlots: {
+                                            id: string;
+                                            scheduleId: string;
+                                            day: number | null;
+                                            startTime: string;
+                                            endTime: string;
+                                            maxBookings: number;
+                                        }[];
+                                    }[] | undefined;
+                                    error: null;
+                                };
+                                outputFormat: "json";
+                                status: 200;
+                            };
+                        }>;
+                    };
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
+                bookings: import("hono/client").ClientRequest<{
+                    $post: {
+                        input: {
+                            json: {
+                                doctorId?: string | undefined;
+                                date?: string | undefined;
+                                startDate?: string | undefined;
+                                endDate?: string | undefined;
+                                scheduleStatus?: "applied" | "approved" | "pending" | "rejected" | undefined;
+                                visitStatus?: "cancelled" | "completed" | "ongoing" | "scheduled" | undefined;
+                                bookingStatus?: "cancelled" | "completed" | "confirmed" | "no_show" | "pending" | undefined;
+                            };
+                        };
+                        output: {
+                            success: false;
+                            message: string;
+                            data: null;
+                            error: null;
+                        };
+                        outputFormat: "json";
+                        status: 401;
+                    } | {
+                        input: {
+                            json: {
+                                doctorId?: string | undefined;
+                                date?: string | undefined;
+                                startDate?: string | undefined;
+                                endDate?: string | undefined;
+                                scheduleStatus?: "applied" | "approved" | "pending" | "rejected" | undefined;
+                                visitStatus?: "cancelled" | "completed" | "ongoing" | "scheduled" | undefined;
+                                bookingStatus?: "cancelled" | "completed" | "confirmed" | "no_show" | "pending" | undefined;
+                            };
+                        };
+                        output: {
+                            success: false;
+                            message: string;
+                            data: import("hono/utils/types").JSONValue;
+                            error: null;
+                        };
+                        outputFormat: "json";
+                        status: 500;
+                    } | {
+                        input: {
+                            json: {
+                                doctorId?: string | undefined;
+                                date?: string | undefined;
+                                startDate?: string | undefined;
+                                endDate?: string | undefined;
+                                scheduleStatus?: "applied" | "approved" | "pending" | "rejected" | undefined;
+                                visitStatus?: "cancelled" | "completed" | "ongoing" | "scheduled" | undefined;
+                                bookingStatus?: "cancelled" | "completed" | "confirmed" | "no_show" | "pending" | undefined;
+                            };
+                        };
+                        output: {
+                            success: true;
+                            message: string;
+                            data: {
+                                booking: {
+                                    id: string;
+                                    date: string;
+                                    queueNo: number | null;
+                                    sharedCode: string | null;
+                                    bookingStatus: "cancelled" | "completed" | "confirmed" | "no_show" | "pending" | null;
+                                    visitStatus: "cancelled" | "completed" | "ongoing" | "scheduled" | null;
+                                    createdAt: string;
+                                };
+                                scheduleDay: {
+                                    id: string;
+                                    day: number | null;
+                                    startTime: string;
+                                    endTime: string;
+                                    maxBookings: number;
+                                };
+                                schedule: {
+                                    id: string;
+                                    scheduleType: "daily" | "monthly" | "weekly";
+                                    scheduleStatus: "active" | "applied" | "approved" | "inactive" | "pending" | "rejected" | null;
+                                };
+                                doctor: {
+                                    id: string;
+                                    name: string;
+                                    email: string | null;
+                                    contactNumber: string | null;
+                                    specialization: string | null;
+                                    department: string | null;
+                                    gender: string | null;
+                                };
+                                member: {
+                                    id: string;
+                                    name: string | null;
+                                    gender: "female" | "male" | "other" | null;
+                                    relation: string | null;
+                                    dob: string | null;
+                                    phone: string | null;
+                                };
+                                user: {
+                                    id: string;
+                                    phone: string;
+                                    email: string | null;
+                                };
+                            }[] | undefined;
+                            error: null;
+                        };
+                        outputFormat: "json";
+                        status: 200;
+                    };
+                }>;
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
+                bookings: {
+                    ":bookingId": {
+                        "update-status": import("hono/client").ClientRequest<{
+                            $post: {
+                                input: {
+                                    json: {
+                                        visitStatus: "cancelled" | "completed" | "ongoing" | "scheduled";
+                                    };
+                                } & {
+                                    param: {
+                                        bookingId: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: null;
+                                    error: null;
+                                };
+                                outputFormat: "json";
+                                status: 401;
+                            } | {
+                                input: {
+                                    json: {
+                                        visitStatus: "cancelled" | "completed" | "ongoing" | "scheduled";
+                                    };
+                                } & {
+                                    param: {
+                                        bookingId: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: null;
+                                    error: null;
+                                };
+                                outputFormat: "json";
+                                status: 404;
+                            } | {
+                                input: {
+                                    json: {
+                                        visitStatus: "cancelled" | "completed" | "ongoing" | "scheduled";
+                                    };
+                                } & {
+                                    param: {
+                                        bookingId: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: import("hono/utils/types").JSONValue;
+                                    error: null;
+                                };
+                                outputFormat: "json";
+                                status: 500;
+                            } | {
+                                input: {
+                                    json: {
+                                        visitStatus: "cancelled" | "completed" | "ongoing" | "scheduled";
+                                    };
+                                } & {
+                                    param: {
+                                        bookingId: string;
+                                    };
+                                };
+                                output: {
+                                    success: true;
+                                    message: string;
+                                    data: {
+                                        id: string;
+                                        scheduleDaysId: string;
+                                        memberId: string;
+                                        date: string;
+                                        queueNo: number | null;
+                                        sharedCode: string | null;
+                                        bookingStatus: "cancelled" | "completed" | "confirmed" | "no_show" | "pending" | null;
+                                        visitStatus: "cancelled" | "completed" | "ongoing" | "scheduled" | null;
+                                        paymentId: string | null;
+                                        createdAt: string;
+                                    } | undefined;
+                                    error: null;
+                                };
+                                outputFormat: "json";
+                                status: 200;
+                            };
+                        }>;
+                    };
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
+                bookings: {
+                    "*": import("hono/client").ClientRequest<{}>;
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
+                doctors: {
+                    "*": import("hono/client").ClientRequest<{}>;
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
+                schedules: {
+                    "*": import("hono/client").ClientRequest<{}>;
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
+                profile: import("hono/client").ClientRequest<{
+                    $get: {
+                        input: {};
+                        output: {
+                            success: false;
+                            message: string;
+                            data: null;
+                            error: null;
+                        };
+                        outputFormat: "json";
+                        status: 400;
+                    } | {
+                        input: {};
+                        output: {
+                            success: false;
+                            message: string;
+                            data: null;
+                            error: null;
+                        };
+                        outputFormat: "json";
+                        status: 401;
+                    } | {
+                        input: {};
+                        output: {
+                            success: true;
+                            message: string;
+                            data: {
+                                hp: {
+                                    id: string;
+                                    name: string;
+                                    email: string;
+                                    contactNumber: string | null;
+                                    location: string | null;
+                                    pin: string | null;
+                                    state: string | null;
+                                    city: string | null;
+                                    houseNumber: string | null;
+                                    roadName: string | null;
+                                    landmark: string | null;
+                                    profileImage: string | null;
+                                    createdAt: string;
+                                    verified: boolean | null;
+                                };
+                            } | undefined;
+                            error: null;
+                        };
+                        outputFormat: "json";
+                        status: 200;
+                    };
+                    $put: {
+                        input: {
+                            json: {
+                                name?: string | undefined;
+                                contactNumber?: string | undefined;
+                                location?: string | undefined;
+                                pin?: string | undefined;
+                                state?: string | undefined;
+                                city?: string | undefined;
+                                houseNumber?: string | undefined;
+                                roadName?: string | undefined;
+                                landmark?: string | undefined;
+                                profileImage?: string | undefined;
+                            };
+                        };
+                        output: {
+                            success: false;
+                            message: string;
+                            data: null;
+                            error: null;
+                        };
+                        outputFormat: "json";
+                        status: 400;
+                    } | {
+                        input: {
+                            json: {
+                                name?: string | undefined;
+                                contactNumber?: string | undefined;
+                                location?: string | undefined;
+                                pin?: string | undefined;
+                                state?: string | undefined;
+                                city?: string | undefined;
+                                houseNumber?: string | undefined;
+                                roadName?: string | undefined;
+                                landmark?: string | undefined;
+                                profileImage?: string | undefined;
+                            };
+                        };
+                        output: {
+                            success: false;
+                            message: string;
+                            data: null;
+                            error: null;
+                        };
+                        outputFormat: "json";
+                        status: 401;
+                    } | {
+                        input: {
+                            json: {
+                                name?: string | undefined;
+                                contactNumber?: string | undefined;
+                                location?: string | undefined;
+                                pin?: string | undefined;
+                                state?: string | undefined;
+                                city?: string | undefined;
+                                houseNumber?: string | undefined;
+                                roadName?: string | undefined;
+                                landmark?: string | undefined;
+                                profileImage?: string | undefined;
+                            };
+                        };
+                        output: {
+                            success: true;
+                            message: string;
+                            data: {
+                                hp: {
+                                    id: string;
+                                    name: string;
+                                    email: string;
+                                    contactNumber: string | null;
+                                    location: string | null;
+                                    pin: string | null;
+                                    state: string | null;
+                                    city: string | null;
+                                    houseNumber: string | null;
+                                    roadName: string | null;
+                                    landmark: string | null;
+                                    profileImage: string | null;
+                                    createdAt: string;
+                                    verified: boolean | null;
+                                };
+                            } | undefined;
+                            error: null;
+                        };
+                        outputFormat: "json";
+                        status: 200;
+                    };
+                }>;
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
+                profile: {
+                    "*": import("hono/client").ClientRequest<{}>;
+                };
             };
         };
     };
@@ -2433,11 +3008,186 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
         v1: {
             admin: {
                 auth: {
-                    login: import("hono/client").ClientRequest<{
+                    logout: import("hono/client").ClientRequest<{
+                        $post: {
+                            input: {};
+                            output: {
+                                success: true;
+                                message: string;
+                                data: null | undefined;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 200;
+                        };
+                    }>;
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            admin: {
+                doctors: import("hono/client").ClientRequest<{
+                    $get: {
+                        input: {};
+                        output: {
+                            success: true;
+                            message: string;
+                            data: {
+                                id: string;
+                                name: string;
+                                email: string | null;
+                                contactNumber: string | null;
+                                gender: string | null;
+                                department: string | null;
+                                degrees: string | null;
+                                experience: number | null;
+                                specialization: string | null;
+                                createdAt: string;
+                                verified: boolean | null;
+                            }[] | undefined;
+                            error: null;
+                        };
+                        outputFormat: "json";
+                        status: 200;
+                    };
+                }>;
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            admin: {
+                doctors: import("hono/client").ClientRequest<{
+                    $post: {
+                        input: {
+                            json: {
+                                name: string;
+                                email?: string | undefined;
+                                contactNumber?: string | undefined;
+                                gender?: "female" | "male" | "other" | undefined;
+                                department?: string | undefined;
+                                degrees?: string | undefined;
+                                experience?: number | undefined;
+                                specialization?: string | undefined;
+                            };
+                        };
+                        output: {
+                            success: true;
+                            message: string;
+                            data: {
+                                contactNumber: string | null;
+                                createdAt: string;
+                                degrees: string | null;
+                                department: string | null;
+                                email: string | null;
+                                experience: number | null;
+                                gender: string | null;
+                                id: string;
+                                name: string;
+                                specialization: string | null;
+                                verified: boolean | null;
+                            } | undefined;
+                            error: null;
+                        };
+                        outputFormat: "json";
+                        status: 200;
+                    };
+                }>;
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            admin: {
+                auth: {
+                    "verify-email": import("hono/client").ClientRequest<{
                         $post: {
                             input: {
                                 json: {
                                     email: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: null;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 400;
+                        } | {
+                            input: {
+                                json: {
+                                    email: string;
+                                };
+                            };
+                            output: {
+                                success: true;
+                                message: string;
+                                data: {
+                                    email: string;
+                                } | undefined;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 200;
+                        };
+                    }>;
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            admin: {
+                auth: {
+                    register: import("hono/client").ClientRequest<{
+                        $post: {
+                            input: {
+                                json: {
+                                    name: string;
+                                    email: string;
+                                    otp: string;
+                                    password: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: null;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 400;
+                        } | {
+                            input: {
+                                json: {
+                                    name: string;
+                                    email: string;
+                                    otp: string;
+                                    password: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: import("hono/utils/types").JSONValue;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 500;
+                        } | {
+                            input: {
+                                json: {
+                                    name: string;
+                                    email: string;
+                                    otp: string;
                                     password: string;
                                 };
                             };
@@ -2456,7 +3206,19 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             };
                             outputFormat: "json";
                             status: 200;
-                        } | {
+                        };
+                    }>;
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            admin: {
+                auth: {
+                    login: import("hono/client").ClientRequest<{
+                        $post: {
                             input: {
                                 json: {
                                     email: string;
@@ -2486,58 +3248,10 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             };
                             outputFormat: "json";
                             status: 500;
-                        };
-                    }>;
-                };
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            admin: {
-                auth: {
-                    register: import("hono/client").ClientRequest<{
-                        $post: {
-                            input: {
-                                json: {
-                                    name: string;
-                                    email: string;
-                                    otp: string;
-                                    password: string;
-                                };
-                            };
-                            output: {
-                                success: false;
-                                message: string;
-                                data: import("hono/utils/types").JSONValue;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 500;
                         } | {
                             input: {
                                 json: {
-                                    name: string;
                                     email: string;
-                                    otp: string;
-                                    password: string;
-                                };
-                            };
-                            output: {
-                                success: false;
-                                message: string;
-                                data: null;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 400;
-                        } | {
-                            input: {
-                                json: {
-                                    name: string;
-                                    email: string;
-                                    otp: string;
                                     password: string;
                                 };
                             };
@@ -2625,81 +3339,6 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                         };
                     }>;
                 };
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            admin: {
-                doctors: import("hono/client").ClientRequest<{
-                    $get: {
-                        input: {};
-                        output: {
-                            success: true;
-                            message: string;
-                            data: {
-                                id: string;
-                                name: string;
-                                email: string | null;
-                                contactNumber: string | null;
-                                gender: string | null;
-                                department: string | null;
-                                degrees: string | null;
-                                experience: number | null;
-                                specialization: string | null;
-                                createdAt: string;
-                                verified: boolean | null;
-                            }[] | undefined;
-                            error: null;
-                        };
-                        outputFormat: "json";
-                        status: 200;
-                    };
-                }>;
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            admin: {
-                doctors: import("hono/client").ClientRequest<{
-                    $post: {
-                        input: {
-                            json: {
-                                name: string;
-                                email?: string | undefined;
-                                contactNumber?: string | undefined;
-                                gender?: "female" | "male" | "other" | undefined;
-                                department?: string | undefined;
-                                degrees?: string | undefined;
-                                experience?: number | undefined;
-                                specialization?: string | undefined;
-                            };
-                        };
-                        output: {
-                            success: true;
-                            message: string;
-                            data: {
-                                contactNumber: string | null;
-                                createdAt: string;
-                                degrees: string | null;
-                                department: string | null;
-                                email: string | null;
-                                experience: number | null;
-                                gender: string | null;
-                                id: string;
-                                name: string;
-                                specialization: string | null;
-                                verified: boolean | null;
-                            } | undefined;
-                            error: null;
-                        };
-                        outputFormat: "json";
-                        status: 200;
-                    };
-                }>;
             };
         };
     };
@@ -2844,337 +3483,11 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             output: {
                                 success: false;
                                 message: string;
-                                data: import("hono/utils/types").JSONValue;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 500;
-                        } | {
-                            input: {
-                                param: {
-                                    id: string;
-                                };
-                            };
-                            output: {
-                                success: false;
-                                message: string;
                                 data: null;
                                 error: null;
                             };
                             outputFormat: "json";
                             status: 400;
-                        } | {
-                            input: {
-                                param: {
-                                    id: string;
-                                };
-                            };
-                            output: {
-                                success: true;
-                                message: string;
-                                data: null | undefined;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 200;
-                        };
-                    }>;
-                };
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            admin: {
-                auth: {
-                    "verify-email": import("hono/client").ClientRequest<{
-                        $post: {
-                            input: {
-                                json: {
-                                    email: string;
-                                };
-                            };
-                            output: {
-                                success: false;
-                                message: string;
-                                data: null;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 400;
-                        } | {
-                            input: {
-                                json: {
-                                    email: string;
-                                };
-                            };
-                            output: {
-                                success: true;
-                                message: string;
-                                data: {
-                                    email: string;
-                                } | undefined;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 200;
-                        };
-                    }>;
-                };
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            admin: {
-                auth: {
-                    logout: import("hono/client").ClientRequest<{
-                        $post: {
-                            input: {};
-                            output: {
-                                success: true;
-                                message: string;
-                                data: null | undefined;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 200;
-                        };
-                    }>;
-                };
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            hp: {
-                schedules: {
-                    ":id": {
-                        enable: import("hono/client").ClientRequest<{
-                            $post: {
-                                input: {
-                                    param: {
-                                        id: string;
-                                    };
-                                };
-                                output: {
-                                    success: false;
-                                    message: string;
-                                    data: null;
-                                    error: null;
-                                };
-                                outputFormat: "json";
-                                status: 401;
-                            } | {
-                                input: {
-                                    param: {
-                                        id: string;
-                                    };
-                                };
-                                output: {
-                                    success: false;
-                                    message: string;
-                                    data: import("hono/utils/types").JSONValue;
-                                    error: null;
-                                };
-                                outputFormat: "json";
-                                status: 500;
-                            } | {
-                                input: {
-                                    param: {
-                                        id: string;
-                                    };
-                                };
-                                output: {
-                                    success: false;
-                                    message: string;
-                                    data: null;
-                                    error: null;
-                                };
-                                outputFormat: "json";
-                                status: 400;
-                            } | {
-                                input: {
-                                    param: {
-                                        id: string;
-                                    };
-                                };
-                                output: {
-                                    success: true;
-                                    message: string;
-                                    data: null | undefined;
-                                    error: null;
-                                };
-                                outputFormat: "json";
-                                status: 200;
-                            };
-                        }>;
-                    };
-                };
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            hp: {
-                schedules: import("hono/client").ClientRequest<{
-                    $get: {
-                        input: {};
-                        output: {
-                            success: true;
-                            message: string;
-                            data: null | undefined;
-                            error: null;
-                        };
-                        outputFormat: "json";
-                        status: 200;
-                    };
-                }>;
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            hp: {
-                schedules: import("hono/client").ClientRequest<{
-                    $post: {
-                        input: {
-                            json: {
-                                doctorId: string;
-                                scheduleType: "daily" | "monthly" | "weekly";
-                                weekDays?: number[] | undefined;
-                                monthDays?: number[] | undefined;
-                                timeSlots: {
-                                    dayOfWeek?: number | undefined;
-                                    dayOfMonth?: number | undefined;
-                                    startTime: string;
-                                    endTime: string;
-                                    maxBookings: number;
-                                }[];
-                                isActive?: boolean | undefined;
-                            };
-                        };
-                        output: {
-                            success: false;
-                            message: string;
-                            data: null;
-                            error: null;
-                        };
-                        outputFormat: "json";
-                        status: 401;
-                    } | {
-                        input: {
-                            json: {
-                                doctorId: string;
-                                scheduleType: "daily" | "monthly" | "weekly";
-                                weekDays?: number[] | undefined;
-                                monthDays?: number[] | undefined;
-                                timeSlots: {
-                                    dayOfWeek?: number | undefined;
-                                    dayOfMonth?: number | undefined;
-                                    startTime: string;
-                                    endTime: string;
-                                    maxBookings: number;
-                                }[];
-                                isActive?: boolean | undefined;
-                            };
-                        };
-                        output: {
-                            success: false;
-                            message: string;
-                            data: import("hono/utils/types").JSONValue;
-                            error: null;
-                        };
-                        outputFormat: "json";
-                        status: 500;
-                    } | {
-                        input: {
-                            json: {
-                                doctorId: string;
-                                scheduleType: "daily" | "monthly" | "weekly";
-                                weekDays?: number[] | undefined;
-                                monthDays?: number[] | undefined;
-                                timeSlots: {
-                                    dayOfWeek?: number | undefined;
-                                    dayOfMonth?: number | undefined;
-                                    startTime: string;
-                                    endTime: string;
-                                    maxBookings: number;
-                                }[];
-                                isActive?: boolean | undefined;
-                            };
-                        };
-                        output: {
-                            success: false;
-                            message: string;
-                            data: null;
-                            error: null;
-                        };
-                        outputFormat: "json";
-                        status: 400;
-                    } | {
-                        input: {
-                            json: {
-                                doctorId: string;
-                                scheduleType: "daily" | "monthly" | "weekly";
-                                weekDays?: number[] | undefined;
-                                monthDays?: number[] | undefined;
-                                timeSlots: {
-                                    dayOfWeek?: number | undefined;
-                                    dayOfMonth?: number | undefined;
-                                    startTime: string;
-                                    endTime: string;
-                                    maxBookings: number;
-                                }[];
-                                isActive?: boolean | undefined;
-                            };
-                        };
-                        output: {
-                            success: true;
-                            message: string;
-                            data: {
-                                createdAt: string;
-                                daysMask: number | null;
-                                doctorId: string;
-                                hpId: string;
-                                id: string;
-                                scheduleStatus: "active" | "cancelled" | "deleted" | "inactive" | null;
-                                scheduleType: "daily" | "monthly" | "weekly";
-                            } | undefined;
-                            error: null;
-                        };
-                        outputFormat: "json";
-                        status: 200;
-                    };
-                }>;
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            hp: {
-                schedules: {
-                    ":id": import("hono/client").ClientRequest<{
-                        $delete: {
-                            input: {
-                                param: {
-                                    id: string;
-                                };
-                            };
-                            output: {
-                                success: false;
-                                message: string;
-                                data: null;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 401;
                         } | {
                             input: {
                                 param: {
@@ -3196,20 +3509,6 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 };
                             };
                             output: {
-                                success: false;
-                                message: string;
-                                data: null;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 400;
-                        } | {
-                            input: {
-                                param: {
-                                    id: string;
-                                };
-                            };
-                            output: {
                                 success: true;
                                 message: string;
                                 data: null | undefined;
@@ -3219,627 +3518,6 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             status: 200;
                         };
                     }>;
-                };
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            hp: {
-                schedules: {
-                    ":id": {
-                        disable: import("hono/client").ClientRequest<{
-                            $post: {
-                                input: {
-                                    param: {
-                                        id: string;
-                                    };
-                                };
-                                output: {
-                                    success: false;
-                                    message: string;
-                                    data: null;
-                                    error: null;
-                                };
-                                outputFormat: "json";
-                                status: 401;
-                            } | {
-                                input: {
-                                    param: {
-                                        id: string;
-                                    };
-                                };
-                                output: {
-                                    success: false;
-                                    message: string;
-                                    data: import("hono/utils/types").JSONValue;
-                                    error: null;
-                                };
-                                outputFormat: "json";
-                                status: 500;
-                            } | {
-                                input: {
-                                    param: {
-                                        id: string;
-                                    };
-                                };
-                                output: {
-                                    success: false;
-                                    message: string;
-                                    data: null;
-                                    error: null;
-                                };
-                                outputFormat: "json";
-                                status: 400;
-                            } | {
-                                input: {
-                                    param: {
-                                        id: string;
-                                    };
-                                };
-                                output: {
-                                    success: true;
-                                    message: string;
-                                    data: null | undefined;
-                                    error: null;
-                                };
-                                outputFormat: "json";
-                                status: 200;
-                            };
-                        }>;
-                    };
-                };
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            hp: {
-                schedules: {
-                    doctor: {
-                        ":doctorId": import("hono/client").ClientRequest<{
-                            $get: {
-                                input: {
-                                    param: {
-                                        doctorId: string;
-                                    };
-                                };
-                                output: {
-                                    success: false;
-                                    message: string;
-                                    data: null;
-                                    error: null;
-                                };
-                                outputFormat: "json";
-                                status: 401;
-                            } | {
-                                input: {
-                                    param: {
-                                        doctorId: string;
-                                    };
-                                };
-                                output: {
-                                    success: false;
-                                    message: string;
-                                    data: import("hono/utils/types").JSONValue;
-                                    error: null;
-                                };
-                                outputFormat: "json";
-                                status: 500;
-                            } | {
-                                input: {
-                                    param: {
-                                        doctorId: string;
-                                    };
-                                };
-                                output: {
-                                    success: false;
-                                    message: string;
-                                    data: null;
-                                    error: null;
-                                };
-                                outputFormat: "json";
-                                status: 400;
-                            } | {
-                                input: {
-                                    param: {
-                                        doctorId: string;
-                                    };
-                                };
-                                output: {
-                                    success: true;
-                                    message: string;
-                                    data: {
-                                        id: string;
-                                        doctorId: string;
-                                        scheduleType: "daily" | "monthly" | "weekly";
-                                        daysMask: number | null;
-                                        scheduleStatus: "active" | "cancelled" | "deleted" | "inactive" | null;
-                                        createdAt: string;
-                                        timeSlots: {
-                                            id: string;
-                                            scheduleId: string;
-                                            day: number | null;
-                                            startTime: string;
-                                            endTime: string;
-                                            maxBookings: number;
-                                        }[];
-                                    }[] | undefined;
-                                    error: null;
-                                };
-                                outputFormat: "json";
-                                status: 200;
-                            };
-                        }>;
-                    };
-                };
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            hp: {
-                schedules: {
-                    day: {
-                        ":scheduleDayId": import("hono/client").ClientRequest<{
-                            $delete: {
-                                input: {
-                                    param: {
-                                        scheduleDayId: string;
-                                    };
-                                };
-                                output: {
-                                    success: false;
-                                    message: string;
-                                    data: null;
-                                    error: null;
-                                };
-                                outputFormat: "json";
-                                status: 401;
-                            } | {
-                                input: {
-                                    param: {
-                                        scheduleDayId: string;
-                                    };
-                                };
-                                output: {
-                                    success: false;
-                                    message: string;
-                                    data: import("hono/utils/types").JSONValue;
-                                    error: null;
-                                };
-                                outputFormat: "json";
-                                status: 500;
-                            } | {
-                                input: {
-                                    param: {
-                                        scheduleDayId: string;
-                                    };
-                                };
-                                output: {
-                                    success: false;
-                                    message: string;
-                                    data: null;
-                                    error: null;
-                                };
-                                outputFormat: "json";
-                                status: 400;
-                            } | {
-                                input: {
-                                    param: {
-                                        scheduleDayId: string;
-                                    };
-                                };
-                                output: {
-                                    success: true;
-                                    message: string;
-                                    data: null | undefined;
-                                    error: null;
-                                };
-                                outputFormat: "json";
-                                status: 200;
-                            };
-                        }>;
-                    };
-                };
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            hp: {
-                doctors: {
-                    all: import("hono/client").ClientRequest<{
-                        $get: {
-                            input: {};
-                            output: {
-                                success: true;
-                                message: string;
-                                data: {
-                                    id: string;
-                                    name: string;
-                                    email: string | null;
-                                    contactNumber: string | null;
-                                    gender: string | null;
-                                    department: string | null;
-                                    degrees: string | null;
-                                    experience: number | null;
-                                    specialization: string | null;
-                                    createdAt: string;
-                                    verified: boolean | null;
-                                }[] | undefined;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 200;
-                        };
-                    }>;
-                };
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            hp: {
-                auth: {
-                    login: import("hono/client").ClientRequest<{
-                        $post: {
-                            input: {
-                                json: {
-                                    email: string;
-                                    password: string;
-                                };
-                            };
-                            output: {
-                                success: false;
-                                message: string;
-                                data: null;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 401;
-                        } | {
-                            input: {
-                                json: {
-                                    email: string;
-                                    password: string;
-                                };
-                            };
-                            output: {
-                                success: true;
-                                message: string;
-                                data: {
-                                    token: string;
-                                    hp: {
-                                        id: string;
-                                        email: string;
-                                        name: string;
-                                    };
-                                } | undefined;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 200;
-                        };
-                    }>;
-                };
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            hp: {
-                auth: {
-                    "verify-email": import("hono/client").ClientRequest<{
-                        $post: {
-                            input: {
-                                json: {
-                                    email: string;
-                                };
-                            };
-                            output: {
-                                success: false;
-                                message: string;
-                                data: null;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 400;
-                        } | {
-                            input: {
-                                json: {
-                                    email: string;
-                                };
-                            };
-                            output: {
-                                success: true;
-                                message: string;
-                                data: {
-                                    email: string;
-                                } | undefined;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 200;
-                        };
-                    }>;
-                };
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            hp: {
-                auth: {
-                    register: import("hono/client").ClientRequest<{
-                        $post: {
-                            input: {
-                                json: {
-                                    name: string;
-                                    email: string;
-                                    otp: string;
-                                    password: string;
-                                };
-                            };
-                            output: {
-                                success: false;
-                                message: string;
-                                data: null;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 400;
-                        } | {
-                            input: {
-                                json: {
-                                    name: string;
-                                    email: string;
-                                    otp: string;
-                                    password: string;
-                                };
-                            };
-                            output: {
-                                success: true;
-                                message: string;
-                                data: {
-                                    token: string;
-                                    hp: {
-                                        id: string;
-                                        name: string;
-                                        email: string;
-                                    };
-                                } | undefined;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 200;
-                        };
-                    }>;
-                };
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            hp: {
-                doctors: {
-                    "my-doctors": import("hono/client").ClientRequest<{
-                        $get: {
-                            input: {};
-                            output: {
-                                success: false;
-                                message: string;
-                                data: null;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 401;
-                        } | {
-                            input: {};
-                            output: {
-                                success: true;
-                                message: string;
-                                data: {
-                                    id: string;
-                                    name: string;
-                                    email: string | null;
-                                    contactNumber: string | null;
-                                    gender: string | null;
-                                    department: string | null;
-                                    degrees: string | null;
-                                    experience: number | null;
-                                    specialization: string | null;
-                                    createdAt: string;
-                                    verified: boolean | null;
-                                }[] | undefined;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 200;
-                        };
-                    }>;
-                };
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            hp: {
-                doctors: {
-                    "*": import("hono/client").ClientRequest<{}>;
-                };
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            hp: {
-                schedules: {
-                    "*": import("hono/client").ClientRequest<{}>;
-                };
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            hp: {
-                profile: import("hono/client").ClientRequest<{
-                    $get: {
-                        input: {};
-                        output: {
-                            success: false;
-                            message: string;
-                            data: null;
-                            error: null;
-                        };
-                        outputFormat: "json";
-                        status: 401;
-                    } | {
-                        input: {};
-                        output: {
-                            success: false;
-                            message: string;
-                            data: null;
-                            error: null;
-                        };
-                        outputFormat: "json";
-                        status: 400;
-                    } | {
-                        input: {};
-                        output: {
-                            success: true;
-                            message: string;
-                            data: {
-                                hp: {
-                                    id: string;
-                                    name: string;
-                                    email: string;
-                                    contactNumber: string | null;
-                                    location: string | null;
-                                    pin: string | null;
-                                    state: string | null;
-                                    city: string | null;
-                                    houseNumber: string | null;
-                                    roadName: string | null;
-                                    landmark: string | null;
-                                    profileImage: string | null;
-                                    createdAt: string;
-                                    verified: boolean | null;
-                                };
-                            } | undefined;
-                            error: null;
-                        };
-                        outputFormat: "json";
-                        status: 200;
-                    };
-                    $put: {
-                        input: {
-                            json: {
-                                name?: string | undefined;
-                                contactNumber?: string | undefined;
-                                location?: string | undefined;
-                                pin?: string | undefined;
-                                state?: string | undefined;
-                                city?: string | undefined;
-                                houseNumber?: string | undefined;
-                                roadName?: string | undefined;
-                                landmark?: string | undefined;
-                                profileImage?: string | undefined;
-                            };
-                        };
-                        output: {
-                            success: false;
-                            message: string;
-                            data: null;
-                            error: null;
-                        };
-                        outputFormat: "json";
-                        status: 401;
-                    } | {
-                        input: {
-                            json: {
-                                name?: string | undefined;
-                                contactNumber?: string | undefined;
-                                location?: string | undefined;
-                                pin?: string | undefined;
-                                state?: string | undefined;
-                                city?: string | undefined;
-                                houseNumber?: string | undefined;
-                                roadName?: string | undefined;
-                                landmark?: string | undefined;
-                                profileImage?: string | undefined;
-                            };
-                        };
-                        output: {
-                            success: false;
-                            message: string;
-                            data: null;
-                            error: null;
-                        };
-                        outputFormat: "json";
-                        status: 400;
-                    } | {
-                        input: {
-                            json: {
-                                name?: string | undefined;
-                                contactNumber?: string | undefined;
-                                location?: string | undefined;
-                                pin?: string | undefined;
-                                state?: string | undefined;
-                                city?: string | undefined;
-                                houseNumber?: string | undefined;
-                                roadName?: string | undefined;
-                                landmark?: string | undefined;
-                                profileImage?: string | undefined;
-                            };
-                        };
-                        output: {
-                            success: true;
-                            message: string;
-                            data: {
-                                hp: {
-                                    id: string;
-                                    name: string;
-                                    email: string;
-                                    contactNumber: string | null;
-                                    location: string | null;
-                                    pin: string | null;
-                                    state: string | null;
-                                    city: string | null;
-                                    houseNumber: string | null;
-                                    roadName: string | null;
-                                    landmark: string | null;
-                                    profileImage: string | null;
-                                    createdAt: string;
-                                    verified: boolean | null;
-                                };
-                            } | undefined;
-                            error: null;
-                        };
-                        outputFormat: "json";
-                        status: 200;
-                    };
-                }>;
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            hp: {
-                profile: {
-                    "*": import("hono/client").ClientRequest<{}>;
                 };
             };
         };
@@ -3848,19 +3526,25 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
     api: {
         v1: {
             users: {
-                "send-code": import("hono/client").ClientRequest<{
-                    $post: {
-                        input: {
-                            json: {
-                                phone: string;
-                            };
-                        };
+                doctors: import("hono/client").ClientRequest<{
+                    $get: {
+                        input: {};
                         output: {
                             success: true;
                             message: string;
                             data: {
-                                phone: string;
-                            } | undefined;
+                                id: string;
+                                name: string;
+                                email: string | null;
+                                contactNumber: string | null;
+                                gender: string | null;
+                                department: string | null;
+                                degrees: string | null;
+                                experience: number | null;
+                                specialization: string | null;
+                                createdAt: string;
+                                verified: boolean | null;
+                            }[] | undefined;
                             error: null;
                         };
                         outputFormat: "json";
@@ -3889,7 +3573,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 error: null;
                             };
                             outputFormat: "json";
-                            status: 401;
+                            status: 400;
                         } | {
                             input: {
                                 param: {
@@ -3903,7 +3587,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 error: null;
                             };
                             outputFormat: "json";
-                            status: 400;
+                            status: 401;
                         } | {
                             input: {
                                 param: {
@@ -3920,7 +3604,9 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                         memberId: string;
                                         date: string;
                                         queueNo: number | null;
+                                        sharedCode: string | null;
                                         bookingStatus: "cancelled" | "completed" | "confirmed" | "no_show" | "pending" | null;
+                                        visitStatus: "cancelled" | "completed" | "ongoing" | "scheduled" | null;
                                         paymentId: string | null;
                                         createdAt: string;
                                     };
@@ -3980,7 +3666,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                         doctorId: string;
                                         scheduleType: "daily" | "monthly" | "weekly";
                                         daysMask: number | null;
-                                        scheduleStatus: "active" | "cancelled" | "deleted" | "inactive" | null;
+                                        scheduleStatus: "active" | "applied" | "approved" | "inactive" | "pending" | "rejected" | null;
                                         createdAt: string;
                                     } | null;
                                 } | undefined;
@@ -4001,6 +3687,21 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                 doctors: {
                     availability: import("hono/client").ClientRequest<{
                         $post: {
+                            input: {
+                                json: {
+                                    doctorId: string;
+                                    date: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: null;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 404;
+                        } | {
                             input: {
                                 json: {
                                     doctorId: string;
@@ -4052,56 +3753,9 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             };
                             outputFormat: "json";
                             status: 200;
-                        } | {
-                            input: {
-                                json: {
-                                    doctorId: string;
-                                    date: string;
-                                };
-                            };
-                            output: {
-                                success: false;
-                                message: string;
-                                data: null;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 404;
                         };
                     }>;
                 };
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            users: {
-                doctors: import("hono/client").ClientRequest<{
-                    $get: {
-                        input: {};
-                        output: {
-                            success: true;
-                            message: string;
-                            data: {
-                                id: string;
-                                name: string;
-                                email: string | null;
-                                contactNumber: string | null;
-                                gender: string | null;
-                                department: string | null;
-                                degrees: string | null;
-                                experience: number | null;
-                                specialization: string | null;
-                                createdAt: string;
-                                verified: boolean | null;
-                            }[] | undefined;
-                            error: null;
-                        };
-                        outputFormat: "json";
-                        status: 200;
-                    };
-                }>;
             };
         };
     };
@@ -4168,7 +3822,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             error: null;
                         };
                         outputFormat: "json";
-                        status: 401;
+                        status: 400;
                     } | {
                         input: {
                             json: {
@@ -4186,7 +3840,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             error: null;
                         };
                         outputFormat: "json";
-                        status: 400;
+                        status: 401;
                     } | {
                         input: {
                             json: {
@@ -4302,6 +3956,32 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
     api: {
         v1: {
             users: {
+                "send-code": import("hono/client").ClientRequest<{
+                    $post: {
+                        input: {
+                            json: {
+                                phone: string;
+                            };
+                        };
+                        output: {
+                            success: true;
+                            message: string;
+                            data: {
+                                phone: string;
+                            } | undefined;
+                            error: null;
+                        };
+                        outputFormat: "json";
+                        status: 200;
+                    };
+                }>;
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            users: {
                 "verify-code": import("hono/client").ClientRequest<{
                     $post: {
                         input: {
@@ -4369,7 +4049,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             error: null;
                         };
                         outputFormat: "json";
-                        status: 401;
+                        status: 400;
                     } | {
                         input: {
                             json: {
@@ -4385,7 +4065,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             error: null;
                         };
                         outputFormat: "json";
-                        status: 400;
+                        status: 401;
                     } | {
                         input: {
                             json: {
@@ -4406,6 +4086,8 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 paymentId: string | null;
                                 queueNo: number | null;
                                 scheduleDaysId: string;
+                                sharedCode: string | null;
+                                visitStatus: "cancelled" | "completed" | "ongoing" | "scheduled" | null;
                             } | undefined;
                             error: null;
                         };
@@ -4444,7 +4126,9 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                         memberId: string;
                                         date: string;
                                         queueNo: number | null;
+                                        sharedCode: string | null;
                                         bookingStatus: "cancelled" | "completed" | "confirmed" | "no_show" | "pending" | null;
+                                        visitStatus: "cancelled" | "completed" | "ongoing" | "scheduled" | null;
                                         paymentId: string | null;
                                         createdAt: string;
                                     };
@@ -4504,7 +4188,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                         doctorId: string;
                                         scheduleType: "daily" | "monthly" | "weekly";
                                         daysMask: number | null;
-                                        scheduleStatus: "active" | "cancelled" | "deleted" | "inactive" | null;
+                                        scheduleStatus: "active" | "applied" | "approved" | "inactive" | "pending" | "rejected" | null;
                                         createdAt: string;
                                     } | null;
                                 }[] | undefined;
@@ -4538,7 +4222,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                     error: null;
                                 };
                                 outputFormat: "json";
-                                status: 401;
+                                status: 400;
                             } | {
                                 input: {
                                     param: {
@@ -4552,7 +4236,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                     error: null;
                                 };
                                 outputFormat: "json";
-                                status: 400;
+                                status: 401;
                             } | {
                                 input: {
                                     param: {
@@ -4569,7 +4253,9 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                             memberId: string;
                                             date: string;
                                             queueNo: number | null;
+                                            sharedCode: string | null;
                                             bookingStatus: "cancelled" | "completed" | "confirmed" | "no_show" | "pending" | null;
+                                            visitStatus: "cancelled" | "completed" | "ongoing" | "scheduled" | null;
                                             paymentId: string | null;
                                             createdAt: string;
                                         };
@@ -4617,7 +4303,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                             doctorId: string;
                                             scheduleType: "daily" | "monthly" | "weekly";
                                             daysMask: number | null;
-                                            scheduleStatus: "active" | "cancelled" | "deleted" | "inactive" | null;
+                                            scheduleStatus: "active" | "applied" | "approved" | "inactive" | "pending" | "rejected" | null;
                                             createdAt: string;
                                         } | null;
                                     }[] | undefined;
@@ -4652,7 +4338,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                     error: null;
                                 };
                                 outputFormat: "json";
-                                status: 401;
+                                status: 400;
                             } | {
                                 input: {
                                     param: {
@@ -4666,7 +4352,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                     error: null;
                                 };
                                 outputFormat: "json";
-                                status: 400;
+                                status: 401;
                             } | {
                                 input: {
                                     param: {
@@ -4682,7 +4368,9 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                         memberId: string;
                                         date: string;
                                         queueNo: number | null;
+                                        sharedCode: string | null;
                                         bookingStatus: "cancelled" | "completed" | "confirmed" | "no_show" | "pending" | null;
+                                        visitStatus: "cancelled" | "completed" | "ongoing" | "scheduled" | null;
                                         paymentId: string | null;
                                         createdAt: string;
                                     } | undefined;
@@ -4711,7 +4399,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             error: null;
                         };
                         outputFormat: "json";
-                        status: 401;
+                        status: 400;
                     } | {
                         input: {};
                         output: {
@@ -4721,7 +4409,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             error: null;
                         };
                         outputFormat: "json";
-                        status: 400;
+                        status: 401;
                     } | {
                         input: {};
                         output: {
@@ -4759,7 +4447,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             error: null;
                         };
                         outputFormat: "json";
-                        status: 401;
+                        status: 400;
                     } | {
                         input: {
                             json: {
@@ -4777,7 +4465,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             error: null;
                         };
                         outputFormat: "json";
-                        status: 400;
+                        status: 401;
                     } | {
                         input: {
                             json: {
@@ -4807,6 +4495,1468 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                         status: 200;
                     };
                 }>;
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
+                auth: {
+                    register: import("hono/client").ClientRequest<{
+                        $post: {
+                            input: {
+                                json: {
+                                    name: string;
+                                    email: string;
+                                    otp: string;
+                                    password: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: null;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 400;
+                        } | {
+                            input: {
+                                json: {
+                                    name: string;
+                                    email: string;
+                                    otp: string;
+                                    password: string;
+                                };
+                            };
+                            output: {
+                                success: true;
+                                message: string;
+                                data: {
+                                    token: string;
+                                    hp: {
+                                        id: string;
+                                        name: string;
+                                        email: string;
+                                    };
+                                } | undefined;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 200;
+                        };
+                    }>;
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
+                bookings: {
+                    ":bookingId": import("hono/client").ClientRequest<{
+                        $get: {
+                            input: {
+                                param: {
+                                    bookingId: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: null;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 401;
+                        } | {
+                            input: {
+                                param: {
+                                    bookingId: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: null;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 404;
+                        } | {
+                            input: {
+                                param: {
+                                    bookingId: string;
+                                };
+                            };
+                            output: {
+                                success: true;
+                                message: string;
+                                data: {
+                                    booking: {
+                                        id: string;
+                                        date: string;
+                                        queueNo: number | null;
+                                        sharedCode: string | null;
+                                        bookingStatus: "cancelled" | "completed" | "confirmed" | "no_show" | "pending" | null;
+                                        visitStatus: "cancelled" | "completed" | "ongoing" | "scheduled" | null;
+                                        createdAt: string;
+                                    };
+                                    scheduleDay: {
+                                        id: string;
+                                        day: number | null;
+                                        startTime: string;
+                                        endTime: string;
+                                        maxBookings: number;
+                                    };
+                                    schedule: {
+                                        id: string;
+                                        scheduleType: "daily" | "monthly" | "weekly";
+                                        scheduleStatus: "active" | "applied" | "approved" | "inactive" | "pending" | "rejected" | null;
+                                    };
+                                    doctor: {
+                                        id: string;
+                                        name: string;
+                                        email: string | null;
+                                        contactNumber: string | null;
+                                        specialization: string | null;
+                                        department: string | null;
+                                        gender: string | null;
+                                        degrees: string | null;
+                                        experience: number | null;
+                                    };
+                                    member: {
+                                        id: string;
+                                        name: string | null;
+                                        gender: "female" | "male" | "other" | null;
+                                        relation: string | null;
+                                        dob: string | null;
+                                        phone: string | null;
+                                    };
+                                    user: {
+                                        id: string;
+                                        phone: string;
+                                        email: string | null;
+                                    };
+                                } | undefined;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 200;
+                        } | {
+                            input: {
+                                param: {
+                                    bookingId: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: import("hono/utils/types").JSONValue;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 500;
+                        };
+                    }>;
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
+                bookings: {
+                    "by-doctor": {
+                        ":doctorId": import("hono/client").ClientRequest<{
+                            $get: {
+                                input: {
+                                    query: {
+                                        date?: string | undefined;
+                                    };
+                                } & {
+                                    param: {
+                                        doctorId: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: null;
+                                    error: null;
+                                };
+                                outputFormat: "json";
+                                status: 401;
+                            } | {
+                                input: {
+                                    query: {
+                                        date?: string | undefined;
+                                    };
+                                } & {
+                                    param: {
+                                        doctorId: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: import("hono/utils/types").JSONValue;
+                                    error: null;
+                                };
+                                outputFormat: "json";
+                                status: 500;
+                            } | {
+                                input: {
+                                    query: {
+                                        date?: string | undefined;
+                                    };
+                                } & {
+                                    param: {
+                                        doctorId: string;
+                                    };
+                                };
+                                output: {
+                                    success: true;
+                                    message: string;
+                                    data: {
+                                        bookingId: string;
+                                        date: string;
+                                        queueNo: number | null;
+                                        bookingStatus: "cancelled" | "completed" | "confirmed" | "no_show" | "pending" | null;
+                                        visitStatus: "cancelled" | "completed" | "ongoing" | "scheduled" | null;
+                                        sharedCode: string | null;
+                                        scheduleDayId: string;
+                                        startTime: string;
+                                        endTime: string;
+                                        maxBookings: number;
+                                        scheduleId: string;
+                                        scheduleType: "daily" | "monthly" | "weekly";
+                                        doctorId: string;
+                                        doctorName: string;
+                                        memberId: string | null;
+                                        memberName: string | null;
+                                        memberPhone: string | null;
+                                    }[] | undefined;
+                                    error: null;
+                                };
+                                outputFormat: "json";
+                                status: 200;
+                            };
+                        }>;
+                    };
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
+                doctors: {
+                    all: import("hono/client").ClientRequest<{
+                        $get: {
+                            input: {};
+                            output: {
+                                success: true;
+                                message: string;
+                                data: {
+                                    id: string;
+                                    name: string;
+                                    email: string | null;
+                                    contactNumber: string | null;
+                                    gender: string | null;
+                                    department: string | null;
+                                    degrees: string | null;
+                                    experience: number | null;
+                                    specialization: string | null;
+                                    createdAt: string;
+                                    verified: boolean | null;
+                                }[] | undefined;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 200;
+                        };
+                    }>;
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
+                doctors: {
+                    "my-doctors": import("hono/client").ClientRequest<{
+                        $get: {
+                            input: {};
+                            output: {
+                                success: false;
+                                message: string;
+                                data: null;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 401;
+                        } | {
+                            input: {};
+                            output: {
+                                success: true;
+                                message: string;
+                                data: {
+                                    id: string;
+                                    name: string;
+                                    email: string | null;
+                                    contactNumber: string | null;
+                                    gender: string | null;
+                                    department: string | null;
+                                    degrees: string | null;
+                                    experience: number | null;
+                                    specialization: string | null;
+                                    createdAt: string;
+                                    verified: boolean | null;
+                                }[] | undefined;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 200;
+                        };
+                    }>;
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
+                schedules: {
+                    ":id": {
+                        disable: import("hono/client").ClientRequest<{
+                            $post: {
+                                input: {
+                                    param: {
+                                        id: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: null;
+                                    error: null;
+                                };
+                                outputFormat: "json";
+                                status: 400;
+                            } | {
+                                input: {
+                                    param: {
+                                        id: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: null;
+                                    error: null;
+                                };
+                                outputFormat: "json";
+                                status: 401;
+                            } | {
+                                input: {
+                                    param: {
+                                        id: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: import("hono/utils/types").JSONValue;
+                                    error: null;
+                                };
+                                outputFormat: "json";
+                                status: 500;
+                            } | {
+                                input: {
+                                    param: {
+                                        id: string;
+                                    };
+                                };
+                                output: {
+                                    success: true;
+                                    message: string;
+                                    data: null | undefined;
+                                    error: null;
+                                };
+                                outputFormat: "json";
+                                status: 200;
+                            };
+                        }>;
+                    };
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
+                schedules: {
+                    day: {
+                        ":scheduleDayId": import("hono/client").ClientRequest<{
+                            $delete: {
+                                input: {
+                                    param: {
+                                        scheduleDayId: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: null;
+                                    error: null;
+                                };
+                                outputFormat: "json";
+                                status: 400;
+                            } | {
+                                input: {
+                                    param: {
+                                        scheduleDayId: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: null;
+                                    error: null;
+                                };
+                                outputFormat: "json";
+                                status: 401;
+                            } | {
+                                input: {
+                                    param: {
+                                        scheduleDayId: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: import("hono/utils/types").JSONValue;
+                                    error: null;
+                                };
+                                outputFormat: "json";
+                                status: 500;
+                            } | {
+                                input: {
+                                    param: {
+                                        scheduleDayId: string;
+                                    };
+                                };
+                                output: {
+                                    success: true;
+                                    message: string;
+                                    data: null | undefined;
+                                    error: null;
+                                };
+                                outputFormat: "json";
+                                status: 200;
+                            };
+                        }>;
+                    };
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
+                auth: {
+                    "verify-email": import("hono/client").ClientRequest<{
+                        $post: {
+                            input: {
+                                json: {
+                                    email: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: null;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 400;
+                        } | {
+                            input: {
+                                json: {
+                                    email: string;
+                                };
+                            };
+                            output: {
+                                success: true;
+                                message: string;
+                                data: {
+                                    email: string;
+                                } | undefined;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 200;
+                        };
+                    }>;
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
+                auth: {
+                    login: import("hono/client").ClientRequest<{
+                        $post: {
+                            input: {
+                                json: {
+                                    email: string;
+                                    password: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: null;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 401;
+                        } | {
+                            input: {
+                                json: {
+                                    email: string;
+                                    password: string;
+                                };
+                            };
+                            output: {
+                                success: true;
+                                message: string;
+                                data: {
+                                    token: string;
+                                    hp: {
+                                        id: string;
+                                        email: string;
+                                        name: string;
+                                    };
+                                } | undefined;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 200;
+                        };
+                    }>;
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
+                schedules: import("hono/client").ClientRequest<{
+                    $get: {
+                        input: {};
+                        output: {
+                            success: true;
+                            message: string;
+                            data: null | undefined;
+                            error: null;
+                        };
+                        outputFormat: "json";
+                        status: 200;
+                    };
+                }>;
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
+                schedules: import("hono/client").ClientRequest<{
+                    $post: {
+                        input: {
+                            json: {
+                                doctorId: string;
+                                scheduleType: "daily" | "monthly" | "weekly";
+                                weekDays?: number[] | undefined;
+                                monthDays?: number[] | undefined;
+                                timeSlots: {
+                                    dayOfWeek?: number | undefined;
+                                    dayOfMonth?: number | undefined;
+                                    startTime: string;
+                                    endTime: string;
+                                    maxBookings: number;
+                                }[];
+                                isActive?: boolean | undefined;
+                            };
+                        };
+                        output: {
+                            success: false;
+                            message: string;
+                            data: null;
+                            error: null;
+                        };
+                        outputFormat: "json";
+                        status: 400;
+                    } | {
+                        input: {
+                            json: {
+                                doctorId: string;
+                                scheduleType: "daily" | "monthly" | "weekly";
+                                weekDays?: number[] | undefined;
+                                monthDays?: number[] | undefined;
+                                timeSlots: {
+                                    dayOfWeek?: number | undefined;
+                                    dayOfMonth?: number | undefined;
+                                    startTime: string;
+                                    endTime: string;
+                                    maxBookings: number;
+                                }[];
+                                isActive?: boolean | undefined;
+                            };
+                        };
+                        output: {
+                            success: false;
+                            message: string;
+                            data: null;
+                            error: null;
+                        };
+                        outputFormat: "json";
+                        status: 401;
+                    } | {
+                        input: {
+                            json: {
+                                doctorId: string;
+                                scheduleType: "daily" | "monthly" | "weekly";
+                                weekDays?: number[] | undefined;
+                                monthDays?: number[] | undefined;
+                                timeSlots: {
+                                    dayOfWeek?: number | undefined;
+                                    dayOfMonth?: number | undefined;
+                                    startTime: string;
+                                    endTime: string;
+                                    maxBookings: number;
+                                }[];
+                                isActive?: boolean | undefined;
+                            };
+                        };
+                        output: {
+                            success: false;
+                            message: string;
+                            data: import("hono/utils/types").JSONValue;
+                            error: null;
+                        };
+                        outputFormat: "json";
+                        status: 500;
+                    } | {
+                        input: {
+                            json: {
+                                doctorId: string;
+                                scheduleType: "daily" | "monthly" | "weekly";
+                                weekDays?: number[] | undefined;
+                                monthDays?: number[] | undefined;
+                                timeSlots: {
+                                    dayOfWeek?: number | undefined;
+                                    dayOfMonth?: number | undefined;
+                                    startTime: string;
+                                    endTime: string;
+                                    maxBookings: number;
+                                }[];
+                                isActive?: boolean | undefined;
+                            };
+                        };
+                        output: {
+                            success: true;
+                            message: string;
+                            data: {
+                                createdAt: string;
+                                daysMask: number | null;
+                                doctorId: string;
+                                hpId: string;
+                                id: string;
+                                scheduleStatus: "active" | "applied" | "approved" | "inactive" | "pending" | "rejected" | null;
+                                scheduleType: "daily" | "monthly" | "weekly";
+                            } | undefined;
+                            error: null;
+                        };
+                        outputFormat: "json";
+                        status: 200;
+                    };
+                }>;
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
+                schedules: {
+                    ":id": import("hono/client").ClientRequest<{
+                        $put: {
+                            input: {
+                                json: {
+                                    doctorId: string;
+                                    scheduleType: "daily" | "monthly" | "weekly";
+                                    weekDays?: number[] | undefined;
+                                    monthDays?: number[] | undefined;
+                                    timeSlots: {
+                                        dayOfWeek?: number | undefined;
+                                        dayOfMonth?: number | undefined;
+                                        startTime: string;
+                                        endTime: string;
+                                        maxBookings: number;
+                                    }[];
+                                    isActive?: boolean | undefined;
+                                };
+                            } & {
+                                param: {
+                                    id: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: null;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 400;
+                        } | {
+                            input: {
+                                json: {
+                                    doctorId: string;
+                                    scheduleType: "daily" | "monthly" | "weekly";
+                                    weekDays?: number[] | undefined;
+                                    monthDays?: number[] | undefined;
+                                    timeSlots: {
+                                        dayOfWeek?: number | undefined;
+                                        dayOfMonth?: number | undefined;
+                                        startTime: string;
+                                        endTime: string;
+                                        maxBookings: number;
+                                    }[];
+                                    isActive?: boolean | undefined;
+                                };
+                            } & {
+                                param: {
+                                    id: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: null;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 401;
+                        } | {
+                            input: {
+                                json: {
+                                    doctorId: string;
+                                    scheduleType: "daily" | "monthly" | "weekly";
+                                    weekDays?: number[] | undefined;
+                                    monthDays?: number[] | undefined;
+                                    timeSlots: {
+                                        dayOfWeek?: number | undefined;
+                                        dayOfMonth?: number | undefined;
+                                        startTime: string;
+                                        endTime: string;
+                                        maxBookings: number;
+                                    }[];
+                                    isActive?: boolean | undefined;
+                                };
+                            } & {
+                                param: {
+                                    id: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: import("hono/utils/types").JSONValue;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 500;
+                        } | {
+                            input: {
+                                json: {
+                                    doctorId: string;
+                                    scheduleType: "daily" | "monthly" | "weekly";
+                                    weekDays?: number[] | undefined;
+                                    monthDays?: number[] | undefined;
+                                    timeSlots: {
+                                        dayOfWeek?: number | undefined;
+                                        dayOfMonth?: number | undefined;
+                                        startTime: string;
+                                        endTime: string;
+                                        maxBookings: number;
+                                    }[];
+                                    isActive?: boolean | undefined;
+                                };
+                            } & {
+                                param: {
+                                    id: string;
+                                };
+                            };
+                            output: {
+                                success: true;
+                                message: string;
+                                data: {
+                                    id: string;
+                                    hpId: string;
+                                    doctorId: string;
+                                    scheduleType: "daily" | "monthly" | "weekly";
+                                    daysMask: number | null;
+                                    scheduleStatus: "active" | "applied" | "approved" | "inactive" | "pending" | "rejected" | null;
+                                    createdAt: string;
+                                    timeSlots: {
+                                        id: string;
+                                        scheduleId: string;
+                                        day: number | null;
+                                        startTime: string;
+                                        endTime: string;
+                                        maxBookings: number;
+                                    }[];
+                                } | undefined;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 200;
+                        };
+                    }>;
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
+                schedules: {
+                    ":id": import("hono/client").ClientRequest<{
+                        $delete: {
+                            input: {
+                                param: {
+                                    id: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: null;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 400;
+                        } | {
+                            input: {
+                                param: {
+                                    id: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: null;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 401;
+                        } | {
+                            input: {
+                                param: {
+                                    id: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: import("hono/utils/types").JSONValue;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 500;
+                        } | {
+                            input: {
+                                param: {
+                                    id: string;
+                                };
+                            };
+                            output: {
+                                success: true;
+                                message: string;
+                                data: null | undefined;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 200;
+                        };
+                    }>;
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
+                schedules: {
+                    ":id": {
+                        enable: import("hono/client").ClientRequest<{
+                            $post: {
+                                input: {
+                                    param: {
+                                        id: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: null;
+                                    error: null;
+                                };
+                                outputFormat: "json";
+                                status: 400;
+                            } | {
+                                input: {
+                                    param: {
+                                        id: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: null;
+                                    error: null;
+                                };
+                                outputFormat: "json";
+                                status: 401;
+                            } | {
+                                input: {
+                                    param: {
+                                        id: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: import("hono/utils/types").JSONValue;
+                                    error: null;
+                                };
+                                outputFormat: "json";
+                                status: 500;
+                            } | {
+                                input: {
+                                    param: {
+                                        id: string;
+                                    };
+                                };
+                                output: {
+                                    success: true;
+                                    message: string;
+                                    data: null | undefined;
+                                    error: null;
+                                };
+                                outputFormat: "json";
+                                status: 200;
+                            };
+                        }>;
+                    };
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
+                schedules: {
+                    doctor: {
+                        ":doctorId": import("hono/client").ClientRequest<{
+                            $get: {
+                                input: {
+                                    param: {
+                                        doctorId: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: null;
+                                    error: null;
+                                };
+                                outputFormat: "json";
+                                status: 400;
+                            } | {
+                                input: {
+                                    param: {
+                                        doctorId: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: null;
+                                    error: null;
+                                };
+                                outputFormat: "json";
+                                status: 401;
+                            } | {
+                                input: {
+                                    param: {
+                                        doctorId: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: import("hono/utils/types").JSONValue;
+                                    error: null;
+                                };
+                                outputFormat: "json";
+                                status: 500;
+                            } | {
+                                input: {
+                                    param: {
+                                        doctorId: string;
+                                    };
+                                };
+                                output: {
+                                    success: true;
+                                    message: string;
+                                    data: {
+                                        id: string;
+                                        doctorId: string;
+                                        scheduleType: "daily" | "monthly" | "weekly";
+                                        daysMask: number | null;
+                                        scheduleStatus: "active" | "applied" | "approved" | "inactive" | "pending" | "rejected" | null;
+                                        createdAt: string;
+                                        timeSlots: {
+                                            id: string;
+                                            scheduleId: string;
+                                            day: number | null;
+                                            startTime: string;
+                                            endTime: string;
+                                            maxBookings: number;
+                                        }[];
+                                    }[] | undefined;
+                                    error: null;
+                                };
+                                outputFormat: "json";
+                                status: 200;
+                            };
+                        }>;
+                    };
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
+                bookings: import("hono/client").ClientRequest<{
+                    $post: {
+                        input: {
+                            json: {
+                                doctorId?: string | undefined;
+                                date?: string | undefined;
+                                startDate?: string | undefined;
+                                endDate?: string | undefined;
+                                scheduleStatus?: "applied" | "approved" | "pending" | "rejected" | undefined;
+                                visitStatus?: "cancelled" | "completed" | "ongoing" | "scheduled" | undefined;
+                                bookingStatus?: "cancelled" | "completed" | "confirmed" | "no_show" | "pending" | undefined;
+                            };
+                        };
+                        output: {
+                            success: false;
+                            message: string;
+                            data: null;
+                            error: null;
+                        };
+                        outputFormat: "json";
+                        status: 401;
+                    } | {
+                        input: {
+                            json: {
+                                doctorId?: string | undefined;
+                                date?: string | undefined;
+                                startDate?: string | undefined;
+                                endDate?: string | undefined;
+                                scheduleStatus?: "applied" | "approved" | "pending" | "rejected" | undefined;
+                                visitStatus?: "cancelled" | "completed" | "ongoing" | "scheduled" | undefined;
+                                bookingStatus?: "cancelled" | "completed" | "confirmed" | "no_show" | "pending" | undefined;
+                            };
+                        };
+                        output: {
+                            success: false;
+                            message: string;
+                            data: import("hono/utils/types").JSONValue;
+                            error: null;
+                        };
+                        outputFormat: "json";
+                        status: 500;
+                    } | {
+                        input: {
+                            json: {
+                                doctorId?: string | undefined;
+                                date?: string | undefined;
+                                startDate?: string | undefined;
+                                endDate?: string | undefined;
+                                scheduleStatus?: "applied" | "approved" | "pending" | "rejected" | undefined;
+                                visitStatus?: "cancelled" | "completed" | "ongoing" | "scheduled" | undefined;
+                                bookingStatus?: "cancelled" | "completed" | "confirmed" | "no_show" | "pending" | undefined;
+                            };
+                        };
+                        output: {
+                            success: true;
+                            message: string;
+                            data: {
+                                booking: {
+                                    id: string;
+                                    date: string;
+                                    queueNo: number | null;
+                                    sharedCode: string | null;
+                                    bookingStatus: "cancelled" | "completed" | "confirmed" | "no_show" | "pending" | null;
+                                    visitStatus: "cancelled" | "completed" | "ongoing" | "scheduled" | null;
+                                    createdAt: string;
+                                };
+                                scheduleDay: {
+                                    id: string;
+                                    day: number | null;
+                                    startTime: string;
+                                    endTime: string;
+                                    maxBookings: number;
+                                };
+                                schedule: {
+                                    id: string;
+                                    scheduleType: "daily" | "monthly" | "weekly";
+                                    scheduleStatus: "active" | "applied" | "approved" | "inactive" | "pending" | "rejected" | null;
+                                };
+                                doctor: {
+                                    id: string;
+                                    name: string;
+                                    email: string | null;
+                                    contactNumber: string | null;
+                                    specialization: string | null;
+                                    department: string | null;
+                                    gender: string | null;
+                                };
+                                member: {
+                                    id: string;
+                                    name: string | null;
+                                    gender: "female" | "male" | "other" | null;
+                                    relation: string | null;
+                                    dob: string | null;
+                                    phone: string | null;
+                                };
+                                user: {
+                                    id: string;
+                                    phone: string;
+                                    email: string | null;
+                                };
+                            }[] | undefined;
+                            error: null;
+                        };
+                        outputFormat: "json";
+                        status: 200;
+                    };
+                }>;
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
+                bookings: {
+                    ":bookingId": {
+                        "update-status": import("hono/client").ClientRequest<{
+                            $post: {
+                                input: {
+                                    json: {
+                                        visitStatus: "cancelled" | "completed" | "ongoing" | "scheduled";
+                                    };
+                                } & {
+                                    param: {
+                                        bookingId: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: null;
+                                    error: null;
+                                };
+                                outputFormat: "json";
+                                status: 401;
+                            } | {
+                                input: {
+                                    json: {
+                                        visitStatus: "cancelled" | "completed" | "ongoing" | "scheduled";
+                                    };
+                                } & {
+                                    param: {
+                                        bookingId: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: null;
+                                    error: null;
+                                };
+                                outputFormat: "json";
+                                status: 404;
+                            } | {
+                                input: {
+                                    json: {
+                                        visitStatus: "cancelled" | "completed" | "ongoing" | "scheduled";
+                                    };
+                                } & {
+                                    param: {
+                                        bookingId: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: import("hono/utils/types").JSONValue;
+                                    error: null;
+                                };
+                                outputFormat: "json";
+                                status: 500;
+                            } | {
+                                input: {
+                                    json: {
+                                        visitStatus: "cancelled" | "completed" | "ongoing" | "scheduled";
+                                    };
+                                } & {
+                                    param: {
+                                        bookingId: string;
+                                    };
+                                };
+                                output: {
+                                    success: true;
+                                    message: string;
+                                    data: {
+                                        id: string;
+                                        scheduleDaysId: string;
+                                        memberId: string;
+                                        date: string;
+                                        queueNo: number | null;
+                                        sharedCode: string | null;
+                                        bookingStatus: "cancelled" | "completed" | "confirmed" | "no_show" | "pending" | null;
+                                        visitStatus: "cancelled" | "completed" | "ongoing" | "scheduled" | null;
+                                        paymentId: string | null;
+                                        createdAt: string;
+                                    } | undefined;
+                                    error: null;
+                                };
+                                outputFormat: "json";
+                                status: 200;
+                            };
+                        }>;
+                    };
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
+                bookings: {
+                    "*": import("hono/client").ClientRequest<{}>;
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
+                doctors: {
+                    "*": import("hono/client").ClientRequest<{}>;
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
+                schedules: {
+                    "*": import("hono/client").ClientRequest<{}>;
+                };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
+                profile: import("hono/client").ClientRequest<{
+                    $get: {
+                        input: {};
+                        output: {
+                            success: false;
+                            message: string;
+                            data: null;
+                            error: null;
+                        };
+                        outputFormat: "json";
+                        status: 400;
+                    } | {
+                        input: {};
+                        output: {
+                            success: false;
+                            message: string;
+                            data: null;
+                            error: null;
+                        };
+                        outputFormat: "json";
+                        status: 401;
+                    } | {
+                        input: {};
+                        output: {
+                            success: true;
+                            message: string;
+                            data: {
+                                hp: {
+                                    id: string;
+                                    name: string;
+                                    email: string;
+                                    contactNumber: string | null;
+                                    location: string | null;
+                                    pin: string | null;
+                                    state: string | null;
+                                    city: string | null;
+                                    houseNumber: string | null;
+                                    roadName: string | null;
+                                    landmark: string | null;
+                                    profileImage: string | null;
+                                    createdAt: string;
+                                    verified: boolean | null;
+                                };
+                            } | undefined;
+                            error: null;
+                        };
+                        outputFormat: "json";
+                        status: 200;
+                    };
+                    $put: {
+                        input: {
+                            json: {
+                                name?: string | undefined;
+                                contactNumber?: string | undefined;
+                                location?: string | undefined;
+                                pin?: string | undefined;
+                                state?: string | undefined;
+                                city?: string | undefined;
+                                houseNumber?: string | undefined;
+                                roadName?: string | undefined;
+                                landmark?: string | undefined;
+                                profileImage?: string | undefined;
+                            };
+                        };
+                        output: {
+                            success: false;
+                            message: string;
+                            data: null;
+                            error: null;
+                        };
+                        outputFormat: "json";
+                        status: 400;
+                    } | {
+                        input: {
+                            json: {
+                                name?: string | undefined;
+                                contactNumber?: string | undefined;
+                                location?: string | undefined;
+                                pin?: string | undefined;
+                                state?: string | undefined;
+                                city?: string | undefined;
+                                houseNumber?: string | undefined;
+                                roadName?: string | undefined;
+                                landmark?: string | undefined;
+                                profileImage?: string | undefined;
+                            };
+                        };
+                        output: {
+                            success: false;
+                            message: string;
+                            data: null;
+                            error: null;
+                        };
+                        outputFormat: "json";
+                        status: 401;
+                    } | {
+                        input: {
+                            json: {
+                                name?: string | undefined;
+                                contactNumber?: string | undefined;
+                                location?: string | undefined;
+                                pin?: string | undefined;
+                                state?: string | undefined;
+                                city?: string | undefined;
+                                houseNumber?: string | undefined;
+                                roadName?: string | undefined;
+                                landmark?: string | undefined;
+                                profileImage?: string | undefined;
+                            };
+                        };
+                        output: {
+                            success: true;
+                            message: string;
+                            data: {
+                                hp: {
+                                    id: string;
+                                    name: string;
+                                    email: string;
+                                    contactNumber: string | null;
+                                    location: string | null;
+                                    pin: string | null;
+                                    state: string | null;
+                                    city: string | null;
+                                    houseNumber: string | null;
+                                    roadName: string | null;
+                                    landmark: string | null;
+                                    profileImage: string | null;
+                                    createdAt: string;
+                                    verified: boolean | null;
+                                };
+                            } | undefined;
+                            error: null;
+                        };
+                        outputFormat: "json";
+                        status: 200;
+                    };
+                }>;
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            hp: {
+                profile: {
+                    "*": import("hono/client").ClientRequest<{}>;
+                };
             };
         };
     };

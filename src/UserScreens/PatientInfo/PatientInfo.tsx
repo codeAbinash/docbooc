@@ -39,8 +39,8 @@ const PatientInfo = ({}: {}) => {
 
   const { mutate: addMember, isPending: isAddingMember } = useMutation({
     mutationKey: ['add-family-member'],
-    mutationFn: async () =>
-      await (
+    mutationFn: async () => {
+      return await (
         await api.users.members.$post({
           json: {
             name,
@@ -50,12 +50,17 @@ const PatientInfo = ({}: {}) => {
             phone: mobile,
           },
         })
-      ).json(),
+      ).json()
+    },
     onSuccess: (data) => {
       console.log(data)
       if (!data.success) return ToastAndroid.show('Failed to add family member', ToastAndroid.LONG)
       ToastAndroid.show('Family member added successfully', ToastAndroid.SHORT)
       navigation.goBack()
+    },
+    onError: (error) => {
+      console.error(error)
+      ToastAndroid.show('An error occurred while adding family member', ToastAndroid.LONG)
     },
   })
 
