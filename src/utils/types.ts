@@ -4,6 +4,7 @@ import { StackNavigationProp } from '@react-navigation/stack'
 import { AdminRootStackParamList } from '../../AdminApp'
 import { RootStackParamList } from '../../App'
 import type { HpRootStackParamList } from '../../HPApp'
+import { client } from './client'
 export type { HpRootStackParamList }
 
 export type StackNav = StackNavigationProp<RootStackParamList>
@@ -37,3 +38,10 @@ export type NU = null | undefined
 export type InferApiResponse<T extends (...args: any) => any> = Awaited<
   ReturnType<Awaited<Awaited<ReturnType<T>>['json']>>
 >
+
+const myDoctorAPi = client.api.v1.hp.doctors['my-doctors'].$get
+export type Doctor = NonNullable<InferApiResponse<typeof myDoctorAPi>['data']>[number]
+
+const bookingsApi = client.api.v1.hp.bookings.list.$get
+
+export type BookingPosition = NonNullable<InferApiResponse<typeof bookingsApi>['data']>[number]

@@ -1,24 +1,18 @@
-import { useCallback, useState, useEffect, memo } from 'react'
-import { View, TouchableOpacity } from 'react-native'
-import { ScrollView } from 'react-native-gesture-handler'
-import { useNavigation } from '@react-navigation/native'
+import Chip from '@components/Chip'
+import DoctorSwitcherModal from '@components/DoctorSwitcherModal'
+import { PaddingTop } from '@components/SafePadding'
+import Search from '@components/Search'
+import ArrowLeft01Icon from '@hugeicons/ArrowLeft01Icon'
 import Menu01Icon from '@hugeicons/Menu01Icon'
 import SquareIcon from '@hugeicons/SquareIcon'
-import ArrowLeft01Icon from '@hugeicons/ArrowLeft01Icon'
+import { useNavigation } from '@react-navigation/native'
 import Colors from '@utils/colors'
-import { useColorScheme } from 'nativewind'
 import { Medium, Regular } from '@utils/fonts'
-import { PaddingTop } from '@components/SafePadding'
-import Chip from '@components/Chip'
-import Search from '@components/Search'
-import DoctorSwitcherModal from '@components/DoctorSwitcherModal'
-
-// Types
-interface DoctorInfo {
-  id: string
-  name: string
-  specialty: string
-}
+import type { Doctor } from '@utils/types'
+import { useColorScheme } from 'nativewind'
+import { memo, useCallback, useEffect, useState } from 'react'
+import { TouchableOpacity, View } from 'react-native'
+import { ScrollView } from 'react-native-gesture-handler'
 
 interface ChipItem {
   id: number
@@ -41,18 +35,12 @@ interface HybridHeadProps {
   showMenu?: boolean
   onMenuPress?: () => void
   showDoctorInfo?: boolean
-  doctorInfo?: DoctorInfo
-  onDoctorSelect?: (doctor: DoctorInfo) => void
+  doctorInfo?: Doctor
+  onDoctorSelect?: (doctor: Doctor) => void
   showBackButton?: boolean
   onBackPress?: () => void
   rightElement?: React.ReactNode
-}
-
-// Constants
-const DEFAULT_DOCTOR: DoctorInfo = {
-  id: '1',
-  name: 'Dr. Abinash Karmakar',
-  specialty: 'Cardiologist',
+  doctors?: Doctor[]
 }
 
 const ICON_SIZE = {
@@ -81,6 +69,7 @@ function HybridHead({
   showBackButton = false,
   onBackPress,
   rightElement,
+  doctors = [],
 }: HybridHeadProps) {
   const { colorScheme } = useColorScheme()
   const navigation = useNavigation()
@@ -89,7 +78,6 @@ function HybridHead({
   const [searchQuery, setSearchQuery] = useState('')
   const [isSearchOpen, setIsSearchOpen] = useState(searchOpen && !rightElement)
   const [showDoctorModal, setShowDoctorModal] = useState(false)
-  const [currentDoctor, setCurrentDoctor] = useState<DoctorInfo>(doctorInfo || DEFAULT_DOCTOR)
 
   const isDark = colorScheme === 'dark'
   const iconColor = isDark ? Colors.text.dark : Colors.text.DEFAULT
@@ -138,8 +126,7 @@ function HybridHead({
   }, [onBackPress, navigation])
 
   const handleDoctorSelect = useCallback(
-    (doctor: DoctorInfo) => {
-      setCurrentDoctor(doctor)
+    (doctor: Doctor) => {
       onDoctorSelect?.(doctor)
     },
     [onDoctorSelect],
@@ -168,13 +155,12 @@ function HybridHead({
   )
 
   return (
-    
-    <View className="bg-white pt-3 dark:bg-neutral-800">
+    <View className='bg-white pt-3 dark:bg-neutral-800'>
       <PaddingTop />
 
       {/* Search Mode */}
       {isSearchOpen ? (
-        <View className="px-5 ">
+        <View className='px-5'>
           <Search
             placeholder={searchPlaceholder}
             value={searchQuery}
@@ -185,20 +171,17 @@ function HybridHead({
         </View>
       ) : (
         /* Header Content */
-        <View className="flex-row  items-center justify-between px-5 dark:border-neutral-700">
+        <View className='flex-row items-center justify-between px-5 dark:border-neutral-700'>
           {/* Left Section - Back & Menu */}
-          <View className="flex-row items-center gap-2">
+          <View className='flex-row items-center gap-2'>
             {showBackButton && (
-              <TouchableOpacity onPress={handleBackPress} className="dark:bg-neutral-800">
+              <TouchableOpacity onPress={handleBackPress} className='dark:bg-neutral-800'>
                 <ArrowLeft01Icon size={ICON_SIZE.BACK} color={iconColor} strokeWidth={2} />
               </TouchableOpacity>
             )}
 
             {showMenu && (
-              <TouchableOpacity
-                onPress={handleMenuPress}
-                className="rounded-lg  p-1 dark:bg-neutral-800"
-              >
+              <TouchableOpacity onPress={handleMenuPress} className='rounded-lg p-1 dark:bg-neutral-800'>
                 <Menu01Icon size={ICON_SIZE.MENU} color={iconColor} strokeWidth={2} />
               </TouchableOpacity>
             )}
@@ -206,27 +189,24 @@ function HybridHead({
 
           {/* Center/Right Section - Doctor Info or Title */}
           {showDoctorInfo ? (
-            <View className="flex-1 flex-row items-center">
-              <View className="flex-1 flex-row items-center justify-center">
-                <Medium className="text-xl text-black dark:text-white">{currentDoctor.name} </Medium>
-                <Regular className="text-2xl text-black dark:text-white">|</Regular>
-                <Medium className="bg-neutral-100 p-1 text-xs text-neutral-500">
-                  {currentDoctor.specialty}
+            <View className='flex-1 flex-row items-center'>
+              <View className='flex-1 flex-row items-center justify-center'>
+                <Medium className='text-xl text-black dark:text-white'>{doctorInfo?.name ?? 'Select doctor'}</Medium>
+                <Regular className='text-2xl text-black dark:text-white'>|</Regular>
+                <Medium className='bg-neutral-100 p-1 text-xs text-neutral-500'>
+                  {doctorInfo?.specialization ?? doctorInfo?.department ?? 'N/A'}
                 </Medium>
               </View>
-              <TouchableOpacity
-                onPress={handleOpenDoctorModal}
-                className="rounded-xl p-1 dark:bg-neutral-800"
-              >
+              <TouchableOpacity onPress={handleOpenDoctorModal} className='rounded-xl p-1 dark:bg-neutral-800'>
                 <SquareIcon size={ICON_SIZE.SQUARE} color={Colors.accent} />
               </TouchableOpacity>
             </View>
           ) : (
             <>
-              <View className="flex-1 items-start justify-center py-1 pl-2">
-                {typeof title === 'string' ? <Medium className="text-2xl">{title}</Medium> : title}
+              <View className='flex-1 items-start justify-center py-1 pl-2'>
+                {typeof title === 'string' ? <Medium className='text-2xl'>{title}</Medium> : title}
               </View>
-              <View className="flex-row items-center gap-2">
+              <View className='flex-row items-center gap-2'>
                 {showSearch && !rightElement && (
                   <Search
                     placeholder={searchPlaceholder}
@@ -245,11 +225,11 @@ function HybridHead({
 
       {/* Chip Items */}
       {chipItems && (
-        <View className="bg-white py-3 dark:bg-neutral-800">
+        <View className='bg-white py-3 dark:bg-neutral-800'>
           <ScrollView
             ref={chipScrollRef}
             horizontal
-            contentContainerClassName="px-5"
+            contentContainerClassName='px-5'
             showsHorizontalScrollIndicator={false}
           >
             {chipItems.map(renderChipItem)}
@@ -265,8 +245,9 @@ function HybridHead({
         <DoctorSwitcherModal
           visible={showDoctorModal}
           onClose={handleCloseDoctorModal}
-          currentDoctorId={currentDoctor.id}
+          currentDoctorId={doctorInfo?.id}
           onSelectDoctor={handleDoctorSelect}
+          doctors={doctors}
         />
       )}
     </View>
