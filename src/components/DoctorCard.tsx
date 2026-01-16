@@ -34,7 +34,7 @@ export function DoctorCard({
     <TouchableOpacity
       activeOpacity={0.7}
       onPress={onPress}
-      className={` overflow-hidden rounded-3xl border  bg-white dark:bg-neutral-800 ${selected ? 'border-blue-600' : 'border-neutral-200 dark:border-neutral-700'}`}
+      className={` overflow-hidden rounded-xl border  bg-white dark:bg-neutral-800 ${selected ? 'border-blue-600' : 'border-neutral-200 dark:border-neutral-700'}`}
       {...rest}
     >
       <DoctorCardInternal
@@ -91,13 +91,13 @@ function DoctorCardInternal({
           resizeMode='cover'
         />
         <View className='flex-1'>
-          <SemiBold className='text-base text-neutral-900 dark:text-white'>{doctor.name}</SemiBold>
+          <SemiBold className='text-base  text-neutral-900 dark:text-white'>{doctor.name}</SemiBold>
           <Medium className='text-sm text-neutral-600 dark:text-neutral-400'>{doctor.department}</Medium>
         </View>
         {showBookButton ? (
           <TouchableOpacity
             onPress={onAdd}
-            className='flex-row items-center gap-2 rounded-xl bg-accent px-5 py-5'
+            className='flex-row items-center gap-2 rounded-xl  bg-accent px-5 py-5'
             activeOpacity={0.7}
           >
             <PlusSignIcon color='white' size={20} strokeWidth={2} />

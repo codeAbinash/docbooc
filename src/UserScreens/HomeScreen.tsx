@@ -114,11 +114,14 @@ function Header({ navigation }: NavProp) {
 
   return (
     <View className='bg-gradient-to-b from-blue-900 to-blue-700 pb-8 pt-6'>
-      <View className='absolute bottom-0 left-0 right-0 top-0 opacity-40'>
-        <Lottie source={Animations.motorcycle} loop style={{ width: '100%', height: 350 }} />
-      </View>
+      {/* <View className='absolute bottom-0 left-0 right-0 top-0 opacity-80'>
+        <Lottie source={Animations.homedoctor} loop style={{ width: '100%', height: 245 }}  />
+      </View> */}
       <View className='relative z-10'>
         <PaddingTop />
+        <View className='absolute bottom-0 left-60 right-0 top-0 opacity-80'>
+        <Lottie source={Animations.homedoctor} loop style={{ width: '100%', height: 300 }}  />
+      </View>
         <View className='flex-1 flex-row px-6 dark:border-card-dark/20'>
           <View className='flex-1 justify-between pt-5'>
             <Medium className='text text-4xl'>DocBooc</Medium>

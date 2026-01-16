@@ -8,12 +8,14 @@ import { PaddingBottom } from '@components/SafePadding'
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import { useQuery } from '@tanstack/react-query'
 import { api } from '@utils/client'
-import { Medium } from '@utils/fonts'
+import { Medium, SemiBold, Regular } from '@utils/fonts'
 import { StackNav } from '@utils/types'
 import { useEffect, useState } from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import { RootStackParamList } from '../../../App'
+import { Lottie } from '@/components/Lottie'
+import Animations from '@/assets/animations/animations'
 
 const formatTo12Hour = (time: string): string => {
   const [hours, minutes] = time.split(':').map(Number)
@@ -65,16 +67,27 @@ const BookAppointment = () => {
 
   return (
     <View className='flex-1 bg-white'>
-      <HybridHead title='Date and Location' showBackButton onBackPress={navigation.goBack}></HybridHead>
+      <HybridHead
+        title={
+          <View className='flex-row items-center justify-center'>
+            <Medium className='text-2xl text-black'>{doctor.name}</Medium>
+            <Regular className='text-2xl text-black'> |</Regular>
+            <Medium className='bg-neutral-100 p-1 text-sm text-neutral-500'>{doctor.department}</Medium>
+          </View>
+        }
+        showBackButton
+        onBackPress={navigation.goBack}
+      ></HybridHead>
       <View className='w-full'>
         <DateCardContainer onDateChange={setSelectedDate} />
       </View>
 
-      <ScrollView className='flex-1 px-5' showsVerticalScrollIndicator={false} contentContainerClassName=''>
+      <ScrollView className='flex-1 px-6' showsVerticalScrollIndicator={false} contentContainerClassName=''>
         {isLoading ? (
-          <View className='items-center justify-center py-10'>
-            <ActivityIndicator size='large' color='#3b82f6' />
-            <Medium className='text-neutral-600 '>Loading available locations...</Medium>
+          <View className='flex-1 items-center justify-center py-10'>
+            <Lottie source={Animations.loading} size={150} />
+
+            {/* <Medium className='text-neutral-600'>Loading available locations...</Medium> */}
           </View>
         ) : locations.length > 0 ? (
           <View className='gap-5 py-5'>
@@ -103,15 +116,13 @@ const BookAppointment = () => {
             })}
           </View>
         ) : selectedDate ? (
-          <View className='items-center justify-center rounded-2xl bg-white p-10 '>
-            <Medium className='text-center text-neutral-600 '>
-              No available locations for selected date
-            </Medium>
+          <View className='items-center justify-center rounded-2xl bg-white p-10'>
+            <Medium className='text-center text-neutral-600'>No available locations for selected date</Medium>
           </View>
         ) : null}
       </ScrollView>
 
-      <View className='bg-white px-5 py-3 '>
+      <View className='bg-white px-6 pb-3'>
         <Button title='Proceed' disabled={!selectedLocation} onPress={handleNext} />
       </View>
       <PaddingBottom />

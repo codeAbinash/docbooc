@@ -331,7 +331,13 @@ export const doctors = [
   },
 ]
 
-
 export const TERMS_OF_SERVICE_URL = 'https://example.com/terms-of-service'
 
-export const DEFAULT_PP_IMAGE = 'https://st4.depositphotos.com/7877830/25337/v/450/depositphotos_253374286-stock-illustration-vector-illustration-male-doctor-avatar.jpg'
+export const DEFAULT_PP_IMAGE =
+  'https://st4.depositphotos.com/7877830/25337/v/450/depositphotos_253374286-stock-illustration-vector-illustration-male-doctor-avatar.jpg'
+
+export const DEFAULT_LP_IMAGE =
+  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSO95DVdeLspVFknn3wF3oHHkokjPyFYiw6DA&s'
+
+
+  

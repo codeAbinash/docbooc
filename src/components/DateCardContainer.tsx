@@ -81,7 +81,7 @@ export function DateCardContainer({ onDateChange }: DateCardContainerProps) {
       const isActive = currentIndex === index
 
       return (
-        <View style={{ width: containerWidth }} className='flex-row items-center justify-center gap-4 px-2'>
+        <View style={{ width: containerWidth }} className='flex-row items-start pl-1 gap-4  '>
           <Calendar01Icon size={25} strokeWidth={1.5} />
           <View className='flex-row items-center justify-center gap-1'>
             <Medium
@@ -125,9 +125,9 @@ export function DateCardContainer({ onDateChange }: DateCardContainerProps) {
   }
 
   return (
-    <View className='border-b border-neutral-300 px-6 pb-4 pt-4 dark:border-neutral-600'>
+    <View className='border-b border-neutral-300   px-6 py-4 dark:border-neutral-600'>
       {/* Date Carousel and Quick Select Buttons in One Row */}
-      <View className='flex-row items-center gap-2'>
+      <View className='flex-row  items-center gap-2'>
         {/* <TouchableOpacity className='rounded-lg pl-1'>
           <Calendar01Icon size={25} strokeWidth={2} />
         </TouchableOpacity> */}
@@ -158,22 +158,22 @@ export function DateCardContainer({ onDateChange }: DateCardContainerProps) {
         </View>
 
         {/* Quick Select Buttons */}
-        <View className='flex-row gap-2'>
+        <View className=' flex-row gap-2'>
           <TouchableOpacity
             onPress={() => scrollToIndex(0 - currentIndex)}
-            className='rounded-lg border border-neutral-300 px-2 py-2 dark:border-neutral-600'
+            className='rounded-lg border border-neutral-300 px-3 py-2 dark:border-neutral-600'
           >
             <Medium className='text-xs text-neutral-700 dark:text-neutral-300'>Today</Medium>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => scrollToIndex(1 - currentIndex)}
-            className='rounded-lg border border-neutral-300 px-2 py-2 dark:border-neutral-600'
+            className='rounded-lg border border-neutral-300 px-3 py-2 dark:border-neutral-600'
           >
             <Medium className='text-xs text-neutral-700 dark:text-neutral-300'>Tomorrow</Medium>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => scrollToIndex(2 - currentIndex)}
-            className='rounded-lg border border-neutral-300 px-2 py-2 dark:border-neutral-600'
+            className='rounded-lg border border-neutral-300 px-3 py-2 dark:border-neutral-600'
           >
             <Medium className='text-xs text-neutral-700 dark:text-neutral-300'>Day After</Medium>
           </TouchableOpacity>
