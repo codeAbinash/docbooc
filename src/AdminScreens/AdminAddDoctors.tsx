@@ -78,11 +78,11 @@ const AdminAddDoctors = () => {
         showMenu={true}
         rightElement={
           <TouchableOpacity onPress={() => navigation.navigate('AdminAddDoctor')} className='rounded-lg bg-accent p-2'>
-            <PlusSignIcon size={26} color={Colors.text.dark} strokeWidth={2} />
+            <PlusSignIcon size={24} color={Colors.text.dark} strokeWidth={2} />
           </TouchableOpacity>
         }
       />
-      <View className='flex-1 bg-neutral-100 dark:bg-neutral-900'>
+      <View className='flex-1 bg-white dark:bg-neutral-900'>
         {isLoading ? (
           <View className='flex-1 items-center justify-center'>
             <ActivityIndicator size='large' color={Colors.accent} />

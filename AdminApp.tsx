@@ -1,4 +1,5 @@
 import AdminAddDoctor from '@/AdminScreens/AdminAddDoctor'
+import BookingOTPVerification from '@/AdminScreens/BookingOTPVerification'
 import AdminLogin from '@/AdminScreens/AdminAuthentications/Login/AdminLogin'
 import AdminOTP from '@/AdminScreens/AdminAuthentications/OTP/AdminOTP'
 import AdminSignup from '@/AdminScreens/AdminAuthentications/Signup/AdminSignup'
@@ -52,6 +53,7 @@ export default function AdminApp() {
           <RootStack.Screen name='AdminOTP' component={AdminOTP} />
 
           <RootStack.Screen name='AdminAddDoctor' component={AdminAddDoctor} />
+          <RootStack.Screen name='BookingOTPVerification' component={BookingOTPVerification} />
         </RootStack.Navigator>
       </NavigationContainer>
     </QueryClientProvider>
@@ -86,4 +88,5 @@ export type AdminRootStackParamList = {
           verified: boolean | null
         }
       }
+  BookingOTPVerification: undefined
 }

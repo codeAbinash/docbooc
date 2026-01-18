@@ -14,5 +14,5 @@ TextInput.defaultProps = TextInput.defaultProps || {}
 TextInput.defaultProps.allowFontScaling = true
 
 // AppRegistry.registerComponent(appName, () => HPApp)
-AppRegistry.registerComponent(appName, () => App)
-// AppRegistry.registerComponent(appName, () => AdminApp)
+// AppRegistry.registerComponent(appName, () => App)
+AppRegistry.registerComponent(appName, () => AdminApp)
