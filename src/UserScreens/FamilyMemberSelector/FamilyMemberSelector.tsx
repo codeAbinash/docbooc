@@ -3,15 +3,18 @@ import { PaddingBottom } from '@components/SafePadding'
 
 import FamilyMemberCard, { Member } from '@/UserScreens/FamilyMemberSelector/FamilyMemberCard'
 import { BookingAppointmentData, useBookingStore } from '@/zustand/bookingStore'
+import popupStore from '@/zustand/popupStore'
 import Button from '@components/Button'
 import HybridHead from '@components/HybridHead'
 import PlusSignIcon from '@hugeicons/PlusSignIcon'
+import ArrowLeftIcon from '@hugeicons/ArrowLeft01Icon'
 import { useQuery } from '@tanstack/react-query'
+import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import { api } from '@utils/client'
 import { Medium, SemiBold } from '@utils/fonts'
 import { NavProp } from '@utils/types'
-import React from 'react'
-import { ActivityIndicator, ScrollView, View } from 'react-native'
+import React, { useCallback } from 'react'
+import { ActivityIndicator, ScrollView, View, BackHandler } from 'react-native'
 
 const calcAge = (dob?: string | null) => {
   if (!dob) return undefined
@@ -54,6 +57,7 @@ const mapMemberToPatientData = (member: Member): BookingAppointmentData['patient
 const FamilyMemberSelectorScreen = ({ navigation }: NavProp) => {
   const [selectedMemberId, setSelectedMemberId] = React.useState<string | null>(null)
   const { setSelectedMemberId: setBookingMemberId, setPatientData } = useBookingStore()
+  const alert = popupStore((state) => state.alert)
   const { data: membersResponse, isPending: isMembersPending } = useQuery({
     queryKey: ['members'],
     queryFn: async () => await (await api.users.members.$get()).json(),
@@ -71,6 +75,48 @@ const FamilyMemberSelectorScreen = ({ navigation }: NavProp) => {
     navigation.navigate('PatientInfo' as any, { fromSetupProfile: true })
   }
 
+  const handleBackPress = () => {
+    alert('Going back', 'select appointment date and location again?', [
+      {
+        text: 'Cancel the Appointment',
+        onPress: () => {
+          alert('Cancel', 'Do you want to cancel this appointment?', [
+            {
+              text: 'Yes',
+              onPress: () => navigation.navigate('Home' as any),
+            },
+            {
+              text: 'No',
+              onPress: () => {},
+            },
+          ])
+        },
+      },
+
+      {
+        text: 'No',
+        onPress: () => {},
+      },
+      {
+        text: 'Yes',
+        onPress: () => navigation.goBack(),
+      },
+    ])
+  }
+
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        handleBackPress()
+        return true
+      }
+
+      const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress)
+
+      return () => subscription.remove()
+    }, [navigation]),
+  )
+
   const familyMembers = membersResponse?.data || []
   if (isMembersPending) {
     return (
@@ -82,7 +128,7 @@ const FamilyMemberSelectorScreen = ({ navigation }: NavProp) => {
 
   return (
     <View className='flex-1 bg-white'>
-      <HybridHead title='Select Patient' showBackButton={true} onBackPress={() => navigation.goBack()} />
+      <HybridHead title='Select Patient' showBackButton={true} onBackPress={handleBackPress} />
 
       <View className='flex-1'>
         <ScrollView className='flex-1' contentContainerClassName='px-5 py-4' showsVerticalScrollIndicator={false}>

@@ -5,7 +5,7 @@ const Animations = {
   lock: require('./lottie/lock.lottie'),
   motorcycle: require('./lottie/motorcycle.lottie'),
   loading: require('./lottie/loading.lottie'),
-  homedoctor: require('./lottie/fsar.lottie'),
+  homedoctor: require('./lottie/bg3.lottie'),
 }
 
 export default Animations

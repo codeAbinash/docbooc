@@ -1,6 +1,6 @@
 import popupStore from '@/zustand/popupStore'
 import { H } from '@utils/dimensions'
-import { Medium, SemiBold } from '@utils/fonts'
+import { Medium, SemiBold, Regular } from '@utils/fonts'
 import React from 'react'
 import { Modal, ScrollView, TouchableOpacity, View } from 'react-native'
 
@@ -31,26 +31,49 @@ const Popup = React.memo<PopupT>(({ text, title, buttons, index, noClose }) => {
         }}
       >
         <View className='flex-1 items-center justify-center bg-black/40 dark:bg-black/50'>
-          <View className='w-[85%] rounded-xl bg-white dark:bg-zinc-900'>
-            <View className='px-6 pt-5'>
+          <View className='w-[85%] overflow-hidden rounded-2xl border border-neutral-200 bg-white dark:border-neutral-700 dark:bg-neutral-800'>
+            <View className='px-5 pb-4 pt-5'>
               <SemiBold className='text-base text-black dark:text-white'>{title}</SemiBold>
-              <ScrollView style={{ maxHeight: H * 0.65, marginTop: 10 }}>
-                <Medium className='text-sm text-black dark:text-white' style={{ fontSize: 12 }}>
-                  {text}
-                </Medium>
+              <ScrollView style={{ maxHeight: H * 0.45, marginTop: 10 }} showsVerticalScrollIndicator={false}>
+                <Regular className='text-sm text-gray-600 dark:text-gray-400'>{text}</Regular>
               </ScrollView>
             </View>
-            <View className='mt-5 flex-row flex-wrap items-center justify-end px-4 pb-5'>
-              {buttons?.map((button, i) => (
-                <PopupButton
-                  key={i}
-                  text={button.text}
-                  onPress={() => {
-                    button.onPress?.()
-                    removePopup(index)
-                  }}
-                />
-              ))}
+
+            <View className='flex-row items-center justify-between gap-2 border-t border-neutral-200 px-4 py-4 dark:border-neutral-700'>
+              {buttons && buttons.length > 0 && buttons[0] && (
+                <>
+                  <TouchableOpacity
+                    activeOpacity={0.7}
+                    onPress={() => {
+                      buttons[0]?.onPress?.()
+                      removePopup(index)
+                    }}
+                    className='rounded-lg bg-red-50 px-5 py-3 dark:bg-red-950/30'
+                  >
+                    <Medium className='text-sm text-red-600 dark:text-red-500'>{buttons[0].text}</Medium>
+                  </TouchableOpacity>
+                  <View className='flex-1' />
+                  <View className='flex-row gap-2'>
+                    {buttons.slice(1).map((button, i) => (
+                      <TouchableOpacity
+                        key={i}
+                        activeOpacity={0.7}
+                        onPress={() => {
+                          button.onPress?.()
+                          removePopup(index)
+                        }}
+                        className={`rounded-lg px-5 py-3 ${
+                          i === 0 ? 'bg-gray-100 dark:bg-gray-700' : 'bg-blue-600 dark:bg-blue-700'
+                        }`}
+                      >
+                        <Medium className={`text-sm ${i === 0 ? 'text-gray-700 dark:text-gray-300' : 'text-white'}`}>
+                          {button.text}
+                        </Medium>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                </>
+              )}
             </View>
           </View>
         </View>
@@ -60,20 +83,6 @@ const Popup = React.memo<PopupT>(({ text, title, buttons, index, noClose }) => {
 })
 
 export default Popup
-
-const PopupButton = React.memo<{ text: string; onPress?: () => void }>(({ text, onPress }) => {
-  return (
-    <TouchableOpacity
-      className='min-w-20 items-center justify-center rounded-lg px-3 py-3 active:bg-black/5 dark:active:bg-white/10'
-      onPress={onPress}
-      activeOpacity={1}
-    >
-      <SemiBold className='text-black dark:text-white' style={{ fontSize: 12 }}>
-        {text}
-      </SemiBold>
-    </TouchableOpacity>
-  )
-})
 
 export const Popups = React.memo((props) => {
   const popups = popupStore((store) => store.popups)

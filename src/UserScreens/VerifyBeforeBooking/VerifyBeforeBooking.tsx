@@ -1,12 +1,14 @@
 import { useBookingStore } from '@/zustand/bookingStore'
+import popupStore from '@/zustand/popupStore'
 import Button from '@components/Button'
 import HybridHead from '@components/HybridHead'
 import { PaddingBottom } from '@components/SafePadding'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import { useMutation } from '@tanstack/react-query'
 import { api } from '@utils/client'
 import { StackNav } from '@utils/types'
-import { ScrollView, ToastAndroid, View } from 'react-native'
+import { ScrollView, ToastAndroid, View, BackHandler } from 'react-native'
+import { useCallback } from 'react'
 import { AppointmentDetailsCard } from './AppointmentDetailsCard'
 import { ImportantNotesCard } from './ImportantNotesCard'
 import { PaymentSummaryCard } from './PaymentSummaryCard'
@@ -15,6 +17,7 @@ import { formatTimeSlot } from './utils'
 const VerifyBeforeBooking = () => {
   const navigation = useNavigation<StackNav>()
   const { appointment } = useBookingStore()
+  const alert = popupStore((state) => state.alert)
 
   const timeSlot = appointment.location?.timeSlots?.[0]
   const appointmentTime = formatTimeSlot(timeSlot?.startTime)
@@ -44,9 +47,51 @@ const VerifyBeforeBooking = () => {
     },
   })
 
+  const handleBackPress = () => {
+    alert('Going back', 'Do you want to select the patient again', [
+      {
+        text: 'Cancel the Appointment',
+        onPress: () => {
+          alert('Cancel', 'Do you want to cancel this appointment?', [
+            {
+              text: 'Yes',
+              onPress: () => navigation.navigate('Home' as any),
+            },
+            {
+              text: 'No',
+              onPress: () => {},
+            },
+          ])
+        },
+      },
+
+      {
+        text: 'No',
+        onPress: () => {},
+      },
+      {
+        text: 'Yes',
+        onPress: () => navigation.goBack(),
+      },
+    ])
+  }
+
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        handleBackPress()
+        return true
+      }
+
+      const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress)
+
+      return () => subscription.remove()
+    }, [navigation]),
+  )
+
   return (
     <View className='bg flex-1'>
-      <HybridHead title='Review Appointment' showBackButton={true} onBackPress={() => navigation.goBack()} />
+      <HybridHead title='Review Appointment' showBackButton={true} onBackPress={handleBackPress} />
 
       <ScrollView className='flex-1 bg-white' contentContainerClassName='pb-6' showsVerticalScrollIndicator={false}>
         <View className='gap-4 px-5 pt-4'>
