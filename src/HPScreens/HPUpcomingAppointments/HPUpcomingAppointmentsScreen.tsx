@@ -1,16 +1,16 @@
+import HybridHead from '@components/HybridHead'
+import KeyboardAvoid from '@components/KeyboardAvoid'
 import { PaddingBottom } from '@components/SafePadding'
 import Calendar03Icon from '@hugeicons/Calendar03Icon'
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker'
-import Colors from '@utils/colors'
-import { SemiBold } from '@utils/fonts'
 import { useQuery } from '@tanstack/react-query'
 import { client } from '@utils/client'
+import Colors from '@utils/colors'
+import { SemiBold } from '@utils/fonts'
 import type { Doctor, Patient } from '@utils/types'
-import { memo, useCallback, useMemo, useState, useEffect } from 'react'
-import { FlatList, Platform, TouchableOpacity, View, ActivityIndicator } from 'react-native'
+import { memo, useCallback, useEffect, useMemo, useState } from 'react'
+import { ActivityIndicator, FlatList, Platform, TouchableOpacity, View } from 'react-native'
 import PatientCard from '../components/PatientCard'
-import HybridHead from '@components/HybridHead'
-import KeyboardAvoid from '@components/KeyboardAvoid'
 
 type SearchAndDateBarProps = {
   selectedDate: Date
@@ -18,7 +18,6 @@ type SearchAndDateBarProps = {
   onToggleDatePicker: () => void
   onDateChange: (event: DateTimePickerEvent, date?: Date) => void
 }
-
 
 const formatDate = (date: Date) => {
   const today = new Date()
@@ -136,13 +135,10 @@ const HPUpcomingAppointmentsScreen = memo(function HPUpcomingAppointmentsScreenC
     }
   }, [])
 
-  const renderPatientCard = useCallback(
-    ({ item }: { item: Patient }) => {
-      const transformedPatient = transformAppointmentToPatientCard(item)
-      return <PatientCard patient={transformedPatient} isExpanded={false} onToggle={() => {}} hideActions />
-    },
-    [],
-  )
+  const renderPatientCard = useCallback(({ item }: { item: Patient }) => {
+    const transformedPatient = transformAppointmentToPatientCard(item)
+    return <PatientCard patient={transformedPatient} isExpanded={false} onToggle={() => {}} hideActions />
+  }, [])
 
   const keyExtractor = useCallback((item: Patient) => item.id, [])
 
@@ -164,7 +160,13 @@ const HPUpcomingAppointmentsScreen = memo(function HPUpcomingAppointmentsScreenC
   return (
     <KeyboardAvoid>
       <View className='flex-1 bg-white dark:bg-neutral-900'>
-        <HybridHead showMenu={true} showDoctorInfo={true} doctors={myDoctors || []} doctorInfo={selectedDoctor} onDoctorSelect={setSelectedDoctor} />
+        <HybridHead
+          showMenu={true}
+          showDoctorInfo={true}
+          doctors={myDoctors || []}
+          doctorInfo={selectedDoctor}
+          onDoctorSelect={setSelectedDoctor}
+        />
         <View className='flex-1'>
           <FlatList
             data={upcomingAppointments || []}
