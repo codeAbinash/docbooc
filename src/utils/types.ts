@@ -45,3 +45,6 @@ export type Doctor = NonNullable<InferApiResponse<typeof myDoctorAPi>['data']>[n
 const bookingsApi = client.api.v1.hp.bookings.list.$get
 
 export type BookingPosition = NonNullable<InferApiResponse<typeof bookingsApi>['data']>[number]
+
+const patientsApi = client.api.v1.hp.bookings.patients.$get
+export type Patient = NonNullable<InferApiResponse<typeof patientsApi>['data']>[number]

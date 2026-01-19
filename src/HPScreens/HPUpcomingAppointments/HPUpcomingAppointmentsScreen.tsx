@@ -1,45 +1,24 @@
 import { PaddingBottom } from '@components/SafePadding'
-import Search from '@components/Search'
 import Calendar03Icon from '@hugeicons/Calendar03Icon'
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker'
 import Colors from '@utils/colors'
 import { SemiBold } from '@utils/fonts'
+import { useQuery } from '@tanstack/react-query'
+import { client } from '@utils/client'
+import type { Doctor, Patient } from '@utils/types'
 import { memo, useCallback, useMemo, useState, useEffect } from 'react'
-import { FlatList, Platform, TouchableOpacity, View, Keyboard, KeyboardAvoidingView } from 'react-native'
+import { FlatList, Platform, TouchableOpacity, View, ActivityIndicator } from 'react-native'
 import PatientCard from '../components/PatientCard'
 import HybridHead from '@components/HybridHead'
 import KeyboardAvoid from '@components/KeyboardAvoid'
 
-const SAMPLE_PATIENTS = [
-  { id: '1', name: 'John Smith', age: 45, gender: 'Male' as const, queuePosition: 1, status: 'confirmed' as const },
-  {
-    id: '2',
-    name: 'Sarah Johnson',
-    age: 32,
-    gender: 'Female' as const,
-    queuePosition: 2,
-    status: 'provisional' as const,
-  },
-  { id: '3', name: 'Michael Brown', age: 28, gender: 'Male' as const, queuePosition: 3, status: 'confirmed' as const },
-  {
-    id: '4',
-    name: 'Emily Davis',
-    age: 67,
-    gender: 'Female' as const,
-    queuePosition: 4,
-    status: 'provisional' as const,
-  },
-  { id: '5', name: 'David Wilson', age: 52, gender: 'Male' as const, queuePosition: 5, status: 'confirmed' as const },
-]
-
 type SearchAndDateBarProps = {
-  searchQuery: string
-  onSearchChange: (text: string) => void
   selectedDate: Date
   showDatePicker: boolean
   onToggleDatePicker: () => void
   onDateChange: (event: DateTimePickerEvent, date?: Date) => void
 }
+
 
 const formatDate = (date: Date) => {
   const today = new Date()
@@ -58,8 +37,6 @@ const formatDate = (date: Date) => {
 }
 
 const SearchAndDateBar = memo(function SearchAndDateBar({
-  searchQuery,
-  onSearchChange,
   selectedDate,
   showDatePicker,
   onToggleDatePicker,
@@ -68,20 +45,15 @@ const SearchAndDateBar = memo(function SearchAndDateBar({
   const formattedDate = useMemo(() => formatDate(selectedDate), [selectedDate])
 
   return (
-    <View className='border-t border-b border-neutral-200 bg-white px-5 py-3 dark:bg-neutral-900'>
-      <View className='flex-row gap-3'>
-        <View className='flex-1'>
-          <Search value={searchQuery} onChangeText={onSearchChange} placeholder='Search patients...' />
-        </View>
-        <TouchableOpacity
-          onPress={onToggleDatePicker}
-          activeOpacity={0.7}
-          className='flex-row items-center  gap-2 rounded-lg bg-accent/15 px-3'
-        >
-          <Calendar03Icon color={Colors.accent} size={20} strokeWidth={2} />
-          <SemiBold style={{ color: Colors.accent, fontSize: 15 }}>{formattedDate}</SemiBold>
-        </TouchableOpacity>
-      </View>
+    <View className='border-t border-neutral-200 bg-white px-5 py-3 dark:bg-neutral-900'>
+      <TouchableOpacity
+        onPress={onToggleDatePicker}
+        activeOpacity={0.7}
+        className='flex-row items-center gap-2 rounded-lg bg-accent/15 px-3 py-2'
+      >
+        <Calendar03Icon color={Colors.accent} size={20} strokeWidth={2} />
+        <SemiBold style={{ color: Colors.accent, fontSize: 15 }}>{formattedDate}</SemiBold>
+      </TouchableOpacity>
 
       {showDatePicker && (
         <DateTimePicker
@@ -95,25 +67,61 @@ const SearchAndDateBar = memo(function SearchAndDateBar({
   )
 })
 
+const transformAppointmentToPatientCard = (
+  appointment: Patient,
+): {
+  id: string
+  name: string
+  age: number
+  gender: 'Male' | 'Female' | 'Other'
+  queuePosition: number
+  status: 'confirmed' | 'provisional'
+} => ({
+  id: appointment.id,
+  name: appointment.patient.fullName || 'N/A',
+  age: appointment.patient.dob ? new Date().getFullYear() - new Date(appointment.patient.dob).getFullYear() : 0,
+  gender: appointment.patient.gender === 'female' ? 'Female' : appointment.patient.gender === 'male' ? 'Male' : 'Other',
+  queuePosition: appointment.queueNo || 0,
+  status: appointment.status === 'completed' ? 'confirmed' : 'provisional',
+})
+
 const HPUpcomingAppointmentsScreen = memo(function HPUpcomingAppointmentsScreenComponent() {
-  const [searchQuery, setSearchQuery] = useState('')
   const [selectedDate, setSelectedDate] = useState(new Date())
   const [showDatePicker, setShowDatePicker] = useState(false)
-  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false)
+  const [selectedDoctor, setSelectedDoctor] = useState<Doctor | undefined>()
+
+  const { data: myDoctors } = useQuery({
+    queryKey: ['my-doctors'],
+    queryFn: async () => {
+      const response = await (await client.api.v1.hp.doctors['my-doctors'].$get()).json()
+      return response.data
+    },
+  })
 
   useEffect(() => {
-    const showListener = Keyboard.addListener('keyboardDidShow', () => {
-      setIsKeyboardVisible(true)
-    })
-    const hideListener = Keyboard.addListener('keyboardDidHide', () => {
-      setIsKeyboardVisible(false)
-    })
-
-    return () => {
-      showListener.remove()
-      hideListener.remove()
+    if (!selectedDoctor && myDoctors?.length) {
+      setSelectedDoctor(myDoctors[0])
     }
-  }, [])
+  }, [myDoctors, selectedDoctor])
+
+  const selectedDateIso = useMemo(() => selectedDate.toISOString().split('T')[0] || '', [selectedDate])
+
+  const { data: upcomingAppointments, isLoading } = useQuery({
+    queryKey: ['upcoming-appointments', selectedDoctor?.id, selectedDateIso],
+    queryFn: async () => {
+      if (!selectedDoctor?.id) return []
+      const response = await (
+        await client.api.v1.hp.bookings.patients.$get({
+          query: {
+            date: selectedDateIso,
+            doctorId: selectedDoctor.id,
+          },
+        })
+      ).json()
+      return response.data || []
+    },
+    enabled: !!selectedDoctor?.id,
+  })
 
   const handleToggleDatePicker = useCallback(() => {
     setShowDatePicker((prev) => !prev)
@@ -128,34 +136,44 @@ const HPUpcomingAppointmentsScreen = memo(function HPUpcomingAppointmentsScreenC
     }
   }, [])
 
-  const filteredPatients = useMemo(
-    () => SAMPLE_PATIENTS.filter((patient) => patient.name.toLowerCase().includes(searchQuery.toLowerCase())),
-    [searchQuery],
-  )
-
   const renderPatientCard = useCallback(
-    ({ item }: { item: (typeof SAMPLE_PATIENTS)[0] }) => (
-      <PatientCard patient={item} isExpanded={false} onToggle={() => {}} hideActions />
-    ),
+    ({ item }: { item: Patient }) => {
+      const transformedPatient = transformAppointmentToPatientCard(item)
+      return <PatientCard patient={transformedPatient} isExpanded={false} onToggle={() => {}} hideActions />
+    },
     [],
   )
 
-  const keyExtractor = useCallback((item: (typeof SAMPLE_PATIENTS)[0]) => item.id, [])
+  const keyExtractor = useCallback((item: Patient) => item.id, [])
 
   const ListFooterComponent = useCallback(() => <PaddingBottom />, [])
 
+  const EmptyState = useCallback(
+    () => (
+      <View className='flex-1 items-center justify-center py-16'>
+        {isLoading ? (
+          <ActivityIndicator size='large' color={Colors.accent} />
+        ) : (
+          <SemiBold style={{ color: Colors.text.DEFAULT, fontSize: 16 }}>No appointments found</SemiBold>
+        )}
+      </View>
+    ),
+    [isLoading],
+  )
+
   return (
     <KeyboardAvoid>
-      <View className='flex-1 bg-white'>
-        <HybridHead showMenu={true} showDoctorInfo={true} />
-        <View className='flex-1 pt-2'>
+      <View className='flex-1 bg-white dark:bg-neutral-900'>
+        <HybridHead showMenu={true} showDoctorInfo={true} doctors={myDoctors || []} doctorInfo={selectedDoctor} onDoctorSelect={setSelectedDoctor} />
+        <View className='flex-1'>
           <FlatList
-            data={filteredPatients}
+            data={upcomingAppointments || []}
             renderItem={renderPatientCard}
             keyExtractor={keyExtractor}
-            contentContainerClassName='pb-16 pt-4 px-5'
+            contentContainerClassName='pb-32 pt-4 px-5'
             showsVerticalScrollIndicator={false}
             ListFooterComponent={ListFooterComponent}
+            ListEmptyComponent={EmptyState}
             removeClippedSubviews={true}
             maxToRenderPerBatch={10}
             updateCellsBatchingPeriod={50}
@@ -163,16 +181,14 @@ const HPUpcomingAppointmentsScreen = memo(function HPUpcomingAppointmentsScreenC
             windowSize={5}
           />
         </View>
-        <View className=' absolute bottom-0 left-0 right-0 bg-white dark:bg-neutral-900'>
+        <View className='absolute bottom-0 left-0 right-0 bg-white dark:bg-neutral-900'>
           <SearchAndDateBar
-            searchQuery={searchQuery}
-            onSearchChange={setSearchQuery}
             selectedDate={selectedDate}
             showDatePicker={showDatePicker}
             onToggleDatePicker={handleToggleDatePicker}
             onDateChange={handleDateChange}
           />
-          {!isKeyboardVisible && <PaddingBottom />}
+          <PaddingBottom />
         </View>
       </View>
     </KeyboardAvoid>
