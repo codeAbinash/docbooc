@@ -1,10 +1,10 @@
 import AdminAddDoctor from '@/AdminScreens/AdminAddDoctor'
-import BookingOTPVerification from '@/AdminScreens/BookingOTPVerification'
 import AdminLogin from '@/AdminScreens/AdminAuthentications/Login/AdminLogin'
 import AdminOTP from '@/AdminScreens/AdminAuthentications/OTP/AdminOTP'
 import AdminSignup from '@/AdminScreens/AdminAuthentications/Signup/AdminSignup'
 import AdminHome from '@/AdminScreens/AdminHome'
 import AdminSplash from '@/AdminScreens/AdminSplash'
+import BookingOTPVerification from '@/AdminScreens/BookingOTPVerification'
 import { Popups } from '@components/Popup'
 import { AutoStatusBar } from '@components/StatusBar'
 import { queryClient } from '@query/index'
@@ -12,7 +12,9 @@ import { DarkTheme, DefaultTheme, NavigationContainer } from '@react-navigation/
 import { CardStyleInterpolators, createStackNavigator, StackNavigationOptions } from '@react-navigation/stack'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { Dimensions, useColorScheme } from 'react-native'
-import './src/global.css'
+import '../global.css'
+import AdminAddDepartment from './Department/AdminAddDepartment'
+import AdminAddDepartments from './Department/AdminAddDepartments'
 const { width, height } = Dimensions.get('window')
 
 const IOS_BOTTOM_STYLE: StackNavigationOptions = {
@@ -54,6 +56,8 @@ export default function AdminApp() {
 
           <RootStack.Screen name='AdminAddDoctor' component={AdminAddDoctor} />
           <RootStack.Screen name='BookingOTPVerification' component={BookingOTPVerification} />
+          <RootStack.Screen name='AdminAddDepartments' component={AdminAddDepartments} />
+          <RootStack.Screen name='AdminAddDepartment' component={AdminAddDepartment} />
         </RootStack.Navigator>
       </NavigationContainer>
     </QueryClientProvider>
@@ -89,4 +93,6 @@ export type AdminRootStackParamList = {
         }
       }
   BookingOTPVerification: undefined
+  AdminAddDepartments: undefined
+  AdminAddDepartment: undefined
 }

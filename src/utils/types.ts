@@ -1,7 +1,7 @@
 import type { DrawerNavigationProp } from '@react-navigation/drawer'
 import { RouteProp } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
-import { AdminRootStackParamList } from '../../AdminApp'
+import { AdminRootStackParamList } from '../AdminScreens/AdminApp'
 import { RootStackParamList } from '../../App'
 import type { HpRootStackParamList } from '../../HPApp'
 import { client } from './client'

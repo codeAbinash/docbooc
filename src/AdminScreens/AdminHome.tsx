@@ -1,13 +1,12 @@
-import AdminCustomDrawer from '@/AdminScreens/components/AdminCustomDrawer'
 import AdminAddDoctors from '@/AdminScreens/AdminAddDoctors'
-import AdminAddDepartments from '@/AdminScreens/AdminAddDepartments'
-import AdminApproveSchedules from '@/AdminScreens/AdminApproveSchedules'
 import AdminApproveBookings from '@/AdminScreens/AdminApproveBookings'
+import AdminApproveSchedules from '@/AdminScreens/AdminApproveSchedules'
 import AdminViewHPs from '@/AdminScreens/AdminViewHPs'
 import AdminViewPatients from '@/AdminScreens/AdminViewPatients'
+import AdminCustomDrawer from '@/AdminScreens/components/AdminCustomDrawer'
 import { createDrawerNavigator } from '@react-navigation/drawer'
 
-const Drawer = createDrawerNavigator()
+export const Drawer = createDrawerNavigator()
 
 export default function AdminHome() {
   return (
@@ -21,7 +20,6 @@ export default function AdminHome() {
       }}
     >
       <Drawer.Screen name='AdminAddDoctors' component={AdminAddDoctors} />
-      <Drawer.Screen name='AdminAddDepartments' component={AdminAddDepartments} />
       <Drawer.Screen name='AdminApproveSchedules' component={AdminApproveSchedules} />
       <Drawer.Screen name='AdminApproveBookings' component={AdminApproveBookings} />
       <Drawer.Screen name='AdminViewHPs' component={AdminViewHPs} />
