@@ -1,32 +1,15 @@
 import Button from '@components/Button'
 import HybridHead from '@components/HybridHead'
 import InputWithLabel from '@components/InputWithLabel'
-import Bone02Icon from '@hugeicons/Bone02Icon'
-import Brain01Icon from '@hugeicons/Brain01Icon'
-import Cardiogram02Icon from '@hugeicons/Cardiogram02Icon'
-import DigestionIcon from '@hugeicons/DigestionIcon'
-import FemaleSymbolIcon from '@hugeicons/FemaleSymbolIcon'
-import Medicine02Icon from '@hugeicons/Medicine02Icon'
-import PatientIcon from '@hugeicons/PatientIcon'
+import { queryClient } from '@query/index'
 import { useMutation } from '@tanstack/react-query'
 import { adminApi } from '@utils/client'
+import { iconList, ICONS } from '@utils/icons'
 import { NavProp } from '@utils/types'
 import { useState } from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import colors from 'tailwindcss/colors'
 import { DepartmentIcon } from './types'
-
-export const ICONS: Record<DepartmentIcon, any> = {
-  Medicine02Icon,
-  Cardiogram02Icon,
-  Bone02Icon,
-  DigestionIcon,
-  Brain01Icon,
-  PatientIcon,
-  FemaleSymbolIcon,
-}
-
-const iconList = Object.keys(ICONS) as DepartmentIcon[]
 
 export default function AdminAddDepartment({ navigation }: NavProp) {
   const [name, setName] = useState('')
@@ -35,14 +18,21 @@ export default function AdminAddDepartment({ navigation }: NavProp) {
 
   const { mutate, isPending } = useMutation({
     mutationFn: async () =>
-      await adminApi.departments.$post({
-        json: {
-          name,
-          description,
-          icon: selectedIcon,
-        },
-      }),
+      await (
+        await adminApi.departments.$post({
+          json: {
+            name,
+            description,
+            icon: selectedIcon,
+          },
+        })
+      ).json(),
     mutationKey: ['add-department'],
+    onSuccess: (data) => {
+      if (!data.success) return
+      navigation.goBack()
+      queryClient.invalidateQueries({ queryKey: ['departments'] })
+    },
   })
 
   return (

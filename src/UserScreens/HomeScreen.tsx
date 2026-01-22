@@ -1,37 +1,49 @@
-import { specialties } from '@/constants'
 import { DoctorCard } from '@components/DoctorCard'
 
 import Press from '@components/Press'
 import { PaddingTop } from '@components/SafePadding'
 import Calendar03Icon from '@hugeicons/Calendar03Icon'
-import Medicine02Icon from '@hugeicons/Medicine02Icon'
 import NotificationSquareIcon from '@hugeicons/NotificationSquareIcon'
 
 import Search01Icon from '@hugeicons/Search01Icon'
 import { useNavigation } from '@react-navigation/native'
 
-import { Black, Bold, Medium, Regular, SemiBold } from '@utils/fonts'
+import { Medium, Regular, SemiBold } from '@utils/fonts'
 import { NavProp, StackNav } from '@utils/types'
-import { ScrollView, TouchableOpacity, useColorScheme, View, useWindowDimensions, Animated } from 'react-native'
-import UpcomingScheduleCard from './UpcomingScheduleCard'
+import { Animated, ScrollView, TouchableOpacity, useColorScheme, useWindowDimensions, View } from 'react-native'
 
-import Animations from '@assets/animations/animations'
-import { Lottie } from '@components/Lottie'
+import { Department } from '@/AdminScreens/Department/types'
+import { useQuery } from '@tanstack/react-query'
+import { api, client } from '@utils/client'
+import { getIconByName } from '@utils/icons'
 import { useRef } from 'react'
 
 export default function HomeScreen({ navigation }: NavProp) {
   const { width } = useWindowDimensions()
   const scrollY = useRef(new Animated.Value(0)).current
 
+  const { data, isLoading } = useQuery({
+    queryKey: ['departments'],
+    queryFn: async () => await (await api.public.departments.$get(client)).json(),
+  })
+
+  const { data: doctorsResponse, isLoading: isDoctorsLoading } = useQuery({
+    queryKey: ['doctors'],
+    queryFn: async () => await (await api.users.doctors.$get()).json(),
+  })
+
+  const departments = data?.data || []
+  const doctors = doctorsResponse?.data || []
+
   return (
     <View className='flex-1'>
       <PaddingTop />
-      <ScrollView className='flex-1 bg-white'  contentContainerClassName='' showsVerticalScrollIndicator={false}>
+      <ScrollView className='flex-1 bg-white' contentContainerClassName='' showsVerticalScrollIndicator={false}>
         <Header navigation={navigation} />
         {/* <UpcomingSchedule /> */}
-        <SearchDoctorByDept />
-        {specialties.map((specialty) => (
-          <TopDoctors key={specialty.id} specialty={specialty} />
+        <SearchDoctorByDept departments={departments} isLoading={isLoading} />
+        {departments.map((department) => (
+          <TopDoctors key={department.id} department={department} doctors={doctors} isLoading={isDoctorsLoading} />
         ))}
       </ScrollView>
     </View>
@@ -42,41 +54,40 @@ function Header({ navigation }: NavProp) {
   const scheme = useColorScheme()
 
   return (
-    <View >
-        <View className='flex-1 flex-row px-6 dark:border-card-dark/20'>
-          <View className=' flex-1   justify-center gap-8'>
-            <Medium className='text  text-4xl'>DocBooc</Medium>
-            <View>
-              <View className='flex-row gap-2'>
-                <Regular className='text text-4xl opacity-50'>Find</Regular>
-                <Medium className='text text-4xl'>Your</Medium>
-              </View>
-              <View className='mt-2 flex-row gap-2'>
-                <Medium className='text text-4xl'>Specialist</Medium>
-                <Regular className='text text-4xl opacity-50'>Doctor</Regular>
-              </View>
+    <View>
+      <View className='flex-1 flex-row px-6 dark:border-card-dark/20'>
+        <View className='flex-1 justify-center gap-8'>
+          <Medium className='text text-4xl'>DocBooc</Medium>
+          <View>
+            <View className='flex-row gap-2'>
+              <Regular className='text text-4xl opacity-50'>Find</Regular>
+              <Medium className='text text-4xl'>Your</Medium>
+            </View>
+            <View className='mt-2 flex-row gap-2'>
+              <Medium className='text text-4xl'>Specialist</Medium>
+              <Regular className='text text-4xl opacity-50'>Doctor</Regular>
             </View>
           </View>
-
-          <View className=' gap-1 '>
-            <Press
-              onPress={() => navigation.navigate('Doctors' as any, { openSearch: true })}
-              className='bg rounded-full border border-neutral-300 p-4 dark:bg-zinc-900'
-            >
-              <Search01Icon color={scheme === 'dark' ? 'white' : 'black'} size={20} strokeWidth={1.7} />
-            </Press>
-            <Press
-              onPress={() => navigation.navigate('Login' as any)}
-              className='bg rounded-full border border-neutral-300 p-4 dark:bg-zinc-900'
-            >
-              <NotificationSquareIcon color={scheme === 'dark' ? 'white' : 'black'} size={20} strokeWidth={1.7} />
-            </Press>
-            <Press className='bg rounded-full border border-neutral-300 p-4 dark:bg-zinc-900'>
-              <Calendar03Icon color={scheme === 'dark' ? 'white' : 'black'} size={20} strokeWidth={1.7} />
-            </Press>
-          </View>
         </View>
-    
+
+        <View className='gap-1'>
+          <Press
+            onPress={() => navigation.navigate('Doctors' as any, { openSearch: true })}
+            className='bg rounded-full border border-neutral-300 p-4 dark:bg-zinc-900'
+          >
+            <Search01Icon color={scheme === 'dark' ? 'white' : 'black'} size={20} strokeWidth={1.7} />
+          </Press>
+          <Press
+            onPress={() => navigation.navigate('Login' as any)}
+            className='bg rounded-full border border-neutral-300 p-4 dark:bg-zinc-900'
+          >
+            <NotificationSquareIcon color={scheme === 'dark' ? 'white' : 'black'} size={20} strokeWidth={1.7} />
+          </Press>
+          <Press className='bg rounded-full border border-neutral-300 p-4 dark:bg-zinc-900'>
+            <Calendar03Icon color={scheme === 'dark' ? 'white' : 'black'} size={20} strokeWidth={1.7} />
+          </Press>
+        </View>
+      </View>
     </View>
   )
 }
@@ -98,12 +109,21 @@ function Header({ navigation }: NavProp) {
 //   )
 // }
 
-const SearchDoctorByDept = () => {
+interface SearchDoctorByDeptProps {
+  departments: Department[]
+  isLoading: boolean
+}
+
+const SearchDoctorByDept = ({ departments, isLoading }: SearchDoctorByDeptProps) => {
   const navigation = useNavigation<StackNav>()
 
+  if (isLoading) {
+    return null
+  }
+
   return (
-    <View className='flex-1 gap-3  px-6 py-6'>
-      <View className='flex-row items-center justify-between '>
+    <View className='flex-1 gap-3 px-6 py-6'>
+      <View className='flex-row items-center justify-between'>
         <SemiBold className='text text-lg'>Search doctor by department</SemiBold>
         <TouchableOpacity onPress={() => navigation.navigate('Departments' as any)}>
           <Medium className='text-base text-blue-600'>See All</Medium>
@@ -111,21 +131,21 @@ const SearchDoctorByDept = () => {
       </View>
 
       <View className='flex-row flex-wrap items-center justify-between gap-y-5'>
-        {specialties.map((specialty) => {
-          const IconComponent = specialty.icon || Medicine02Icon
+        {departments.slice(0, 8).map((department) => {
+          const IconComponent = getIconByName(department.icon)
           return (
             <TouchableOpacity
-              key={specialty.id}
-              className='items-center gap-3 '
-              style={{ width: '25%' }} // 4 items per row with some spacing
+              key={department.id}
+              className='items-center gap-3'
+              style={{ width: '25%' }}
               activeOpacity={0.7}
-              onPress={() => navigation.navigate('Doctors')}
+              onPress={() => navigation.navigate('Doctors', { departmentId: department.id })}
             >
               <View className='items-center justify-center rounded-full bg-accent/90' style={{ width: 65, height: 65 }}>
                 <IconComponent size={30} color={'#FFFFFF'} />
               </View>
-              <Medium className=' text text-center text-sm opacity-60' numberOfLines={1} >
-                {specialty.name}
+              <Medium className='text text-center text-sm opacity-60' numberOfLines={1}>
+                {department.name}
               </Medium>
             </TouchableOpacity>
           )
@@ -136,57 +156,58 @@ const SearchDoctorByDept = () => {
 }
 
 interface TopDoctorsProps {
-  specialty: {
-    id: number
-    name: string
-    icon: any
-  }
+  department: Department
+  doctors: any[]
+  isLoading: boolean
 }
 
-function TopDoctors({ specialty }: TopDoctorsProps) {
+function TopDoctors({ department, doctors, isLoading }: TopDoctorsProps) {
   const { width } = useWindowDimensions()
   const navigation = useNavigation<StackNav>()
 
-  const mockDoctor = {
-    name: 'Dr. A. Barik Hossain',
-    degrees: 'MBBS, MD (General Medicine)',
-    department: 'Diabetes Specialist',
-    experience: 5,
+  const departmentDoctors = doctors.filter((doctor) => doctor.department === department.name).slice(0, 4)
+
+  if (isLoading || departmentDoctors.length === 0) {
+    return null
   }
 
   const cardWidth = width - 40
 
   return (
-    <View className='flex-1 gap-3 pb-6  '>
-      <View className='flex-row  items-center justify-between px-6'>
-        <SemiBold className='text text-base'>Experts in {specialty.name}</SemiBold>
-        <TouchableOpacity>
+    <View className='flex-1 gap-3 pb-6'>
+      <View className='flex-row items-center justify-between px-6'>
+        <SemiBold className='text text-base'>Experts in {department.name}</SemiBold>
+        <TouchableOpacity onPress={() => navigation.navigate('Doctors', { departmentId: department.id })}>
           <Medium className='text-base text-blue-600'>See All</Medium>
         </TouchableOpacity>
       </View>
 
       <ScrollView
-  horizontal
-  contentContainerClassName='px-6'
-  showsVerticalScrollIndicator={false}
-  showsHorizontalScrollIndicator={false}
-  snapToInterval={cardWidth + 16}
-  snapToAlignment='start'
-  decelerationRate='normal'
-  disableIntervalMomentum={true}
-  contentContainerStyle={{ gap: 16 }}
->
-  {Array.from({ length: 4 }).map((_, index) => (
-    <View key={index} style={{ width: cardWidth }}>
-      <DoctorCard
-        doctor={mockDoctor}
-        showSelector={false}
-        showBookButton={true}
-        onAdd={() => navigation.navigate('BookAppointment' as any)}
-      />
-    </View>
-  ))}
-</ScrollView>
+        horizontal
+        contentContainerClassName='px-6'
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        snapToInterval={cardWidth + 16}
+        snapToAlignment='start'
+        decelerationRate='normal'
+        disableIntervalMomentum={true}
+        contentContainerStyle={{ gap: 16 }}
+      >
+        {departmentDoctors.map((doctor) => (
+          <View key={doctor.id} style={{ width: cardWidth }}>
+            <DoctorCard
+              doctor={doctor}
+              showSelector={false}
+              showBookButton={true}
+              onAdd={() =>
+                navigation.navigate('BookAppointment', {
+                  doctor: { ...doctor, specialization: doctor.specialization || doctor.department },
+                })
+              }
+            />
+          </View>
+        ))}
+      </ScrollView>
     </View>
   )
 }

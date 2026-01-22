@@ -6,7 +6,7 @@ import { AppRegistry, Text, TextInput } from 'react-native'
 import { name as appName } from './app.json'
 import HPApp from './HPApp'
 import App from './App'
-import AdminApp from './AdminApp'
+import AdminApp from './src/AdminScreens/AdminApp'
 
 Text.defaultProps = Text.defaultProps || {}
 Text.defaultProps.allowFontScaling = true

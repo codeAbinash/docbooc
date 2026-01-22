@@ -19,6 +19,10 @@ const HPScheduleDoctors = () => {
   const [searchQuery, setSearchQuery] = useState('')
   const scrollViewRef = useRef<ScrollView>(null)
 
+  const handleChipSelect = useCallback((id: number | string) => {
+    setSelected(typeof id === 'number' ? id : Number(id))
+  }, [])
+
   const allItems = [ALL_SPECIALTY, ...specialties]
 
   const { data: doctorsResponse, isLoading } = useQuery({
@@ -50,7 +54,7 @@ const HPScheduleDoctors = () => {
         searchPlaceholder='Search doctors, specialties...'
         chipItems={allItems}
         selectedChipId={selected}
-        onChipSelect={setSelected}
+        onChipSelect={handleChipSelect}
         chipScrollRef={scrollViewRef}
         onSearchChange={setSearchQuery}
       />

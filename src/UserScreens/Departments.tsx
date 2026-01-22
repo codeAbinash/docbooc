@@ -4,6 +4,10 @@ import { Medium, Regular } from '@utils/fonts'
 import { NavProp } from '@utils/types'
 import { FlatList, TouchableOpacity, View } from 'react-native'
 import { memo, useCallback } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { api, client } from '@utils/client'
+import { Department } from '@/AdminScreens/Department/types'
+import { getIconByName } from '@utils/icons'
 
 
 const DEPARTMENT_COLORS = [
@@ -17,16 +21,14 @@ const DEPARTMENT_COLORS = [
   'bg-cyan-50 text-cyan-900',
 ] as const
 
-type DepartmentItem = (typeof specialties)[0]
-
 interface DepartmentCardProps {
-  item: DepartmentItem
+  item: Department
   index: number
   onPress: () => void
 }
 
 const DepartmentCard = memo(({ item, index, onPress }: DepartmentCardProps) => {
-  const IconComponent = item.icon
+  const IconComponent = getIconByName(item.icon)
   const colorClass = DEPARTMENT_COLORS[index % DEPARTMENT_COLORS.length]!
   const [bgClass, textClass] = colorClass.split(' ') as [string, string]
 
@@ -47,7 +49,9 @@ const DepartmentCard = memo(({ item, index, onPress }: DepartmentCardProps) => {
         </View>
         <View style={{ gap: 12 }}>
           <Medium className={`text-base ${textClass}`}>{item.name}</Medium>
-          <Regular className={`text-xs leading-4 ${textClass.replace('900', '700')}`}>{item.description}</Regular>
+          {item.description && (
+            <Regular className={`text-xs leading-4 ${textClass.replace('900', '700')}`}>{item.description}</Regular>
+          )}
         </View>
       </View>
     </TouchableOpacity>
@@ -57,26 +61,32 @@ const DepartmentCard = memo(({ item, index, onPress }: DepartmentCardProps) => {
 DepartmentCard.displayName = 'DepartmentCard'
 
 export default function Departments({ navigation }: NavProp) {
+  const { data, isLoading } = useQuery({
+    queryKey: ['departments'],
+    queryFn: async () => await (await api.public.departments.$get(client)).json(),
+  })
+
+  const departments = data?.data || []
     
   const handleNavigate = useCallback(() => {
     navigation.navigate('Doctors' as any)
   }, [navigation])
 
   const renderDepartmentCard = useCallback(
-    ({ item, index }: { item: DepartmentItem; index: number }) => (
+    ({ item, index }: { item: Department; index: number }) => (
       <DepartmentCard item={item} index={index} onPress={handleNavigate} />
     ),
     [handleNavigate],
   )
 
-  const keyExtractor = useCallback((item: DepartmentItem) => item.id.toString(), [])
+  const keyExtractor = useCallback((item: Department) => item.id.toString(), [])
 
   return (
     <View className='flex-1 bg-white'>
       <HybridHead title='Departments' showBackButton={true} />
 
       <FlatList
-        data={specialties}
+        data={departments}
         renderItem={renderDepartmentCard}
         keyExtractor={keyExtractor}
         numColumns={2}

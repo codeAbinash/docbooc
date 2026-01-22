@@ -1,8 +1,8 @@
 import Delete02Icon from '@assets/icons/hugeicons/Delete02Icon'
 import { Medium, Regular } from '@utils/fonts'
+import { getIconByName } from '@utils/icons'
 import { memo } from 'react'
 import { TouchableOpacity, View } from 'react-native'
-import { ICONS } from '../AdminAddDepartment'
 import { Department } from '../types'
 
 export interface DepartmentCardProps {
@@ -13,7 +13,7 @@ export interface DepartmentCardProps {
 
 const DepartmentCard = memo(({ department, onPress, onDelete }: DepartmentCardProps) => {
   const iconName = department.icon || 'Medicine02Icon'
-  const Icon = ICONS[iconName as keyof typeof ICONS]
+  const Icon = getIconByName(iconName)
 
   return (
     <TouchableOpacity activeOpacity={0.7} onPress={onPress} className='flex-1' style={{ padding: 12 }}>

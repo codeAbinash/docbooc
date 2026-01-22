@@ -27,6 +27,10 @@ const HPAddPatients = ({ route }: any) => {
   const [isSearchOpen, setIsSearchOpen] = useState(route?.params?.openSearch || false)
   const scrollViewRef = useRef<ScrollView>(null)
 
+  const handleChipSelect = useCallback((id: number | string) => {
+    setSelected(typeof id === 'number' ? id : Number(id))
+  }, [])
+
   const titles = ['DocBook', 'Search Doctors', 'Find Your Specialist Doctor', 'Book Appointments Easily']
 
   const handleAnimationComplete = useCallback(() => {
@@ -67,7 +71,7 @@ const HPAddPatients = ({ route }: any) => {
   }, [selected, searchQuery, doctors])
 
   return (
-    <View className='flex-1 '>
+    <View className='flex-1'>
       <HybridHead
         showBackButton={true}
         title={'Select doctor'}
@@ -75,21 +79,21 @@ const HPAddPatients = ({ route }: any) => {
         searchPlaceholder='Search doctors, specialties...'
         chipItems={allItems}
         selectedChipId={selected}
-        onChipSelect={setSelected}
+        onChipSelect={handleChipSelect}
         chipScrollRef={scrollViewRef}
         onSearchChange={setSearchQuery}
         onSearchToggle={setIsSearchOpen}
         searchOpen={isSearchOpen}
       />
 
-      <View className='flex-1  bg-white dark:bg-neutral-900'>
+      <View className='flex-1 bg-white dark:bg-neutral-900'>
         {isLoading ? (
           <View className='flex-1 items-center justify-center'>
             <ActivityIndicator size='large' color={Colors.accent} />
           </View>
         ) : (
           <FlatList
-            className=' flex-1 pt-3'
+            className='flex-1 pt-3'
             contentContainerClassName='px-5 pb-10'
             data={filteredDoctors}
             renderItem={({ item }) => (

@@ -12,65 +12,11 @@ import Press from '@components/Press'
 import popupStore from '@/zustand/popupStore'
 import Doctor01Icon from '@hugeicons/Doctor01Icon'
 import { useNavigation, useRoute } from '@react-navigation/native'
-import { useMutation } from '@tanstack/react-query'
-import { adminApi } from '@utils/client'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { adminApi, api, client } from '@utils/client'
 import { AdminStackNav } from '@utils/types'
 import { useColorScheme } from 'nativewind'
 import { z } from 'zod'
-
-const DEPARTMENTS = [
-  'General Medicine',
-  'General Surgery',
-  'Pulmonary Medicine',
-
-  'Cardiology',
-  'Cardiothoracic & Vascular Surgery',
-  'Neurology',
-  'Neurosurgery',
-  'Nephrology',
-  'Urology',
-  'Gastroenterology',
-  'Surgical Gastroenterology',
-  'Pulmonology',
-  'Endocrinology',
-  'Rheumatology',
-  'Hepatology',
-  'Medical Oncology',
-  'Surgical Oncology',
-  'Radiation Oncology',
-  'ENT',
-  'Ophthalmology',
-  'Dentistry',
-  'Oral Medicine',
-
-  'Gynecology',
-  'Pediatrics',
-  'Pediatric Surgery',
-  'Neonatology',
-  'Reproductive Medicine',
-  'Orthopedics',
-
-  'Physiotherapy',
-
-  'Dermatology',
-  'Cosmetology',
-  'Nutrition & Dietetics',
-  'Psychiatry',
-  'Clinical Psychology',
-  'Radiology',
-  'Pathology',
-
-  'Nuclear Medicine',
-  'Hematology',
-  'Vascular Surgery',
-  'Plastic & Reconstructive Surgery',
-  'Immunology',
-  'Geriatric Medicine',
-  'Interventional Radiology',
-
-  'Anesthesiology',
-  'Transfusion Medicine',
-] as const
 
 const SPECIALIZATIONS = [
   'General Surgery',
@@ -105,7 +51,7 @@ const DEGREES = [
 
 const GENDERS = ['Male', 'Female', 'Other'] as const
 
-type Department = (typeof DEPARTMENTS)[number]
+type Department = string
 type Specialization = (typeof SPECIALIZATIONS)[number] | null
 type Gender = (typeof GENDERS)[number]
 type Degree = (typeof DEGREES)[number]
@@ -133,12 +79,19 @@ export default function AdminAddDoctor() {
   const doctorData = (route.params as any)?.doctor
   const isEditing = !!doctorData
 
+  const { data: departmentsResponse } = useQuery({
+    queryKey: ['departments'],
+    queryFn: async () => await (await api.public.departments.$get(client)).json(),
+  })
+
+  const departments = departmentsResponse?.data || []
+
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [contact, setContact] = useState('')
   const [gender, setGender] = useState<Gender>('Male')
   const [degrees, setDegrees] = useState<Degree[]>([])
-  const [department, setDepartment] = useState<Department>('General Medicine')
+  const [department, setDepartment] = useState<Department>('')
   const [specialization, setSpecialization] = useState<Specialization>(null)
   const [experience, setExperience] = useState('')
 
@@ -197,15 +150,17 @@ export default function AdminAddDoctor() {
       setEmail(doctorData.email || '')
       setContact(doctorData.contactNumber || '')
       setGender(doctorData.gender?.[0]?.toUpperCase() + doctorData.gender?.slice(1) || 'Male')
-      setDepartment(doctorData.department || 'General Medicine')
+      setDepartment(doctorData.department || '')
       setSpecialization(doctorData.specialization || null)
       setExperience(doctorData.experience?.toString() || '')
       if (doctorData.degrees) {
         const degreeArray = doctorData.degrees.split(',').map((d: string) => d.trim()) as Degree[]
         setDegrees(degreeArray)
       }
+    } else if (!isEditing && departments.length > 0 && !department) {
+      setDepartment(departments[0]?.name || '')
     }
-  }, [isEditing, doctorData])
+  }, [isEditing, doctorData, departments, department])
 
   const handleDegreeToggle = (degree: Degree) => {
     if (degrees.includes(degree)) {
@@ -274,7 +229,7 @@ export default function AdminAddDoctor() {
   const isDark = colorScheme === 'dark'
 
   return (
-    <View className='bg-white flex-1'>
+    <View className='flex-1 bg-white'>
       <HybridHead
         title={isEditing ? 'Edit Doctor' : 'Add Doctor'}
         showBackButton
@@ -340,7 +295,7 @@ export default function AdminAddDoctor() {
                 <SelectDropdown
                   label='Department'
                   value={department}
-                  options={DEPARTMENTS.map((d) => ({ label: d, value: d }))}
+                  options={departments.map((d) => ({ label: d.name, value: d.name }))}
                   onSelect={(value) => setDepartment(value as Department)}
                 />
               </View>

@@ -1,23 +1,26 @@
+import { DepartmentIcon } from '@/AdminScreens/Department/types'
 import Chip from '@components/Chip'
 import DoctorSwitcherModal from '@components/DoctorSwitcherModal'
 import { PaddingTop } from '@components/SafePadding'
 import Search from '@components/Search'
 import ArrowLeft01Icon from '@hugeicons/ArrowLeft01Icon'
+import { HugeIconProps } from '@hugeicons/constants'
 import Menu01Icon from '@hugeicons/Menu01Icon'
 import SquareIcon from '@hugeicons/SquareIcon'
 import { useNavigation } from '@react-navigation/native'
 import Colors from '@utils/colors'
 import { Medium, Regular } from '@utils/fonts'
+import { getIconByName } from '@utils/icons'
 import type { Doctor } from '@utils/types'
 import { useColorScheme } from 'nativewind'
-import { memo, useCallback, useEffect, useState } from 'react'
+import { ComponentType, memo, useCallback, useEffect, useState } from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 
 interface ChipItem {
-  id: number
+  id: number | string
   name: string
-  icon: any
+  icon?: DepartmentIcon | ComponentType<HugeIconProps> | null
 }
 
 interface HybridHeadProps {
@@ -29,8 +32,8 @@ interface HybridHeadProps {
   searchOpen?: boolean
   children?: React.ReactNode
   chipItems?: ChipItem[]
-  selectedChipId?: number
-  onChipSelect?: (id: number) => void
+  selectedChipId?: number | string
+  onChipSelect?: (id: number | string) => void
   chipScrollRef?: React.RefObject<ScrollView | null>
   showMenu?: boolean
   onMenuPress?: () => void
@@ -142,15 +145,18 @@ function HybridHead({
 
   // Render helpers
   const renderChipItem = useCallback(
-    (item: ChipItem) => (
-      <Chip
-        key={item.id}
-        icon={item.icon}
-        label={item.name}
-        onPress={() => onChipSelect?.(item.id)}
-        variant={selectedChipId === item.id ? 'transparentAccent' : 'default'}
-      />
-    ),
+    (item: ChipItem) => {
+      const icon = getIconByName(item.icon as DepartmentIcon)
+      return (
+        <Chip
+          key={item.id}
+          icon={icon}
+          label={item.name}
+          onPress={() => onChipSelect?.(item.id)}
+          variant={selectedChipId === item.id ? 'transparentAccent' : 'default'}
+        />
+      )
+    },
     [selectedChipId, onChipSelect],
   )
 

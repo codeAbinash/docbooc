@@ -14,3 +14,5 @@
 - Maintain the performance of the code.
 
 - Keep the pure functions outside of React components or any other functions.
+
+- always always always always check for type errors before providing the final code.

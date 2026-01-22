@@ -103,7 +103,7 @@ export type RootStackParamList = {
   Complete: undefined
   Login: undefined
   OTP: { countryCode?: string; mobileNumber?: string }
-  Doctors: undefined
+  Doctors: { departmentId?: string; openSearch?: boolean } | undefined
   VerifyBeforeBooking: undefined
   Appointments: undefined
   AppointmentDetails: { appointmentId: string }

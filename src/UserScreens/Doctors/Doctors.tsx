@@ -1,21 +1,34 @@
 import { specialties } from '@/constants'
 import HybridHead from '@components/HybridHead'
 import Doctor01Icon from '@hugeicons/Doctor01Icon'
-import { useFocusEffect, useNavigation } from '@react-navigation/native'
+import { useFocusEffect, useNavigation, useRoute, RouteProp } from '@react-navigation/native'
 import { useQuery } from '@tanstack/react-query'
-import { api } from '@utils/client'
+import { api, client } from '@utils/client'
 import Colors from '@utils/colors'
 import { StackNav } from '@utils/types'
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { useCallback, useMemo, useRef, useState, useEffect } from 'react'
 import { ActivityIndicator, FlatList, View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import { DoctorCard } from '../../components/DoctorCard'
+import { Department } from '@/AdminScreens/Department/types'
+import { RootStackParamList } from '../../../App'
 
-export const ALL_SPECIALTY = { id: 0, name: 'All', icon: Doctor01Icon }
+type DoctorsRouteProp = RouteProp<RootStackParamList, 'Doctors'>
 
-const Doctors = ({ route }: any) => {
+export const ALL_SPECIALTY: Department = {
+  id: '0',
+  name: 'All',
+  description: null,
+  icon: null,
+  color: null,
+  createdAt: '',
+  updatedAt: '',
+}
+
+const Doctors = () => {
   const navigate = useNavigation<StackNav>()
-  const [selected, setSelected] = useState<number>(0)
+  const route = useRoute<DoctorsRouteProp>()
+  const [selected, setSelected] = useState<string>('0')
   const [searchQuery, setSearchQuery] = useState('')
   const [titleIndex, setTitleIndex] = useState(0)
   const [isSearchOpen, setIsSearchOpen] = useState(route?.params?.openSearch || false)
@@ -38,7 +51,24 @@ const Doctors = ({ route }: any) => {
     }, [route?.params?.openSearch]),
   )
 
-  const allItems = [ALL_SPECIALTY, ...specialties]
+  useFocusEffect(
+    useCallback(() => {
+      if (route?.params?.departmentId) {
+        setSelected(route.params.departmentId)
+      } else {
+        setSelected('0')
+      }
+    }, [route?.params?.departmentId]),
+  )
+
+  const { data: departmentsResponse } = useQuery({
+    queryKey: ['departments'],
+    queryFn: async () => await (await api.public.departments.$get(client)).json(),
+  })
+
+  const departments = useMemo(() => departmentsResponse?.data || [], [departmentsResponse])
+
+  const allItems = useMemo(() => [ALL_SPECIALTY, ...departments], [departments])
 
   const { data: doctorsResponse, isLoading } = useQuery({
     queryKey: ['doctors'],
@@ -47,18 +77,26 @@ const Doctors = ({ route }: any) => {
 
   const doctors = useMemo(() => doctorsResponse?.data || [], [doctorsResponse])
 
+  const handleChipSelect = useCallback((id: number | string) => {
+    setSelected(id.toString())
+  }, [])
+
   const filteredDoctors = useMemo(() => {
-    let result = selected
-      ? doctors.filter((doctor) => doctor.specialization === specialties.find((s) => s.id === selected)?.name)
-      : doctors
+    let result =
+      selected !== '0'
+        ? doctors.filter((doctor) => doctor.department === departments.find((d) => d.id === selected)?.name)
+        : doctors
     if (searchQuery) {
       const query = searchQuery.toLowerCase()
       result = result.filter(
-        (d) => d.name.toLowerCase().includes(query) || d.specialization?.toLowerCase().includes(query),
+        (d) =>
+          d.name.toLowerCase().includes(query) ||
+          d.specialization?.toLowerCase().includes(query) ||
+          d.department?.toLowerCase().includes(query),
       )
     }
     return result
-  }, [selected, searchQuery, doctors])
+  }, [selected, searchQuery, doctors, departments])
 
   return (
     <View className='flex-1'>
@@ -69,7 +107,7 @@ const Doctors = ({ route }: any) => {
         searchPlaceholder='Search doctors, specialties...'
         chipItems={allItems}
         selectedChipId={selected}
-        onChipSelect={setSelected}
+        onChipSelect={handleChipSelect}
         chipScrollRef={scrollViewRef}
         onSearchChange={setSearchQuery}
         onSearchToggle={setIsSearchOpen}

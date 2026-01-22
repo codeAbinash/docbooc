@@ -56,6 +56,10 @@ function HPTodaysAppointmentsScreen() {
   const [selectedAction, setSelectedAction] = useState<SelectedAction | null>(null)
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | undefined>()
 
+  const handleChipSelect = useCallback((id: number | string) => {
+    setActiveTab(typeof id === 'number' ? id : Number(id))
+  }, [])
+
   const queryClient = useQueryClient()
 
   const isCompleteTab = activeTab === 1
@@ -162,7 +166,7 @@ function HPTodaysAppointmentsScreen() {
         showDoctorInfo={true}
         chipItems={CHIP_ITEMS}
         selectedChipId={activeTab}
-        onChipSelect={setActiveTab}
+        onChipSelect={handleChipSelect}
         doctors={myDoctors || []}
         doctorInfo={selectedDoctor}
         onDoctorSelect={setSelectedDoctor}

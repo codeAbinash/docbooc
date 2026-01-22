@@ -4,19 +4,21 @@ import { Medium, SemiBold } from '@utils/fonts'
 import { useColorScheme } from 'nativewind'
 import { memo, useMemo } from 'react'
 import { TouchableOpacity, TouchableOpacityProps } from 'react-native'
+import Medicine02Icon from '@hugeicons/Medicine02Icon'
 
 type ChipProps = {
   label: string
-  icon: React.ComponentType<HugeIconProps>
+  icon?: React.ComponentType<HugeIconProps> | null
   isActive?: boolean
   onPress?: () => void
   variant?: 'default' | 'deepAccent' | 'transparentAccent'
 } & TouchableOpacityProps
 
-const Chip = memo(({ label, icon: IconComponent, isActive = false, onPress, variant = 'default' }: ChipProps) => {
+const Chip = memo(({ label, icon, isActive = false, onPress, variant = 'default' }: ChipProps) => {
   const { colorScheme } = useColorScheme()
   const dark = colorScheme === 'dark'
   const isHighlighted = isActive || variant !== 'default'
+  const IconComponent = icon || Medicine02Icon
 
   const { bgStyle, color } = useMemo(
     () => ({
@@ -41,7 +43,10 @@ const Chip = memo(({ label, icon: IconComponent, isActive = false, onPress, vari
   const TextComponent = isHighlighted ? Medium : Medium
 
   return (
-    <TouchableOpacity onPress={onPress} className={`flex-row  items-end justify-start gap-2 rounded-full  px-5 py-3 ${bgStyle}`}>
+    <TouchableOpacity
+      onPress={onPress}
+      className={`flex-row items-end justify-start gap-2 rounded-full px-5 py-3 ${bgStyle}`}
+    >
       <IconComponent color={color} size={20} strokeWidth={2} />
       <TextComponent style={{ color }}>{label}</TextComponent>
     </TouchableOpacity>

@@ -53,9 +53,9 @@ const HPViewDoctors = () => {
     return filtered
   }, [doctors, searchQuery])
 
-  const handleSpecialtySelect = (id: number) => {
-    setSelected(id)
-  }
+  const handleSpecialtySelect = useCallback((id: number | string) => {
+    setSelected(typeof id === 'number' ? id : Number(id))
+  }, [])
 
   const allItems = [ALL_SPECIALTY, ...specialties]
 
