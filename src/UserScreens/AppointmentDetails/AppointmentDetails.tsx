@@ -1,15 +1,68 @@
+import Clock03Icon from '@assets/icons/hugeicons/Clock03Icon'
+import Doctor01Icon from '@assets/icons/hugeicons/Doctor01Icon'
+import Location06Icon from '@assets/icons/hugeicons/Location06Icon'
+import PatientIcon from '@assets/icons/hugeicons/PatientIcon'
 import HybridHead from '@components/HybridHead'
-import Press from '@components/Press'
 import { PaddingBottom } from '@components/SafePadding'
+import Calendar01Icon from '@hugeicons/Calendar01Icon'
 import { useNavigation, useRoute } from '@react-navigation/native'
+import { useQuery } from '@tanstack/react-query'
+import { client } from '@utils/client'
 import { Medium, SemiBold } from '@utils/fonts'
 import { StackNav } from '@utils/types'
 import { ScrollView, View } from 'react-native'
-import Calendar01Icon from '@hugeicons/Calendar01Icon'
-import Clock03Icon from '@assets/icons/hugeicons/Clock03Icon'
-import Location06Icon from '@assets/icons/hugeicons/Location06Icon'
-import PatientIcon from '@assets/icons/hugeicons/PatientIcon'
-import Doctor01Icon from '@assets/icons/hugeicons/Doctor01Icon'
+
+// Pure helper: format time string to 12-hour format (e.g. 14:30 -> 2:30 PM)
+function formatTime12(timeStr?: string | null) {
+  if (!timeStr) return 'TBD'
+
+  // Try parsing as full datetime
+  const dt = new Date(timeStr)
+  if (!isNaN(dt.getTime())) {
+    const hours = dt.getHours()
+    const minutes = dt.getMinutes()
+    const ampm = hours >= 12 ? 'PM' : 'AM'
+    const h12 = hours % 12 || 12
+    return `${h12}:${String(minutes).padStart(2, '0')} ${ampm}`
+  }
+
+  // Match simple time like HH:MM or HH:MM:SS
+  const m = String(timeStr).match(/^(\d{1,2}):(\d{2})(?::\d{2})?$/)
+  if (m) {
+    let hours = Number(m[1])
+    const minutes = Number(m[2])
+    const ampm = hours >= 12 ? 'PM' : 'AM'
+    const h12 = hours % 12 || 12
+    return `${h12}:${String(minutes).padStart(2, '0')} ${ampm}`
+  }
+
+  return String(timeStr)
+}
+
+// Pure helper: format date to `12 Jan 2026` style
+function formatDateShort(dateStr?: string | null) {
+  if (!dateStr) return 'N/A'
+
+  const dt = new Date(dateStr)
+  if (!isNaN(dt.getTime())) {
+    const day = dt.getDate()
+    const month = dt.toLocaleString('en-US', { month: 'short' })
+    const year = dt.getFullYear()
+    return `${day} ${month} ${year}`
+  }
+
+  // Fallback for YYYY-MM-DD or similar
+  const m = String(dateStr).match(/^(\d{4})-(\d{2})-(\d{2})/)
+  if (m) {
+    const y = m[1]
+    const mo = Number(m[2])
+    const d = Number(m[3])
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    return `${d} ${monthNames[mo - 1]} ${y}`
+  }
+
+  return String(dateStr)
+}
 
 export default function AppointmentDetails() {
   const navigation = useNavigation<StackNav>()
@@ -20,48 +73,23 @@ export default function AppointmentDetails() {
     status?: 'provisional' | 'confirmed'
   }
 
-  const appointmentData = {
-    id: '1',
-    doctor: {
-      name: 'Dr. Michael Chen',
-      specialty: 'Cardiologist',
-      qualification: 'MBBS, MD, DM (Cardiology)',
-      experience: 21,
-      image:
-        'https://st4.depositphotos.com/7877830/25337/v/450/depositphotos_253374286-stock-illustration-vector-illustration-male-doctor-avatar.jpg',
+  const { data } = useQuery({
+    queryKey: ['appointmentDetails', route.params],
+    queryFn: async () => {
+      const res = await client.api.v1.users.booking[':bookingId'].$get({
+        param: {
+          bookingId: appointmentId,
+        },
+      })
+
+      return (await res.json())?.data
     },
-    patient: {
-      name: 'Sarah Johnson',
-      age: '28',
-      gender: 'Female',
-      mobile: '+91 98765 43210',
-      relationship: 'Myself',
-    },
-    appointment: {
-      date: 'October 15, 2024',
-      day: 'Tuesday',
-      time: '10:30 AM',
-      queueNumber: 5,
-      status: status,
-    },
-    location: {
-      name: 'Metro Medical Center',
-      address: '456 Health Street, Metro Station',
-      distance: '4.2 km',
-      image: 'https://images.unsplash.com/photo-1586773860418-d37222d8fce3?w=400&h=300&fit=crop',
-    },
-    payment: {
-      consultationFee: 500,
-      platformFee: 50,
-      gst: 99,
-      total: 649,
-      paymentMethod: 'UPI',
-      transactionId: 'TXN1234567890',
-    },
-  }
+  })
+
+  console.log(data)
 
   return (
-    <View className='bg-white flex-1'>
+    <View className='flex-1 bg-white'>
       <HybridHead title='Appointment Details' showBackButton={true} onBackPress={() => navigation.goBack()} />
 
       <ScrollView className='flex-1' contentContainerClassName='pb-6' showsVerticalScrollIndicator={false}>
@@ -75,11 +103,11 @@ export default function AppointmentDetails() {
                   <View className='rounded-md bg-blue-100/50 p-2 dark:bg-blue-900/20'>
                     <Calendar01Icon size={20} color='#3b82f6' strokeWidth={2} />
                   </View>
-                  <SemiBold className='text-base text-neutral-900 dark:text-white'>Appointment Details</SemiBold>
+                  <SemiBold className='text-base text-neutral-900 dark:text-white'>Appointment Details </SemiBold>
                 </View>
                 <View className='bg-green-100 px-3 py-1 dark:bg-blue-900/30'>
                   <SemiBold className='text-xs capitalize text-green-600 dark:text-blue-400'>
-                    {appointmentData.appointment.status}
+                    {data?.booking?.bookingStatus || 'pending'}
                   </SemiBold>
                 </View>
               </View>
@@ -94,10 +122,10 @@ export default function AppointmentDetails() {
                 <View className='flex-1'>
                   <Medium className='text-sm text-neutral-600 dark:text-neutral-400'>Doctor</Medium>
                   <SemiBold className='mt-1 text-sm text-neutral-900 dark:text-white'>
-                    {appointmentData.doctor.name}
+                    {data?.doctor?.name || 'N/A'}
                   </SemiBold>
                   <Medium className='mt-1 text-sm text-neutral-600 dark:text-neutral-400'>
-                    {appointmentData.doctor.specialty}
+                    {data?.doctor?.department || ''}
                   </Medium>
                 </View>
               </View>
@@ -112,10 +140,10 @@ export default function AppointmentDetails() {
                 <View className='flex-1'>
                   <Medium className='text-sm text-neutral-600 dark:text-neutral-400'>Patient</Medium>
                   <SemiBold className='mt-1 text-sm text-neutral-900 dark:text-white'>
-                    {appointmentData.patient.name}
+                    {data?.patient?.name || 'N/A'}
                   </SemiBold>
                   <Medium className='mt-1 text-sm text-neutral-600 dark:text-neutral-400'>
-                    Age: {appointmentData.patient.age}
+                    Gender: {data?.patient?.gender || 'N/A'}
                   </Medium>
                 </View>
               </View>
@@ -131,17 +159,17 @@ export default function AppointmentDetails() {
                   <View className='flex-1'>
                     <Medium className='text-sm text-neutral-600 dark:text-neutral-400'>Appointment</Medium>
                     <SemiBold className='mt-1 text-sm text-neutral-900 dark:text-white'>
-                      {appointmentData.appointment.time}
+                      {formatTime12(data?.schedule?.startTime)}
                     </SemiBold>
                     <Medium className='mt-1 text-sm text-neutral-600 dark:text-neutral-400'>
-                      {appointmentData.appointment.day}, {appointmentData.appointment.date}
+                      {formatDateShort(data?.booking?.date)}
                     </Medium>
                   </View>
                 </View>
                 <View className='items-end'>
                   <SemiBold className='text-sm text-neutral-600 dark:text-neutral-400'>Queue</SemiBold>
                   <SemiBold className='mt-1 text-lg text-blue-600 dark:text-blue-400'>
-                    Q{appointmentData.appointment.queueNumber}
+                    Q{data?.booking?.queueNo || 'N/A'}
                   </SemiBold>
                 </View>
               </View>
@@ -156,10 +184,11 @@ export default function AppointmentDetails() {
                 <View className='flex-1'>
                   <Medium className='text-sm text-neutral-600 dark:text-neutral-400'>Location</Medium>
                   <SemiBold className='mt-1 text-sm text-neutral-900 dark:text-white'>
-                    {appointmentData.location.name}
+                    {data?.healthcareProvider?.name || 'N/A'}
                   </SemiBold>
                   <Medium className='mt-1 text-sm text-neutral-600 dark:text-neutral-400'>
-                    {appointmentData.location.address}
+                    {[data?.healthcareProvider?.roadName, data?.healthcareProvider?.city].filter(Boolean).join(', ') ||
+                      'Address N/A'}
                   </Medium>
                 </View>
               </View>
@@ -169,21 +198,21 @@ export default function AppointmentDetails() {
             <View className='border-t border-neutral-100 px-4 py-3 dark:border-neutral-700'>
               <View className='flex-row items-start gap-3'>
                 <View
-                  className={`rounded-md p-2 ${appointmentData.appointment.status === 'confirmed' ? 'bg-green-100/50 dark:bg-green-900/20' : 'bg-yellow-100/50 dark:bg-yellow-900/20'}`}
+                  className={`rounded-md p-2 ${data?.booking?.bookingStatus === 'confirmed' ? 'bg-green-100/50 dark:bg-green-900/20' : 'bg-yellow-100/50 dark:bg-yellow-900/20'}`}
                 >
                   <Calendar01Icon
                     size={16}
-                    color={appointmentData.appointment.status === 'confirmed' ? '#16a34a' : '#eab308'}
+                    color={data?.booking?.bookingStatus === 'confirmed' ? '#16a34a' : '#eab308'}
                     strokeWidth={2}
                   />
                 </View>
                 <View className='flex-1'>
                   <Medium className='text-sm text-neutral-600 dark:text-neutral-400'>Status</Medium>
                   <SemiBold className='mt-1 text-sm capitalize text-neutral-900 dark:text-white'>
-                    {appointmentData.appointment.status}
+                    {data?.booking?.bookingStatus || 'pending'}
                   </SemiBold>
                   <Medium className='mt-1 text-xs text-neutral-600 dark:text-neutral-400'>
-                    {appointmentData.appointment.status === 'confirmed'
+                    {data?.booking?.bookingStatus === 'confirmed'
                       ? 'Appointment confirmed by hospital'
                       : 'Awaiting confirmation from hospital'}
                   </Medium>
@@ -200,7 +229,9 @@ export default function AppointmentDetails() {
                   <Medium className='text-xs font-semibold text-neutral-600 dark:text-neutral-400'>
                     Appointment Code
                   </Medium>
-                  <SemiBold className='text-3xl text-blue-600 dark:text-blue-400'>1234</SemiBold>
+                  <SemiBold className='text-3xl text-blue-600 dark:text-blue-400'>
+                    {data?.booking?.sharedCode || 'N/A'}
+                  </SemiBold>
                 </View>
                 <View className='items-center gap-1 rounded-xl bg-blue-600 p-3 dark:bg-blue-700'>
                   <Medium className='text-xs text-blue-100'>Show at</Medium>
@@ -227,23 +258,17 @@ export default function AppointmentDetails() {
               <View className='gap-3'>
                 <View className='flex-row justify-between'>
                   <Medium className='text-sm text-neutral-600 dark:text-neutral-400'>Platform Fee</Medium>
-                  <SemiBold className='text-sm text-neutral-900 dark:text-white'>
-                    ₹{appointmentData.payment.platformFee}
-                  </SemiBold>
+                  <SemiBold className='text-sm text-neutral-900 dark:text-white'>₹0</SemiBold>
                 </View>
                 <View className='h-px bg-neutral-100 dark:bg-neutral-700' />
                 <View className='flex-row justify-between'>
                   <Medium className='text-sm text-neutral-600 dark:text-neutral-400'>GST (18%)</Medium>
-                  <SemiBold className='text-sm text-neutral-900 dark:text-white'>
-                    ₹{appointmentData.payment.gst}
-                  </SemiBold>
+                  <SemiBold className='text-sm text-neutral-900 dark:text-white'>₹0</SemiBold>
                 </View>
                 <View className='h-px bg-neutral-200 dark:bg-neutral-600' />
                 <View className='flex-row items-center justify-between py-2'>
                   <SemiBold className='text-base text-neutral-900 dark:text-white'>Total Payable</SemiBold>
-                  <SemiBold className='text-lg text-green-600 dark:text-green-400'>
-                    ₹{appointmentData.payment.total}
-                  </SemiBold>
+                  <SemiBold className='text-lg text-green-600 dark:text-green-400'>₹0</SemiBold>
                 </View>
               </View>
             </View>

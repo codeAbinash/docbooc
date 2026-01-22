@@ -690,6 +690,96 @@ declare const client: {
     api: {
         v1: {
             users: {
+                members: import("hono/client").ClientRequest<{
+                    $post: {
+                        input: {
+                            json: {
+                                name: string;
+                                dob: string;
+                                gender: "female" | "male" | "other";
+                                relation?: string | undefined;
+                                phone?: string | undefined;
+                            };
+                        };
+                        output: {
+                            success: false;
+                            message: string;
+                            data: null;
+                            error: null;
+                        };
+                        outputFormat: "json";
+                        status: 400;
+                    } | {
+                        input: {
+                            json: {
+                                name: string;
+                                dob: string;
+                                gender: "female" | "male" | "other";
+                                relation?: string | undefined;
+                                phone?: string | undefined;
+                            };
+                        };
+                        output: {
+                            success: false;
+                            message: string;
+                            data: null;
+                            error: null;
+                        };
+                        outputFormat: "json";
+                        status: 401;
+                    } | {
+                        input: {
+                            json: {
+                                name: string;
+                                dob: string;
+                                gender: "female" | "male" | "other";
+                                relation?: string | undefined;
+                                phone?: string | undefined;
+                            };
+                        };
+                        output: {
+                            success: false;
+                            message: string;
+                            data: null;
+                            error: null;
+                        };
+                        outputFormat: "json";
+                        status: 500;
+                    } | {
+                        input: {
+                            json: {
+                                name: string;
+                                dob: string;
+                                gender: "female" | "male" | "other";
+                                relation?: string | undefined;
+                                phone?: string | undefined;
+                            };
+                        };
+                        output: {
+                            success: true;
+                            message: string;
+                            data: {
+                                id: string;
+                                userId: string;
+                                name: string | null;
+                                dob: string | null;
+                                relation: string | null;
+                                gender: "female" | "male" | "other" | null;
+                                phone: string | null;
+                            } | undefined;
+                            error: null;
+                        };
+                        outputFormat: "json";
+                        status: 200;
+                    };
+                }>;
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            users: {
                 booking: {
                     member: {
                         ":patientId": import("hono/client").ClientRequest<{
@@ -799,128 +889,6 @@ declare const client: {
                         }>;
                     };
                 };
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            users: {
-                doctors: import("hono/client").ClientRequest<{
-                    $get: {
-                        input: {};
-                        output: {
-                            success: true;
-                            message: string;
-                            data: {
-                                id: string;
-                                name: string;
-                                email: string | null;
-                                contactNumber: string | null;
-                                gender: string | null;
-                                department: string | null;
-                                degrees: string | null;
-                                experience: number | null;
-                                specialization: string | null;
-                                createdAt: string;
-                                verified: boolean | null;
-                            }[] | undefined;
-                            error: null;
-                        };
-                        outputFormat: "json";
-                        status: 200;
-                    };
-                }>;
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            users: {
-                members: import("hono/client").ClientRequest<{
-                    $post: {
-                        input: {
-                            json: {
-                                name: string;
-                                dob: string;
-                                gender: "female" | "male" | "other";
-                                relation?: string | undefined;
-                                phone?: string | undefined;
-                            };
-                        };
-                        output: {
-                            success: false;
-                            message: string;
-                            data: null;
-                            error: null;
-                        };
-                        outputFormat: "json";
-                        status: 400;
-                    } | {
-                        input: {
-                            json: {
-                                name: string;
-                                dob: string;
-                                gender: "female" | "male" | "other";
-                                relation?: string | undefined;
-                                phone?: string | undefined;
-                            };
-                        };
-                        output: {
-                            success: false;
-                            message: string;
-                            data: null;
-                            error: null;
-                        };
-                        outputFormat: "json";
-                        status: 401;
-                    } | {
-                        input: {
-                            json: {
-                                name: string;
-                                dob: string;
-                                gender: "female" | "male" | "other";
-                                relation?: string | undefined;
-                                phone?: string | undefined;
-                            };
-                        };
-                        output: {
-                            success: false;
-                            message: string;
-                            data: null;
-                            error: null;
-                        };
-                        outputFormat: "json";
-                        status: 500;
-                    } | {
-                        input: {
-                            json: {
-                                name: string;
-                                dob: string;
-                                gender: "female" | "male" | "other";
-                                relation?: string | undefined;
-                                phone?: string | undefined;
-                            };
-                        };
-                        output: {
-                            success: true;
-                            message: string;
-                            data: {
-                                id: string;
-                                userId: string;
-                                name: string | null;
-                                dob: string | null;
-                                relation: string | null;
-                                gender: "female" | "male" | "other" | null;
-                                phone: string | null;
-                            } | undefined;
-                            error: null;
-                        };
-                        outputFormat: "json";
-                        status: 200;
-                    };
-                }>;
             };
         };
     };
@@ -1142,7 +1110,7 @@ declare const client: {
                                 error: null;
                             };
                             outputFormat: "json";
-                            status: 400;
+                            status: 401;
                         } | {
                             input: {
                                 param: {
@@ -1156,7 +1124,7 @@ declare const client: {
                                 error: null;
                             };
                             outputFormat: "json";
-                            status: 401;
+                            status: 404;
                         } | {
                             input: {
                                 param: {
@@ -1167,78 +1135,43 @@ declare const client: {
                                 success: true;
                                 message: string;
                                 data: {
-                                    bookings: {
-                                        id: string;
-                                        scheduleDaysId: string;
-                                        patientId: string;
-                                        date: string;
-                                        queueNo: number | null;
-                                        sharedCode: string | null;
-                                        bookingStatus: "cancelled" | "confirmed" | "provisional" | null;
-                                        visitStatus: "complete" | "missed" | "ongoing" | null;
-                                        paymentId: string | null;
-                                        createdAt: string;
-                                    };
-                                    doctors: {
+                                    doctor: {
                                         id: string;
                                         name: string;
-                                        email: string | null;
-                                        contactNumber: string | null;
-                                        gender: string | null;
                                         department: string | null;
-                                        degrees: string | null;
-                                        experience: number | null;
-                                        specialization: string | null;
-                                        createdAt: string;
-                                        verified: boolean | null;
                                     } | null;
-                                    healthcare_providers: {
+                                    patient: {
+                                        id: string;
+                                        name: string | null;
+                                        dob: string | null;
+                                        gender: "female" | "male" | "other" | null;
+                                    } | null;
+                                    schedule: {
+                                        id: string | null;
+                                        scheduleType: "daily" | "monthly" | "weekly" | null;
+                                        scheduleStatus: "active" | "applied" | "approved" | "inactive" | "pending" | "rejected" | null;
+                                        startTime: string | null;
+                                        endTime: string | null;
+                                    };
+                                    booking: {
+                                        id: string;
+                                        date: string;
+                                        bookingStatus: "cancelled" | "confirmed" | "provisional" | null;
+                                        createdAt: string;
+                                        sharedCode: string | null;
+                                        queueNo: number | null;
+                                    };
+                                    healthcareProvider: {
                                         id: string;
                                         name: string;
-                                        email: string;
-                                        contactNumber: string | null;
-                                        location: string | null;
-                                        pin: string | null;
-                                        state: string | null;
-                                        city: string | null;
                                         houseNumber: string | null;
                                         roadName: string | null;
                                         landmark: string | null;
-                                        profileImage: string | null;
-                                        password: string;
-                                        createdAt: string;
-                                        verified: boolean | null;
+                                        city: string | null;
+                                        state: string | null;
+                                        pin: string | null;
                                     } | null;
-                                    members: {
-                                        id: string;
-                                        userId: string;
-                                        relation: string | null;
-                                        name: string | null;
-                                        gender: "female" | "male" | "other" | null;
-                                        dob: string | null;
-                                        phone: string | null;
-                                        isMe: boolean | null;
-                                        createdAt: string;
-                                        updatedAt: string;
-                                    } | null;
-                                    schedule_days: {
-                                        id: string;
-                                        scheduleId: string;
-                                        day: number | null;
-                                        startTime: string;
-                                        endTime: string;
-                                        maxBookings: number;
-                                    } | null;
-                                    schedules: {
-                                        id: string;
-                                        hpId: string;
-                                        doctorId: string;
-                                        scheduleType: "daily" | "monthly" | "weekly";
-                                        daysMask: number | null;
-                                        scheduleStatus: "active" | "applied" | "approved" | "inactive" | "pending" | "rejected" | null;
-                                        createdAt: string;
-                                    } | null;
-                                } | undefined;
+                                } | null | undefined;
                                 error: null;
                             };
                             outputFormat: "json";
@@ -1349,6 +1282,38 @@ declare const client: {
                         };
                     }>;
                 };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            users: {
+                doctors: import("hono/client").ClientRequest<{
+                    $get: {
+                        input: {};
+                        output: {
+                            success: true;
+                            message: string;
+                            data: {
+                                id: string;
+                                name: string;
+                                email: string | null;
+                                contactNumber: string | null;
+                                gender: string | null;
+                                department: string | null;
+                                degrees: string | null;
+                                experience: number | null;
+                                specialization: string | null;
+                                createdAt: string;
+                                verified: boolean | null;
+                            }[] | undefined;
+                            error: null;
+                        };
+                        outputFormat: "json";
+                        status: 200;
+                    };
+                }>;
             };
         };
     };
@@ -3743,6 +3708,96 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
     api: {
         v1: {
             users: {
+                members: import("hono/client").ClientRequest<{
+                    $post: {
+                        input: {
+                            json: {
+                                name: string;
+                                dob: string;
+                                gender: "female" | "male" | "other";
+                                relation?: string | undefined;
+                                phone?: string | undefined;
+                            };
+                        };
+                        output: {
+                            success: false;
+                            message: string;
+                            data: null;
+                            error: null;
+                        };
+                        outputFormat: "json";
+                        status: 400;
+                    } | {
+                        input: {
+                            json: {
+                                name: string;
+                                dob: string;
+                                gender: "female" | "male" | "other";
+                                relation?: string | undefined;
+                                phone?: string | undefined;
+                            };
+                        };
+                        output: {
+                            success: false;
+                            message: string;
+                            data: null;
+                            error: null;
+                        };
+                        outputFormat: "json";
+                        status: 401;
+                    } | {
+                        input: {
+                            json: {
+                                name: string;
+                                dob: string;
+                                gender: "female" | "male" | "other";
+                                relation?: string | undefined;
+                                phone?: string | undefined;
+                            };
+                        };
+                        output: {
+                            success: false;
+                            message: string;
+                            data: null;
+                            error: null;
+                        };
+                        outputFormat: "json";
+                        status: 500;
+                    } | {
+                        input: {
+                            json: {
+                                name: string;
+                                dob: string;
+                                gender: "female" | "male" | "other";
+                                relation?: string | undefined;
+                                phone?: string | undefined;
+                            };
+                        };
+                        output: {
+                            success: true;
+                            message: string;
+                            data: {
+                                id: string;
+                                userId: string;
+                                name: string | null;
+                                dob: string | null;
+                                relation: string | null;
+                                gender: "female" | "male" | "other" | null;
+                                phone: string | null;
+                            } | undefined;
+                            error: null;
+                        };
+                        outputFormat: "json";
+                        status: 200;
+                    };
+                }>;
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            users: {
                 booking: {
                     member: {
                         ":patientId": import("hono/client").ClientRequest<{
@@ -3852,128 +3907,6 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                         }>;
                     };
                 };
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            users: {
-                doctors: import("hono/client").ClientRequest<{
-                    $get: {
-                        input: {};
-                        output: {
-                            success: true;
-                            message: string;
-                            data: {
-                                id: string;
-                                name: string;
-                                email: string | null;
-                                contactNumber: string | null;
-                                gender: string | null;
-                                department: string | null;
-                                degrees: string | null;
-                                experience: number | null;
-                                specialization: string | null;
-                                createdAt: string;
-                                verified: boolean | null;
-                            }[] | undefined;
-                            error: null;
-                        };
-                        outputFormat: "json";
-                        status: 200;
-                    };
-                }>;
-            };
-        };
-    };
-} & {
-    api: {
-        v1: {
-            users: {
-                members: import("hono/client").ClientRequest<{
-                    $post: {
-                        input: {
-                            json: {
-                                name: string;
-                                dob: string;
-                                gender: "female" | "male" | "other";
-                                relation?: string | undefined;
-                                phone?: string | undefined;
-                            };
-                        };
-                        output: {
-                            success: false;
-                            message: string;
-                            data: null;
-                            error: null;
-                        };
-                        outputFormat: "json";
-                        status: 400;
-                    } | {
-                        input: {
-                            json: {
-                                name: string;
-                                dob: string;
-                                gender: "female" | "male" | "other";
-                                relation?: string | undefined;
-                                phone?: string | undefined;
-                            };
-                        };
-                        output: {
-                            success: false;
-                            message: string;
-                            data: null;
-                            error: null;
-                        };
-                        outputFormat: "json";
-                        status: 401;
-                    } | {
-                        input: {
-                            json: {
-                                name: string;
-                                dob: string;
-                                gender: "female" | "male" | "other";
-                                relation?: string | undefined;
-                                phone?: string | undefined;
-                            };
-                        };
-                        output: {
-                            success: false;
-                            message: string;
-                            data: null;
-                            error: null;
-                        };
-                        outputFormat: "json";
-                        status: 500;
-                    } | {
-                        input: {
-                            json: {
-                                name: string;
-                                dob: string;
-                                gender: "female" | "male" | "other";
-                                relation?: string | undefined;
-                                phone?: string | undefined;
-                            };
-                        };
-                        output: {
-                            success: true;
-                            message: string;
-                            data: {
-                                id: string;
-                                userId: string;
-                                name: string | null;
-                                dob: string | null;
-                                relation: string | null;
-                                gender: "female" | "male" | "other" | null;
-                                phone: string | null;
-                            } | undefined;
-                            error: null;
-                        };
-                        outputFormat: "json";
-                        status: 200;
-                    };
-                }>;
             };
         };
     };
@@ -4195,7 +4128,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 error: null;
                             };
                             outputFormat: "json";
-                            status: 400;
+                            status: 401;
                         } | {
                             input: {
                                 param: {
@@ -4209,7 +4142,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 error: null;
                             };
                             outputFormat: "json";
-                            status: 401;
+                            status: 404;
                         } | {
                             input: {
                                 param: {
@@ -4220,78 +4153,43 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 success: true;
                                 message: string;
                                 data: {
-                                    bookings: {
-                                        id: string;
-                                        scheduleDaysId: string;
-                                        patientId: string;
-                                        date: string;
-                                        queueNo: number | null;
-                                        sharedCode: string | null;
-                                        bookingStatus: "cancelled" | "confirmed" | "provisional" | null;
-                                        visitStatus: "complete" | "missed" | "ongoing" | null;
-                                        paymentId: string | null;
-                                        createdAt: string;
-                                    };
-                                    doctors: {
+                                    doctor: {
                                         id: string;
                                         name: string;
-                                        email: string | null;
-                                        contactNumber: string | null;
-                                        gender: string | null;
                                         department: string | null;
-                                        degrees: string | null;
-                                        experience: number | null;
-                                        specialization: string | null;
-                                        createdAt: string;
-                                        verified: boolean | null;
                                     } | null;
-                                    healthcare_providers: {
+                                    patient: {
+                                        id: string;
+                                        name: string | null;
+                                        dob: string | null;
+                                        gender: "female" | "male" | "other" | null;
+                                    } | null;
+                                    schedule: {
+                                        id: string | null;
+                                        scheduleType: "daily" | "monthly" | "weekly" | null;
+                                        scheduleStatus: "active" | "applied" | "approved" | "inactive" | "pending" | "rejected" | null;
+                                        startTime: string | null;
+                                        endTime: string | null;
+                                    };
+                                    booking: {
+                                        id: string;
+                                        date: string;
+                                        bookingStatus: "cancelled" | "confirmed" | "provisional" | null;
+                                        createdAt: string;
+                                        sharedCode: string | null;
+                                        queueNo: number | null;
+                                    };
+                                    healthcareProvider: {
                                         id: string;
                                         name: string;
-                                        email: string;
-                                        contactNumber: string | null;
-                                        location: string | null;
-                                        pin: string | null;
-                                        state: string | null;
-                                        city: string | null;
                                         houseNumber: string | null;
                                         roadName: string | null;
                                         landmark: string | null;
-                                        profileImage: string | null;
-                                        password: string;
-                                        createdAt: string;
-                                        verified: boolean | null;
+                                        city: string | null;
+                                        state: string | null;
+                                        pin: string | null;
                                     } | null;
-                                    members: {
-                                        id: string;
-                                        userId: string;
-                                        relation: string | null;
-                                        name: string | null;
-                                        gender: "female" | "male" | "other" | null;
-                                        dob: string | null;
-                                        phone: string | null;
-                                        isMe: boolean | null;
-                                        createdAt: string;
-                                        updatedAt: string;
-                                    } | null;
-                                    schedule_days: {
-                                        id: string;
-                                        scheduleId: string;
-                                        day: number | null;
-                                        startTime: string;
-                                        endTime: string;
-                                        maxBookings: number;
-                                    } | null;
-                                    schedules: {
-                                        id: string;
-                                        hpId: string;
-                                        doctorId: string;
-                                        scheduleType: "daily" | "monthly" | "weekly";
-                                        daysMask: number | null;
-                                        scheduleStatus: "active" | "applied" | "approved" | "inactive" | "pending" | "rejected" | null;
-                                        createdAt: string;
-                                    } | null;
-                                } | undefined;
+                                } | null | undefined;
                                 error: null;
                             };
                             outputFormat: "json";
@@ -4402,6 +4300,38 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                         };
                     }>;
                 };
+            };
+        };
+    };
+} & {
+    api: {
+        v1: {
+            users: {
+                doctors: import("hono/client").ClientRequest<{
+                    $get: {
+                        input: {};
+                        output: {
+                            success: true;
+                            message: string;
+                            data: {
+                                id: string;
+                                name: string;
+                                email: string | null;
+                                contactNumber: string | null;
+                                gender: string | null;
+                                department: string | null;
+                                degrees: string | null;
+                                experience: number | null;
+                                specialization: string | null;
+                                createdAt: string;
+                                verified: boolean | null;
+                            }[] | undefined;
+                            error: null;
+                        };
+                        outputFormat: "json";
+                        status: 200;
+                    };
+                }>;
             };
         };
     };
