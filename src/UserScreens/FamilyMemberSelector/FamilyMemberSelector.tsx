@@ -7,14 +7,13 @@ import popupStore from '@/zustand/popupStore'
 import Button from '@components/Button'
 import HybridHead from '@components/HybridHead'
 import PlusSignIcon from '@hugeicons/PlusSignIcon'
-import ArrowLeftIcon from '@hugeicons/ArrowLeft01Icon'
+import { useFocusEffect } from '@react-navigation/native'
 import { useQuery } from '@tanstack/react-query'
-import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import { api } from '@utils/client'
 import { Medium, SemiBold } from '@utils/fonts'
 import { NavProp } from '@utils/types'
 import React, { useCallback } from 'react'
-import { ActivityIndicator, ScrollView, View, BackHandler } from 'react-native'
+import { ActivityIndicator, BackHandler, ScrollView, View } from 'react-native'
 
 const calcAge = (dob?: string | null) => {
   if (!dob) return undefined
@@ -63,6 +62,9 @@ const FamilyMemberSelectorScreen = ({ navigation }: NavProp) => {
     queryFn: async () => await (await api.users.members.$get()).json(),
   })
 
+  console.log('membersResponse:', membersResponse);
+  
+
   const handleSelectMember = (member: Member) => {
     setSelectedMemberId(member.id)
   }
@@ -71,8 +73,12 @@ const FamilyMemberSelectorScreen = ({ navigation }: NavProp) => {
     navigation.navigate('PatientInfo' as any, { fromFamilyMember: true })
   }
 
-  const handleSetupProfile = () => {
-    navigation.navigate('PatientInfo' as any, { fromSetupProfile: true })
+  const handleSetupProfile = (member: Member) => {
+    navigation.navigate('PatientInfo' as any, { fromSetupProfile: true, memberData: member })
+  }
+
+  const handleEditMember = (member: Member) => {
+    navigation.navigate('PatientInfo' as any, { fromEditMember: true, memberData: member })
   }
 
   const handleBackPress = () => {
@@ -133,9 +139,8 @@ const FamilyMemberSelectorScreen = ({ navigation }: NavProp) => {
       <View className='flex-1'>
         <ScrollView className='flex-1' contentContainerClassName='px-5 py-4' showsVerticalScrollIndicator={false}>
           {familyMembers?.map((member, index) => {
-            const isMyself = index === 0
+            const isMyself = member.isMe
             const needsSetup = isMyself && (!member.name || !member.dob || !member.gender)
-            // const displayName = needsSetup ? 'Setup your profile to continue' : undefined
 
             return (
               <FamilyMemberCard
@@ -143,7 +148,8 @@ const FamilyMemberSelectorScreen = ({ navigation }: NavProp) => {
                 member={member}
                 isSelected={selectedMemberId === member.id}
                 onSelect={handleSelectMember}
-                onNameClick={needsSetup ? handleSetupProfile : undefined}
+                // onNameClick={needsSetup ? handleSetupProfile : undefined}
+                onEdit={handleEditMember}
                 needSetup={needsSetup}
               />
             )
@@ -181,12 +187,11 @@ const FamilyMemberSelectorScreen = ({ navigation }: NavProp) => {
             onPress={() => {
               if (selectedMemberId) {
                 const selectedMember = familyMembers.find((m) => m.id === selectedMemberId)
-                const selectedIndex = familyMembers.findIndex((m) => m.id === selectedMemberId)
-                const needsSetup =
-                  selectedIndex === 0 && (!selectedMember?.name || !selectedMember?.dob || !selectedMember?.gender)
+                const isMe = familyMembers.find((m) => m.id === selectedMemberId)?.isMe
+                const needsSetup = isMe && (!selectedMember?.name || !selectedMember?.dob || !selectedMember?.gender)
 
                 if (needsSetup) {
-                  navigation.navigate('PatientInfo' as any, { fromSetupProfile: true })
+                  navigation.navigate('PatientInfo' as any, { fromSetupProfile: true, memberData: selectedMember })
                 } else if (selectedMember) {
                   setBookingMemberId(selectedMemberId)
                   setPatientData(mapMemberToPatientData(selectedMember))

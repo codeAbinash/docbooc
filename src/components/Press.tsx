@@ -1,11 +1,12 @@
-import React, { useCallback, useRef, useEffect } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import {
+  Animated,
+  type GestureResponderEvent,
   Pressable,
   type PressableProps,
-  Animated,
   type StyleProp,
+  Text,
   type ViewStyle,
-  type GestureResponderEvent,
 } from 'react-native'
 
 export type CustomPressProps = Omit<PressableProps, 'style'> & {
@@ -84,10 +85,18 @@ export default function Press({
     opacity,
   }
 
+  // Normalize children: wrap plain strings/numbers with Text so they are not rendered as raw text under native Views
+  const normalizedChildren = React.Children.map(children, (child) => {
+    if (typeof child === 'string' || typeof child === 'number') {
+      return <Text>{child}</Text>
+    }
+    return child
+  })
+
   if (disabled) {
     return (
       <Pressable style={[style, { opacity: 0.4 }]} disabled {...props}>
-        {children}
+        {normalizedChildren}
       </Pressable>
     )
   }
@@ -100,7 +109,7 @@ export default function Press({
       disabled={disabled}
       {...props}
     >
-      {children}
+      {normalizedChildren}
     </AnimatedPressable>
   )
 }

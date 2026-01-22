@@ -7,7 +7,7 @@ import { PaddingBottom } from '@components/SafePadding'
 import Calendar03Icon from '@hugeicons/Calendar03Icon'
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker'
 import { useNavigation, useRoute } from '@react-navigation/native'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { api } from '@utils/client'
 import Colors from '@utils/colors'
 import { Medium, SemiBold } from '@utils/fonts'
@@ -21,27 +21,78 @@ const PatientInfo = ({}: {}) => {
   const navigation = useNavigation<StackNav>()
   const route = useRoute()
   const scheme = useColorScheme()
+  const queryClient = useQueryClient()
 
   const isFromFamilyMemberSelector = (route.params as any)?.fromFamilyMember === true
   const isFromSetupProfile = (route.params as any)?.fromSetupProfile === true
+  const isFromEditMember = (route.params as any)?.fromEditMember === true
+  const memberData = (route.params as any)?.memberData
 
-  const [name, setName] = useState('')
-  const [selectedGender, setSelectedGender] = useState<Gender>()
-  const [dob, setDob] = useState(new Date())
+  const [name, setName] = useState(memberData?.name || '')
+  const [selectedGender, setSelectedGender] = useState<Gender>(memberData?.gender)
+  const [dob, setDob] = useState(memberData?.dob ? new Date(memberData.dob) : new Date())
   const [showDatePicker, setShowDatePicker] = useState(false)
-  const [mobile, setMobile] = useState('')
+  const [mobile, setMobile] = useState(memberData?.phone || '')
   const [otp, setOtp] = useState('')
   const [showOtpSheet, setShowOtpSheet] = useState(false)
-  const [isFamilyMember, setIsFamilyMember] = useState(false)
-  const [relationName, setRelationName] = useState('')
+  const [isFamilyMember, setIsFamilyMember] = useState(memberData?.relation ? true : false)
+  const [relationName, setRelationName] = useState(memberData?.relation || '')
   const [mobileValidationError, setMobileValidationError] = useState('')
   const mobileRef = useRef<TextInput>(null)
+
+  console.log('memberData:', memberData)
+  // console.log('isFromSetupProfile', isFromSetupProfile)
+  console.log('isFromEditMember', isFromEditMember)
 
   const { mutate: addMember, isPending: isAddingMember } = useMutation({
     mutationKey: ['add-family-member'],
     mutationFn: async () => {
+      console.log('Adding member with data:', {
+        name,
+        dob: dob.toISOString(),
+        gender: selectedGender!,
+        relation: relationName,
+        phone: mobile,
+        isMember: isFamilyMember,
+      })
       return await (
         await api.users.members.$post({
+          json: {
+            name,
+            dob: dob.toISOString(),
+            gender: selectedGender!,
+            relation: relationName,
+            phone: mobile,
+            isMember: isFamilyMember,
+          },
+        })
+      ).json()
+    },
+    onSuccess: (data) => {
+      console.log(data)
+      if (!data.success) return ToastAndroid.show('Failed to add family member', ToastAndroid.LONG)
+      ToastAndroid.show('Family member added successfully', ToastAndroid.SHORT)
+      queryClient.invalidateQueries({ queryKey: ['members'] })
+
+      if (isFamilyMember) {
+        navigation.goBack()
+        return
+      }
+
+      navigation.navigate('VerifyBeforeBooking' as any)
+    },
+    onError: (error) => {
+      console.error(error)
+      ToastAndroid.show('An error occurred while adding family member', ToastAndroid.LONG)
+    },
+  })
+
+  const { mutate: updateMember, isPending: isUpdatingMember } = useMutation({
+    mutationKey: ['update-family-member'],
+    mutationFn: async () => {
+      return await (
+        await api.users.members[':memberId'].$put({
+          param: { memberId: memberData.id },
           json: {
             name,
             dob: dob.toISOString(),
@@ -54,13 +105,14 @@ const PatientInfo = ({}: {}) => {
     },
     onSuccess: (data) => {
       console.log(data)
-      if (!data.success) return ToastAndroid.show('Failed to add family member', ToastAndroid.LONG)
-      ToastAndroid.show('Family member added successfully', ToastAndroid.SHORT)
+      if ('error' in data) return ToastAndroid.show('Failed to update family member', ToastAndroid.LONG)
+      ToastAndroid.show('Family member updated successfully', ToastAndroid.SHORT)
+      queryClient.invalidateQueries({ queryKey: ['members'] })
       navigation.goBack()
     },
     onError: (error) => {
       console.error(error)
-      ToastAndroid.show('An error occurred while adding family member', ToastAndroid.LONG)
+      ToastAndroid.show('An error occurred while updating family member', ToastAndroid.LONG)
     },
   })
 
@@ -111,12 +163,20 @@ const PatientInfo = ({}: {}) => {
   }
 
   function saveProfileAndGoNext() {
-    addMember()
+    if (isFromEditMember || isFromSetupProfile) {
+      updateMember()
+    } else {
+      addMember()
+    }
   }
 
   return (
     <View className='flex-1 bg-white dark:bg-neutral-900'>
-      <HybridHead title='Patient Information' showBackButton onBackPress={() => navigation.goBack()} />
+      <HybridHead
+        title={isFromEditMember ? 'Edit Patient Information' : 'Patient Information'}
+        showBackButton
+        onBackPress={() => navigation.goBack()}
+      />
 
       <ScrollView showsVerticalScrollIndicator={false} className='flex-1'>
         {/* Form Section */}
@@ -132,13 +192,11 @@ const PatientInfo = ({}: {}) => {
               placeholderTextColor={scheme === 'dark' ? '#9ca3af' : '#d1d5db'}
             />
           </View>
-
           {/* Gender (Required) */}
           <View>
             <Medium className='mb-2 text-sm text-neutral-700 dark:text-neutral-300'>Gender (Required) *</Medium>
             <RadioGenderSelector selectedGender={selectedGender} onGenderChange={setSelectedGender} />
           </View>
-
           {/* Date of Birth (Required) */}
           <View>
             <Medium className='mb-2 text-sm text-neutral-700 dark:text-neutral-300'>Date of Birth (Required) *</Medium>
@@ -159,47 +217,41 @@ const PatientInfo = ({}: {}) => {
               />
             )}
           </View>
-
-          {/* Mobile Number (Required) */}
-          {!isFromSetupProfile && (
-            <View>
-              <Medium className='mb-2 text-sm text-neutral-700 dark:text-neutral-300'>
-                Mobile Number (Required) *
-              </Medium>
-              <View className='flex-row gap-3'>
-                <TextInput
-                  ref={mobileRef}
-                  value={mobile}
-                  onChangeText={(text) => {
-                    const cleaned = text.replace(/[^0-9]/g, '')
-                    setMobile(cleaned.slice(0, 10))
-                    if (mobileValidationError) setMobileValidationError('')
-                  }}
-                  keyboardType='phone-pad'
-                  placeholder='Enter your mobile number'
-                  maxLength={10}
-                  className='flex-1 rounded-xl border bg-white px-4 py-3 text-neutral-900 dark:bg-neutral-800 dark:text-white'
-                  style={[
-                    {
-                      borderColor: mobileValidationError ? '#DC2626' : scheme === 'dark' ? '#525252' : '#d1d5db',
-                      borderWidth: 1,
-                    },
-                  ]}
-                  placeholderTextColor={scheme === 'dark' ? '#9ca3af' : '#d1d5db'}
-                />
-                <Press
-                  onPress={handleSendOtp}
-                  className='items-center justify-center rounded-xl border border-blue-600 bg-blue-600 px-4 py-3'
-                >
-                  <Medium className='text-white disabled:text-neutral-500'>Send OTP</Medium>
-                </Press>
-              </View>
-              {mobileValidationError && <Medium className='pt-2 text-sm text-red-600'>{mobileValidationError}</Medium>}
+          {/* Mobile Number (Required) */}(
+          <View>
+            <Medium className='mb-2 text-sm text-neutral-700 dark:text-neutral-300'>Mobile Number (Required) *</Medium>
+            <View className='flex-row gap-3'>
+              <TextInput
+                ref={mobileRef}
+                value={mobile}
+                onChangeText={(text) => {
+                  const cleaned = text.replace(/[^0-9]/g, '')
+                  setMobile(cleaned.slice(0, 10))
+                  if (mobileValidationError) setMobileValidationError('')
+                }}
+                keyboardType='phone-pad'
+                placeholder='Enter your mobile number'
+                maxLength={10}
+                className='flex-1 rounded-xl border bg-white px-4 py-3 text-neutral-900 dark:bg-neutral-800 dark:text-white'
+                style={[
+                  {
+                    borderColor: mobileValidationError ? '#DC2626' : scheme === 'dark' ? '#525252' : '#d1d5db',
+                    borderWidth: 1,
+                  },
+                ]}
+                placeholderTextColor={scheme === 'dark' ? '#9ca3af' : '#d1d5db'}
+              />
+              <Press
+                onPress={handleSendOtp}
+                className='items-center justify-center rounded-xl border border-blue-600 bg-blue-600 px-4 py-3'
+              >
+                <Medium className='text-white disabled:text-neutral-500'>Send OTP</Medium>
+              </Press>
             </View>
-          )}
-
-          {/* Save as Family Member */}
-          {isFromFamilyMemberSelector && !isFromSetupProfile && (
+            {mobileValidationError && <Medium className='pt-2 text-sm text-red-600'>{mobileValidationError}</Medium>}
+          </View>
+          ){/* Save as Family Member */}
+          {isFromFamilyMemberSelector && !isFromEditMember && (
             <View>
               <Press
                 onPress={() => setIsFamilyMember(!isFamilyMember)}
@@ -216,7 +268,6 @@ const PatientInfo = ({}: {}) => {
               </Press>
             </View>
           )}
-
           {/* Relation (Conditional) */}
           {isFamilyMember && (
             <View>
@@ -235,7 +286,13 @@ const PatientInfo = ({}: {}) => {
 
       {/* Action Button */}
       <View className='gap-3 border-t border-neutral-200 bg-white px-5 py-4 dark:border-neutral-700 dark:bg-neutral-800'>
-        {isFamilyMember ? (
+        {isFromEditMember ? (
+          <Button
+            title={isUpdatingMember ? 'Updating...' : 'Update Patient Info'}
+            onPress={saveProfileAndGoNext}
+            disabled={isUpdatingMember}
+          />
+        ) : isFamilyMember ? (
           <Button title='Save Family Member' onPress={saveProfileAndGoNext} />
         ) : (
           <Button
