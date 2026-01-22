@@ -45,7 +45,7 @@ const transformAppointmentToPatientCard = (
   age: appointment.patient.dob ? new Date().getFullYear() - new Date(appointment.patient.dob).getFullYear() : 0,
   gender: appointment.patient.gender === 'female' ? 'Female' : appointment.patient.gender === 'male' ? 'Male' : 'Other',
   queuePosition: appointment.queueNo || 0,
-  status: appointment.status === 'completed' ? 'confirmed' : 'provisional',
+  status: appointment.bookingStatus === 'confirmed' ? 'confirmed' : 'provisional',
 })
 
 // Component
@@ -116,7 +116,7 @@ function HPTodaysAppointmentsScreen() {
       if (selectedAction.type === 'complete') {
         const res = await client.api.v1.hp.bookings.patients[':bookingId'].status.$put({
           param: { bookingId: selectedAction.patientId },
-          json: { status: 'completed' },
+          json: { bookingStatus: 'confirmed' },
         })
         const data = await res.json()
         console.log('booking updated', data)

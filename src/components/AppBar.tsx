@@ -1,19 +1,27 @@
+import DoctorSwitcherModal from '@components/DoctorSwitcherModal'
 import { PaddingTop } from '@components/SafePadding'
 import Menu01Icon from '@hugeicons/Menu01Icon'
 import UserSwitchIcon from '@hugeicons/UserSwitchIcon'
 import { useNavigation } from '@react-navigation/native'
 import Colors from '@utils/colors'
 import { Medium } from '@utils/fonts'
-import { DrawerNav } from '@utils/types'
+import { Doctor, DrawerNav } from '@utils/types'
 import { useColorScheme } from 'nativewind'
-import { useState, memo, useMemo } from 'react'
+import { memo, useMemo, useState } from 'react'
 import { TouchableOpacity, View } from 'react-native'
-import DoctorSwitcherModal from '@components/DoctorSwitcherModal'
 
-const initialDoctor = {
+const initialDoctor: Doctor = {
   id: '1',
   name: 'Dr. Abinash Karmakar',
-  specialty: 'Cardiologist',
+  email: null,
+  contactNumber: null,
+  gender: null,
+  department: null,
+  degrees: null,
+  experience: null,
+  specialization: 'Cardiologist',
+  createdAt: new Date().toISOString(),
+  verified: null,
 }
 
 const MainContent = memo(() => {
@@ -25,7 +33,7 @@ const MainContent = memo(() => {
       <View className='flex-1 flex-row items-center pb-2'>
         <View className='flex-1 items-center'>
           <Medium className='text-xl text-black dark:text-white'>{currentDoctor.name}</Medium>
-          <Medium className='text-xs text-neutral-500'>{currentDoctor.specialty}</Medium>
+          <Medium className='text-xs text-neutral-500'>{currentDoctor.specialization}</Medium>
         </View>
         <TouchableOpacity
           onPress={() => setShowDoctorModal(true)}

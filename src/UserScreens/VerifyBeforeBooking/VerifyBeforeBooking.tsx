@@ -3,12 +3,12 @@ import popupStore from '@/zustand/popupStore'
 import Button from '@components/Button'
 import HybridHead from '@components/HybridHead'
 import { PaddingBottom } from '@components/SafePadding'
-import { useNavigation, useFocusEffect } from '@react-navigation/native'
+import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import { useMutation } from '@tanstack/react-query'
 import { api } from '@utils/client'
 import { StackNav } from '@utils/types'
-import { ScrollView, ToastAndroid, View, BackHandler } from 'react-native'
 import { useCallback } from 'react'
+import { BackHandler, ScrollView, ToastAndroid, View } from 'react-native'
 import { AppointmentDetailsCard } from './AppointmentDetailsCard'
 import { ImportantNotesCard } from './ImportantNotesCard'
 import { PaymentSummaryCard } from './PaymentSummaryCard'
@@ -33,7 +33,7 @@ const VerifyBeforeBooking = () => {
         await api.users.booking.$post({
           json: {
             date: appointment.date,
-            memberId: appointment.selectedMemberId,
+            patientId: appointment.selectedMemberId,
             scheduleDaysId: appointment.location?.scheduleDaysId || '',
           },
         })
