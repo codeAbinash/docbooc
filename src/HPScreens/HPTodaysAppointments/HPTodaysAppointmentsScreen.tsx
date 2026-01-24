@@ -1,13 +1,14 @@
 import ConfirmationModal from '@/HPScreens/components/ConfirmationModal'
 import HybridHead from '@components/HybridHead'
 import { PaddingBottom } from '@components/SafePadding'
+import Calendar01Icon from '@hugeicons/Calendar01Icon'
 import Loading03Icon from '@hugeicons/Loading03Icon'
 import TickDouble02Icon from '@hugeicons/TickDouble02Icon'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { client } from '@utils/client'
 import type { Doctor, Patient } from '@utils/types'
 import { memo, useCallback, useEffect, useState } from 'react'
-import { FlatList, View } from 'react-native'
+import { FlatList, Text, View } from 'react-native'
 import PatientCard from '../components/PatientCard'
 
 type ActionType = 'cancel' | 'complete' | 'move-to-ongoing'
@@ -96,7 +97,12 @@ function HPTodaysAppointmentsScreen() {
     enabled: !!selectedDoctor?.id,
   })
 
-  console.log(todaysAppointments)
+  const filteredAppointments = (todaysAppointments || []).filter((appointment) => {
+    if (activeTab === 1) {
+      return appointment.visitStatus === 'complete'
+    }
+    return appointment.visitStatus !== 'complete'
+  })
 
   // Handlers
   const handleToggleCard = useCallback((id: string) => {
@@ -113,25 +119,26 @@ function HPTodaysAppointmentsScreen() {
     [isCompleteTab],
   )
 
-  const handleConfirm = useCallback(async () => {
-    if (!selectedAction) return
-    setModalVisible(false)
-    try {
-      if (selectedAction.type === 'complete') {
+  const handleConfirm = useCallback(
+    async (visitStatus: 'missed' | 'complete' | 'ongoing') => {
+      if (!selectedAction) return
+      setModalVisible(false)
+      try {
         const res = await client.api.v1.hp.bookings.patients[':bookingId'].status.$put({
           param: { bookingId: selectedAction.patientId },
-          json: { bookingStatus: 'confirmed' },
+          json: { visitStatus },
         })
         const data = await res.json()
         console.log('booking updated', data)
+        queryClient.invalidateQueries({ queryKey: ['todays-appointments', selectedDoctor?.id ?? ''] })
+      } catch (err) {
+        console.error('Failed to update booking status', err)
+      } finally {
+        setSelectedAction(null)
       }
-      queryClient.invalidateQueries({ queryKey: ['todays-appointments', selectedDoctor?.id ?? ''] })
-    } catch (err) {
-      console.error('Failed to update booking status', err)
-    } finally {
-      setSelectedAction(null)
-    }
-  }, [selectedAction, queryClient, selectedDoctor?.id])
+    },
+    [selectedAction, queryClient, selectedDoctor?.id],
+  )
 
   const handleCloseModal = useCallback(() => {
     setModalVisible(false)
@@ -158,6 +165,21 @@ function HPTodaysAppointmentsScreen() {
 
   const keyExtractor = useCallback((item: Patient) => item.id, [])
 
+  const renderEmptyState = useCallback(
+    () => (
+      <View className='flex-1 items-center justify-center px-6 py-12'>
+        <Calendar01Icon size={64} className='mb-4 text-neutral-400 dark:text-neutral-600' />
+        <Text className='mb-2 text-center text-lg font-semibold text-neutral-700 dark:text-neutral-300'>
+          {activeTab === 1 ? 'No Completed Appointments' : 'No Ongoing Appointments'}
+        </Text>
+        <Text className='text-center text-sm text-neutral-500 dark:text-neutral-400'>
+          {activeTab === 1 ? 'No appointments have been completed yet.' : 'All appointments are completed. Great job!'}
+        </Text>
+      </View>
+    ),
+    [activeTab],
+  )
+
   return (
     <View className='flex-1 bg-white dark:bg-neutral-900'>
       <HybridHead
@@ -176,7 +198,10 @@ function HPTodaysAppointmentsScreen() {
         <ConfirmationModal
           visible={modalVisible}
           onClose={handleCloseModal}
-          onConfirm={handleConfirm}
+          onConfirm={() => {
+            const visitStatus = selectedAction.type === 'complete' ? 'complete' : 'ongoing'
+            handleConfirm(visitStatus)
+          }}
           title={`Do you want to ${selectedAction.type} this appointment?`}
           actionType={selectedAction.type}
           patient={selectedAction.transformedPatient}
@@ -184,12 +209,13 @@ function HPTodaysAppointmentsScreen() {
       )}
 
       <FlatList
-        data={todaysAppointments || []}
+        data={filteredAppointments}
         renderItem={renderPatientCard}
         keyExtractor={keyExtractor}
         contentContainerClassName='px-5 pt-1'
         showsVerticalScrollIndicator={false}
         ListFooterComponent={PaddingBottom}
+        ListEmptyComponent={renderEmptyState}
       />
     </View>
   )

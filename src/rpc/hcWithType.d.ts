@@ -942,8 +942,8 @@ declare const client: {
                                         date: string;
                                         queueNo: number | null;
                                         sharedCode: string | null;
-                                        bookingStatus: "cancelled" | "confirmed" | "provisional" | null;
-                                        visitStatus: "complete" | "missed" | "ongoing" | null;
+                                        bookingStatus: "cancelled" | "confirmed" | "provisional";
+                                        visitStatus: "complete" | "missed" | "ongoing";
                                         paymentId: string | null;
                                         createdAt: string;
                                     } | undefined;
@@ -1010,8 +1010,8 @@ declare const client: {
                                             date: string;
                                             queueNo: number | null;
                                             sharedCode: string | null;
-                                            bookingStatus: "cancelled" | "confirmed" | "provisional" | null;
-                                            visitStatus: "complete" | "missed" | "ongoing" | null;
+                                            bookingStatus: "cancelled" | "confirmed" | "provisional";
+                                            visitStatus: "complete" | "missed" | "ongoing";
                                             paymentId: string | null;
                                             createdAt: string;
                                         };
@@ -1190,6 +1190,7 @@ declare const client: {
                                 relation: string | null;
                                 gender: "female" | "male" | "other" | null;
                                 phone: string | null;
+                                isMember: boolean | null;
                             } | undefined;
                             error: null;
                         };
@@ -1275,7 +1276,7 @@ declare const client: {
                             success: true;
                             message: string;
                             data: {
-                                bookingStatus: "cancelled" | "confirmed" | "provisional" | null;
+                                bookingStatus: "cancelled" | "confirmed" | "provisional";
                                 createdAt: string;
                                 date: string;
                                 id: string;
@@ -1284,7 +1285,7 @@ declare const client: {
                                 queueNo: number | null;
                                 scheduleDaysId: string;
                                 sharedCode: string | null;
-                                visitStatus: "complete" | "missed" | "ongoing" | null;
+                                visitStatus: "complete" | "missed" | "ongoing";
                             } | undefined;
                             error: null;
                         };
@@ -1324,8 +1325,8 @@ declare const client: {
                                         date: string;
                                         queueNo: number | null;
                                         sharedCode: string | null;
-                                        bookingStatus: "cancelled" | "confirmed" | "provisional" | null;
-                                        visitStatus: "complete" | "missed" | "ongoing" | null;
+                                        bookingStatus: "cancelled" | "confirmed" | "provisional";
+                                        visitStatus: "complete" | "missed" | "ongoing";
                                         paymentId: string | null;
                                         createdAt: string;
                                     };
@@ -1464,7 +1465,7 @@ declare const client: {
                                     booking: {
                                         id: string;
                                         date: string;
-                                        bookingStatus: "cancelled" | "confirmed" | "provisional" | null;
+                                        bookingStatus: "cancelled" | "confirmed" | "provisional";
                                         createdAt: string;
                                         sharedCode: string | null;
                                         queueNo: number | null;
@@ -1872,8 +1873,8 @@ declare const client: {
                                         date: string;
                                         queueNo: number | null;
                                         sharedCode: string | null;
-                                        bookingStatus: "cancelled" | "confirmed" | "provisional" | null;
-                                        visitStatus: "complete" | "missed" | "ongoing" | null;
+                                        bookingStatus: "cancelled" | "confirmed" | "provisional";
+                                        visitStatus: "complete" | "missed" | "ongoing";
                                         createdAt: string;
                                     };
                                     scheduleDay: {
@@ -1984,8 +1985,8 @@ declare const client: {
                                         date: string;
                                         queueNo: number | null;
                                         sharedCode: string | null;
-                                        bookingStatus: "cancelled" | "confirmed" | "provisional" | null;
-                                        visitStatus: "complete" | "missed" | "ongoing" | null;
+                                        bookingStatus: "cancelled" | "confirmed" | "provisional";
+                                        visitStatus: "complete" | "missed" | "ongoing";
                                         createdAt: string;
                                     };
                                     scheduleDay: {
@@ -2095,8 +2096,8 @@ declare const client: {
                                         bookingId: string;
                                         date: string;
                                         queueNo: number | null;
-                                        bookingStatus: "cancelled" | "confirmed" | "provisional" | null;
-                                        visitStatus: "complete" | "missed" | "ongoing" | null;
+                                        bookingStatus: "cancelled" | "confirmed" | "provisional";
+                                        visitStatus: "complete" | "missed" | "ongoing";
                                         sharedCode: string | null;
                                         scheduleDayId: string;
                                         startTime: string;
@@ -2957,8 +2958,6 @@ declare const client: {
                                 query: {
                                     doctorId: string;
                                     date: string;
-                                    bookingStatus?: "cancelled" | "confirmed" | "provisional" | undefined;
-                                    visitStatus?: "complete" | "missed" | "ongoing" | undefined;
                                 };
                             };
                             output: {
@@ -2974,8 +2973,6 @@ declare const client: {
                                 query: {
                                     doctorId: string;
                                     date: string;
-                                    bookingStatus?: "cancelled" | "confirmed" | "provisional" | undefined;
-                                    visitStatus?: "complete" | "missed" | "ongoing" | undefined;
                                 };
                             };
                             output: {
@@ -2991,8 +2988,6 @@ declare const client: {
                                 query: {
                                     doctorId: string;
                                     date: string;
-                                    bookingStatus?: "cancelled" | "confirmed" | "provisional" | undefined;
-                                    visitStatus?: "complete" | "missed" | "ongoing" | undefined;
                                 };
                             };
                             output: {
@@ -3009,8 +3004,8 @@ declare const client: {
                                         gender: "female" | "male" | "other" | null;
                                     };
                                     queueNo: number | null;
-                                    bookingStatus: "cancelled" | "confirmed" | "provisional" | null;
-                                    visitStatus: "complete" | "missed" | "ongoing" | null;
+                                    bookingStatus: "cancelled" | "confirmed" | "provisional";
+                                    visitStatus: "complete" | "missed" | "ongoing";
                                     sharedCode: string | null;
                                     paymentId: string | null;
                                 }[] | null | undefined;
@@ -3035,8 +3030,7 @@ declare const client: {
                                 $put: {
                                     input: {
                                         json: {
-                                            bookingStatus?: "cancelled" | "confirmed" | "provisional" | undefined;
-                                            visitStatus?: "complete" | "missed" | "ongoing" | undefined;
+                                            visitStatus: "complete" | "missed" | "ongoing";
                                         };
                                     } & {
                                         param: {
@@ -3054,8 +3048,7 @@ declare const client: {
                                 } | {
                                     input: {
                                         json: {
-                                            bookingStatus?: "cancelled" | "confirmed" | "provisional" | undefined;
-                                            visitStatus?: "complete" | "missed" | "ongoing" | undefined;
+                                            visitStatus: "complete" | "missed" | "ongoing";
                                         };
                                     } & {
                                         param: {
@@ -3073,8 +3066,7 @@ declare const client: {
                                 } | {
                                     input: {
                                         json: {
-                                            bookingStatus?: "cancelled" | "confirmed" | "provisional" | undefined;
-                                            visitStatus?: "complete" | "missed" | "ongoing" | undefined;
+                                            visitStatus: "complete" | "missed" | "ongoing";
                                         };
                                     } & {
                                         param: {
@@ -3091,8 +3083,8 @@ declare const client: {
                                             date: string;
                                             queueNo: number | null;
                                             sharedCode: string | null;
-                                            bookingStatus: "cancelled" | "confirmed" | "provisional" | null;
-                                            visitStatus: "complete" | "missed" | "ongoing" | null;
+                                            bookingStatus: "cancelled" | "confirmed" | "provisional";
+                                            visitStatus: "complete" | "missed" | "ongoing";
                                             paymentId: string | null;
                                             createdAt: string;
                                         } | null | undefined;
@@ -4238,8 +4230,8 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                         date: string;
                                         queueNo: number | null;
                                         sharedCode: string | null;
-                                        bookingStatus: "cancelled" | "confirmed" | "provisional" | null;
-                                        visitStatus: "complete" | "missed" | "ongoing" | null;
+                                        bookingStatus: "cancelled" | "confirmed" | "provisional";
+                                        visitStatus: "complete" | "missed" | "ongoing";
                                         paymentId: string | null;
                                         createdAt: string;
                                     } | undefined;
@@ -4306,8 +4298,8 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                             date: string;
                                             queueNo: number | null;
                                             sharedCode: string | null;
-                                            bookingStatus: "cancelled" | "confirmed" | "provisional" | null;
-                                            visitStatus: "complete" | "missed" | "ongoing" | null;
+                                            bookingStatus: "cancelled" | "confirmed" | "provisional";
+                                            visitStatus: "complete" | "missed" | "ongoing";
                                             paymentId: string | null;
                                             createdAt: string;
                                         };
@@ -4486,6 +4478,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 relation: string | null;
                                 gender: "female" | "male" | "other" | null;
                                 phone: string | null;
+                                isMember: boolean | null;
                             } | undefined;
                             error: null;
                         };
@@ -4571,7 +4564,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             success: true;
                             message: string;
                             data: {
-                                bookingStatus: "cancelled" | "confirmed" | "provisional" | null;
+                                bookingStatus: "cancelled" | "confirmed" | "provisional";
                                 createdAt: string;
                                 date: string;
                                 id: string;
@@ -4580,7 +4573,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 queueNo: number | null;
                                 scheduleDaysId: string;
                                 sharedCode: string | null;
-                                visitStatus: "complete" | "missed" | "ongoing" | null;
+                                visitStatus: "complete" | "missed" | "ongoing";
                             } | undefined;
                             error: null;
                         };
@@ -4620,8 +4613,8 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                         date: string;
                                         queueNo: number | null;
                                         sharedCode: string | null;
-                                        bookingStatus: "cancelled" | "confirmed" | "provisional" | null;
-                                        visitStatus: "complete" | "missed" | "ongoing" | null;
+                                        bookingStatus: "cancelled" | "confirmed" | "provisional";
+                                        visitStatus: "complete" | "missed" | "ongoing";
                                         paymentId: string | null;
                                         createdAt: string;
                                     };
@@ -4760,7 +4753,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                     booking: {
                                         id: string;
                                         date: string;
-                                        bookingStatus: "cancelled" | "confirmed" | "provisional" | null;
+                                        bookingStatus: "cancelled" | "confirmed" | "provisional";
                                         createdAt: string;
                                         sharedCode: string | null;
                                         queueNo: number | null;
@@ -5168,8 +5161,8 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                         date: string;
                                         queueNo: number | null;
                                         sharedCode: string | null;
-                                        bookingStatus: "cancelled" | "confirmed" | "provisional" | null;
-                                        visitStatus: "complete" | "missed" | "ongoing" | null;
+                                        bookingStatus: "cancelled" | "confirmed" | "provisional";
+                                        visitStatus: "complete" | "missed" | "ongoing";
                                         createdAt: string;
                                     };
                                     scheduleDay: {
@@ -5280,8 +5273,8 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                         date: string;
                                         queueNo: number | null;
                                         sharedCode: string | null;
-                                        bookingStatus: "cancelled" | "confirmed" | "provisional" | null;
-                                        visitStatus: "complete" | "missed" | "ongoing" | null;
+                                        bookingStatus: "cancelled" | "confirmed" | "provisional";
+                                        visitStatus: "complete" | "missed" | "ongoing";
                                         createdAt: string;
                                     };
                                     scheduleDay: {
@@ -5391,8 +5384,8 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                         bookingId: string;
                                         date: string;
                                         queueNo: number | null;
-                                        bookingStatus: "cancelled" | "confirmed" | "provisional" | null;
-                                        visitStatus: "complete" | "missed" | "ongoing" | null;
+                                        bookingStatus: "cancelled" | "confirmed" | "provisional";
+                                        visitStatus: "complete" | "missed" | "ongoing";
                                         sharedCode: string | null;
                                         scheduleDayId: string;
                                         startTime: string;
@@ -6253,8 +6246,6 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 query: {
                                     doctorId: string;
                                     date: string;
-                                    bookingStatus?: "cancelled" | "confirmed" | "provisional" | undefined;
-                                    visitStatus?: "complete" | "missed" | "ongoing" | undefined;
                                 };
                             };
                             output: {
@@ -6270,8 +6261,6 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 query: {
                                     doctorId: string;
                                     date: string;
-                                    bookingStatus?: "cancelled" | "confirmed" | "provisional" | undefined;
-                                    visitStatus?: "complete" | "missed" | "ongoing" | undefined;
                                 };
                             };
                             output: {
@@ -6287,8 +6276,6 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 query: {
                                     doctorId: string;
                                     date: string;
-                                    bookingStatus?: "cancelled" | "confirmed" | "provisional" | undefined;
-                                    visitStatus?: "complete" | "missed" | "ongoing" | undefined;
                                 };
                             };
                             output: {
@@ -6305,8 +6292,8 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                         gender: "female" | "male" | "other" | null;
                                     };
                                     queueNo: number | null;
-                                    bookingStatus: "cancelled" | "confirmed" | "provisional" | null;
-                                    visitStatus: "complete" | "missed" | "ongoing" | null;
+                                    bookingStatus: "cancelled" | "confirmed" | "provisional";
+                                    visitStatus: "complete" | "missed" | "ongoing";
                                     sharedCode: string | null;
                                     paymentId: string | null;
                                 }[] | null | undefined;
@@ -6331,8 +6318,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 $put: {
                                     input: {
                                         json: {
-                                            bookingStatus?: "cancelled" | "confirmed" | "provisional" | undefined;
-                                            visitStatus?: "complete" | "missed" | "ongoing" | undefined;
+                                            visitStatus: "complete" | "missed" | "ongoing";
                                         };
                                     } & {
                                         param: {
@@ -6350,8 +6336,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 } | {
                                     input: {
                                         json: {
-                                            bookingStatus?: "cancelled" | "confirmed" | "provisional" | undefined;
-                                            visitStatus?: "complete" | "missed" | "ongoing" | undefined;
+                                            visitStatus: "complete" | "missed" | "ongoing";
                                         };
                                     } & {
                                         param: {
@@ -6369,8 +6354,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 } | {
                                     input: {
                                         json: {
-                                            bookingStatus?: "cancelled" | "confirmed" | "provisional" | undefined;
-                                            visitStatus?: "complete" | "missed" | "ongoing" | undefined;
+                                            visitStatus: "complete" | "missed" | "ongoing";
                                         };
                                     } & {
                                         param: {
@@ -6387,8 +6371,8 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                             date: string;
                                             queueNo: number | null;
                                             sharedCode: string | null;
-                                            bookingStatus: "cancelled" | "confirmed" | "provisional" | null;
-                                            visitStatus: "complete" | "missed" | "ongoing" | null;
+                                            bookingStatus: "cancelled" | "confirmed" | "provisional";
+                                            visitStatus: "complete" | "missed" | "ongoing";
                                             paymentId: string | null;
                                             createdAt: string;
                                         } | null | undefined;
