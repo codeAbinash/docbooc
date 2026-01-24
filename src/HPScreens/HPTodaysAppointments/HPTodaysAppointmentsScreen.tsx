@@ -92,7 +92,11 @@ function HPTodaysAppointmentsScreen() {
           },
         })
       ).json()
-      return response.data || []
+      const data = response.data || []
+      return data.map((appointment: Patient, index: number) => ({
+        ...appointment,
+        queueNo: index + 1,
+      }))
     },
     enabled: !!selectedDoctor?.id,
   })
@@ -150,7 +154,7 @@ function HPTodaysAppointmentsScreen() {
       const transformedPatient = transformAppointmentToPatientCard(item)
       return (
         <PatientCard
-          patient={transformedPatient}
+          patient={{ ...transformedPatient, queuePosition: item.queueNo || 0 }}
           isExpanded={expandedCardId === item.id}
           onToggle={handleToggleCard}
           isCompleteTab={isCompleteTab}
