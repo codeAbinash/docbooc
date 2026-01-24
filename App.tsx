@@ -19,7 +19,9 @@ import { CardStyleInterpolators, createStackNavigator, StackNavigationOptions } 
 import { Popups } from '@components/Popup'
 import { queryClient } from '@query/index'
 import { QueryClientProvider } from '@tanstack/react-query'
-import { Dimensions, useColorScheme } from 'react-native'
+import { useColorScheme } from 'nativewind'
+import { useEffect } from 'react'
+import { Dimensions } from 'react-native'
 import Home from './src/UserScreens'
 
 const RootStack = createStackNavigator<RootStackParamList>()
@@ -42,13 +44,17 @@ const SMOOTH_ANIMATION: StackNavigationOptions = {
 }
 
 export default function App() {
-  const scheme = useColorScheme()
+  const { colorScheme, setColorScheme } = useColorScheme()
+
+  useEffect(() => {
+    setColorScheme('light')
+  }, [])
 
   return (
     <QueryClientProvider client={queryClient}>
-      <NavigationContainer theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
+      <NavigationContainer theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <Popups />
-        <AutoStatusBar scheme={scheme} />
+        <AutoStatusBar scheme={colorScheme} />
         <RootStack.Navigator
           screenOptions={{
             headerShown: false,

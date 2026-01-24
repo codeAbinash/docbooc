@@ -1,22 +1,24 @@
 import AdminAddDoctor from '@/AdminScreens/AdminAddDoctor'
-import HPDoctorScheduler from '@components/HPDoctorScheduler'
-import HPScheduleReview from '@components/HPScheduleReview'
 import HPBookAppointment from '@/HPScreens/HPAddPatients/HPBookApointment'
 import HPLogin from '@/HPScreens/HPAuthentications/Login/HPLogin'
 import HPOTP from '@/HPScreens/HPAuthentications/OTP/HPOTP'
 import HPSignup from '@/HPScreens/HPAuthentications/Signup/HPSignup'
 import HPHome from '@/HPScreens/HPHome'
+import EditHPProfileScreen from '@/HPScreens/HPProfile/EditHPProfileScreen'
 import HPSplash from '@/HPScreens/HPSplash'
 import HPDoctorScheduleDetails from '@/HPScreens/HPViewDoctors/HPDoctorScheduleDetails'
-import EditHPProfileScreen from '@/HPScreens/HPProfile/EditHPProfileScreen'
 import { DarkTheme, DefaultTheme } from '@/themes'
+import HPDoctorScheduler from '@components/HPDoctorScheduler'
+import HPScheduleReview from '@components/HPScheduleReview'
 import { Popups } from '@components/Popup'
 import { AutoStatusBar } from '@components/StatusBar'
 import { queryClient } from '@query/index'
 import { NavigationContainer } from '@react-navigation/native'
 import { CardStyleInterpolators, createStackNavigator, StackNavigationOptions } from '@react-navigation/stack'
 import { QueryClientProvider } from '@tanstack/react-query'
-import { Dimensions, useColorScheme } from 'react-native'
+import { useColorScheme } from 'nativewind'
+import { useEffect } from 'react'
+import { Dimensions } from 'react-native'
 import './src/global.css'
 const { width, height } = Dimensions.get('window')
 
@@ -38,13 +40,17 @@ const SMOOTH_ANIMATION: StackNavigationOptions = {
 const RootStack = createStackNavigator<HpRootStackParamList>()
 
 export default function HPApp() {
-  const scheme = useColorScheme()
+  const { colorScheme, setColorScheme } = useColorScheme()
+
+  useEffect(() => {
+    setColorScheme('light')
+  }, [])
 
   return (
     <QueryClientProvider client={queryClient}>
-      <NavigationContainer theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
+      <NavigationContainer theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <Popups />
-        <AutoStatusBar scheme={scheme} />
+        <AutoStatusBar scheme={colorScheme} />
         <RootStack.Navigator
           screenOptions={{
             headerShown: false,
