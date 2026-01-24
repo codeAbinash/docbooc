@@ -1,4 +1,5 @@
 import RadioGenderSelector, { Gender } from '@/UserScreens/PatientInfo/RadioGenderSelector'
+import { useBookingStore } from '@/zustand/bookingStore'
 import BottomSheetCustom from '@components/BottomSheetCustom'
 import Button from '@components/Button'
 import HybridHead from '@components/HybridHead'
@@ -22,6 +23,7 @@ const PatientInfo = ({}: {}) => {
   const route = useRoute()
   const scheme = useColorScheme()
   const queryClient = useQueryClient()
+  const { setPatientData, setSelectedMemberId } = useBookingStore()
 
   const isFromFamilyMemberSelector = (route.params as any)?.fromFamilyMember === true
   const isFromSetupProfile = (route.params as any)?.fromSetupProfile === true
@@ -66,6 +68,19 @@ const PatientInfo = ({}: {}) => {
         return
       }
 
+      if (data.data?.id) {
+        const age = new Date().getFullYear() - dob.getFullYear()
+        setSelectedMemberId(data.data.id)
+        setPatientData({
+          id: data.data.id,
+          name,
+          age,
+          gender: selectedGender,
+          mobile,
+          relationship: relationName || undefined,
+        })
+      }
+
       navigation.navigate('VerifyBeforeBooking' as any)
     },
     onError: (error) => {
@@ -93,6 +108,22 @@ const PatientInfo = ({}: {}) => {
       if ('error' in data) return ToastAndroid.show('Failed to update family member', ToastAndroid.LONG)
       ToastAndroid.show('Family member updated successfully', ToastAndroid.SHORT)
       queryClient.invalidateQueries({ queryKey: ['members'] })
+
+      if (isFromSetupProfile && memberData?.id) {
+        const age = new Date().getFullYear() - dob.getFullYear()
+        setSelectedMemberId(memberData.id)
+        setPatientData({
+          id: memberData.id,
+          name,
+          age,
+          gender: selectedGender,
+          mobile,
+          relationship: relationName || undefined,
+        })
+        navigation.navigate('VerifyBeforeBooking' as any)
+        return
+      }
+
       navigation.goBack()
     },
     onError: (error) => {
