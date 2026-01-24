@@ -3,16 +3,38 @@ import Button from '@components/Button'
 import { Lottie } from '@components/Lottie'
 import { PaddingBottom, PaddingTop } from '@components/SafePadding'
 import { DarkContentTransparentStatusBar } from '@components/StatusBar'
+import { RouteProp } from '@react-navigation/native'
+import { useQuery } from '@tanstack/react-query'
+import { api } from '@utils/client'
 import Colors from '@utils/colors'
 import { W } from '@utils/dimensions'
 import { Bold, Regular, SemiBold } from '@utils/fonts'
 import { NavProp } from '@utils/types'
 import { useEffect, useRef, useState } from 'react'
-import { View, Animated } from 'react-native'
+import { ActivityIndicator, Animated, View } from 'react-native'
+import { RootStackParamList } from '../../App'
 
-export default function Complete({ navigation }: NavProp) {
+type CompleteScreenProps = NavProp & {
+  route: RouteProp<RootStackParamList, 'Complete'>
+}
+
+export default function Complete({ navigation, route }: CompleteScreenProps) {
   const [showContent, setShowContent] = useState(false)
-  const verificationCode = 'MBB-' + Math.random().toString(36).substring(2, 8).toUpperCase()
+  const bookingId = route.params?.bookingId
+
+  const { data: bookingData, isLoading } = useQuery({
+    queryKey: ['booking', bookingId],
+    queryFn: async () => {
+      if (!bookingId) return null
+      const response = await api.users.booking[':bookingId'].$get({
+        param: { bookingId },
+      })
+      return response.json()
+    },
+    enabled: !!bookingId,
+  })
+
+  const verificationCode = bookingData?.data?.booking?.sharedCode || 'N/A'
 
   const contentOpacity = useRef(new Animated.Value(0)).current
   const mainContentTransform = useRef(new Animated.Value(0)).current
@@ -133,9 +155,13 @@ export default function Complete({ navigation }: NavProp) {
             <Regular className='mb-2 text-center text-xs' style={{ color: Colors.gray.DEFAULT }}>
               Verification Code
             </Regular>
-            <SemiBold className='text-center text-xl tracking-wider' style={{ color: Colors.accent }}>
-              {verificationCode}
-            </SemiBold>
+            {isLoading ? (
+              <ActivityIndicator size='small' color={Colors.accent} />
+            ) : (
+              <SemiBold className='text-center text-xl tracking-wider' style={{ color: Colors.accent }}>
+                {verificationCode}
+              </SemiBold>
+            )}
           </Animated.View>
         )}
 
