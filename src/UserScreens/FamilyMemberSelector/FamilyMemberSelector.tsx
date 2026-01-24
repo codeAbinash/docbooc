@@ -62,7 +62,7 @@ const FamilyMemberSelectorScreen = ({ navigation }: NavProp) => {
     queryFn: async () => await (await api.users.members.$get()).json(),
   })
 
-  console.log('membersResponse:', membersResponse);
+
   
 
   const handleSelectMember = (member: Member) => {
@@ -99,10 +99,10 @@ const FamilyMemberSelectorScreen = ({ navigation }: NavProp) => {
         },
       },
 
-      {
-        text: 'No',
-        onPress: () => {},
-      },
+      // {
+      //   text: 'No',
+      //   onPress: () => {},
+      // },
       {
         text: 'Yes',
         onPress: () => navigation.goBack(),
@@ -164,9 +164,9 @@ const FamilyMemberSelectorScreen = ({ navigation }: NavProp) => {
 
           {/* Add New Member Button */}
           <Press onPress={handleAddMember} activeScale={0.98} className=''>
-            <View className='flex-row items-center justify-start rounded-3xl border-2 border-dashed border-accent/70 bg-accent/10 p-4'>
+            <View className='flex-row items-center justify-start rounded-3xl border-2 border-dotted border-accent/70 bg-accent/10 p-4'>
               <View className='rounded-2xl bg-white p-5'>
-                <PlusSignIcon size={20} color='#3b82f6' variant='stroke-rounded' />
+                <PlusSignIcon size={20} color='#3b82f6' variant='duotone-rounded' />
               </View>
               <Medium className='ml-3 text-base text-accent'>Add New Patient</Medium>
             </View>

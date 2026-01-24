@@ -10,12 +10,12 @@ interface PaymentSummaryCardProps {
 }
 
 export const PaymentSummaryCard = ({
-  consultationFee = 500,
-  platformFee = 50,
+
+  platformFee = 21.40,
   gstPercentage = 18,
-  gst = 99,
+  gst = 3.60,
 }: PaymentSummaryCardProps) => {
-  const total = consultationFee + platformFee + gst
+  const total = platformFee + gst
 
   return (
     <View className='overflow-hidden rounded-3xl border border-neutral-300 bg-white dark:border-neutral-700 dark:bg-zinc-900'>
@@ -29,13 +29,13 @@ export const PaymentSummaryCard = ({
       </View>
 
       <View className='px-4 py-3'>
-        <View className='gap-3'>
-          <View className='flex-row justify-between'>
+        <View className='gap-3 '>
+          {/* <View className='flex-row justify-between'>
             <Medium className='text-base text-neutral-600 dark:text-neutral-400'>Consultation Fee</Medium>
             <SemiBold className='text-base text-neutral-900 dark:text-white'>₹{consultationFee}</SemiBold>
           </View>
 
-          <View className='h-px bg-neutral-100 dark:bg-neutral-700' />
+          <View className='h-px bg-neutral-100 dark:bg-neutral-700' /> */}
 
           <View className='flex-row justify-between'>
             <Medium className='text-base text-neutral-600 dark:text-neutral-400'>Platform Fee</Medium>

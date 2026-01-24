@@ -40,21 +40,9 @@ const PatientInfo = ({}: {}) => {
   const [mobileValidationError, setMobileValidationError] = useState('')
   const mobileRef = useRef<TextInput>(null)
 
-  console.log('memberData:', memberData)
-  // console.log('isFromSetupProfile', isFromSetupProfile)
-  console.log('isFromEditMember', isFromEditMember)
-
   const { mutate: addMember, isPending: isAddingMember } = useMutation({
     mutationKey: ['add-family-member'],
     mutationFn: async () => {
-      console.log('Adding member with data:', {
-        name,
-        dob: dob.toISOString(),
-        gender: selectedGender!,
-        relation: relationName,
-        phone: mobile,
-        isMember: isFamilyMember,
-      })
       return await (
         await api.users.members.$post({
           json: {
@@ -69,7 +57,6 @@ const PatientInfo = ({}: {}) => {
       ).json()
     },
     onSuccess: (data) => {
-      console.log(data)
       if (!data.success) return ToastAndroid.show('Failed to add family member', ToastAndroid.LONG)
       ToastAndroid.show('Family member added successfully', ToastAndroid.SHORT)
       queryClient.invalidateQueries({ queryKey: ['members'] })
@@ -82,7 +69,6 @@ const PatientInfo = ({}: {}) => {
       navigation.navigate('VerifyBeforeBooking' as any)
     },
     onError: (error) => {
-      console.error(error)
       ToastAndroid.show('An error occurred while adding family member', ToastAndroid.LONG)
     },
   })
@@ -104,14 +90,12 @@ const PatientInfo = ({}: {}) => {
       ).json()
     },
     onSuccess: (data) => {
-      console.log(data)
       if ('error' in data) return ToastAndroid.show('Failed to update family member', ToastAndroid.LONG)
       ToastAndroid.show('Family member updated successfully', ToastAndroid.SHORT)
       queryClient.invalidateQueries({ queryKey: ['members'] })
       navigation.goBack()
     },
     onError: (error) => {
-      console.error(error)
       ToastAndroid.show('An error occurred while updating family member', ToastAndroid.LONG)
     },
   })
@@ -217,7 +201,7 @@ const PatientInfo = ({}: {}) => {
               />
             )}
           </View>
-          {/* Mobile Number (Required) */}(
+          {/* Mobile Number (Required) */}
           <View>
             <Medium className='mb-2 text-sm text-neutral-700 dark:text-neutral-300'>Mobile Number (Required) *</Medium>
             <View className='flex-row gap-3'>
@@ -250,7 +234,7 @@ const PatientInfo = ({}: {}) => {
             </View>
             {mobileValidationError && <Medium className='pt-2 text-sm text-red-600'>{mobileValidationError}</Medium>}
           </View>
-          ){/* Save as Family Member */}
+          {/* Save as Family Member */}
           {isFromFamilyMemberSelector && !isFromEditMember && (
             <View>
               <Press

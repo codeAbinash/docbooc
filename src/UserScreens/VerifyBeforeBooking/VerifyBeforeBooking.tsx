@@ -65,10 +65,10 @@ const VerifyBeforeBooking = () => {
         },
       },
 
-      {
-        text: 'No',
-        onPress: () => {},
-      },
+      // {
+      //   text: 'No',
+      //   onPress: () => {},
+      // },
       {
         text: 'Yes',
         onPress: () => navigation.goBack(),

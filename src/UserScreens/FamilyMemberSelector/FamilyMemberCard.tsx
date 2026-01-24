@@ -1,7 +1,8 @@
 import ArrowRight01Icon from '@hugeicons/ArrowRightDoubleIcon'
+import { useNavigation } from '@react-navigation/native'
 import { api } from '@utils/client'
 import { Medium, SemiBold } from '@utils/fonts'
-import { InferApiResponse } from '@utils/types'
+import { InferApiResponse, StackNav } from '@utils/types'
 import { Text, View } from 'react-native'
 import Press from '../../components/Press'
 
@@ -36,6 +37,7 @@ const FamilyMemberCard = ({
   onEdit,
   needSetup = false,
 }: FamilyMemberCardProps) => {
+  const navigation = useNavigation<StackNav>()
   const getInitials = (name: string) => {
     return name
       .split(' ')
@@ -70,9 +72,11 @@ const FamilyMemberCard = ({
           {needSetup ? (
             <Press
               onPress={() => {
-                onEdit?.(member)
+                navigation.navigate('PatientInfo' as any, {
+                  fromSetupProfile: true,
+                  memberData: member,
+                })
               }}
-              disabled={!onEdit}
             >
               <View className='flex-row items-center gap-2'>
                 <Medium className='text-sm text-gray-500'>Setup your profile to continue</Medium>
@@ -85,7 +89,7 @@ const FamilyMemberCard = ({
 
               <View className='flex-row items-center'>
                 <View className='flex-1'>
-                  <Medium className={`text-sm ${onEdit ? 'text-gray-500' : 'text-gray-500'}`}>
+                  <Medium className='text-sm text-gray-500'>
                     {[
                       member.name,
                       calcAge(member.dob) !== undefined ? `${calcAge(member.dob)}y` : undefined,
@@ -95,7 +99,6 @@ const FamilyMemberCard = ({
                       .join(' • ')}
                   </Medium>
                 </View>
-                {onEdit && <ArrowRight01Icon size={18} color='#3b82f6' variant='stroke-standard' />}
               </View>
               {/* </Press> */}
             </View>
@@ -104,9 +107,9 @@ const FamilyMemberCard = ({
 
         {isSelected && (
           <View className='ml-3 flex-row items-center gap-2'>
-            {onEdit && (
+            {onEdit && !needSetup && (
               <Press onPress={() => onEdit(member)} className='p-2'>
-                <Text className='text-sm font-semibold text-blue-600'>Edit</Text>
+                <Text className='text-base bg-blue-100 rounded-md px-2  font-semibold text-blue-600'>Edit</Text>
               </Press>
             )}
             <View

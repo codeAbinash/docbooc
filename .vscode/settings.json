@@ -4,7 +4,7 @@
   "typescript.experimental.useTsgo": false,
   "files.exclude": {
     "**/AdminScreens": false,
-    "**/HPScreens": true,
-    "**/UserScreens": true
+    "**/HPScreens": false,
+    "**/UserScreens": false
   }
 }
