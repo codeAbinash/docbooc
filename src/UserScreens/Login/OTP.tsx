@@ -146,13 +146,13 @@ export default function OTP({ navigation }: NavProp) {
           <View className='flex items-center justify-center gap-2 pb-3'>
             <View>
               <Medium className='text-center text-xs text-zinc-600 dark:text-zinc-400'>
-                By 'logging in' I agree to the
+                By logging in I agree to the
               </Medium>
             </View>
 
             <View className='flex-row items-center justify-center gap-8'>
               <Pressable onPress={() => {}}>
-                <Text className='font-semibold text-blue-600 underline'>Terms & Conditions</Text>
+                <Medium className='text-sm font-semibold text-blue-600 underline'>Terms & Conditions</Medium>
               </Pressable>
             </View>
           </View>

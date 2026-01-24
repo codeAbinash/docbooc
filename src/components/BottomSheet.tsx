@@ -1,7 +1,6 @@
 import React from 'react'
-import { Modal, TouchableOpacity, View, ScrollView, Dimensions, KeyboardAvoidingView, Platform } from 'react-native'
+import { Dimensions, ScrollView, TouchableOpacity, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { H } from '@utils/dimensions'
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window')
 
@@ -27,19 +26,15 @@ export default function BottomSheet({
   const insets = useSafeAreaInsets()
   const sheetHeight = (SCREEN_HEIGHT - insets.bottom) * heightRatio
   return (
-    <View className='flex-1 justify-end bg-black/50'>
-      <TouchableOpacity activeOpacity={1} className='flex-1' onPress={onClose} />
-      <View
-        style={{ height: sheetHeight, backgroundColor }}
-        className='border-t border-neutral-300 dark:border-zinc-700'
-      >
+    <View className='fixed bottom-0 flex-1 justify-end bg-blue-500'>
+      <TouchableOpacity activeOpacity={1} className='d flex-1 rounded-lg' onPress={onClose} />
+      <View style={{ height: sheetHeight }} className='border-t border-neutral-300 dark:border-zinc-700'>
         {showHandle && (
           <View className='items-center py-2'>
             <View className='h-1 w-12 rounded-full bg-gray-300' />
           </View>
         )}
-
-        <ScrollView scrollEnabled={false} keyboardShouldPersistTaps='always' className='flex-1'>
+        <ScrollView scrollEnabled={false} keyboardShouldPersistTaps='always' className='flex-1 bg-green-500'>
           {children}
         </ScrollView>
       </View>

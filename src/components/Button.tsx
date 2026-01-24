@@ -14,7 +14,7 @@ const GRADIENT_START = { x: 0, y: 0 }
 
 export default function Button({ title, disabled = false, ...props }: ButtonProps) {
   return (
-    <TouchableOpacity activeOpacity={0.7} className='overflow-hidden rounded-3xl' disabled={disabled} {...props}>
+    <TouchableOpacity activeOpacity={0.7} className='overflow-hidden rounded-2xl' disabled={disabled} {...props}>
       <LinearGradient
         colors={disabled ? GRADIENT_DISABLED : GRADIENT_ACTIVE}
         className='items-center justify-center py-4'

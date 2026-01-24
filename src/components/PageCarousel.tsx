@@ -1,26 +1,26 @@
+import { SemiBold } from '@utils/fonts'
 import React, { memo, useCallback } from 'react'
-import { View, Dimensions, StyleSheet, Pressable, Text } from 'react-native'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { Dimensions, Pressable, StyleSheet, View } from 'react-native'
 import Animated, {
-  useSharedValue,
+  Extrapolate,
+  interpolate,
+  runOnJS,
   useAnimatedScrollHandler,
   useAnimatedStyle,
-  interpolate,
-  Extrapolate,
-  runOnJS,
+  useSharedValue,
 } from 'react-native-reanimated'
-import { Lottie } from './Lottie'
-import Animations from '@assets/animations/animations'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { PaddingTop } from './SafePadding'
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
 
 type PageCarouselProps = {
-  pages: React.ReactNode[]
+  pages?: React.ReactNode[]
+  components?: React.ReactNode[]
   onPageChange?: (index: number) => void
   showDots?: boolean
   onSkip?: () => void
   carouselHeightRatio?: number
-  showAnimations?: boolean
   showSkip?: boolean
 }
 
@@ -48,11 +48,11 @@ Dot.displayName = 'Dot'
 
 function PageCarousel({
   pages,
+  components,
   onPageChange,
   showDots = true,
   onSkip,
   carouselHeightRatio = 0.5,
-  showAnimations = true,
   showSkip = true,
 }: PageCarouselProps) {
   const insets = useSafeAreaInsets()
@@ -60,11 +60,7 @@ function PageCarousel({
   const [currentPage, setCurrentPage] = React.useState(0)
   const sheetHeight = (SCREEN_HEIGHT - insets.top) * carouselHeightRatio
 
-  const animationArray = [
-    { animation: Animations.motorcycle, name: 'motorcycle' },
-    { animation: Animations.motorcycle, name: 'motorcycle' },
-    { animation: Animations.motorcycle, name: 'motorcycle' },
-  ]
+  const displayItems = components || pages || []
 
   const handlePageChange = useCallback(
     (pageIndex: number) => {
@@ -95,23 +91,11 @@ function PageCarousel({
         decelerationRate='fast'
         style={{ height: '100%' }}
       >
-        {showAnimations && animationArray.length > 0
-          ? animationArray.map((item, index) => (
-              <View key={index} style={[styles.page, { height: sheetHeight, width: SCREEN_WIDTH }]}>
-                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                  <Lottie
-                    source={item.animation}
-                    loop
-                    style={{ width: SCREEN_WIDTH * 0.8, height: sheetHeight * 0.7 }}
-                  />
-                </View>
-              </View>
-            ))
-          : pages.map((page, index) => (
-              <View key={index} style={[styles.page, { height: sheetHeight, width: SCREEN_WIDTH }]}>
-                {page}
-              </View>
-            ))}
+        {displayItems.map((item, index) => (
+          <View key={index} style={[styles.page, { height: sheetHeight, width: SCREEN_WIDTH }]}>
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>{item}</View>
+          </View>
+        ))}
       </Animated.ScrollView>
 
       {/* {showDots && (
@@ -122,35 +106,37 @@ function PageCarousel({
         </View>
       )} */}
 
-      <View style={styles.topBar}>
-        {showDots && (
-          <View style={styles.topLeftDots}>
-            {pages.map((_, index) => {
-              let size = 10
-
-              return (
-                <View
-                  key={index}
-                  style={[
-                    styles.topDot,
-                    {
-                      height: size,
-                      width: size,
-                      borderRadius: size / 2,
-                      backgroundColor: index === currentPage ? '#3B82F6' : '#D1D5DB',
-                    },
-                  ]}
-                />
-              )
-            })}
-          </View>
-        )}
-
-        {showSkip && (
-          <Pressable onPress={onSkip || (() => {})} style={styles.skipButton}>
-            <Text style={styles.skipText}>Skip</Text>
-          </Pressable>
-        )}
+      <View style={{ position: 'absolute', top: 0, left: 0, right: 0 }}>
+        <PaddingTop />
+        <View className='flex flex-row items-center justify-between px-5 py-2'>
+          {showDots && (
+            <View style={styles.topLeftDots}>
+              {displayItems.map((_, index) => {
+                let size = 7
+                return (
+                  <View
+                    key={index}
+                    className='rounded-full'
+                    style={[
+                      styles.topDot,
+                      {
+                        height: size,
+                        width: size,
+                        borderRadius: size / 2,
+                        backgroundColor: index === currentPage ? '#3B82F6aa' : '#D1D5DBaa',
+                      },
+                    ]}
+                  />
+                )
+              })}
+            </View>
+          )}
+          {showSkip && (
+            <Pressable onPress={onSkip || (() => {})} className='rounded-md bg-zinc-500/50 px-5 py-2'>
+              <SemiBold className='text-white/70'>Skip</SemiBold>
+            </Pressable>
+          )}
+        </View>
       </View>
     </View>
   )
@@ -177,17 +163,6 @@ const styles = StyleSheet.create({
     height: 8,
     width: 8,
     borderRadius: 4,
-  },
-  topBar: {
-    position: 'absolute',
-    top: 16,
-    left: 0,
-    right: 0,
-    paddingHorizontal: 16,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    zIndex: 10,
   },
   topLeftDots: {
     flexDirection: 'row',
