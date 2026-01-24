@@ -1,6 +1,7 @@
 import HybridHead from '@components/HybridHead'
 import KeyboardAvoid from '@components/KeyboardAvoid'
 import { PaddingBottom } from '@components/SafePadding'
+import { Search } from '@components/Search'
 import Calendar03Icon from '@hugeicons/Calendar03Icon'
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker'
 import { useQuery } from '@tanstack/react-query'
@@ -13,6 +14,8 @@ import { ActivityIndicator, FlatList, Platform, TouchableOpacity, View } from 'r
 import PatientCard from '../components/PatientCard'
 
 type SearchAndDateBarProps = {
+  searchQuery: string
+  onSearchChange: (text: string) => void
   selectedDate: Date
   showDatePicker: boolean
   onToggleDatePicker: () => void
@@ -36,6 +39,8 @@ const formatDate = (date: Date) => {
 }
 
 const SearchAndDateBar = memo(function SearchAndDateBar({
+  searchQuery,
+  onSearchChange,
   selectedDate,
   showDatePicker,
   onToggleDatePicker,
@@ -44,15 +49,20 @@ const SearchAndDateBar = memo(function SearchAndDateBar({
   const formattedDate = useMemo(() => formatDate(selectedDate), [selectedDate])
 
   return (
-    <View className='border-t border-neutral-200 bg-white px-5 py-3 dark:bg-neutral-900'>
-      <TouchableOpacity
-        onPress={onToggleDatePicker}
-        activeOpacity={0.7}
-        className='flex-row items-center gap-2 rounded-lg bg-accent/15 px-3 py-2'
-      >
-        <Calendar03Icon color={Colors.accent} size={20} strokeWidth={2} />
-        <SemiBold style={{ color: Colors.accent, fontSize: 15 }}>{formattedDate}</SemiBold>
-      </TouchableOpacity>
+    <View className='border-b border-t border-neutral-200 bg-white px-5 py-3 dark:bg-neutral-900'>
+      <View className='flex-row gap-3'>
+        <View className='flex-1'>
+          <Search value={searchQuery} onChangeText={onSearchChange} placeholder='Search patients...' />
+        </View>
+        <TouchableOpacity
+          onPress={onToggleDatePicker}
+          activeOpacity={0.7}
+          className='flex-row items-center gap-2 rounded-lg bg-accent/15 px-3'
+        >
+          <Calendar03Icon color={Colors.accent} size={20} strokeWidth={2} />
+          <SemiBold style={{ color: Colors.accent, fontSize: 15 }}>{formattedDate}</SemiBold>
+        </TouchableOpacity>
+      </View>
 
       {showDatePicker && (
         <DateTimePicker
@@ -88,6 +98,7 @@ const HPUpcomingAppointmentsScreen = memo(function HPUpcomingAppointmentsScreenC
   const [selectedDate, setSelectedDate] = useState(new Date())
   const [showDatePicker, setShowDatePicker] = useState(false)
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | undefined>()
+  const [searchQuery, setSearchQuery] = useState('')
 
   const { data: myDoctors } = useQuery({
     queryKey: ['my-doctors'],
@@ -117,10 +128,23 @@ const HPUpcomingAppointmentsScreen = memo(function HPUpcomingAppointmentsScreenC
           },
         })
       ).json()
-      return response.data || []
+      const data = response.data || []
+      return data.map((appointment: Patient, index: number) => ({
+        ...appointment,
+        queueNo: index + 1,
+      }))
     },
     enabled: !!selectedDoctor?.id,
   })
+
+  const filteredAppointments = useMemo(() => {
+    if (!searchQuery) return upcomingAppointments || []
+    const query = searchQuery.toLowerCase()
+    return (upcomingAppointments || []).filter((appointment) => {
+      const patientName = appointment.patient.fullName?.toLowerCase() || ''
+      return patientName.includes(query)
+    })
+  }, [upcomingAppointments, searchQuery])
 
   const handleToggleDatePicker = useCallback(() => {
     setShowDatePicker((prev) => !prev)
@@ -169,7 +193,7 @@ const HPUpcomingAppointmentsScreen = memo(function HPUpcomingAppointmentsScreenC
         />
         <View className='flex-1'>
           <FlatList
-            data={upcomingAppointments || []}
+            data={filteredAppointments}
             renderItem={renderPatientCard}
             keyExtractor={keyExtractor}
             contentContainerClassName='pb-32 pt-4 px-5'
@@ -185,6 +209,8 @@ const HPUpcomingAppointmentsScreen = memo(function HPUpcomingAppointmentsScreenC
         </View>
         <View className='absolute bottom-0 left-0 right-0 bg-white dark:bg-neutral-900'>
           <SearchAndDateBar
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
             selectedDate={selectedDate}
             showDatePicker={showDatePicker}
             onToggleDatePicker={handleToggleDatePicker}
