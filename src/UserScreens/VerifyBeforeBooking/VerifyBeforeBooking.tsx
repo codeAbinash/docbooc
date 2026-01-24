@@ -43,7 +43,11 @@ const VerifyBeforeBooking = () => {
       console.log(data)
       if (!data.success)
         return ToastAndroid.show(data.message || 'Failed to book appointment. Please try again.', ToastAndroid.LONG)
-      navigation.replace('Complete')
+      if (data.data?.id) {
+        navigation.replace('Complete', { bookingId: data.data.id })
+      } else {
+        ToastAndroid.show('Booking created but ID not found', ToastAndroid.LONG)
+      }
     },
   })
 

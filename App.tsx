@@ -106,7 +106,7 @@ export type RootStackParamList = {
   }
   PatientInfo: undefined
   FamilyMemberSelectorScreen: undefined
-  Complete: undefined
+  Complete: { bookingId: string }
   Login: undefined
   OTP: { countryCode?: string; mobileNumber?: string }
   Doctors: { departmentId?: string; openSearch?: boolean } | undefined
