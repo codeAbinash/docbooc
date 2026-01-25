@@ -63,28 +63,6 @@ declare const client: {
                                 };
                             };
                             output: {
-                                success: true;
-                                message: string;
-                                data: {
-                                    token: string;
-                                    admin: {
-                                        id: string;
-                                        email: string;
-                                        name: string;
-                                    };
-                                } | undefined;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 200;
-                        } | {
-                            input: {
-                                json: {
-                                    email: string;
-                                    password: string;
-                                };
-                            };
-                            output: {
                                 success: false;
                                 message: string;
                                 data: null;
@@ -107,6 +85,28 @@ declare const client: {
                             };
                             outputFormat: "json";
                             status: 500;
+                        } | {
+                            input: {
+                                json: {
+                                    email: string;
+                                    password: string;
+                                };
+                            };
+                            output: {
+                                success: true;
+                                message: string;
+                                data: {
+                                    token: string;
+                                    admin: {
+                                        id: string;
+                                        email: string;
+                                        name: string;
+                                    };
+                                } | undefined;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 200;
                         };
                     }>;
                 };
@@ -131,11 +131,11 @@ declare const client: {
                             output: {
                                 success: false;
                                 message: string;
-                                data: import("hono/utils/types").JSONValue;
+                                data: null;
                                 error: null;
                             };
                             outputFormat: "json";
-                            status: 500;
+                            status: 400;
                         } | {
                             input: {
                                 json: {
@@ -148,11 +148,11 @@ declare const client: {
                             output: {
                                 success: false;
                                 message: string;
-                                data: null;
+                                data: import("hono/utils/types").JSONValue;
                                 error: null;
                             };
                             outputFormat: "json";
-                            status: 400;
+                            status: 500;
                         } | {
                             input: {
                                 json: {
@@ -529,11 +529,11 @@ declare const client: {
                             output: {
                                 success: false;
                                 message: string;
-                                data: import("hono/utils/types").JSONValue;
+                                data: null;
                                 error: null;
                             };
                             outputFormat: "json";
-                            status: 500;
+                            status: 400;
                         } | {
                             input: {
                                 param: {
@@ -543,11 +543,11 @@ declare const client: {
                             output: {
                                 success: false;
                                 message: string;
-                                data: null;
+                                data: import("hono/utils/types").JSONValue;
                                 error: null;
                             };
                             outputFormat: "json";
-                            status: 400;
+                            status: 500;
                         } | {
                             input: {
                                 param: {
@@ -604,11 +604,11 @@ declare const client: {
                         output: {
                             success: false;
                             message: string;
-                            data: import("hono/utils/types").JSONValue;
+                            data: null;
                             error: null;
                         };
                         outputFormat: "json";
-                        status: 500;
+                        status: 400;
                     } | {
                         input: {
                             json: {
@@ -621,11 +621,11 @@ declare const client: {
                         output: {
                             success: false;
                             message: string;
-                            data: null;
+                            data: import("hono/utils/types").JSONValue;
                             error: null;
                         };
                         outputFormat: "json";
-                        status: 400;
+                        status: 500;
                     } | {
                         input: {
                             json: {
@@ -671,11 +671,11 @@ declare const client: {
                             output: {
                                 success: false;
                                 message: string;
-                                data: import("hono/utils/types").JSONValue;
+                                data: null;
                                 error: null;
                             };
                             outputFormat: "json";
-                            status: 500;
+                            status: 404;
                         } | {
                             input: {
                                 param: {
@@ -685,11 +685,11 @@ declare const client: {
                             output: {
                                 success: false;
                                 message: string;
-                                data: null;
+                                data: import("hono/utils/types").JSONValue;
                                 error: null;
                             };
                             outputFormat: "json";
-                            status: 404;
+                            status: 500;
                         } | {
                             input: {
                                 param: {
@@ -758,27 +758,6 @@ declare const client: {
                             output: {
                                 success: false;
                                 message: string;
-                                data: import("hono/utils/types").JSONValue;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 500;
-                        } | {
-                            input: {
-                                json: {
-                                    name?: string | undefined;
-                                    description?: string | undefined;
-                                    icon?: "Bone02Icon" | "Brain01Icon" | "Cardiogram02Icon" | "DigestionIcon" | "FemaleSymbolIcon" | "Medicine02Icon" | "PatientIcon" | undefined;
-                                    color?: string | undefined;
-                                };
-                            } & {
-                                param: {
-                                    id: string;
-                                };
-                            };
-                            output: {
-                                success: false;
-                                message: string;
                                 data: null;
                                 error: null;
                             };
@@ -805,6 +784,27 @@ declare const client: {
                             };
                             outputFormat: "json";
                             status: 404;
+                        } | {
+                            input: {
+                                json: {
+                                    name?: string | undefined;
+                                    description?: string | undefined;
+                                    icon?: "Bone02Icon" | "Brain01Icon" | "Cardiogram02Icon" | "DigestionIcon" | "FemaleSymbolIcon" | "Medicine02Icon" | "PatientIcon" | undefined;
+                                    color?: string | undefined;
+                                };
+                            } & {
+                                param: {
+                                    id: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: import("hono/utils/types").JSONValue;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 500;
                         } | {
                             input: {
                                 json: {
@@ -911,7 +911,7 @@ declare const client: {
                                     error: null;
                                 };
                                 outputFormat: "json";
-                                status: 401;
+                                status: 400;
                             } | {
                                 input: {
                                     param: {
@@ -925,7 +925,7 @@ declare const client: {
                                     error: null;
                                 };
                                 outputFormat: "json";
-                                status: 400;
+                                status: 401;
                             } | {
                                 input: {
                                     param: {
@@ -978,7 +978,7 @@ declare const client: {
                                     error: null;
                                 };
                                 outputFormat: "json";
-                                status: 401;
+                                status: 400;
                             } | {
                                 input: {
                                     param: {
@@ -992,7 +992,7 @@ declare const client: {
                                     error: null;
                                 };
                                 outputFormat: "json";
-                                status: 400;
+                                status: 401;
                             } | {
                                 input: {
                                     param: {
@@ -1129,7 +1129,7 @@ declare const client: {
                             error: null;
                         };
                         outputFormat: "json";
-                        status: 401;
+                        status: 400;
                     } | {
                         input: {
                             json: {
@@ -1148,7 +1148,7 @@ declare const client: {
                             error: null;
                         };
                         outputFormat: "json";
-                        status: 400;
+                        status: 401;
                     } | {
                         input: {
                             json: {
@@ -1247,7 +1247,7 @@ declare const client: {
                             error: null;
                         };
                         outputFormat: "json";
-                        status: 401;
+                        status: 400;
                     } | {
                         input: {
                             json: {
@@ -1263,7 +1263,7 @@ declare const client: {
                             error: null;
                         };
                         outputFormat: "json";
-                        status: 400;
+                        status: 401;
                     } | {
                         input: {
                             json: {
@@ -1612,11 +1612,11 @@ declare const client: {
                             output: {
                                 success: false;
                                 message: string;
-                                data: import("hono/utils/types").JSONValue;
+                                data: null;
                                 error: null;
                             };
                             outputFormat: "json";
-                            status: 500;
+                            status: 404;
                         } | {
                             input: {
                                 json: {
@@ -1627,11 +1627,11 @@ declare const client: {
                             output: {
                                 success: false;
                                 message: string;
-                                data: null;
+                                data: import("hono/utils/types").JSONValue;
                                 error: null;
                             };
                             outputFormat: "json";
-                            status: 404;
+                            status: 500;
                         } | {
                             input: {
                                 json: {
@@ -1689,7 +1689,7 @@ declare const client: {
                             error: null;
                         };
                         outputFormat: "json";
-                        status: 401;
+                        status: 400;
                     } | {
                         input: {};
                         output: {
@@ -1699,7 +1699,7 @@ declare const client: {
                             error: null;
                         };
                         outputFormat: "json";
-                        status: 400;
+                        status: 401;
                     } | {
                         input: {};
                         output: {
@@ -1737,7 +1737,7 @@ declare const client: {
                             error: null;
                         };
                         outputFormat: "json";
-                        status: 401;
+                        status: 400;
                     } | {
                         input: {
                             json: {
@@ -1755,7 +1755,7 @@ declare const client: {
                             error: null;
                         };
                         outputFormat: "json";
-                        status: 400;
+                        status: 401;
                     } | {
                         input: {
                             json: {
@@ -1951,20 +1951,6 @@ declare const client: {
                             output: {
                                 success: false;
                                 message: string;
-                                data: import("hono/utils/types").JSONValue;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 500;
-                        } | {
-                            input: {
-                                param: {
-                                    bookingId: string;
-                                };
-                            };
-                            output: {
-                                success: false;
-                                message: string;
                                 data: null;
                                 error: null;
                             };
@@ -2030,6 +2016,20 @@ declare const client: {
                             };
                             outputFormat: "json";
                             status: 200;
+                        } | {
+                            input: {
+                                param: {
+                                    bookingId: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: import("hono/utils/types").JSONValue;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 500;
                         };
                     }>;
                 };
@@ -2142,6 +2142,20 @@ declare const client: {
                                     error: null;
                                 };
                                 outputFormat: "json";
+                                status: 400;
+                            } | {
+                                input: {
+                                    param: {
+                                        id: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: null;
+                                    error: null;
+                                };
+                                outputFormat: "json";
                                 status: 401;
                             } | {
                                 input: {
@@ -2157,20 +2171,6 @@ declare const client: {
                                 };
                                 outputFormat: "json";
                                 status: 500;
-                            } | {
-                                input: {
-                                    param: {
-                                        id: string;
-                                    };
-                                };
-                                output: {
-                                    success: false;
-                                    message: string;
-                                    data: null;
-                                    error: null;
-                                };
-                                outputFormat: "json";
-                                status: 400;
                             } | {
                                 input: {
                                     param: {
@@ -2199,6 +2199,35 @@ declare const client: {
                 schedules: {
                     ":id": import("hono/client").ClientRequest<{
                         $put: {
+                            input: {
+                                json: {
+                                    doctorId: string;
+                                    scheduleType: "daily" | "monthly" | "weekly";
+                                    weekDays?: number[] | undefined;
+                                    monthDays?: number[] | undefined;
+                                    timeSlots: {
+                                        dayOfWeek?: number | undefined;
+                                        dayOfMonth?: number | undefined;
+                                        startTime: string;
+                                        endTime: string;
+                                        maxBookings: number;
+                                    }[];
+                                    isActive?: boolean | undefined;
+                                };
+                            } & {
+                                param: {
+                                    id: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: null;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 400;
+                        } | {
                             input: {
                                 json: {
                                     doctorId: string;
@@ -2256,35 +2285,6 @@ declare const client: {
                             };
                             outputFormat: "json";
                             status: 500;
-                        } | {
-                            input: {
-                                json: {
-                                    doctorId: string;
-                                    scheduleType: "daily" | "monthly" | "weekly";
-                                    weekDays?: number[] | undefined;
-                                    monthDays?: number[] | undefined;
-                                    timeSlots: {
-                                        dayOfWeek?: number | undefined;
-                                        dayOfMonth?: number | undefined;
-                                        startTime: string;
-                                        endTime: string;
-                                        maxBookings: number;
-                                    }[];
-                                    isActive?: boolean | undefined;
-                                };
-                            } & {
-                                param: {
-                                    id: string;
-                                };
-                            };
-                            output: {
-                                success: false;
-                                message: string;
-                                data: null;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 400;
                         } | {
                             input: {
                                 json: {
@@ -2521,6 +2521,31 @@ declare const client: {
                             error: null;
                         };
                         outputFormat: "json";
+                        status: 400;
+                    } | {
+                        input: {
+                            json: {
+                                doctorId: string;
+                                scheduleType: "daily" | "monthly" | "weekly";
+                                weekDays?: number[] | undefined;
+                                monthDays?: number[] | undefined;
+                                timeSlots: {
+                                    dayOfWeek?: number | undefined;
+                                    dayOfMonth?: number | undefined;
+                                    startTime: string;
+                                    endTime: string;
+                                    maxBookings: number;
+                                }[];
+                                isActive?: boolean | undefined;
+                            };
+                        };
+                        output: {
+                            success: false;
+                            message: string;
+                            data: null;
+                            error: null;
+                        };
+                        outputFormat: "json";
                         status: 401;
                     } | {
                         input: {
@@ -2547,31 +2572,6 @@ declare const client: {
                         };
                         outputFormat: "json";
                         status: 500;
-                    } | {
-                        input: {
-                            json: {
-                                doctorId: string;
-                                scheduleType: "daily" | "monthly" | "weekly";
-                                weekDays?: number[] | undefined;
-                                monthDays?: number[] | undefined;
-                                timeSlots: {
-                                    dayOfWeek?: number | undefined;
-                                    dayOfMonth?: number | undefined;
-                                    startTime: string;
-                                    endTime: string;
-                                    maxBookings: number;
-                                }[];
-                                isActive?: boolean | undefined;
-                            };
-                        };
-                        output: {
-                            success: false;
-                            message: string;
-                            data: null;
-                            error: null;
-                        };
-                        outputFormat: "json";
-                        status: 400;
                     } | {
                         input: {
                             json: {
@@ -2629,6 +2629,20 @@ declare const client: {
                                 error: null;
                             };
                             outputFormat: "json";
+                            status: 400;
+                        } | {
+                            input: {
+                                param: {
+                                    id: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: null;
+                                error: null;
+                            };
+                            outputFormat: "json";
                             status: 401;
                         } | {
                             input: {
@@ -2644,20 +2658,6 @@ declare const client: {
                             };
                             outputFormat: "json";
                             status: 500;
-                        } | {
-                            input: {
-                                param: {
-                                    id: string;
-                                };
-                            };
-                            output: {
-                                success: false;
-                                message: string;
-                                data: null;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 400;
                         } | {
                             input: {
                                 param: {
@@ -2698,6 +2698,20 @@ declare const client: {
                                     error: null;
                                 };
                                 outputFormat: "json";
+                                status: 400;
+                            } | {
+                                input: {
+                                    param: {
+                                        id: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: null;
+                                    error: null;
+                                };
+                                outputFormat: "json";
                                 status: 401;
                             } | {
                                 input: {
@@ -2713,20 +2727,6 @@ declare const client: {
                                 };
                                 outputFormat: "json";
                                 status: 500;
-                            } | {
-                                input: {
-                                    param: {
-                                        id: string;
-                                    };
-                                };
-                                output: {
-                                    success: false;
-                                    message: string;
-                                    data: null;
-                                    error: null;
-                                };
-                                outputFormat: "json";
-                                status: 400;
                             } | {
                                 input: {
                                     param: {
@@ -2768,21 +2768,7 @@ declare const client: {
                                     error: null;
                                 };
                                 outputFormat: "json";
-                                status: 401;
-                            } | {
-                                input: {
-                                    param: {
-                                        doctorId: string;
-                                    };
-                                };
-                                output: {
-                                    success: false;
-                                    message: string;
-                                    data: import("hono/utils/types").JSONValue;
-                                    error: null;
-                                };
-                                outputFormat: "json";
-                                status: 500;
+                                status: 400;
                             } | {
                                 input: {
                                     param: {
@@ -2796,7 +2782,21 @@ declare const client: {
                                     error: null;
                                 };
                                 outputFormat: "json";
-                                status: 400;
+                                status: 401;
+                            } | {
+                                input: {
+                                    param: {
+                                        doctorId: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: null;
+                                    error: null;
+                                };
+                                outputFormat: "json";
+                                status: 404;
                             } | {
                                 input: {
                                     param: {
@@ -2853,6 +2853,20 @@ declare const client: {
                                     error: null;
                                 };
                                 outputFormat: "json";
+                                status: 400;
+                            } | {
+                                input: {
+                                    param: {
+                                        scheduleDayId: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: null;
+                                    error: null;
+                                };
+                                outputFormat: "json";
                                 status: 401;
                             } | {
                                 input: {
@@ -2868,20 +2882,6 @@ declare const client: {
                                 };
                                 outputFormat: "json";
                                 status: 500;
-                            } | {
-                                input: {
-                                    param: {
-                                        scheduleDayId: string;
-                                    };
-                                };
-                                output: {
-                                    success: false;
-                                    message: string;
-                                    data: null;
-                                    error: null;
-                                };
-                                outputFormat: "json";
-                                status: 400;
                             } | {
                                 input: {
                                     param: {
@@ -3144,7 +3144,7 @@ declare const client: {
                             error: null;
                         };
                         outputFormat: "json";
-                        status: 401;
+                        status: 400;
                     } | {
                         input: {};
                         output: {
@@ -3154,7 +3154,7 @@ declare const client: {
                             error: null;
                         };
                         outputFormat: "json";
-                        status: 400;
+                        status: 401;
                     } | {
                         input: {};
                         output: {
@@ -3205,7 +3205,7 @@ declare const client: {
                             error: null;
                         };
                         outputFormat: "json";
-                        status: 401;
+                        status: 400;
                     } | {
                         input: {
                             json: {
@@ -3228,7 +3228,7 @@ declare const client: {
                             error: null;
                         };
                         outputFormat: "json";
-                        status: 400;
+                        status: 401;
                     } | {
                         input: {
                             json: {
@@ -3351,28 +3351,6 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 };
                             };
                             output: {
-                                success: true;
-                                message: string;
-                                data: {
-                                    token: string;
-                                    admin: {
-                                        id: string;
-                                        email: string;
-                                        name: string;
-                                    };
-                                } | undefined;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 200;
-                        } | {
-                            input: {
-                                json: {
-                                    email: string;
-                                    password: string;
-                                };
-                            };
-                            output: {
                                 success: false;
                                 message: string;
                                 data: null;
@@ -3395,6 +3373,28 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             };
                             outputFormat: "json";
                             status: 500;
+                        } | {
+                            input: {
+                                json: {
+                                    email: string;
+                                    password: string;
+                                };
+                            };
+                            output: {
+                                success: true;
+                                message: string;
+                                data: {
+                                    token: string;
+                                    admin: {
+                                        id: string;
+                                        email: string;
+                                        name: string;
+                                    };
+                                } | undefined;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 200;
                         };
                     }>;
                 };
@@ -3419,11 +3419,11 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             output: {
                                 success: false;
                                 message: string;
-                                data: import("hono/utils/types").JSONValue;
+                                data: null;
                                 error: null;
                             };
                             outputFormat: "json";
-                            status: 500;
+                            status: 400;
                         } | {
                             input: {
                                 json: {
@@ -3436,11 +3436,11 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             output: {
                                 success: false;
                                 message: string;
-                                data: null;
+                                data: import("hono/utils/types").JSONValue;
                                 error: null;
                             };
                             outputFormat: "json";
-                            status: 400;
+                            status: 500;
                         } | {
                             input: {
                                 json: {
@@ -3817,11 +3817,11 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             output: {
                                 success: false;
                                 message: string;
-                                data: import("hono/utils/types").JSONValue;
+                                data: null;
                                 error: null;
                             };
                             outputFormat: "json";
-                            status: 500;
+                            status: 400;
                         } | {
                             input: {
                                 param: {
@@ -3831,11 +3831,11 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             output: {
                                 success: false;
                                 message: string;
-                                data: null;
+                                data: import("hono/utils/types").JSONValue;
                                 error: null;
                             };
                             outputFormat: "json";
-                            status: 400;
+                            status: 500;
                         } | {
                             input: {
                                 param: {
@@ -3892,11 +3892,11 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                         output: {
                             success: false;
                             message: string;
-                            data: import("hono/utils/types").JSONValue;
+                            data: null;
                             error: null;
                         };
                         outputFormat: "json";
-                        status: 500;
+                        status: 400;
                     } | {
                         input: {
                             json: {
@@ -3909,11 +3909,11 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                         output: {
                             success: false;
                             message: string;
-                            data: null;
+                            data: import("hono/utils/types").JSONValue;
                             error: null;
                         };
                         outputFormat: "json";
-                        status: 400;
+                        status: 500;
                     } | {
                         input: {
                             json: {
@@ -3959,11 +3959,11 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             output: {
                                 success: false;
                                 message: string;
-                                data: import("hono/utils/types").JSONValue;
+                                data: null;
                                 error: null;
                             };
                             outputFormat: "json";
-                            status: 500;
+                            status: 404;
                         } | {
                             input: {
                                 param: {
@@ -3973,11 +3973,11 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             output: {
                                 success: false;
                                 message: string;
-                                data: null;
+                                data: import("hono/utils/types").JSONValue;
                                 error: null;
                             };
                             outputFormat: "json";
-                            status: 404;
+                            status: 500;
                         } | {
                             input: {
                                 param: {
@@ -4046,27 +4046,6 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             output: {
                                 success: false;
                                 message: string;
-                                data: import("hono/utils/types").JSONValue;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 500;
-                        } | {
-                            input: {
-                                json: {
-                                    name?: string | undefined;
-                                    description?: string | undefined;
-                                    icon?: "Bone02Icon" | "Brain01Icon" | "Cardiogram02Icon" | "DigestionIcon" | "FemaleSymbolIcon" | "Medicine02Icon" | "PatientIcon" | undefined;
-                                    color?: string | undefined;
-                                };
-                            } & {
-                                param: {
-                                    id: string;
-                                };
-                            };
-                            output: {
-                                success: false;
-                                message: string;
                                 data: null;
                                 error: null;
                             };
@@ -4093,6 +4072,27 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             };
                             outputFormat: "json";
                             status: 404;
+                        } | {
+                            input: {
+                                json: {
+                                    name?: string | undefined;
+                                    description?: string | undefined;
+                                    icon?: "Bone02Icon" | "Brain01Icon" | "Cardiogram02Icon" | "DigestionIcon" | "FemaleSymbolIcon" | "Medicine02Icon" | "PatientIcon" | undefined;
+                                    color?: string | undefined;
+                                };
+                            } & {
+                                param: {
+                                    id: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: import("hono/utils/types").JSONValue;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 500;
                         } | {
                             input: {
                                 json: {
@@ -4199,7 +4199,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                     error: null;
                                 };
                                 outputFormat: "json";
-                                status: 401;
+                                status: 400;
                             } | {
                                 input: {
                                     param: {
@@ -4213,7 +4213,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                     error: null;
                                 };
                                 outputFormat: "json";
-                                status: 400;
+                                status: 401;
                             } | {
                                 input: {
                                     param: {
@@ -4266,7 +4266,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                     error: null;
                                 };
                                 outputFormat: "json";
-                                status: 401;
+                                status: 400;
                             } | {
                                 input: {
                                     param: {
@@ -4280,7 +4280,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                     error: null;
                                 };
                                 outputFormat: "json";
-                                status: 400;
+                                status: 401;
                             } | {
                                 input: {
                                     param: {
@@ -4417,7 +4417,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             error: null;
                         };
                         outputFormat: "json";
-                        status: 401;
+                        status: 400;
                     } | {
                         input: {
                             json: {
@@ -4436,7 +4436,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             error: null;
                         };
                         outputFormat: "json";
-                        status: 400;
+                        status: 401;
                     } | {
                         input: {
                             json: {
@@ -4535,7 +4535,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             error: null;
                         };
                         outputFormat: "json";
-                        status: 401;
+                        status: 400;
                     } | {
                         input: {
                             json: {
@@ -4551,7 +4551,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             error: null;
                         };
                         outputFormat: "json";
-                        status: 400;
+                        status: 401;
                     } | {
                         input: {
                             json: {
@@ -4900,11 +4900,11 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             output: {
                                 success: false;
                                 message: string;
-                                data: import("hono/utils/types").JSONValue;
+                                data: null;
                                 error: null;
                             };
                             outputFormat: "json";
-                            status: 500;
+                            status: 404;
                         } | {
                             input: {
                                 json: {
@@ -4915,11 +4915,11 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             output: {
                                 success: false;
                                 message: string;
-                                data: null;
+                                data: import("hono/utils/types").JSONValue;
                                 error: null;
                             };
                             outputFormat: "json";
-                            status: 404;
+                            status: 500;
                         } | {
                             input: {
                                 json: {
@@ -4977,7 +4977,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             error: null;
                         };
                         outputFormat: "json";
-                        status: 401;
+                        status: 400;
                     } | {
                         input: {};
                         output: {
@@ -4987,7 +4987,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             error: null;
                         };
                         outputFormat: "json";
-                        status: 400;
+                        status: 401;
                     } | {
                         input: {};
                         output: {
@@ -5025,7 +5025,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             error: null;
                         };
                         outputFormat: "json";
-                        status: 401;
+                        status: 400;
                     } | {
                         input: {
                             json: {
@@ -5043,7 +5043,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             error: null;
                         };
                         outputFormat: "json";
-                        status: 400;
+                        status: 401;
                     } | {
                         input: {
                             json: {
@@ -5239,20 +5239,6 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             output: {
                                 success: false;
                                 message: string;
-                                data: import("hono/utils/types").JSONValue;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 500;
-                        } | {
-                            input: {
-                                param: {
-                                    bookingId: string;
-                                };
-                            };
-                            output: {
-                                success: false;
-                                message: string;
                                 data: null;
                                 error: null;
                             };
@@ -5318,6 +5304,20 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             };
                             outputFormat: "json";
                             status: 200;
+                        } | {
+                            input: {
+                                param: {
+                                    bookingId: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: import("hono/utils/types").JSONValue;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 500;
                         };
                     }>;
                 };
@@ -5430,6 +5430,20 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                     error: null;
                                 };
                                 outputFormat: "json";
+                                status: 400;
+                            } | {
+                                input: {
+                                    param: {
+                                        id: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: null;
+                                    error: null;
+                                };
+                                outputFormat: "json";
                                 status: 401;
                             } | {
                                 input: {
@@ -5445,20 +5459,6 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 };
                                 outputFormat: "json";
                                 status: 500;
-                            } | {
-                                input: {
-                                    param: {
-                                        id: string;
-                                    };
-                                };
-                                output: {
-                                    success: false;
-                                    message: string;
-                                    data: null;
-                                    error: null;
-                                };
-                                outputFormat: "json";
-                                status: 400;
                             } | {
                                 input: {
                                     param: {
@@ -5487,6 +5487,35 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                 schedules: {
                     ":id": import("hono/client").ClientRequest<{
                         $put: {
+                            input: {
+                                json: {
+                                    doctorId: string;
+                                    scheduleType: "daily" | "monthly" | "weekly";
+                                    weekDays?: number[] | undefined;
+                                    monthDays?: number[] | undefined;
+                                    timeSlots: {
+                                        dayOfWeek?: number | undefined;
+                                        dayOfMonth?: number | undefined;
+                                        startTime: string;
+                                        endTime: string;
+                                        maxBookings: number;
+                                    }[];
+                                    isActive?: boolean | undefined;
+                                };
+                            } & {
+                                param: {
+                                    id: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: null;
+                                error: null;
+                            };
+                            outputFormat: "json";
+                            status: 400;
+                        } | {
                             input: {
                                 json: {
                                     doctorId: string;
@@ -5544,35 +5573,6 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             };
                             outputFormat: "json";
                             status: 500;
-                        } | {
-                            input: {
-                                json: {
-                                    doctorId: string;
-                                    scheduleType: "daily" | "monthly" | "weekly";
-                                    weekDays?: number[] | undefined;
-                                    monthDays?: number[] | undefined;
-                                    timeSlots: {
-                                        dayOfWeek?: number | undefined;
-                                        dayOfMonth?: number | undefined;
-                                        startTime: string;
-                                        endTime: string;
-                                        maxBookings: number;
-                                    }[];
-                                    isActive?: boolean | undefined;
-                                };
-                            } & {
-                                param: {
-                                    id: string;
-                                };
-                            };
-                            output: {
-                                success: false;
-                                message: string;
-                                data: null;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 400;
                         } | {
                             input: {
                                 json: {
@@ -5809,6 +5809,31 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             error: null;
                         };
                         outputFormat: "json";
+                        status: 400;
+                    } | {
+                        input: {
+                            json: {
+                                doctorId: string;
+                                scheduleType: "daily" | "monthly" | "weekly";
+                                weekDays?: number[] | undefined;
+                                monthDays?: number[] | undefined;
+                                timeSlots: {
+                                    dayOfWeek?: number | undefined;
+                                    dayOfMonth?: number | undefined;
+                                    startTime: string;
+                                    endTime: string;
+                                    maxBookings: number;
+                                }[];
+                                isActive?: boolean | undefined;
+                            };
+                        };
+                        output: {
+                            success: false;
+                            message: string;
+                            data: null;
+                            error: null;
+                        };
+                        outputFormat: "json";
                         status: 401;
                     } | {
                         input: {
@@ -5835,31 +5860,6 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                         };
                         outputFormat: "json";
                         status: 500;
-                    } | {
-                        input: {
-                            json: {
-                                doctorId: string;
-                                scheduleType: "daily" | "monthly" | "weekly";
-                                weekDays?: number[] | undefined;
-                                monthDays?: number[] | undefined;
-                                timeSlots: {
-                                    dayOfWeek?: number | undefined;
-                                    dayOfMonth?: number | undefined;
-                                    startTime: string;
-                                    endTime: string;
-                                    maxBookings: number;
-                                }[];
-                                isActive?: boolean | undefined;
-                            };
-                        };
-                        output: {
-                            success: false;
-                            message: string;
-                            data: null;
-                            error: null;
-                        };
-                        outputFormat: "json";
-                        status: 400;
                     } | {
                         input: {
                             json: {
@@ -5917,6 +5917,20 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 error: null;
                             };
                             outputFormat: "json";
+                            status: 400;
+                        } | {
+                            input: {
+                                param: {
+                                    id: string;
+                                };
+                            };
+                            output: {
+                                success: false;
+                                message: string;
+                                data: null;
+                                error: null;
+                            };
+                            outputFormat: "json";
                             status: 401;
                         } | {
                             input: {
@@ -5932,20 +5946,6 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             };
                             outputFormat: "json";
                             status: 500;
-                        } | {
-                            input: {
-                                param: {
-                                    id: string;
-                                };
-                            };
-                            output: {
-                                success: false;
-                                message: string;
-                                data: null;
-                                error: null;
-                            };
-                            outputFormat: "json";
-                            status: 400;
                         } | {
                             input: {
                                 param: {
@@ -5986,6 +5986,20 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                     error: null;
                                 };
                                 outputFormat: "json";
+                                status: 400;
+                            } | {
+                                input: {
+                                    param: {
+                                        id: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: null;
+                                    error: null;
+                                };
+                                outputFormat: "json";
                                 status: 401;
                             } | {
                                 input: {
@@ -6001,20 +6015,6 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 };
                                 outputFormat: "json";
                                 status: 500;
-                            } | {
-                                input: {
-                                    param: {
-                                        id: string;
-                                    };
-                                };
-                                output: {
-                                    success: false;
-                                    message: string;
-                                    data: null;
-                                    error: null;
-                                };
-                                outputFormat: "json";
-                                status: 400;
                             } | {
                                 input: {
                                     param: {
@@ -6056,21 +6056,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                     error: null;
                                 };
                                 outputFormat: "json";
-                                status: 401;
-                            } | {
-                                input: {
-                                    param: {
-                                        doctorId: string;
-                                    };
-                                };
-                                output: {
-                                    success: false;
-                                    message: string;
-                                    data: import("hono/utils/types").JSONValue;
-                                    error: null;
-                                };
-                                outputFormat: "json";
-                                status: 500;
+                                status: 400;
                             } | {
                                 input: {
                                     param: {
@@ -6084,7 +6070,21 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                     error: null;
                                 };
                                 outputFormat: "json";
-                                status: 400;
+                                status: 401;
+                            } | {
+                                input: {
+                                    param: {
+                                        doctorId: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: null;
+                                    error: null;
+                                };
+                                outputFormat: "json";
+                                status: 404;
                             } | {
                                 input: {
                                     param: {
@@ -6141,6 +6141,20 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                     error: null;
                                 };
                                 outputFormat: "json";
+                                status: 400;
+                            } | {
+                                input: {
+                                    param: {
+                                        scheduleDayId: string;
+                                    };
+                                };
+                                output: {
+                                    success: false;
+                                    message: string;
+                                    data: null;
+                                    error: null;
+                                };
+                                outputFormat: "json";
                                 status: 401;
                             } | {
                                 input: {
@@ -6156,20 +6170,6 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 };
                                 outputFormat: "json";
                                 status: 500;
-                            } | {
-                                input: {
-                                    param: {
-                                        scheduleDayId: string;
-                                    };
-                                };
-                                output: {
-                                    success: false;
-                                    message: string;
-                                    data: null;
-                                    error: null;
-                                };
-                                outputFormat: "json";
-                                status: 400;
                             } | {
                                 input: {
                                     param: {
@@ -6432,7 +6432,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             error: null;
                         };
                         outputFormat: "json";
-                        status: 401;
+                        status: 400;
                     } | {
                         input: {};
                         output: {
@@ -6442,7 +6442,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             error: null;
                         };
                         outputFormat: "json";
-                        status: 400;
+                        status: 401;
                     } | {
                         input: {};
                         output: {
@@ -6493,7 +6493,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             error: null;
                         };
                         outputFormat: "json";
-                        status: 401;
+                        status: 400;
                     } | {
                         input: {
                             json: {
@@ -6516,7 +6516,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                             error: null;
                         };
                         outputFormat: "json";
-                        status: 400;
+                        status: 401;
                     } | {
                         input: {
                             json: {

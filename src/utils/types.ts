@@ -1,10 +1,10 @@
 import type { DrawerNavigationProp } from '@react-navigation/drawer'
 import { RouteProp } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
-import { AdminRootStackParamList } from '../AdminScreens/AdminApp'
 import { RootStackParamList } from '../../App'
 import type { HpRootStackParamList } from '../../HPApp'
-import { client } from './client'
+import { AdminRootStackParamList } from '../AdminScreens/AdminApp'
+import { client, hpApi } from './client'
 export type { HpRootStackParamList }
 
 export type StackNav = StackNavigationProp<RootStackParamList>
@@ -48,3 +48,11 @@ export type BookingPosition = NonNullable<InferApiResponse<typeof bookingsApi>['
 
 const patientsApi = client.api.v1.hp.bookings.patients.$get
 export type Patient = NonNullable<InferApiResponse<typeof patientsApi>['data']>[number]
+
+export type ScheduleType = InferApiResponse<(typeof hpApi.schedules.doctor)[':doctorId']['$get']>
+
+export type Schedule = NonNullable<ScheduleType['data']>[number]
+export type TimeSlot = Schedule['timeSlots'][number]
+
+const schedulePostApi = hpApi.schedules.$post
+export type SchedulePayload = Parameters<typeof schedulePostApi>[0]['json']
