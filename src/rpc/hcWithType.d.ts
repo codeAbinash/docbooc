@@ -1059,7 +1059,7 @@ declare const client: {
                                             doctorId: string;
                                             scheduleType: "daily" | "monthly" | "weekly";
                                             daysMask: number | null;
-                                            scheduleStatus: "active" | "deleted" | "inactive" | null;
+                                            scheduleStatus: "active" | "deleted" | "inactive";
                                             createdAt: string;
                                         } | null;
                                     }[] | undefined;
@@ -1386,7 +1386,7 @@ declare const client: {
                                         doctorId: string;
                                         scheduleType: "daily" | "monthly" | "weekly";
                                         daysMask: number | null;
-                                        scheduleStatus: "active" | "deleted" | "inactive" | null;
+                                        scheduleStatus: "active" | "deleted" | "inactive";
                                         createdAt: string;
                                     } | null;
                                 }[] | undefined;
@@ -1887,7 +1887,7 @@ declare const client: {
                                     schedule: {
                                         id: string;
                                         scheduleType: "daily" | "monthly" | "weekly";
-                                        scheduleStatus: "active" | "deleted" | "inactive" | null;
+                                        scheduleStatus: "active" | "deleted" | "inactive";
                                     };
                                     doctor: {
                                         id: string;
@@ -1999,7 +1999,7 @@ declare const client: {
                                     schedule: {
                                         id: string;
                                         scheduleType: "daily" | "monthly" | "weekly";
-                                        scheduleStatus: "active" | "deleted" | "inactive" | null;
+                                        scheduleStatus: "active" | "deleted" | "inactive";
                                     };
                                     doctor: {
                                         id: string;
@@ -2315,7 +2315,7 @@ declare const client: {
                                     doctorId: string;
                                     scheduleType: "daily" | "monthly" | "weekly";
                                     daysMask: number | null;
-                                    scheduleStatus: "active" | "deleted" | "inactive" | null;
+                                    scheduleStatus: "active" | "deleted" | "inactive";
                                     createdAt: string;
                                     timeSlots: {
                                         id: string;
@@ -2598,7 +2598,7 @@ declare const client: {
                                 doctorId: string;
                                 hpId: string;
                                 id: string;
-                                scheduleStatus: "active" | "deleted" | "inactive" | null;
+                                scheduleStatus: "active" | "deleted" | "inactive";
                                 scheduleType: "daily" | "monthly" | "weekly";
                             } | undefined;
                             error: null;
@@ -2811,7 +2811,7 @@ declare const client: {
                                         doctorId: string;
                                         scheduleType: "daily" | "monthly" | "weekly";
                                         daysMask: number | null;
-                                        scheduleStatus: "active" | "deleted" | "inactive" | null;
+                                        scheduleStatus: "active" | "deleted" | "inactive";
                                         createdAt: string;
                                         timeSlots: {
                                             id: string;
@@ -4347,7 +4347,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                             doctorId: string;
                                             scheduleType: "daily" | "monthly" | "weekly";
                                             daysMask: number | null;
-                                            scheduleStatus: "active" | "deleted" | "inactive" | null;
+                                            scheduleStatus: "active" | "deleted" | "inactive";
                                             createdAt: string;
                                         } | null;
                                     }[] | undefined;
@@ -4674,7 +4674,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                         doctorId: string;
                                         scheduleType: "daily" | "monthly" | "weekly";
                                         daysMask: number | null;
-                                        scheduleStatus: "active" | "deleted" | "inactive" | null;
+                                        scheduleStatus: "active" | "deleted" | "inactive";
                                         createdAt: string;
                                     } | null;
                                 }[] | undefined;
@@ -5175,7 +5175,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                     schedule: {
                                         id: string;
                                         scheduleType: "daily" | "monthly" | "weekly";
-                                        scheduleStatus: "active" | "deleted" | "inactive" | null;
+                                        scheduleStatus: "active" | "deleted" | "inactive";
                                     };
                                     doctor: {
                                         id: string;
@@ -5287,7 +5287,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                     schedule: {
                                         id: string;
                                         scheduleType: "daily" | "monthly" | "weekly";
-                                        scheduleStatus: "active" | "deleted" | "inactive" | null;
+                                        scheduleStatus: "active" | "deleted" | "inactive";
                                     };
                                     doctor: {
                                         id: string;
@@ -5603,7 +5603,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                     doctorId: string;
                                     scheduleType: "daily" | "monthly" | "weekly";
                                     daysMask: number | null;
-                                    scheduleStatus: "active" | "deleted" | "inactive" | null;
+                                    scheduleStatus: "active" | "deleted" | "inactive";
                                     createdAt: string;
                                     timeSlots: {
                                         id: string;
@@ -5886,7 +5886,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 doctorId: string;
                                 hpId: string;
                                 id: string;
-                                scheduleStatus: "active" | "deleted" | "inactive" | null;
+                                scheduleStatus: "active" | "deleted" | "inactive";
                                 scheduleType: "daily" | "monthly" | "weekly";
                             } | undefined;
                             error: null;
@@ -6099,7 +6099,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                         doctorId: string;
                                         scheduleType: "daily" | "monthly" | "weekly";
                                         daysMask: number | null;
-                                        scheduleStatus: "active" | "deleted" | "inactive" | null;
+                                        scheduleStatus: "active" | "deleted" | "inactive";
                                         createdAt: string;
                                         timeSlots: {
                                             id: string;
