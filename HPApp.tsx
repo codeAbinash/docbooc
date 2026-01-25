@@ -61,7 +61,7 @@ export default function HPApp() {
           <RootStack.Screen name='HPLogin' component={HPLogin} options={SMOOTH_ANIMATION} />
           <RootStack.Screen name='HPSignup' component={HPSignup} options={SMOOTH_ANIMATION} />
           <RootStack.Screen name='HPHome' component={HPHome} options={SMOOTH_ANIMATION} />
-          <RootStack.Screen name='HPOTP' component={HPOTP} options={SMOOTH_ANIMATION} />
+          {/* <RootStack.Screen name='HPOTP' component={HPOTP} options={SMOOTH_ANIMATION} /> */}
           <RootStack.Screen name='HPDoctorScheduler' component={HPDoctorScheduler} options={SMOOTH_ANIMATION} />
           <RootStack.Screen name='HPScheduleReview' component={HPScheduleReview} options={SMOOTH_ANIMATION} />
           <RootStack.Screen name='HPBookAppointment' component={HPBookAppointment} options={SMOOTH_ANIMATION} />

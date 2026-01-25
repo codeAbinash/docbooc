@@ -104,17 +104,10 @@ export default function Login({ navigation }: NavProp) {
               carouselHeightRatio={1}
               onSkip={handleSkip}
             />
-            {/* <Image
-              source={{
-                uri: 'https://images.unsplash.com/photo-1766512433912-ba04869c2fbc?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-              }}
-              height={SCREEN_HEIGHT}
-              width={600}
-            /> */}
-            {/* <Lottie source={Animations.motorcycle} /> */}
+            
           </View>
           <View></View>
-          {/* <BottomSheet visible={true} onClose={() => {}} heightRatio={0.31}> */}
+         
           <View className='rounded-t-[30px] bg-white px-6 py-4 pt-2.5'>
             <View className='mb-3 items-center py-2'>
               <View className='h-1 w-12 rounded-full bg-gray-300' />

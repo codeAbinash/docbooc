@@ -181,7 +181,7 @@ export default function HPDoctorScheduleDetails({ navigation, route }: HPNavProp
         onBackPress={() => navigation.goBack()}
         rightElement={
           <View className='flex-row gap-2'>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               onPress={() => {
                 navigation.navigate('HPDoctorScheduler', {
                   doctorId,
@@ -191,7 +191,7 @@ export default function HPDoctorScheduleDetails({ navigation, route }: HPNavProp
               className='size-12 items-center justify-center rounded-xl bg-white dark:bg-zinc-900'
             >
               <TimeScheduleIcon size={25} strokeWidth={1.7} color={Colors.accent} />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <TouchableOpacity
               onPress={() => {
                 alert('Delete Schedule', 'Are you sure you want to delete this schedule?', [

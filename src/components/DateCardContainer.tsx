@@ -35,7 +35,7 @@ interface DateCardContainerProps {
 }
 
 export function DateCardContainer({ onDateChange }: DateCardContainerProps) {
-  const [currentIndex, setCurrentIndex] = useState(1)
+  const [currentIndex, setCurrentIndex] = useState(0)
   const [containerWidth, setContainerWidth] = useState(0)
   const flatListRef = useRef<FlatList>(null)
 
@@ -68,7 +68,7 @@ export function DateCardContainer({ onDateChange }: DateCardContainerProps) {
   const scrollToIndex = useCallback(
     (offset: number) => {
       if (flatListRef.current && containerWidth > 0) {
-        const newIndex = Math.max(0, Math.min(364, currentIndex + offset))
+        const newIndex = Math.max(0, Math.min(30, currentIndex + offset))
         flatListRef.current.scrollToIndex({ index: newIndex, animated: true })
       }
     },
@@ -81,7 +81,7 @@ export function DateCardContainer({ onDateChange }: DateCardContainerProps) {
       const isActive = currentIndex === index
 
       return (
-        <View style={{ width: containerWidth }} className='flex-row items-start pl-1 gap-4  '>
+        <View style={{ width: containerWidth }} className='flex-row items-start gap-4 pl-1'>
           <Calendar01Icon size={25} strokeWidth={1.5} />
           <View className='flex-row items-center justify-center gap-1'>
             <Medium
@@ -125,9 +125,9 @@ export function DateCardContainer({ onDateChange }: DateCardContainerProps) {
   }
 
   return (
-    <View className='border-b border-neutral-300   px-6 py-4 dark:border-neutral-600'>
+    <View className='border-b border-neutral-300 px-6 py-4 dark:border-neutral-600'>
       {/* Date Carousel and Quick Select Buttons in One Row */}
-      <View className='flex-row  items-center gap-2'>
+      <View className='flex-row items-center gap-2'>
         {/* <TouchableOpacity className='rounded-lg pl-1'>
           <Calendar01Icon size={25} strokeWidth={2} />
         </TouchableOpacity> */}
@@ -137,7 +137,7 @@ export function DateCardContainer({ onDateChange }: DateCardContainerProps) {
           {containerWidth > 0 && (
             <FlatList
               ref={flatListRef}
-              data={Array.from({ length: 90 }, (_, i) => i)}
+              data={Array.from({ length: 31 }, (_, i) => i)}
               renderItem={renderItem}
               keyExtractor={(item) => item.toString()}
               horizontal
@@ -151,14 +151,14 @@ export function DateCardContainer({ onDateChange }: DateCardContainerProps) {
               maxToRenderPerBatch={5}
               windowSize={5}
               removeClippedSubviews={true}
-              initialScrollIndex={1}
+              initialScrollIndex={0}
               onScrollToIndexFailed={() => {}}
             />
           )}
         </View>
 
         {/* Quick Select Buttons */}
-        <View className=' flex-row gap-2'>
+        <View className='flex-row gap-2'>
           <TouchableOpacity
             onPress={() => scrollToIndex(0 - currentIndex)}
             className='rounded-lg border border-neutral-300 px-3 py-2 dark:border-neutral-600'

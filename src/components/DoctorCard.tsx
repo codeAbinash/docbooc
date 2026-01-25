@@ -1,4 +1,4 @@
-import { Medium, SemiBold } from '@utils/fonts'
+import { Medium, Regular, SemiBold } from '@utils/fonts'
 import { Image, TouchableOpacity, TouchableOpacityProps, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import Colors from '@utils/colors'
@@ -91,8 +91,8 @@ function DoctorCardInternal({
           resizeMode='cover'
         />
         <View className='flex-1'>
-          <SemiBold className='text-base  text-neutral-900 dark:text-white'>{doctor.name}</SemiBold>
-          <Medium className='text-sm text-neutral-600 dark:text-neutral-400'>{doctor.department}</Medium>
+          <Medium className='text-lg  text-neutral-900 dark:text-white'>Dr. {doctor.name}</Medium>
+          <Regular className='text-sm text-neutral-600 dark:text-neutral-400'>{doctor.department}</Regular>
         </View>
         {showBookButton ? (
           <TouchableOpacity

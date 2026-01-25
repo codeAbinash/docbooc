@@ -7,11 +7,12 @@ import NotificationSquareIcon from '@assets/icons/hugeicons/NotificationSquareIc
 import PatientIcon from '@assets/icons/hugeicons/PatientIcon'
 import TimeScheduleIcon from '@assets/icons/hugeicons/TimeScheduleIcon'
 import UserIcon from '@assets/icons/hugeicons/UserIcon'
+import Edit01Icon from '@hugeicons/Home01Icon'
 import { DrawerContentScrollView } from '@react-navigation/drawer'
 import { useTheme } from '@react-navigation/native'
 import Colors from '@utils/colors'
 import { Medium, Regular, SemiBold } from '@utils/fonts'
-import { View, Text } from 'react-native'
+import { View, Text, TouchableOpacity } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Press from '../../components/Press'
 import ProfilePicture from '../../components/ProfilePicture'
@@ -40,13 +41,21 @@ export default function CustomDrawer(props: any) {
         showsVerticalScrollIndicator={false}
       >
         <View style={{ paddingHorizontal: 16, paddingBottom: 32 }}>
-          <View className='flex-row items-center gap-2'>
-            <View className='size-8 items-center justify-center rounded-lg' style={{ backgroundColor: Colors.accent }}>
-              <SemiBold className='text-lg text-white'>ℑ</SemiBold>
+          <View className='flex-row items-center gap-3'>
+            <View style={{ width: 3, height: 32, backgroundColor: Colors.accent, borderRadius: 2 }} />
+            <View className='flex-1'>
+              <Regular className='text-sm' style={{ color: colors.text, opacity: 0.6 }}>
+                Hello 👋
+              </Regular>
+              <View className='flex-row items-center gap-2'>
+                <SemiBold className='text-xl' style={{ color: colors.text }}>
+                  HP Name
+                </SemiBold>
+                <TouchableOpacity>
+                  <Edit01Icon size={18} color={colors.text} strokeWidth={1.5} />
+                </TouchableOpacity>
+              </View>
             </View>
-            <SemiBold className='text-xl' style={{ color: colors.text }}>
-              Jiban Surakha 
-            </SemiBold>
           </View>
         </View>
 
@@ -65,10 +74,10 @@ export default function CustomDrawer(props: any) {
                   }}
                 >
                   <View className='size-5 items-center justify-center'>
-                    <Icon size={20} color={isActive ? Colors.accent : colors.text} strokeWidth={1.5} />
+                    <Icon size={20} color={isActive ? Colors.accent : colors.text} variant="duotone-rounded" strokeWidth={1.5} />
                   </View>
                   <Regular
-                    className='flex-1 text-base'
+                    className='flex-1  text-lg'
                     style={{
                       color: isActive ? Colors.accent : colors.text,
                     }}
@@ -92,7 +101,7 @@ export default function CustomDrawer(props: any) {
           onPress={() => handleLogout(() => logout('HPLogin'))}
           className='flex-row items-center gap-3 rounded-lg px-4 py-3'
           style={{
-            backgroundColor: '#ef444410',
+            backgroundColor: 'transparent',
           }}
         >
           <View className='size-5 items-center justify-center'>

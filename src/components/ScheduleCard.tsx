@@ -81,7 +81,7 @@ export default function ScheduleCard({
   const getScheduleDay = (type: string, schedule: any) => {
     switch (type) {
       case 'daily':
-        return '-'
+        return 'Everyday'
       case 'weekly':
         return schedule.day
       case 'monthly':
@@ -122,101 +122,76 @@ export default function ScheduleCard({
   }
   return (
     <View className='gap-4'>
-      {/* Card with Heading and Rows */}
-      <View className='overflow-hidden rounded-3xl border border-neutral-200 bg-white dark:border-neutral-700 dark:bg-zinc-900'>
-        {/* Heading */}
-        <View className='border-b border-neutral-200 px-3 py-3 dark:border-neutral-700'>
-          <View className='flex-row items-center gap-2'>
-            <View className={`rounded-md p-2 ${config.bgColor}`}>
-              <Calendar01Icon size={24} color={config.color} strokeWidth={2} />
-            </View>
-            <SemiBold className='text-lg text-neutral-800 dark:text-neutral-200'>{config.title}</SemiBold>
-          </View>
-        </View>
-        {/* Table Header */}
-        <View className='border-b border-neutral-200 bg-neutral-50/50 px-5 py-2 dark:border-neutral-700 dark:bg-neutral-800/30'>
-          <View className='flex-row items-center gap-2'>
-            {showSelector && <View className='mr-2 w-6' />}
-            <View style={{ flex: 0.5, minWidth: 80 }}>
-              <Medium className='text-sm font-semibold text-neutral-600 dark:text-neutral-400'>Frequency</Medium>
-            </View>
-            <View style={{ flex: 0.5, minWidth: 60 }}>
-              <Medium className='text-sm font-semibold text-neutral-600 dark:text-neutral-400'>Day</Medium>
-            </View>
-            <View style={{ flex: 0.5, minWidth: 30 }}>
-              <Medium className='text-sm font-semibold text-neutral-600 dark:text-neutral-400'>Max</Medium>
-            </View>
-            <View style={{ flex: 1, minWidth: 125 }}>
-              <Medium className='text-sm font-semibold text-neutral-600 dark:text-neutral-400'>Time</Medium>
-            </View>
-          </View>
-        </View>
-        {/* Table Rows */}
-        <View>
-          {schedules.map((schedule, scheduleIndex) => (
-            <View key={schedule.key}>
-              {schedule.slots.map((slot, slotIndex) => (
-                <View key={slotIndex}>
-                  {(scheduleIndex > 0 || slotIndex > 0) && (
-                    <View className='h-[1px] bg-neutral-200 dark:bg-neutral-700' />
-                  )}
-                  <TouchableOpacity
-                    onPress={() => handleSelection(schedule.key, slotIndex)}
-                    activeOpacity={0.7}
-                    className={
-                      selectedKey === schedule.key ? 'bg-blue-100 dark:bg-blue-900/20' : 'bg-white dark:bg-zinc-900'
-                    }
-                  >
-                    <View className='flex-row items-center gap-2 px-4 py-4'>
-                      {/* HeroUI-inspired Radio Button */}
-                      {showSelector && (
-                        <TouchableOpacity
-                          onPress={() => handleSelection(schedule.key, slotIndex)}
-                          className='mr-2 w-7 items-center justify-center'
-                        >
-                          <View
-                            className={`h-6 w-6 items-center justify-center rounded-full border-2 ${
-                              selectedKey === schedule.key
-                                ? 'border-blue-600 bg-blue-600'
-                                : 'border-neutral-300 bg-white dark:border-neutral-600 dark:bg-zinc-800'
-                            }`}
-                          >
-                            {selectedKey === schedule.key && <View className='h-2.5 w-2.5 rounded-full bg-white' />}
-                          </View>
-                        </TouchableOpacity>
-                      )}
-                      {/* Frequency Column */}
-                      <View style={{ flex: 0.5, minWidth: 80 }}>
-                        <Medium className='text-sm text-neutral-700 dark:text-neutral-300' numberOfLines={1}>
-                          {getScheduleFrequency(type)}
-                        </Medium>
-                      </View>
-                      {/* Day Column */}
-                      <View style={{ flex: 0.5, minWidth: 60 }}>
-                        <Medium className='text-sm text-neutral-700 dark:text-neutral-300' numberOfLines={1}>
-                          {getScheduleDay(type, schedule)}
-                        </Medium>
-                      </View>
-                      {/* Max Column */}
-                      <View style={{ flex: 0.5, minWidth: 30 }}>
-                        <Medium className='text-sm text-neutral-700 dark:text-neutral-300' numberOfLines={1}>
-                          {schedule.maxBookings || '-'}
-                        </Medium>
-                      </View>
-                      {/* Time Column */}
-                      <View style={{ flex: 1, minWidth: 125 }}>
-                        <Medium className='text-sm text-neutral-700 dark:text-neutral-300' numberOfLines={1}>
-                          {slot}
-                        </Medium>
-                      </View>
-                    </View>
-                  </TouchableOpacity>
-                </View>
-              ))}
-            </View>
-          ))}
-        </View>
+      {/* Header with gradient */}
+      <View className='px-0.5'>
+        <SemiBold className='mb-1 text-lg text-neutral-900 dark:text-white'>{config.title}</SemiBold>
+        <Medium className='text-sm text-neutral-500 dark:text-neutral-400'>
+          {schedules.reduce((sum, s) => sum + s.slots.length, 0)} time slots
+        </Medium>
       </View>
+
+      {/* Slots as list view */}
+      {schedules.length === 0 ? (
+        <View className='items-center justify-center rounded-2xl bg-neutral-100 px-6 py-12 dark:bg-neutral-800/50'>
+          <Calendar01Icon size={40} color='#a3a3a3' strokeWidth={1.5} />
+          <Medium className='mt-3 text-neutral-500 dark:text-neutral-400'>No schedules available</Medium>
+        </View>
+      ) : (
+        <View className='gap-2'>
+          {schedules.map((schedule) =>
+            schedule.slots.map((slot, slotIndex) => {
+              const isSelected = selectedKey === schedule.key
+              const timeSlot = parseTimeSlot(slot)
+              const dayLabel = getScheduleDay(type, schedule)
+
+              return (
+                <TouchableOpacity
+                  key={`${schedule.key}-${slotIndex}`}
+                  onPress={() => handleSelection(schedule.key, slotIndex)}
+                  activeOpacity={0.7}
+                >
+                  <View className='flex-row items-center gap-3 overflow-hidden rounded-lg border border-neutral-200 bg-white px-4 py-3 dark:border-neutral-700 dark:bg-neutral-800'>
+                    {showSelector && (
+                      <View
+                        className='h-6 w-6 flex-shrink-0 items-center justify-center rounded-md border-2'
+                        style={{
+                          borderColor: isSelected ? '#3b82f6' : '#d1d5db',
+                          backgroundColor: isSelected ? '#3b82f6' : 'transparent',
+                        }}
+                      >
+                        {isSelected && <View className='h-3 w-3 rounded-sm bg-white' />}
+                      </View>
+                    )}
+
+                    {/* Content */}
+                    <View className='flex-1'>
+                      <Medium className='text-base font-medium text-neutral-900 dark:text-white'>
+                        {dayLabel} | {timeSlot.startTime}
+                        {timeSlot.endTime}
+                      </Medium>
+                      {schedule.maxBookings && (
+                        <Medium className='mt-1 text-sm text-neutral-500 dark:text-neutral-400'>
+                          Max bookings {schedule.maxBookings}
+                        </Medium>
+                      )}
+                    </View>
+
+                    {getDeleteHandler(schedule) && (
+                      <TouchableOpacity
+                        onPress={getDeleteHandler(schedule)}
+                        className='flex-shrink-0 p-1 active:opacity-70'
+                        hitSlop={{ top: 6, bottom: 6, left: 6, right: 6 }}
+                      >
+                        <Cancel01Icon size={14} color='#ef4444' strokeWidth={2.5} />
+                      </TouchableOpacity>
+                    )}
+                  </View>
+                </TouchableOpacity>
+              )
+            }),
+          )}
+        </View>
+      )}
     </View>
   )
 }
