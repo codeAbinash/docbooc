@@ -13,9 +13,73 @@ const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
 
 const formatTime = (timeString: string) => {
   if (timeString.includes('T')) {
-    return new Date(timeString).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false })
+    return new Date(timeString).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })
   }
-  return timeString.substring(0, 5)
+  const [hours = '0', minutes = '00'] = timeString.split(':')
+  const hour = parseInt(hours)
+  const ampm = hour >= 12 ? 'PM' : 'AM'
+  const formattedHour = hour % 12 || 12
+  return `${formattedHour.toString().padStart(2, '0')}:${minutes} ${ampm}`
+}
+
+type GroupedScheduleItem = { key: string; id: string; slots: string[]; maxBookings?: number }
+type WeeklyScheduleItem = GroupedScheduleItem & { day: string }
+type MonthlyScheduleItem = GroupedScheduleItem & { date: number }
+
+type GroupedSchedules = {
+  weekly: WeeklyScheduleItem[]
+  daily: GroupedScheduleItem[]
+  monthly: MonthlyScheduleItem[]
+}
+
+function groupSchedules(scheduleData: SchedulePayload): GroupedSchedules {
+  const grouped: GroupedSchedules = { weekly: [], daily: [], monthly: [] }
+  const scheduleType = scheduleData.scheduleType
+
+  if (scheduleType === 'daily') {
+    grouped.daily = scheduleData.timeSlots.map((slot, index) => ({
+      key: `daily-${index}`,
+      id: `daily-${index}`,
+      slots: [`${formatTime(slot.startTime)} - ${formatTime(slot.endTime)}`],
+      maxBookings: slot.maxBookings,
+    }))
+  } else if (scheduleType === 'weekly') {
+    const dayGroups: { [key: string]: { slots: string[]; maxBookings: number } } = {}
+    scheduleData.timeSlots.forEach((slot) => {
+      if (slot.dayOfWeek !== undefined) {
+        const day = DAYS[slot.dayOfWeek]
+        if (day) {
+          if (!dayGroups[day]) dayGroups[day] = { slots: [], maxBookings: slot.maxBookings }
+          dayGroups[day].slots.push(`${formatTime(slot.startTime)} - ${formatTime(slot.endTime)}`)
+        }
+      }
+    })
+    grouped.weekly = Object.entries(dayGroups).map(([day, data]) => ({
+      key: day,
+      id: day,
+      day,
+      slots: data.slots,
+      maxBookings: data.maxBookings,
+    }))
+  } else if (scheduleType === 'monthly') {
+    const dateGroups: { [key: number]: { slots: string[]; maxBookings: number } } = {}
+    scheduleData.timeSlots.forEach((slot) => {
+      if (slot.dayOfMonth !== undefined) {
+        const day = slot.dayOfMonth
+        if (!dateGroups[day]) dateGroups[day] = { slots: [], maxBookings: slot.maxBookings }
+        dateGroups[day].slots.push(`${formatTime(slot.startTime)} - ${formatTime(slot.endTime)}`)
+      }
+    })
+    grouped.monthly = Object.entries(dateGroups).map(([dateKey, data]) => ({
+      key: `day-${dateKey}`,
+      id: `day-${dateKey}`,
+      date: parseInt(dateKey),
+      slots: data.slots,
+      maxBookings: data.maxBookings,
+    }))
+  }
+
+  return grouped
 }
 
 const HPScheduleReview = () => {
@@ -40,63 +104,13 @@ const HPScheduleReview = () => {
   })
 
   const handleSendForReview = () => {
-    mutate({
-      doctorId,
-      scheduleType: scheduleData.scheduleType,
-      timeSlots: scheduleData.timeSlots.map((slot) => ({
-        startTime: formatTime(slot.startTime),
-        endTime: formatTime(slot.endTime),
-        maxBookings: slot.maxBookings,
-        ...(slot.dayOfWeek !== undefined && { dayOfWeek: slot.dayOfWeek }),
-        ...(slot.dayOfMonth !== undefined && { dayOfMonth: slot.dayOfMonth }),
-      })),
-      isActive: true,
-      ...(scheduleData.weekDays && { weekDays: scheduleData.weekDays }),
-      ...(scheduleData.monthDays && { monthDays: scheduleData.monthDays }),
-    })
+    mutate(scheduleData)
   }
 
-  const schedules = (() => {
-    const scheduleType = scheduleData.scheduleType
-
-    if (scheduleType === 'daily') {
-      return scheduleData.timeSlots.map((slot, index) => ({
-        key: `daily-${index}`,
-        id: `daily-${index}`,
-        slots: [`${formatTime(slot.startTime)} - ${formatTime(slot.endTime)}`],
-      }))
-    } else if (scheduleType === 'weekly') {
-      const grouped: { [key: string]: string[] } = {}
-      scheduleData.timeSlots.forEach((slot) => {
-        if (slot.dayOfWeek !== undefined) {
-          const day = DAYS[slot.dayOfWeek]
-          if (day) {
-            if (!grouped[day]) grouped[day] = []
-            grouped[day].push(`${formatTime(slot.startTime)} - ${formatTime(slot.endTime)}`)
-          }
-        }
-      })
-      return Object.entries(grouped).map(([day, slots]) => ({ key: day, id: day, day, slots }))
-    } else if (scheduleType === 'monthly') {
-      const grouped: { [key: number]: string[] } = {}
-      scheduleData.timeSlots.forEach((slot) => {
-        if (slot.dayOfMonth !== undefined) {
-          const day = slot.dayOfMonth
-          if (!grouped[day]) grouped[day] = []
-          grouped[day].push(`${formatTime(slot.startTime)} - ${formatTime(slot.endTime)}`)
-        }
-      })
-      return Object.entries(grouped).map(([date, slots]) => ({
-        key: `day-${date}`,
-        id: `day-${date}`,
-        date: parseInt(date),
-        slots,
-      }))
-    }
-    return []
-  })()
-
+  const schedules = groupSchedules(scheduleData)
   const scheduleType = (scheduleData.scheduleType || 'daily') as 'daily' | 'weekly' | 'monthly'
+  const displaySchedules =
+    scheduleType === 'weekly' ? schedules.weekly : scheduleType === 'monthly' ? schedules.monthly : schedules.daily
 
   return (
     <View className='flex-1 bg-white'>
@@ -104,7 +118,7 @@ const HPScheduleReview = () => {
       <View className='flex-1'>
         <ScrollView className='flex-1' showsVerticalScrollIndicator={false}>
           <View className='gap-6 p-5'>
-            <ScheduleCard type={scheduleType} schedules={schedules} showSelector={false} />
+            <ScheduleCard type={scheduleType} schedules={displaySchedules} showSelector={false} />
           </View>
         </ScrollView>
         <View className='px-5 py-3'>

@@ -193,6 +193,8 @@ function HPTodaysAppointmentsScreen() {
     [activeTab],
   )
 
+  console.log('doctors:', myDoctors)
+
   return (
     <View className='flex-1 bg-white dark:bg-neutral-900'>
       <HybridHead
