@@ -2,15 +2,17 @@ import HybridHead from '@components/HybridHead'
 import KeyboardAvoid from '@components/KeyboardAvoid'
 import { PaddingBottom } from '@components/SafePadding'
 import { Search } from '@components/Search'
+import { Lottie } from '@components/Lottie'
+import { CustomDatePicker } from '@components/CustomDatePicker'
 import Calendar03Icon from '@hugeicons/Calendar03Icon'
-import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker'
+import Animations from '@/assets/animations/animations'
 import { useQuery } from '@tanstack/react-query'
 import { client } from '@utils/client'
 import Colors from '@utils/colors'
 import { SemiBold } from '@utils/fonts'
 import type { Doctor, Patient } from '@utils/types'
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
-import { ActivityIndicator, FlatList, Platform, TouchableOpacity, View } from 'react-native'
+import { FlatList, RefreshControl, Text, TouchableOpacity, View } from 'react-native'
 import PatientCard from '../components/PatientCard'
 
 type SearchAndDateBarProps = {
@@ -19,7 +21,7 @@ type SearchAndDateBarProps = {
   selectedDate: Date
   showDatePicker: boolean
   onToggleDatePicker: () => void
-  onDateChange: (event: DateTimePickerEvent, date?: Date) => void
+  onDateTimeChange: (date: Date) => void
 }
 
 const formatDate = (date: Date) => {
@@ -44,35 +46,34 @@ const SearchAndDateBar = memo(function SearchAndDateBar({
   selectedDate,
   showDatePicker,
   onToggleDatePicker,
-  onDateChange,
+  onDateTimeChange,
 }: SearchAndDateBarProps) {
   const formattedDate = useMemo(() => formatDate(selectedDate), [selectedDate])
 
   return (
-    <View className='border-b border-t border-neutral-200 bg-white px-5 py-3 dark:bg-neutral-900'>
-      <View className='flex-row gap-3'>
-        <View className='flex-1'>
-          <Search value={searchQuery} onChangeText={onSearchChange} placeholder='Search patients...' />
+    <>
+      <View className='border-b border-t border-neutral-200 bg-white px-5 py-3 dark:bg-neutral-900'>
+        <View className='flex-row gap-3'>
+          <View className='flex-1'>
+            <Search value={searchQuery} onChangeText={onSearchChange} placeholder='Search patients...' />
+          </View>
+          <TouchableOpacity
+            onPress={onToggleDatePicker}
+            activeOpacity={0.7}
+            className='flex-row items-center gap-2 rounded-lg bg-accent/15 px-3'
+          >
+            <Calendar03Icon color={Colors.accent} size={20} strokeWidth={2} />
+            <SemiBold style={{ color: Colors.accent, fontSize: 15 }}>{formattedDate}</SemiBold>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          onPress={onToggleDatePicker}
-          activeOpacity={0.7}
-          className='flex-row items-center gap-2 rounded-lg bg-accent/15 px-3'
-        >
-          <Calendar03Icon color={Colors.accent} size={20} strokeWidth={2} />
-          <SemiBold style={{ color: Colors.accent, fontSize: 15 }}>{formattedDate}</SemiBold>
-        </TouchableOpacity>
       </View>
-
-      {showDatePicker && (
-        <DateTimePicker
-          value={selectedDate}
-          mode='date'
-          onChange={onDateChange}
-          display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-        />
-      )}
-    </View>
+      <CustomDatePicker
+        visible={showDatePicker}
+        onClose={onToggleDatePicker}
+        onDateTimeChange={onDateTimeChange}
+        initialDate={selectedDate}
+      />
+    </>
   )
 })
 
@@ -95,7 +96,11 @@ const transformAppointmentToPatientCard = (
 })
 
 const HPUpcomingAppointmentsScreen = memo(function HPUpcomingAppointmentsScreenComponent() {
-  const [selectedDate, setSelectedDate] = useState(new Date())
+  const [selectedDate, setSelectedDate] = useState(() => {
+    const tomorrow = new Date()
+    tomorrow.setDate(tomorrow.getDate() + 1)
+    return tomorrow
+  })
   const [showDatePicker, setShowDatePicker] = useState(false)
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | undefined>()
   const [searchQuery, setSearchQuery] = useState('')
@@ -116,7 +121,11 @@ const HPUpcomingAppointmentsScreen = memo(function HPUpcomingAppointmentsScreenC
 
   const selectedDateIso = useMemo(() => selectedDate.toISOString().split('T')[0] || '', [selectedDate])
 
-  const { data: upcomingAppointments, isLoading } = useQuery({
+  const {
+    data: upcomingAppointments,
+    isLoading,
+    refetch,
+  } = useQuery({
     queryKey: ['upcoming-appointments', selectedDoctor?.id, selectedDateIso],
     queryFn: async () => {
       if (!selectedDoctor?.id) return []
@@ -137,6 +146,14 @@ const HPUpcomingAppointmentsScreen = memo(function HPUpcomingAppointmentsScreenC
     enabled: !!selectedDoctor?.id,
   })
 
+  const [refreshing, setRefreshing] = useState(false)
+
+  const handleRefresh = useCallback(async () => {
+    setRefreshing(true)
+    await refetch()
+    setRefreshing(false)
+  }, [refetch])
+
   const filteredAppointments = useMemo(() => {
     if (!searchQuery) return upcomingAppointments || []
     const query = searchQuery.toLowerCase()
@@ -150,13 +167,8 @@ const HPUpcomingAppointmentsScreen = memo(function HPUpcomingAppointmentsScreenC
     setShowDatePicker((prev) => !prev)
   }, [])
 
-  const handleDateChange = useCallback((event: DateTimePickerEvent, date?: Date) => {
-    if (Platform.OS === 'android') {
-      setShowDatePicker(false)
-    }
-    if (date) {
-      setSelectedDate(date)
-    }
+  const handleDateTimeChange = useCallback((date: Date) => {
+    setSelectedDate(date)
   }, [])
 
   const renderPatientCard = useCallback(({ item }: { item: Patient }) => {
@@ -168,18 +180,26 @@ const HPUpcomingAppointmentsScreen = memo(function HPUpcomingAppointmentsScreenC
 
   const ListFooterComponent = useCallback(() => <PaddingBottom />, [])
 
-  const EmptyState = useCallback(
-    () => (
-      <View className='flex-1 items-center justify-center py-16'>
-        {isLoading ? (
-          <ActivityIndicator size='large' color={Colors.accent} />
-        ) : (
-          <SemiBold style={{ color: Colors.text.DEFAULT, fontSize: 16 }}>No appointments found</SemiBold>
-        )}
+  const EmptyState = useCallback(() => {
+    if (isLoading) {
+      return (
+        <View className='flex-1 items-center justify-center'>
+          <Lottie source={Animations.loading} size={80} />
+        </View>
+      )
+    }
+    return (
+      <View className='flex-1 items-center justify-center py-32'>
+        <Lottie source={Animations.cal} size={250} loop={true} hardwareAccelerationAndroid={true} />
+        <Text className='mb-2 text-center text-lg font-semibold text-neutral-700 dark:text-neutral-300'>
+          No Appointments
+        </Text>
+        <Text className='text-center text-sm text-neutral-500 dark:text-neutral-400'>
+          No appointments scheduled for this date.
+        </Text>
       </View>
-    ),
-    [isLoading],
-  )
+    )
+  }, [isLoading])
 
   return (
     <KeyboardAvoid>
@@ -205,6 +225,9 @@ const HPUpcomingAppointmentsScreen = memo(function HPUpcomingAppointmentsScreenC
             updateCellsBatchingPeriod={50}
             initialNumToRender={8}
             windowSize={5}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} tintColor={Colors.accent} />
+            }
           />
         </View>
         <View className='absolute bottom-0 left-0 right-0 bg-white dark:bg-neutral-900'>
@@ -214,7 +237,7 @@ const HPUpcomingAppointmentsScreen = memo(function HPUpcomingAppointmentsScreenC
             selectedDate={selectedDate}
             showDatePicker={showDatePicker}
             onToggleDatePicker={handleToggleDatePicker}
-            onDateChange={handleDateChange}
+            onDateTimeChange={handleDateTimeChange}
           />
           <PaddingBottom />
         </View>

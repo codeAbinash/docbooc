@@ -81,14 +81,15 @@ const DoctorSwitcherModal = memo<DoctorSwitcherModalProps>(
 
               <ScrollView className='max-h-96' showsVerticalScrollIndicator={false}>
                 <View className='gap-2'>
-                  {doctors.map((doctor) => (
-                    <DoctorItem
-                      key={doctor.id}
-                      doctor={doctor}
-                      isSelected={currentDoctorId === doctor.id}
-                      onSelect={handleSelect}
-                    />
-                  ))}
+                  {Array.isArray(doctors) &&
+                    doctors.map((doctor) => (
+                      <DoctorItem
+                        key={doctor.id}
+                        doctor={doctor}
+                        isSelected={currentDoctorId === doctor.id}
+                        onSelect={handleSelect}
+                      />
+                    ))}
                 </View>
               </ScrollView>
             </TouchableOpacity>

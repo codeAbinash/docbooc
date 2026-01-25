@@ -1,6 +1,8 @@
 import { DepartmentIcon } from '@/AdminScreens/Department/types'
+import Animations from '@assets/animations/animations'
 import Chip from '@components/Chip'
 import DoctorSwitcherModal from '@components/DoctorSwitcherModal'
+import { Lottie } from '@components/Lottie'
 import { PaddingTop } from '@components/SafePadding'
 import Search from '@components/Search'
 import ArrowLeft01Icon from '@hugeicons/ArrowLeft01Icon'
@@ -197,11 +199,20 @@ function HybridHead({
           {showDoctorInfo ? (
             <View className='flex-1 flex-row items-center'>
               <View className='flex-1 flex-row items-center justify-center'>
-                <Medium className='text-xl text-black dark:text-white'>{doctorInfo?.name ?? 'Select doctor'}</Medium>
-                <Regular className='text-2xl text-black dark:text-white'>|</Regular>
-                <Medium className='bg-neutral-100 p-1 text-xs text-neutral-500'>
-                  {doctorInfo?.specialization ?? doctorInfo?.department ?? 'N/A'}
-                </Medium>
+                {doctorInfo?.name ? (
+                  <>
+                    <Medium className='text-2xl text-black dark:text-white'>{doctorInfo.name}</Medium>
+                    <Regular className='text-2xl text-black dark:text-white'> |</Regular>
+                    <Medium className='bg-neutral-100 p-1 text-xs text-neutral-500'>
+                      {doctorInfo?.specialization ?? doctorInfo?.department ?? 'N/A'}
+                    </Medium>
+                    
+                  </>
+                ) : (
+                  <View className='items-center justify-center  w-12'>
+                    <Lottie source={Animations.loading} size={25} />
+                  </View>
+                )}
               </View>
               <TouchableOpacity onPress={handleOpenDoctorModal} className='rounded-xl p-1 dark:bg-neutral-800'>
                 <SquareIcon size={ICON_SIZE.SQUARE} color={Colors.accent} />

@@ -105,7 +105,7 @@ export default function AdminOTP({ navigation, route }: AdminNavProp) {
         <PaddingTop />
         <Header title='' />
         <View className='flex-1 gap-10 p-6'>
-          <Lottie source={Animations.lock} />
+          <Lottie source={Animations.loading} />
           <View className='gap-2'>
             <Bold className='text text-2xl'>OTP Verification</Bold>
             <Medium className='text text-base opacity-70'>
