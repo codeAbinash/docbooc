@@ -1,22 +1,30 @@
-import { specialties } from '@/constants'
+import { useRefreshOnFocus } from '@/query'
 import { ALL_SPECIALTY } from '@/UserScreens/Doctors/Doctors'
 import { DoctorCard } from '@components/DoctorCard'
+import HybridHead from '@components/HybridHead'
 import { useNavigation } from '@react-navigation/native'
 import { useQuery } from '@tanstack/react-query'
-import { hpApi } from '@utils/client'
+import { api, client, hpApi } from '@utils/client'
 import Colors from '@utils/colors'
 import { HPStackNav } from '@utils/types'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { ActivityIndicator, FlatList, RefreshControl, View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
-import HybridHead from '@components/HybridHead'
-import { useRefreshOnFocus } from '@/query'
 
 const HPViewDoctors = () => {
   const navigate = useNavigation<HPStackNav>()
-  const [selected, setSelected] = useState(0)
+  const [selected, setSelected] = useState('0')
   const scrollViewRef = useRef<ScrollView>(null)
   const [searchQuery, setSearchQuery] = useState('')
+
+  const { data: departmentsResponse } = useQuery({
+    queryKey: ['departments'],
+    queryFn: async () => await (await api.public.departments.$get(client)).json(),
+  })
+
+  const departments = useMemo(() => departmentsResponse?.data || [], [departmentsResponse])
+
+  const allItems = useMemo(() => [ALL_SPECIALTY, ...departments], [departments])
 
   const {
     data: doctorsData,
@@ -43,7 +51,10 @@ const HPViewDoctors = () => {
   const doctors = doctorsData?.data || []
 
   const filteredDoctors = useMemo(() => {
-    let filtered = doctors
+    let filtered =
+      selected !== '0'
+        ? doctors.filter((doctor) => doctor.department === departments.find((d) => d.id === selected)?.name)
+        : doctors
     if (searchQuery) {
       const query = searchQuery.toLowerCase()
       filtered = filtered.filter(
@@ -51,13 +62,11 @@ const HPViewDoctors = () => {
       )
     }
     return filtered
-  }, [doctors, searchQuery])
+  }, [selected, searchQuery, doctors, departments])
 
   const handleSpecialtySelect = useCallback((id: number | string) => {
-    setSelected(typeof id === 'number' ? id : Number(id))
+    setSelected(typeof id === 'string' ? id : id.toString())
   }, [])
-
-  const allItems = [ALL_SPECIALTY, ...specialties]
 
   return (
     <>
@@ -80,7 +89,7 @@ const HPViewDoctors = () => {
         ) : (
           <FlatList
             className='flex-1 pt-2'
-            contentContainerClassName='px-5 pb-10'
+            contentContainerClassName='px-6 pb-10'
             data={filteredDoctors}
             renderItem={({ item }) => (
               <DoctorCard

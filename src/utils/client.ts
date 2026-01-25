@@ -3,17 +3,16 @@ import authStore from '@/zustand/authStore'
 import hcWithType from '../rpc/hcWithType'
 
 //@ts-ignore
-// import { hc } from '../../node_modules/hono/dist/client/client'
-import { hc } from 'hono/dist/client/client'
+import { hc } from 'hono/client'
 import { WEB } from './constants'
 
-// let address = WEB
-let address = 'http://192.168.29.96:8787'
+let address = WEB
+// let address = 'http://192.168.29.96:8787'
 // address = __DEV__ ? 'http://192.168.29.220:8787/' : WEB
 
 console.log(process.env.LOCAL)
 
-let client = (hc as typeof hcWithType)(address, {
+let client = (hc as unknown as typeof hcWithType)(address, {
   headers() {
     const { token } = authStore.getState()
     if (!token)
@@ -42,7 +41,7 @@ export const adminApi = client.api.v1.admin
 // }
 
 export function updateClientHeader(token: string) {
-  client = (hc as typeof hcWithType)(address, {
+  client = (hc as unknown as typeof hcWithType)(address, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

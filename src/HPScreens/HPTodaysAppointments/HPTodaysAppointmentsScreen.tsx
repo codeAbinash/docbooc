@@ -1,14 +1,16 @@
 import ConfirmationModal from '@/HPScreens/components/ConfirmationModal'
 import HybridHead from '@components/HybridHead'
 import { PaddingBottom } from '@components/SafePadding'
+import { Lottie } from '@components/Lottie'
 import Calendar01Icon from '@hugeicons/Calendar01Icon'
 import Loading03Icon from '@hugeicons/Loading03Icon'
 import TickDouble02Icon from '@hugeicons/TickDouble02Icon'
+import Animations from '@/assets/animations/animations'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { client } from '@utils/client'
 import type { Doctor, Patient } from '@utils/types'
 import { memo, useCallback, useEffect, useState } from 'react'
-import { FlatList, Text, View } from 'react-native'
+import { FlatList, RefreshControl, Text, View } from 'react-native'
 import PatientCard from '../components/PatientCard'
 
 type ActionType = 'cancel' | 'complete' | 'move-to-ongoing'
@@ -56,6 +58,7 @@ function HPTodaysAppointmentsScreen() {
   const [modalVisible, setModalVisible] = useState(false)
   const [selectedAction, setSelectedAction] = useState<SelectedAction | null>(null)
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | undefined>()
+  const [refreshing, setRefreshing] = useState(false)
 
   const handleChipSelect = useCallback((id: number | string) => {
     setActiveTab(typeof id === 'number' ? id : Number(id))
@@ -79,7 +82,7 @@ function HPTodaysAppointmentsScreen() {
     }
   }, [myDoctors, selectedDoctor])
 
-  const { data: todaysAppointments } = useQuery({
+  const { data: todaysAppointments, refetch } = useQuery({
     queryKey: ['todays-appointments', selectedDoctor?.id],
     queryFn: async () => {
       if (!selectedDoctor?.id) return []
@@ -100,6 +103,12 @@ function HPTodaysAppointmentsScreen() {
     },
     enabled: !!selectedDoctor?.id,
   })
+
+  const handleRefresh = useCallback(async () => {
+    setRefreshing(true)
+    await refetch()
+    setRefreshing(false)
+  }, [refetch])
 
   const filteredAppointments = (todaysAppointments || []).filter((appointment) => {
     if (activeTab === 1) {
@@ -171,8 +180,8 @@ function HPTodaysAppointmentsScreen() {
 
   const renderEmptyState = useCallback(
     () => (
-      <View className='flex-1 items-center justify-center px-6 py-12'>
-        <Calendar01Icon size={64} className='mb-4 text-neutral-400 dark:text-neutral-600' />
+      <View className='flex-1 items-center justify-center py-20'>
+        <Lottie source={Animations.cal} size={250} loop={true} hardwareAccelerationAndroid={true} />
         <Text className='mb-2 text-center text-lg font-semibold text-neutral-700 dark:text-neutral-300'>
           {activeTab === 1 ? 'No Completed Appointments' : 'No Ongoing Appointments'}
         </Text>
@@ -183,6 +192,8 @@ function HPTodaysAppointmentsScreen() {
     ),
     [activeTab],
   )
+
+  console.log('doctors:', myDoctors)
 
   return (
     <View className='flex-1 bg-white dark:bg-neutral-900'>
@@ -216,10 +227,11 @@ function HPTodaysAppointmentsScreen() {
         data={filteredAppointments}
         renderItem={renderPatientCard}
         keyExtractor={keyExtractor}
-        contentContainerClassName='px-5 pt-1'
+        contentContainerClassName=' px-6 py-1'
         showsVerticalScrollIndicator={false}
         ListFooterComponent={PaddingBottom}
         ListEmptyComponent={renderEmptyState}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
       />
     </View>
   )

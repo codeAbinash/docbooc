@@ -1,30 +1,13 @@
-import HybridHead from '@components/HybridHead'
 import popupStore from '@/zustand/popupStore'
 import Button from '@components/Button'
-import { PaddingBottom, PaddingTop } from '@components/SafePadding'
+import HybridHead from '@components/HybridHead'
+import { PaddingBottom } from '@components/SafePadding'
+import ScheduleCard from '@components/ScheduleCard'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { useMutation } from '@tanstack/react-query'
 import { hpApi } from '@utils/client'
-import { HPStackNav } from '@utils/types'
+import { HPStackNav, SchedulePayload } from '@utils/types'
 import { ScrollView, View } from 'react-native'
-import ScheduleCard from '@components/ScheduleCard'
-
-type RouteParams = {
-  doctorId: string
-  doctorName: string
-  scheduleData: {
-    scheduleType: string
-    timeSlots: Array<{
-      startTime: string
-      endTime: string
-      maxBookings: number
-      dayOfWeek?: number
-      dayOfMonth?: number
-    }>
-    weekDays?: number[]
-    monthDays?: number[]
-  }
-}
 
 const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
@@ -38,11 +21,15 @@ const formatTime = (timeString: string) => {
 const HPScheduleReview = () => {
   const navigation = useNavigation<HPStackNav>()
   const route = useRoute<any>()
-  const { doctorId, doctorName, scheduleData } = route.params as RouteParams
+  const { doctorId, doctorName, scheduleData } = route.params as {
+    doctorId: string
+    doctorName: string
+    scheduleData: SchedulePayload
+  }
   const alert = popupStore((state) => state.alert)
 
   const { mutate, isPending } = useMutation({
-    mutationFn: async (payload: any) => (await hpApi.schedules.$post({ json: payload })).json(),
+    mutationFn: async (payload: SchedulePayload) => (await hpApi.schedules.$post({ json: payload })).json(),
     onSuccess: (data) => {
       if (!data.success) return alert('Error', data.message || 'An error occurred while creating the schedule.')
       alert('Success', 'Schedule created successfully', [{ text: 'OK', onPress: () => navigation.navigate('HPHome') }])
@@ -77,33 +64,45 @@ const HPScheduleReview = () => {
         key: `daily-${index}`,
         id: `daily-${index}`,
         slots: [`${formatTime(slot.startTime)} - ${formatTime(slot.endTime)}`],
+        maxBookings: slot.maxBookings,
       }))
     } else if (scheduleType === 'weekly') {
-      const grouped: { [key: string]: string[] } = {}
+      const grouped: { [key: string]: { slot: string; maxBookings: number | undefined } } = {}
       scheduleData.timeSlots.forEach((slot) => {
         if (slot.dayOfWeek !== undefined) {
           const day = DAYS[slot.dayOfWeek]
           if (day) {
-            if (!grouped[day]) grouped[day] = []
-            grouped[day].push(`${formatTime(slot.startTime)} - ${formatTime(slot.endTime)}`)
+            grouped[day] = {
+              slot: `${formatTime(slot.startTime)} - ${formatTime(slot.endTime)}`,
+              maxBookings: slot.maxBookings,
+            }
           }
         }
       })
-      return Object.entries(grouped).map(([day, slots]) => ({ key: day, id: day, day, slots }))
+      return Object.entries(grouped).map(([day, data]) => ({
+        key: day,
+        id: day,
+        day,
+        slots: [data.slot],
+        maxBookings: data.maxBookings,
+      }))
     } else if (scheduleType === 'monthly') {
-      const grouped: { [key: number]: string[] } = {}
+      const grouped: { [key: number]: { slot: string; maxBookings: number | undefined } } = {}
       scheduleData.timeSlots.forEach((slot) => {
         if (slot.dayOfMonth !== undefined) {
           const day = slot.dayOfMonth
-          if (!grouped[day]) grouped[day] = []
-          grouped[day].push(`${formatTime(slot.startTime)} - ${formatTime(slot.endTime)}`)
+          grouped[day] = {
+            slot: `${formatTime(slot.startTime)} - ${formatTime(slot.endTime)}`,
+            maxBookings: slot.maxBookings,
+          }
         }
       })
-      return Object.entries(grouped).map(([date, slots]) => ({
+      return Object.entries(grouped).map(([date, data]) => ({
         key: `day-${date}`,
         id: `day-${date}`,
         date: parseInt(date),
-        slots,
+        slots: [data.slot],
+        maxBookings: data.maxBookings,
       }))
     }
     return []

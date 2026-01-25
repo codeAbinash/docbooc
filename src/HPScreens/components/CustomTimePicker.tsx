@@ -1,13 +1,13 @@
-import { SemiBold, Medium } from '@utils/fonts'
-import { memo, useState, useCallback, useRef } from 'react'
-import { Modal, TouchableOpacity, View, ScrollView, NativeScrollEvent, NativeSyntheticEvent } from 'react-native'
 import Time04Icon from '@assets/icons/hugeicons/Time04Icon'
+import { Medium, SemiBold } from '@utils/fonts'
+import { memo, useCallback, useRef, useState } from 'react'
+import { Modal, NativeScrollEvent, NativeSyntheticEvent, ScrollView, TouchableOpacity, View } from 'react-native'
 
 export const formatTime = (date: Date) =>
   date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })
 
 const HOURS = Array.from({ length: 12 }, (_, i) => i + 1)
-const MINUTES = Array.from({ length: 60 }, (_, i) => i)
+const MINUTES = [0, 15, 30, 45]
 const PERIODS = ['AM', 'PM'] as const
 const ITEM_HEIGHT = 50
 
@@ -72,7 +72,7 @@ const ScrollPicker = memo(
           className='h-full px-4'
           showsVerticalScrollIndicator={false}
           snapToInterval={ITEM_HEIGHT}
-          decelerationRate={0.85}
+          decelerationRate='fast'
           onScroll={onScroll}
           scrollEventThrottle={16}
           onMomentumScrollEnd={onScrollEnd}
@@ -95,30 +95,28 @@ const CustomTimePicker = memo(({ isVisible, onClose, onSelectTime, currentTime }
   const [p, setP] = useState<'AM' | 'PM'>(currentTime.getHours() >= 12 ? 'PM' : 'AM')
   const hRef = useRef<ScrollView | null>(null)
   const mRef = useRef<ScrollView | null>(null)
-  const scrollVelocity = useRef(0)
 
   const handleHScroll = useCallback((e: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const v = Math.round(e.nativeEvent.contentOffset.y / ITEM_HEIGHT)
-    if (v >= 0 && v <= 11) setH(v + 1)
+    const offset = e.nativeEvent.contentOffset.y
+    const index = Math.round(offset / ITEM_HEIGHT)
+    const clamped = Math.max(0, Math.min(11, index))
+    setH(clamped + 1)
   }, [])
 
   const handleMScroll = useCallback((e: NativeSyntheticEvent<NativeScrollEvent>) => {
-    scrollVelocity.current = Math.abs(e.nativeEvent.velocity?.y || 0)
-    const v = Math.round(e.nativeEvent.contentOffset.y / ITEM_HEIGHT)
-    if (v >= 0 && v <= 59) setM(v)
+    const offset = e.nativeEvent.contentOffset.y
+    const index = Math.round(offset / ITEM_HEIGHT)
+    const clamped = Math.max(0, Math.min(3, index))
+    setM(MINUTES[clamped]!)
   }, [])
 
   const handleMScrollEnd = useCallback((e: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const v = Math.round(e.nativeEvent.contentOffset.y / ITEM_HEIGHT)
-
-    // Snap to 15-min intervals if scrolling fast
-    if (scrollVelocity.current > 0.4) {
-      const snapped = Math.round(v / 15) * 15
-      const clamped = Math.min(45, Math.max(0, snapped))
-      setM(clamped)
-      mRef.current?.scrollTo({ y: clamped * ITEM_HEIGHT, animated: true })
-    }
-    scrollVelocity.current = 0
+    const offset = e.nativeEvent.contentOffset.y
+    const index = Math.round(offset / ITEM_HEIGHT)
+    const clamped = Math.max(0, Math.min(3, index))
+    const snappedMinute = MINUTES[clamped]!
+    setM(snappedMinute)
+    mRef.current?.scrollTo({ y: clamped * ITEM_HEIGHT, animated: true })
   }, [])
 
   const handleConfirm = useCallback(() => {
@@ -136,7 +134,10 @@ const CustomTimePicker = memo(({ isVisible, onClose, onSelectTime, currentTime }
 
   const handleMPress = useCallback((v: number) => {
     setM(v)
-    mRef.current?.scrollTo({ y: v * ITEM_HEIGHT, animated: true })
+    const index = MINUTES.indexOf(v)
+    if (index !== -1) {
+      mRef.current?.scrollTo({ y: index * ITEM_HEIGHT, animated: true })
+    }
   }, [])
 
   return (
@@ -172,7 +173,7 @@ const CustomTimePicker = memo(({ isVisible, onClose, onSelectTime, currentTime }
                 onPress={handleMPress}
                 scrollRef={mRef}
                 label='Minute'
-                subtitle='00-59'
+                subtitle='0, 15, 30, 45'
                 onScrollEnd={handleMScrollEnd}
               />
             </View>

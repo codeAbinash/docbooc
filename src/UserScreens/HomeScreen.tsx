@@ -6,7 +6,7 @@ import Calendar03Icon from '@hugeicons/Calendar03Icon'
 import NotificationSquareIcon from '@hugeicons/NotificationSquareIcon'
 
 import Search01Icon from '@hugeicons/Search01Icon'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useFocusEffect } from '@react-navigation/native'
 
 import { Medium, Regular, SemiBold } from '@utils/fonts'
 import { NavProp, StackNav } from '@utils/types'
@@ -16,21 +16,36 @@ import { Department } from '@/AdminScreens/Department/types'
 import { useQuery } from '@tanstack/react-query'
 import { api, client } from '@utils/client'
 import { getIconByName } from '@utils/icons'
-import { useRef } from 'react'
+import { useCallback, useRef } from 'react'
 
 export default function HomeScreen({ navigation }: NavProp) {
   const { width } = useWindowDimensions()
   const scrollY = useRef(new Animated.Value(0)).current
 
-  const { data, isLoading } = useQuery({
+  const {
+    data,
+    isLoading,
+    refetch: refetchDepartments,
+  } = useQuery({
     queryKey: ['departments'],
     queryFn: async () => await (await api.public.departments.$get(client)).json(),
   })
 
-  const { data: doctorsResponse, isLoading: isDoctorsLoading } = useQuery({
+  const {
+    data: doctorsResponse,
+    isLoading: isDoctorsLoading,
+    refetch: refetchDoctors,
+  } = useQuery({
     queryKey: ['doctors'],
     queryFn: async () => await (await api.users.doctors.$get()).json(),
   })
+
+  useFocusEffect(
+    useCallback(() => {
+      refetchDepartments()
+      refetchDoctors()
+    }, [refetchDepartments, refetchDoctors]),
+  )
 
   const departments = data?.data || []
   const doctors = doctorsResponse?.data || []

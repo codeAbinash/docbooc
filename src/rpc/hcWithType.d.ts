@@ -1059,7 +1059,7 @@ declare const client: {
                                             doctorId: string;
                                             scheduleType: "daily" | "monthly" | "weekly";
                                             daysMask: number | null;
-                                            scheduleStatus: "active" | "applied" | "approved" | "inactive" | "pending" | "rejected" | null;
+                                            scheduleStatus: "active" | "deleted" | "inactive";
                                             createdAt: string;
                                         } | null;
                                     }[] | undefined;
@@ -1386,7 +1386,7 @@ declare const client: {
                                         doctorId: string;
                                         scheduleType: "daily" | "monthly" | "weekly";
                                         daysMask: number | null;
-                                        scheduleStatus: "active" | "applied" | "approved" | "inactive" | "pending" | "rejected" | null;
+                                        scheduleStatus: "active" | "deleted" | "inactive";
                                         createdAt: string;
                                     } | null;
                                 }[] | undefined;
@@ -1458,7 +1458,7 @@ declare const client: {
                                     schedule: {
                                         id: string | null;
                                         scheduleType: "daily" | "monthly" | "weekly" | null;
-                                        scheduleStatus: "active" | "applied" | "approved" | "inactive" | "pending" | "rejected" | null;
+                                        scheduleStatus: "active" | "deleted" | "inactive" | null;
                                         startTime: string | null;
                                         endTime: string | null;
                                     };
@@ -1841,7 +1841,7 @@ declare const client: {
                                 query: {
                                     doctorId?: string | undefined;
                                     date?: string | undefined;
-                                    scheduleStatus?: "applied" | "approved" | "pending" | "rejected" | undefined;
+                                    scheduleStatus?: "active" | "deleted" | "inactive" | undefined;
                                     visitStatus?: "complete" | "missed" | "ongoing" | undefined;
                                     bookingStatus?: "cancelled" | "confirmed" | "provisional" | undefined;
                                 };
@@ -1859,7 +1859,7 @@ declare const client: {
                                 query: {
                                     doctorId?: string | undefined;
                                     date?: string | undefined;
-                                    scheduleStatus?: "applied" | "approved" | "pending" | "rejected" | undefined;
+                                    scheduleStatus?: "active" | "deleted" | "inactive" | undefined;
                                     visitStatus?: "complete" | "missed" | "ongoing" | undefined;
                                     bookingStatus?: "cancelled" | "confirmed" | "provisional" | undefined;
                                 };
@@ -1887,7 +1887,7 @@ declare const client: {
                                     schedule: {
                                         id: string;
                                         scheduleType: "daily" | "monthly" | "weekly";
-                                        scheduleStatus: "active" | "applied" | "approved" | "inactive" | "pending" | "rejected" | null;
+                                        scheduleStatus: "active" | "deleted" | "inactive";
                                     };
                                     doctor: {
                                         id: string;
@@ -1999,7 +1999,7 @@ declare const client: {
                                     schedule: {
                                         id: string;
                                         scheduleType: "daily" | "monthly" | "weekly";
-                                        scheduleStatus: "active" | "applied" | "approved" | "inactive" | "pending" | "rejected" | null;
+                                        scheduleStatus: "active" | "deleted" | "inactive";
                                     };
                                     doctor: {
                                         id: string;
@@ -2315,7 +2315,7 @@ declare const client: {
                                     doctorId: string;
                                     scheduleType: "daily" | "monthly" | "weekly";
                                     daysMask: number | null;
-                                    scheduleStatus: "active" | "applied" | "approved" | "inactive" | "pending" | "rejected" | null;
+                                    scheduleStatus: "active" | "deleted" | "inactive";
                                     createdAt: string;
                                     timeSlots: {
                                         id: string;
@@ -2598,7 +2598,7 @@ declare const client: {
                                 doctorId: string;
                                 hpId: string;
                                 id: string;
-                                scheduleStatus: "active" | "applied" | "approved" | "inactive" | "pending" | "rejected" | null;
+                                scheduleStatus: "active" | "deleted" | "inactive";
                                 scheduleType: "daily" | "monthly" | "weekly";
                             } | undefined;
                             error: null;
@@ -2778,11 +2778,11 @@ declare const client: {
                                 output: {
                                     success: false;
                                     message: string;
-                                    data: import("hono/utils/types").JSONValue;
+                                    data: null;
                                     error: null;
                                 };
                                 outputFormat: "json";
-                                status: 500;
+                                status: 400;
                             } | {
                                 input: {
                                     param: {
@@ -2796,7 +2796,7 @@ declare const client: {
                                     error: null;
                                 };
                                 outputFormat: "json";
-                                status: 400;
+                                status: 404;
                             } | {
                                 input: {
                                     param: {
@@ -2811,7 +2811,7 @@ declare const client: {
                                         doctorId: string;
                                         scheduleType: "daily" | "monthly" | "weekly";
                                         daysMask: number | null;
-                                        scheduleStatus: "active" | "applied" | "approved" | "inactive" | "pending" | "rejected" | null;
+                                        scheduleStatus: "active" | "deleted" | "inactive";
                                         createdAt: string;
                                         timeSlots: {
                                             id: string;
@@ -4347,7 +4347,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                             doctorId: string;
                                             scheduleType: "daily" | "monthly" | "weekly";
                                             daysMask: number | null;
-                                            scheduleStatus: "active" | "applied" | "approved" | "inactive" | "pending" | "rejected" | null;
+                                            scheduleStatus: "active" | "deleted" | "inactive";
                                             createdAt: string;
                                         } | null;
                                     }[] | undefined;
@@ -4674,7 +4674,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                         doctorId: string;
                                         scheduleType: "daily" | "monthly" | "weekly";
                                         daysMask: number | null;
-                                        scheduleStatus: "active" | "applied" | "approved" | "inactive" | "pending" | "rejected" | null;
+                                        scheduleStatus: "active" | "deleted" | "inactive";
                                         createdAt: string;
                                     } | null;
                                 }[] | undefined;
@@ -4746,7 +4746,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                     schedule: {
                                         id: string | null;
                                         scheduleType: "daily" | "monthly" | "weekly" | null;
-                                        scheduleStatus: "active" | "applied" | "approved" | "inactive" | "pending" | "rejected" | null;
+                                        scheduleStatus: "active" | "deleted" | "inactive" | null;
                                         startTime: string | null;
                                         endTime: string | null;
                                     };
@@ -5129,7 +5129,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 query: {
                                     doctorId?: string | undefined;
                                     date?: string | undefined;
-                                    scheduleStatus?: "applied" | "approved" | "pending" | "rejected" | undefined;
+                                    scheduleStatus?: "active" | "deleted" | "inactive" | undefined;
                                     visitStatus?: "complete" | "missed" | "ongoing" | undefined;
                                     bookingStatus?: "cancelled" | "confirmed" | "provisional" | undefined;
                                 };
@@ -5147,7 +5147,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 query: {
                                     doctorId?: string | undefined;
                                     date?: string | undefined;
-                                    scheduleStatus?: "applied" | "approved" | "pending" | "rejected" | undefined;
+                                    scheduleStatus?: "active" | "deleted" | "inactive" | undefined;
                                     visitStatus?: "complete" | "missed" | "ongoing" | undefined;
                                     bookingStatus?: "cancelled" | "confirmed" | "provisional" | undefined;
                                 };
@@ -5175,7 +5175,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                     schedule: {
                                         id: string;
                                         scheduleType: "daily" | "monthly" | "weekly";
-                                        scheduleStatus: "active" | "applied" | "approved" | "inactive" | "pending" | "rejected" | null;
+                                        scheduleStatus: "active" | "deleted" | "inactive";
                                     };
                                     doctor: {
                                         id: string;
@@ -5287,7 +5287,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                     schedule: {
                                         id: string;
                                         scheduleType: "daily" | "monthly" | "weekly";
-                                        scheduleStatus: "active" | "applied" | "approved" | "inactive" | "pending" | "rejected" | null;
+                                        scheduleStatus: "active" | "deleted" | "inactive";
                                     };
                                     doctor: {
                                         id: string;
@@ -5603,7 +5603,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                     doctorId: string;
                                     scheduleType: "daily" | "monthly" | "weekly";
                                     daysMask: number | null;
-                                    scheduleStatus: "active" | "applied" | "approved" | "inactive" | "pending" | "rejected" | null;
+                                    scheduleStatus: "active" | "deleted" | "inactive";
                                     createdAt: string;
                                     timeSlots: {
                                         id: string;
@@ -5886,7 +5886,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 doctorId: string;
                                 hpId: string;
                                 id: string;
-                                scheduleStatus: "active" | "applied" | "approved" | "inactive" | "pending" | "rejected" | null;
+                                scheduleStatus: "active" | "deleted" | "inactive";
                                 scheduleType: "daily" | "monthly" | "weekly";
                             } | undefined;
                             error: null;
@@ -6066,11 +6066,11 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                 output: {
                                     success: false;
                                     message: string;
-                                    data: import("hono/utils/types").JSONValue;
+                                    data: null;
                                     error: null;
                                 };
                                 outputFormat: "json";
-                                status: 500;
+                                status: 400;
                             } | {
                                 input: {
                                     param: {
@@ -6084,7 +6084,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                     error: null;
                                 };
                                 outputFormat: "json";
-                                status: 400;
+                                status: 404;
                             } | {
                                 input: {
                                     param: {
@@ -6099,7 +6099,7 @@ export declare const hcWithType: (baseUrl: string, options?: import("hono").Clie
                                         doctorId: string;
                                         scheduleType: "daily" | "monthly" | "weekly";
                                         daysMask: number | null;
-                                        scheduleStatus: "active" | "applied" | "approved" | "inactive" | "pending" | "rejected" | null;
+                                        scheduleStatus: "active" | "deleted" | "inactive";
                                         createdAt: string;
                                         timeSlots: {
                                             id: string;
