@@ -3,7 +3,8 @@ import { View, TouchableOpacity, ScrollView } from 'react-native'
 import Calendar01Icon from '@hugeicons/Calendar01Icon'
 import Cancel01Icon from '@hugeicons/Cancel01Icon'
 import { useColorScheme } from 'nativewind'
-import { useState } from 'react'
+import { useState, memo } from 'react'
+import { Skeleton } from '@components/Skeleton'
 
 type ScheduleCardProps = {
   type: 'weekly' | 'daily' | 'monthly'
@@ -195,3 +196,29 @@ export default function ScheduleCard({
     </View>
   )
 }
+
+export const ScheduleCardShimmer = memo(() => (
+  <Skeleton>
+    <View className='gap-4'>
+      <View className='px-0.5'>
+        <View className='mb-2 h-6 w-40 animate-pulse rounded-md bg-neutral-200 dark:bg-neutral-700' />
+        <View className='h-4 w-24 animate-pulse rounded-md bg-neutral-200 dark:bg-neutral-700' />
+      </View>
+
+      <View className='gap-2'>
+        {Array.from({ length: 3 }).map((_, index) => (
+          <View
+            key={index}
+            className='flex-row items-center gap-3 rounded-lg border border-neutral-200 bg-white px-4 py-3 dark:border-neutral-700 dark:bg-neutral-800'
+          >
+            <View className='h-6 w-6 animate-pulse rounded-md bg-neutral-200 dark:bg-neutral-700' />
+            <View className='flex-1 gap-2'>
+              <View className='h-5 w-3/4 animate-pulse rounded-md bg-neutral-200 dark:bg-neutral-700' />
+              <View className='h-4 w-1/2 animate-pulse rounded-md bg-neutral-200 dark:bg-neutral-700' />
+            </View>
+          </View>
+        ))}
+      </View>
+    </View>
+  </Skeleton>
+))

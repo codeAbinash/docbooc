@@ -6,6 +6,8 @@ import TimeScheduleIcon from '@hugeicons/TimeScheduleIcon'
 import Cancel01Icon from '@hugeicons/Cancel01Icon'
 import PlusSignIcon from '@hugeicons/PlusSignIcon'
 import { HPStackNav } from '@utils/types'
+import { Skeleton } from '@components/Skeleton'
+import { memo } from 'react'
 
 type DoctorCardProps = {
   doctor: any
@@ -170,3 +172,32 @@ function DoctorCardInternal({
     </>
   )
 }
+
+export const DoctorCardShimmer = memo(() => (
+  <Skeleton>
+    <View className='overflow-hidden rounded-xl border border-neutral-200 bg-white dark:border-neutral-700 dark:bg-neutral-800'>
+      <View className='flex-row items-start gap-3 p-3'>
+        <View className='size-16 animate-pulse rounded-xl bg-neutral-200 dark:bg-neutral-700' />
+        <View className='flex-1 gap-2'>
+          <View className='h-5 w-3/4 animate-pulse rounded-md bg-neutral-200 dark:bg-neutral-700' />
+          <View className='h-4 w-1/2 animate-pulse rounded-md bg-neutral-200 dark:bg-neutral-700' />
+        </View>
+        <View className='size-7 animate-pulse rounded-full bg-neutral-200 dark:bg-neutral-700' />
+      </View>
+
+      <View className='border-b border-neutral-200 dark:border-neutral-700' />
+
+      <View className='flex-row items-end gap-3 p-3'>
+        <View className='flex-1 gap-2 rounded-lg bg-neutral-100 p-3 dark:bg-neutral-700'>
+          <View className='h-3 w-20 animate-pulse rounded bg-neutral-200 dark:bg-neutral-600' />
+          <View className='h-6 w-16 animate-pulse rounded-md bg-neutral-200 dark:bg-neutral-600' />
+        </View>
+        <View className='h-full w-px bg-neutral-200 dark:bg-neutral-600' />
+        <View className='gap-2 rounded-lg bg-neutral-100 p-3 dark:bg-neutral-700'>
+          <View className='h-3 w-16 animate-pulse rounded bg-neutral-200 dark:bg-neutral-600' />
+          <View className='h-4 w-12 animate-pulse rounded bg-neutral-200 dark:bg-neutral-600' />
+        </View>
+      </View>
+    </View>
+  </Skeleton>
+))

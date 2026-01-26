@@ -25,7 +25,14 @@ export default function BottomSheetCustom({
   snapPoints = [],
 }: BottomSheetCustomProps) {
   return (
-    <Modal visible={visible} transparent animationType='slide' onRequestClose={onClose}>
+    <Modal
+      visible={visible}
+      transparent
+      animationType='slide'
+      onRequestClose={onClose}
+      hardwareAccelerated
+      statusBarTranslucent
+    >
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}

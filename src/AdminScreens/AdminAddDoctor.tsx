@@ -109,7 +109,6 @@ export default function AdminAddDoctor() {
       return await (await adminApi.doctors.$post({ json: data })).json()
     },
     onSuccess: (data) => {
-      console.log(data)
       if (!data || !data.success) return alert('Error', 'Failed to save doctor. Please try again.')
       navigation.goBack()
     },

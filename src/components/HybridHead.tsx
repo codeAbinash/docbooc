@@ -6,9 +6,9 @@ import { Lottie } from '@components/Lottie'
 import { PaddingTop } from '@components/SafePadding'
 import Search from '@components/Search'
 import ArrowLeft01Icon from '@hugeicons/ArrowLeft01Icon'
+import ArrowUpDownIcon from '@hugeicons/ArrowUpDownIcon'
 import { HugeIconProps } from '@hugeicons/constants'
 import Menu01Icon from '@hugeicons/Menu01Icon'
-import SquareIcon from '@hugeicons/SquareIcon'
 import { useNavigation } from '@react-navigation/native'
 import Colors from '@utils/colors'
 import { Medium, Regular } from '@utils/fonts'
@@ -206,16 +206,15 @@ function HybridHead({
                     <Medium className='bg-neutral-100 p-1 text-xs text-neutral-500'>
                       {doctorInfo?.specialization ?? doctorInfo?.department ?? 'N/A'}
                     </Medium>
-                    
                   </>
                 ) : (
-                  <View className='items-center justify-center  w-12'>
+                  <View className='w-12 items-center justify-center'>
                     <Lottie source={Animations.loading} size={25} />
                   </View>
                 )}
               </View>
               <TouchableOpacity onPress={handleOpenDoctorModal} className='rounded-xl p-1 dark:bg-neutral-800'>
-                <SquareIcon size={ICON_SIZE.SQUARE} color={Colors.accent} />
+                <ArrowUpDownIcon size={ICON_SIZE.SQUARE} style={{ transform: [{ rotate: '90deg' }] }} />
               </TouchableOpacity>
             </View>
           ) : (

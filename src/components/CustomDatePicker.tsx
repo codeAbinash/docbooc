@@ -160,7 +160,7 @@ export const CustomDatePicker = ({
   const currentTimeLabel = `${String(selectedHour).padStart(2, '0')}:${String(selectedMinute).padStart(2, '0')} ${selectedHour < 12 ? 'AM' : 'PM'}`
 
   return (
-    <Modal visible={visible} transparent animationType='fade'>
+    <Modal visible={visible} transparent animationType='fade' hardwareAccelerated statusBarTranslucent>
       <View className='flex-1 items-center justify-center bg-black/50'>
         <View className='w-5/6 rounded-3xl bg-white px-6 py-6'>
           {/* Header */}

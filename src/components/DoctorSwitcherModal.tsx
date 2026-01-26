@@ -64,7 +64,14 @@ const DoctorSwitcherModal = memo<DoctorSwitcherModalProps>(
     }, [])
 
     return (
-      <Modal visible={visible} transparent={true} animationType='fade' onRequestClose={onClose}>
+      <Modal
+        visible={visible}
+        transparent={true}
+        animationType='fade'
+        onRequestClose={onClose}
+        hardwareAccelerated
+        statusBarTranslucent
+      >
         <TouchableOpacity className='flex-1 bg-black/50' activeOpacity={1} onPress={onClose}>
           <View className='flex-1 items-center justify-center px-5'>
             <TouchableOpacity

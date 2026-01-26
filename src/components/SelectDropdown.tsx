@@ -57,7 +57,14 @@ export default function SelectDropdown({
         <ArrowDown01Icon size={20} color={isDark ? '#e5e7eb' : '#6b7280'} strokeWidth={2} />
       </TouchableOpacity>
 
-      <Modal visible={isOpen} transparent animationType='none' onRequestClose={() => setIsOpen(false)}>
+      <Modal
+        visible={isOpen}
+        transparent
+        animationType='none'
+        onRequestClose={() => setIsOpen(false)}
+        hardwareAccelerated
+        statusBarTranslucent
+      >
         <TouchableOpacity
           className={`flex-1 items-center justify-center px-5 ${isDark ? 'bg-black/50' : 'bg-black/50'}`}
           activeOpacity={1}

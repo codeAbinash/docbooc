@@ -13,7 +13,7 @@ import { SemiBold } from '@utils/fonts'
 import type { Doctor, Patient } from '@utils/types'
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { FlatList, RefreshControl, Text, TouchableOpacity, View } from 'react-native'
-import PatientCard from '../components/PatientCard'
+import PatientCard, { PatientCardShimmer } from '../components/PatientCard'
 
 type SearchAndDateBarProps = {
   searchQuery: string
@@ -183,8 +183,10 @@ const HPUpcomingAppointmentsScreen = memo(function HPUpcomingAppointmentsScreenC
   const EmptyState = useCallback(() => {
     if (isLoading) {
       return (
-        <View className='flex-1 items-center justify-center'>
-          <Lottie source={Animations.loading} size={80} />
+        <View>
+          {Array.from({ length: 8 }).map((_, index) => (
+            <PatientCardShimmer key={index} />
+          ))}
         </View>
       )
     }

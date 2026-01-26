@@ -1,17 +1,18 @@
+import Animations from '@/assets/animations/animations'
 import ConfirmationModal from '@/HPScreens/components/ConfirmationModal'
 import HybridHead from '@components/HybridHead'
-import { PaddingBottom } from '@components/SafePadding'
 import { Lottie } from '@components/Lottie'
-import Calendar01Icon from '@hugeicons/Calendar01Icon'
+import { PaddingBottom } from '@components/SafePadding'
+import { Toggle } from '@components/Toggle'
 import Loading03Icon from '@hugeicons/Loading03Icon'
 import TickDouble02Icon from '@hugeicons/TickDouble02Icon'
-import Animations from '@/assets/animations/animations'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { client } from '@utils/client'
+import { Medium, SemiBold } from '@utils/fonts'
 import type { Doctor, Patient } from '@utils/types'
 import { memo, useCallback, useEffect, useState } from 'react'
-import { FlatList, RefreshControl, Text, View } from 'react-native'
-import PatientCard from '../components/PatientCard'
+import { FlatList, RefreshControl, TouchableOpacity, View } from 'react-native'
+import PatientCard, { PatientCardShimmer } from '../components/PatientCard'
 
 type ActionType = 'cancel' | 'complete' | 'move-to-ongoing'
 
@@ -59,6 +60,7 @@ function HPTodaysAppointmentsScreen() {
   const [selectedAction, setSelectedAction] = useState<SelectedAction | null>(null)
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | undefined>()
   const [refreshing, setRefreshing] = useState(false)
+  const [isQuickBookEnabled, setIsQuickBookEnabled] = useState(true)
 
   const handleChipSelect = useCallback((id: number | string) => {
     setActiveTab(typeof id === 'number' ? id : Number(id))
@@ -68,7 +70,7 @@ function HPTodaysAppointmentsScreen() {
 
   const isCompleteTab = activeTab === 1
 
-  const { data: myDoctors } = useQuery({
+  const { data: myDoctors, isPending } = useQuery({
     queryKey: ['my-doctors'],
     queryFn: async () => {
       const response = await (await client.api.v1.hp.doctors['my-doctors'].$get()).json()
@@ -82,7 +84,11 @@ function HPTodaysAppointmentsScreen() {
     }
   }, [myDoctors, selectedDoctor])
 
-  const { data: todaysAppointments, refetch } = useQuery({
+  const {
+    data: todaysAppointments,
+    refetch,
+    isLoading: isLoadingAppointments,
+  } = useQuery({
     queryKey: ['todays-appointments', selectedDoctor?.id],
     queryFn: async () => {
       if (!selectedDoctor?.id) return []
@@ -180,20 +186,15 @@ function HPTodaysAppointmentsScreen() {
 
   const renderEmptyState = useCallback(
     () => (
-      <View className='flex-1 items-center justify-center py-20'>
-        <Lottie source={Animations.cal} size={250} loop={true} hardwareAccelerationAndroid={true} />
-        <Text className='mb-2 text-center text-lg font-semibold text-neutral-700 dark:text-neutral-300'>
-          {activeTab === 1 ? 'No Completed Appointments' : 'No Ongoing Appointments'}
-        </Text>
-        <Text className='text-center text-sm text-neutral-500 dark:text-neutral-400'>
-          {activeTab === 1 ? 'No appointments have been completed yet.' : 'All appointments are completed. Great job!'}
-        </Text>
-      </View>
+      <EmptyState
+        mainText={activeTab === 1 ? 'No Completed Appointments' : 'No Ongoing Appointments'}
+        subText={
+          activeTab === 1 ? 'No appointments have been completed yet.' : 'All appointments are completed. Great job!'
+        }
+      />
     ),
     [activeTab],
   )
-
-  console.log('doctors:', myDoctors)
 
   return (
     <View className='flex-1 bg-white dark:bg-neutral-900'>
@@ -209,6 +210,8 @@ function HPTodaysAppointmentsScreen() {
         onDoctorSelect={setSelectedDoctor}
       />
 
+      {(isPending || isLoadingAppointments) && <Shimmer />}
+
       {selectedAction && (
         <ConfirmationModal
           visible={modalVisible}
@@ -223,18 +226,51 @@ function HPTodaysAppointmentsScreen() {
         />
       )}
 
-      <FlatList
-        data={filteredAppointments}
-        renderItem={renderPatientCard}
-        keyExtractor={keyExtractor}
-        contentContainerClassName=' px-6 py-1'
-        showsVerticalScrollIndicator={false}
-        ListFooterComponent={PaddingBottom}
-        ListEmptyComponent={renderEmptyState}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
-      />
+      {!isPending && !isLoadingAppointments && (
+        <FlatList
+          data={filteredAppointments}
+          renderItem={renderPatientCard}
+          keyExtractor={keyExtractor}
+          contentContainerClassName=' px-6 py-1'
+          showsVerticalScrollIndicator={false}
+          ListFooterComponent={PaddingBottom}
+          ListEmptyComponent={renderEmptyState}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
+        />
+      )}
+      <View>
+        <View className='flex flex-row justify-between border-b border-t border-neutral-200 px-6 py-4'>
+          <Medium className='text-neutral-800O text-lg'>Allow quick book</Medium>
+          <TouchableOpacity onPress={() => setIsQuickBookEnabled((prev) => !prev)} activeOpacity={0.8}>
+            <Toggle isActive={isQuickBookEnabled} />
+          </TouchableOpacity>
+        </View>
+        <PaddingBottom />
+      </View>
+    </View>
+  )
+}
+
+function EmptyState({ mainText, subText }: { mainText: string; subText: string }) {
+  return (
+    <View className='flex-1 items-center justify-center py-20'>
+      <Lottie source={Animations.cal} size={250} loop={true} hardwareAccelerationAndroid={true} />
+      <SemiBold className='mb-2 mt-5 text-center text-lg font-semibold text-neutral-700 dark:text-neutral-300'>
+        {mainText}
+      </SemiBold>
+      <Medium className='text-center text-sm text-neutral-500 dark:text-neutral-400'>{subText}</Medium>
     </View>
   )
 }
 
 export default memo(HPTodaysAppointmentsScreen)
+
+function Shimmer() {
+  return (
+    <View className='px-6 pt-1'>
+      {Array.from({ length: 10 }).map((_, index) => (
+        <PatientCardShimmer key={index} />
+      ))}
+    </View>
+  )
+}

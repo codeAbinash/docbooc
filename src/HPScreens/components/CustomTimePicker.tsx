@@ -141,7 +141,7 @@ const CustomTimePicker = memo(({ isVisible, onClose, onSelectTime, currentTime }
   }, [])
 
   return (
-    <Modal visible={isVisible} transparent animationType='slide' statusBarTranslucent>
+    <Modal visible={isVisible} transparent animationType='slide' statusBarTranslucent hardwareAccelerated>
       <View className='flex-1 justify-end bg-black/50'>
         <View className='bg-white dark:bg-neutral-900'>
           <View className='items-center pt-4'>

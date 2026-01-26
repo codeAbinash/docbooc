@@ -33,7 +33,6 @@ export default function AdminLogin({ navigation }: AdminNavProp) {
       })
     },
     onError: (error) => {
-      console.log(error)
       alert('Error', 'Failed to login. Please try again.')
       console.error(error)
     },

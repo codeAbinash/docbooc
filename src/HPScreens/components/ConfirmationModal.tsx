@@ -101,7 +101,14 @@ const ConfirmationModal = memo<ConfirmationModalProps>(
     }, [])
 
     return (
-      <Modal visible={visible} transparent animationType='fade' onRequestClose={onClose}>
+      <Modal
+        visible={visible}
+        transparent
+        animationType='fade'
+        onRequestClose={onClose}
+        hardwareAccelerated
+        statusBarTranslucent
+      >
         <TouchableOpacity
           className='flex-1 justify-center bg-black/50 px-5'
           activeOpacity={1}

@@ -13,7 +13,7 @@ import { HPNavProp, Schedule, TimeSlot } from '@utils/types'
 import { useColorScheme } from 'nativewind'
 import { useState } from 'react'
 import { ActivityIndicator, ScrollView, TouchableOpacity, View } from 'react-native'
-import ScheduleCard from '../../components/ScheduleCard'
+import ScheduleCard, { ScheduleCardShimmer } from '../../components/ScheduleCard'
 
 type GroupedScheduleItem = { key: string; id: string; slots: string[]; maxBookings?: number }
 type WeeklyScheduleItem = GroupedScheduleItem & { day: string }
@@ -217,9 +217,13 @@ export default function HPDoctorScheduleDetails({ navigation, route }: HPNavProp
         }
       />
       {isLoading ? (
-        <View className='flex-1 items-center justify-center'>
-          <ActivityIndicator size='large' color={Colors.accent} />
-        </View>
+        <ScrollView className='flex-1 p-5' showsVerticalScrollIndicator={false}>
+          <View className='gap-6'>
+            {Array.from({ length: 3 }).map((_, index) => (
+              <ScheduleCardShimmer key={index} />
+            ))}
+          </View>
+        </ScrollView>
       ) : (
         <ScrollView className='flex-1' showsVerticalScrollIndicator={false}>
           <View className='flex-1 gap-6 p-5'>

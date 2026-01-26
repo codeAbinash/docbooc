@@ -1,3 +1,4 @@
+import { Skeleton } from '@components/Skeleton'
 import Cancel01Icon from '@hugeicons/Cancel01Icon'
 import TickDouble02Icon from '@hugeicons/TickDouble02Icon'
 import Colors from '@utils/colors'
@@ -62,7 +63,7 @@ const Status = memo(({ status }: { status?: 'provisional' | 'confirmed' }) => {
   const style = config[status]
 
   return (
-    <View className={` px-1 py-1 ${style.bg} ${style.border}`}>
+    <View className={`px-1 py-1 ${style.bg} ${style.border}`}>
       <View className='flex-row items-center gap-0.5'>
         {/* <Medium className={`text-xs ${style.text}`}>{style.icon}</Medium> */}
         <Medium className={`text-xs capitalize ${style.text}`}>{status}</Medium>
@@ -93,12 +94,12 @@ const PatientCard = memo(
     onMoveToOngoing,
     hideActions = false,
   }: PatientCardProps) => (
-    <View className='mb-3 rounded-[19px] bg-white border border-neutral-200 dark:bg-zinc-900'>
+    <View className='mb-3 rounded-[19px] border border-neutral-200 bg-white dark:bg-zinc-900'>
       <TouchableOpacity onPress={hideActions ? undefined : () => onToggle(patient.id)} className='p-3.5'>
         <View className='flex-row'>
           <QueueNumber number={patient.queuePosition} />
           <View className='flex-1'>
-            <View className='flex-row items-start  justify-between'>
+            <View className='flex-row items-start justify-between'>
               <View className='mr-3 flex-1'>
                 <PatientInfo name={patient.name} gender={patient.gender} age={patient.age} />
               </View>
@@ -141,5 +142,24 @@ const PatientCard = memo(
     </View>
   ),
 )
+
+export const PatientCardShimmer = memo(() => (
+  <Skeleton>
+    <View className='mb-3 rounded-[19px] border border-neutral-200 bg-white p-3.5 dark:bg-zinc-900'>
+      <View className='flex-row'>
+        <View className='mr-4 size-[58px] animate-pulse rounded-xl bg-neutral-200 dark:bg-neutral-700' />
+        <View className='flex-1'>
+          <View className='flex-row items-start justify-between'>
+            <View className='mr-3 flex-1'>
+              <View className='mb-2 h-5 w-3/4 animate-pulse rounded-md bg-neutral-200 dark:bg-neutral-700' />
+              <View className='h-4 w-1/2 animate-pulse rounded-md bg-neutral-200 dark:bg-neutral-700' />
+            </View>
+            <View className='h-6 w-20 animate-pulse rounded bg-neutral-200 dark:bg-neutral-700' />
+          </View>
+        </View>
+      </View>
+    </View>
+  </Skeleton>
+))
 
 export default PatientCard

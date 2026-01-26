@@ -1,6 +1,6 @@
 import { useRefreshOnFocus } from '@/query'
 import { ALL_SPECIALTY } from '@/UserScreens/Doctors/Doctors'
-import { DoctorCard } from '@components/DoctorCard'
+import { DoctorCard, DoctorCardShimmer } from '@components/DoctorCard'
 import HybridHead from '@components/HybridHead'
 import { useNavigation } from '@react-navigation/native'
 import { useQuery } from '@tanstack/react-query'
@@ -83,8 +83,12 @@ const HPViewDoctors = () => {
       />
       <View className='flex-1 bg-white dark:bg-neutral-900'>
         {isLoading ? (
-          <View className='flex-1 items-center justify-center'>
-            <ActivityIndicator size='large' color={Colors.accent} />
+          <View className='flex-1 px-6 pt-2'>
+            {Array.from({ length: 8 }).map((_, index) => (
+              <View key={index} className='mb-4'>
+                <DoctorCardShimmer />
+              </View>
+            ))}
           </View>
         ) : (
           <FlatList
