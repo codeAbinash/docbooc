@@ -6,6 +6,7 @@ import { PaddingBottom } from '@components/SafePadding'
 import { Toggle } from '@components/Toggle'
 import Loading03Icon from '@hugeicons/Loading03Icon'
 import TickDouble02Icon from '@hugeicons/TickDouble02Icon'
+import popupStore from '@/zustand/popupStore'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { client } from '@utils/client'
 import { Medium, SemiBold } from '@utils/fonts'
@@ -32,6 +33,7 @@ interface SelectedAction {
 const CHIP_ITEMS = [
   { id: 0, name: 'Ongoing', icon: Loading03Icon },
   { id: 1, name: 'Complete', icon: TickDouble02Icon },
+  { id: 2, name: 'Cancelled', icon: TickDouble02Icon },
 ]
 
 const transformAppointmentToPatientCard = (
@@ -66,9 +68,32 @@ function HPTodaysAppointmentsScreen() {
     setActiveTab(typeof id === 'number' ? id : Number(id))
   }, [])
 
+  const handleQuickBookToggle = useCallback(() => {
+    if (!isQuickBookEnabled) {
+      popupStore
+        .getState()
+        .alert(
+          'Turn On Quick Book?',
+          'Note: Bookings made through Quick Book require on-the-spot payment. The OPD Manager is responsible for accepting and processing this payment.',
+          [
+            {
+              text: 'No',
+            },
+            {
+              text: 'Yes',
+              onPress: () => setIsQuickBookEnabled(true),
+            },
+          ],
+        )
+    } else {
+      setIsQuickBookEnabled(false)
+    }
+  }, [isQuickBookEnabled])
+
   const queryClient = useQueryClient()
 
   const isCompleteTab = activeTab === 1
+  const isCancelledTab = activeTab === 2
 
   const { data: myDoctors, isPending } = useQuery({
     queryKey: ['my-doctors'],
@@ -120,7 +145,10 @@ function HPTodaysAppointmentsScreen() {
     if (activeTab === 1) {
       return appointment.visitStatus === 'complete'
     }
-    return appointment.visitStatus !== 'complete'
+    if (activeTab === 2) {
+      return appointment.visitStatus === 'missed'
+    }
+    return appointment.visitStatus !== 'complete' && appointment.visitStatus !== 'missed'
   })
 
   // Handlers
@@ -184,17 +212,18 @@ function HPTodaysAppointmentsScreen() {
 
   const keyExtractor = useCallback((item: Patient) => item.id, [])
 
-  const renderEmptyState = useCallback(
-    () => (
-      <EmptyState
-        mainText={activeTab === 1 ? 'No Completed Appointments' : 'No Ongoing Appointments'}
-        subText={
-          activeTab === 1 ? 'No appointments have been completed yet.' : 'All appointments are completed. Great job!'
-        }
-      />
-    ),
-    [activeTab],
-  )
+  const renderEmptyState = useCallback(() => {
+    let mainText = 'No Ongoing Appointments'
+    let subText = 'All appointments are completed. Great job!'
+    if (activeTab === 1) {
+      mainText = 'No Completed Appointments'
+      subText = 'No appointments have been completed yet.'
+    } else if (activeTab === 2) {
+      mainText = 'No Cancelled Appointments'
+      subText = 'No appointments have been cancelled.'
+    }
+    return <EmptyState mainText={mainText} subText={subText} />
+  }, [activeTab])
 
   return (
     <View className='flex-1 bg-white dark:bg-neutral-900'>
@@ -210,8 +239,6 @@ function HPTodaysAppointmentsScreen() {
         onDoctorSelect={setSelectedDoctor}
       />
 
-      {(isPending || isLoadingAppointments) && <Shimmer />}
-
       {selectedAction && (
         <ConfirmationModal
           visible={modalVisible}
@@ -226,22 +253,26 @@ function HPTodaysAppointmentsScreen() {
         />
       )}
 
+      {/* Show shimmer only when appointments are loading (after doctors are loaded) */}
+      {!isPending && isLoadingAppointments && <Shimmer />}
+
+      {/* Show FlatList when both doctors and appointments are loaded */}
       {!isPending && !isLoadingAppointments && (
         <FlatList
           data={filteredAppointments}
           renderItem={renderPatientCard}
           keyExtractor={keyExtractor}
-          contentContainerClassName=' px-6 py-1'
+          contentContainerClassName='px-6 py-1 pb-32'
           showsVerticalScrollIndicator={false}
-          ListFooterComponent={PaddingBottom}
           ListEmptyComponent={renderEmptyState}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
         />
       )}
-      <View>
+
+      <View className='absolute bottom-0 left-0 right-0 bg-white dark:bg-neutral-900'>
         <View className='flex flex-row justify-between border-b border-t border-neutral-200 px-6 py-4'>
-          <Medium className='text-neutral-800O text-lg'>Allow quick book</Medium>
-          <TouchableOpacity onPress={() => setIsQuickBookEnabled((prev) => !prev)} activeOpacity={0.8}>
+          <Medium className='text-lg text-neutral-800'>Allow quick book</Medium>
+          <TouchableOpacity onPress={handleQuickBookToggle} activeOpacity={0.8}>
             <Toggle isActive={isQuickBookEnabled} />
           </TouchableOpacity>
         </View>

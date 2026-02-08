@@ -10,7 +10,7 @@
     "prettier": "prettier --check .",
     "format": "prettier --write .",
     "test": "jest",
-    "ts": "tsgo",
+    "ts": "tsc --noEmit --skipLibCheck",
     "tsc": "tsc",
     "check-types": "tsgo --noEmit",
     "build": "cd android && gradlew assembleRelease && cd .. && npm run install-release-apk",

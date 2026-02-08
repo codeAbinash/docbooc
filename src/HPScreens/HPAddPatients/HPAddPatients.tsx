@@ -73,7 +73,7 @@ const HPAddPatients = ({ route }: any) => {
   return (
     <View className='flex-1'>
       <HybridHead
-        showBackButton={true}
+        showMenu={true}
         title={'Select doctor'}
         showSearch={true}
         searchPlaceholder='Search doctors, specialties...'

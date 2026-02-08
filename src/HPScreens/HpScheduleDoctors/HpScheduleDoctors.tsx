@@ -56,7 +56,7 @@ const HPScheduleDoctors = () => {
     <View className='flex-1'>
       <HybridHead
         showMenu={true}
-        title='Schedule Doctors'
+        title='Onboard Doctors'
         showSearch={true}
         searchPlaceholder='Search doctors, specialties...'
         chipItems={allItems}

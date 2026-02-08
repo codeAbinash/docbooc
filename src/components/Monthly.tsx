@@ -4,7 +4,9 @@ import Calendar01Icon from '@hugeicons/Calendar01Icon'
 import Cancel01Icon from '@hugeicons/Cancel01Icon'
 import { DateTimePickerEvent } from '@react-native-community/datetimepicker'
 import { Medium, SemiBold } from '@utils/fonts'
-import { useState } from 'react'
+import { useNavigation } from '@react-navigation/native'
+import { HPStackNav } from '@utils/types'
+import { useState, useEffect } from 'react'
 import { Platform, ScrollView, TouchableOpacity, View, TextInput } from 'react-native'
 import { TimeButton } from '@components/TimeSelector'
 
@@ -26,22 +28,67 @@ type DateWiseSchedule = {
 
 type MonthlyProps = {
   onScheduleChange?: (schedule: DateWiseSchedule) => void
+  recurrenceData?: any
+  onSlotCreated?: () => void
 }
 
 const ONE_HOUR = 60 * 60 * 1000
 
-const createDefaultSlot = (): TimeSlot => ({
+const formatDateWithOrdinal = (date: Date): string => {
+  const day = date.getDate()
+  const month = date.toLocaleDateString('en-US', { month: 'short' })
+  const year = date.getFullYear()
+
+  const suffix =
+    day % 100 >= 11 && day % 100 <= 13
+      ? 'th'
+      : day % 10 === 1
+        ? 'st'
+        : day % 10 === 2
+          ? 'nd'
+          : day % 10 === 3
+            ? 'rd'
+            : 'th'
+  return `${day}${suffix} ${month}, ${year}`
+}
+
+const createDefaultSlot = (recurrence?: any): TimeSlot => ({
   id: Date.now().toString() + Math.random(),
-  startTime: new Date(),
-  endTime: new Date(Date.now() + ONE_HOUR),
-  maxBookings: 20,
+  startTime: recurrence?.startTime || new Date(),
+  endTime: recurrence?.endTime || new Date(Date.now() + ONE_HOUR),
+  maxBookings: recurrence?.maxBookings || 20,
 })
 
 const DATES = Array.from({ length: 31 }, (_, i) => i + 1)
 
-export default function Monthly({ onScheduleChange }: MonthlyProps) {
+export default function Monthly({ onScheduleChange, recurrenceData, onSlotCreated }: MonthlyProps) {
+  const navigation = useNavigation<HPStackNav>()
   const [selectedDates, setSelectedDates] = useState<number[]>([])
   const [dateWiseSchedule, setDateWiseSchedule] = useState<DateWiseSchedule>({})
+
+  useEffect(() => {
+    if (recurrenceData && selectedDates.length > 0) {
+      const firstDate = selectedDates[0]
+      if (firstDate) {
+        setDateWiseSchedule((prevSchedule) => {
+          const dateSchedule = prevSchedule[firstDate]
+          if (dateSchedule) {
+            const newSlot = createDefaultSlot(recurrenceData)
+            const newSchedule = {
+              ...prevSchedule,
+              [firstDate]: {
+                slots: [...dateSchedule.slots, newSlot],
+              },
+            }
+            onScheduleChange?.(newSchedule)
+            return newSchedule
+          }
+          return prevSchedule
+        })
+        onSlotCreated?.()
+      }
+    }
+  }, [recurrenceData, selectedDates, onSlotCreated, onScheduleChange])
 
   const updateSchedule = (newSchedule: DateWiseSchedule) => {
     setDateWiseSchedule(newSchedule)
@@ -59,27 +106,19 @@ export default function Monthly({ onScheduleChange }: MonthlyProps) {
       updateSchedule({
         ...dateWiseSchedule,
         [date]: {
-          slots: [createDefaultSlot()],
+          slots: [],
         },
       })
     }
   }
 
   const addDateTimeSlot = (date: number) => {
-    const dateSchedule = dateWiseSchedule[date]
-    if (!dateSchedule) return
-
-    updateSchedule({
-      ...dateWiseSchedule,
-      [date]: {
-        slots: [...dateSchedule.slots, createDefaultSlot()],
-      },
-    })
+    navigation.navigate('RecurrenceSchedule')
   }
 
   const removeDateTimeSlot = (date: number, slotId: string) => {
     const dateSchedule = dateWiseSchedule[date]
-    if (!dateSchedule || dateSchedule.slots.length <= 1) return
+    if (!dateSchedule) return
 
     updateSchedule({
       ...dateWiseSchedule,
@@ -132,23 +171,9 @@ export default function Monthly({ onScheduleChange }: MonthlyProps) {
     })
   }
 
-  const updateMaxBookings = (date: number, id: string, value: string) => {
-    const dateSchedule = dateWiseSchedule[date]
-    if (!dateSchedule) return
-
-    const maxBookings = Math.max(0, Math.min(100, parseInt(value) || 0))
-
-    updateSchedule({
-      ...dateWiseSchedule,
-      [date]: {
-        slots: dateSchedule.slots.map((slot) => (slot.id === id ? { ...slot, maxBookings } : slot)),
-      },
-    })
-  }
-
   return (
     <ScrollView className='flex-1' contentContainerClassName='px-5 gap-6'>
-      <View className='rounded-2xl bg-white p-4 border border-neutral-400  dark:bg-neutral-800'>
+      <View className='rounded-2xl border border-neutral-400 bg-white p-4 dark:bg-neutral-800'>
         <View className='mb-4 flex-row items-center justify-between'>
           <View className='flex-row items-center'>
             <View className='mr-3 rounded-lg p-1 dark:border-blue-800/30 dark:bg-blue-900/20'>
@@ -198,7 +223,7 @@ export default function Monthly({ onScheduleChange }: MonthlyProps) {
             key={date}
             className='overflow-hidden rounded-2xl border border-neutral-400 bg-white dark:border-neutral-700 dark:bg-neutral-800'
           >
-            <View className='border-b border-neutral-400 p-4 dark:border-neutral-700'>
+            <View className='p-4 dark:border-neutral-700'>
               <View className='flex-row items-center justify-between'>
                 <View className='flex-row items-center gap-3'>
                   <View className='rounded-lg bg-blue-100/50 p-2.5 dark:bg-blue-900/20'>
@@ -223,9 +248,8 @@ export default function Monthly({ onScheduleChange }: MonthlyProps) {
               {dateSchedule.slots.map((slot, index) => (
                 <View key={slot.id}>
                   {index > 0 && <View className='h-[1px] bg-neutral-300 dark:bg-neutral-700' />}
-                  <View className={`flex-row `}>
-                    
-                    <View className='flex-1 p-4'>
+                  <View className={`flex-row`}>
+                    <View className='flex-1 border-t border-neutral-400 p-4'>
                       <View className='mb-4 flex-row items-center justify-between'>
                         <View className='flex-row items-center gap-3'>
                           <View>
@@ -248,15 +272,11 @@ export default function Monthly({ onScheduleChange }: MonthlyProps) {
                           </View>
                         </View>
                         <TouchableOpacity
-                          onPress={() => dateSchedule.slots.length > 1 && removeDateTimeSlot(date, slot.id)}
+                          onPress={() => removeDateTimeSlot(date, slot.id)}
                           activeOpacity={0.7}
-                          className={`items-center rounded-lg p-2 ${
-                            dateSchedule.slots.length > 1
-                              ? 'bg-red-100/50 dark:border-red-800/30 dark:bg-red-900/20'
-                              : 'bg-neutral-100/50 dark:bg-neutral-700/20'
-                          }`}
+                          className='items-center rounded-lg bg-red-100/50 p-2 dark:border-red-800/30 dark:bg-red-900/20'
                         >
-                          <Cancel01Icon size={20} color={dateSchedule.slots.length > 1 ? '#ef4444' : '#9ca3af'} />
+                          <Cancel01Icon size={20} color='#ef4444' />
                         </TouchableOpacity>
                       </View>
                       <View className='gap-3'>
@@ -273,23 +293,6 @@ export default function Monthly({ onScheduleChange }: MonthlyProps) {
                             onTogglePicker={(id, type) => toggleDatePicker(date, id, type)}
                             onTimeChange={(id, type, event, dateVal) => updateDateTime(date, id, type, event, dateVal)}
                           />
-                        </View>
-                        <View className='flex-row items-center gap-3'>
-                          <View className='flex-1'>
-                            <Medium className='text-xs text-neutral-500 dark:text-neutral-400'>Max Bookings</Medium>
-                            <Medium className='text-xs text-neutral-400 dark:text-neutral-500'>
-                              Number of patients can visit during this slot
-                            </Medium>
-                          </View>
-                          <View className='w-1/2'>
-                            <TextInput
-                              value={slot.maxBookings.toString()}
-                              onChangeText={(value) => updateMaxBookings(date, slot.id, value)}
-                              keyboardType='number-pad'
-                              maxLength={3}
-                              className='rounded-lg border border-neutral-200 bg-white px-4 py-3 text-center text-lg text-neutral-800 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-200'
-                            />
-                          </View>
                         </View>
                       </View>
                     </View>

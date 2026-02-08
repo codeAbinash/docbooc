@@ -2,8 +2,8 @@ import { HugeIconProps } from '@hugeicons/constants'
 import Colors from '@utils/colors'
 import { Medium, SemiBold } from '@utils/fonts'
 import { useColorScheme } from 'nativewind'
-import { memo, useMemo } from 'react'
-import { TouchableOpacity, TouchableOpacityProps } from 'react-native'
+import { useEffect, useRef, memo, useMemo } from 'react'
+import { TouchableOpacity, TouchableOpacityProps, Animated } from 'react-native'
 import Medicine02Icon from '@hugeicons/Medicine02Icon'
 
 type ChipProps = {
@@ -19,6 +19,24 @@ const Chip = memo(({ label, icon, isActive = false, onPress, variant = 'default'
   const dark = colorScheme === 'dark'
   const isHighlighted = isActive || variant !== 'default'
   const IconComponent = icon || Medicine02Icon
+
+  const scaleAnim = useRef(new Animated.Value(isActive ? 1.05 : 1)).current
+  const opacityAnim = useRef(new Animated.Value(isActive ? 1 : 0.8)).current
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(scaleAnim, {
+        toValue: isActive ? 1.05 : 1,
+        duration: 250,
+        useNativeDriver: true,
+      }),
+      Animated.timing(opacityAnim, {
+        toValue: isActive ? 1 : 0.8,
+        duration: 250,
+        useNativeDriver: true,
+      }),
+    ]).start()
+  }, [isActive, scaleAnim, opacityAnim])
 
   const { bgStyle, color } = useMemo(
     () => ({
@@ -43,13 +61,20 @@ const Chip = memo(({ label, icon, isActive = false, onPress, variant = 'default'
   const TextComponent = isHighlighted ? Medium : Medium
 
   return (
-    <TouchableOpacity
-      onPress={onPress}
-      className={`flex-row items-end justify-start gap-2 rounded-full px-5 py-3 ${bgStyle}`}
+    <Animated.View
+      style={{
+        transform: [{ scale: scaleAnim }],
+        opacity: opacityAnim,
+      }}
     >
-      <IconComponent color={color} size={20} strokeWidth={2} />
-      <TextComponent style={{ color }}>{label}</TextComponent>
-    </TouchableOpacity>
+      <TouchableOpacity
+        onPress={onPress}
+        className={`flex-row items-end justify-start gap-2 rounded-full px-5 py-3 ${bgStyle}`}
+      >
+        <IconComponent color={color} size={20} strokeWidth={2} />
+        <TextComponent style={{ color }}>{label}</TextComponent>
+      </TouchableOpacity>
+    </Animated.View>
   )
 })
 

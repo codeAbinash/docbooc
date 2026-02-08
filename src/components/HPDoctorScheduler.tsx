@@ -3,14 +3,18 @@ import Chip from '@components/Chip'
 import Press from '@components/Press'
 import Tick02Icon from '@hugeicons/Tick02Icon'
 import Clock03Icon from '@hugeicons/Clock03Icon'
-import { useNavigation, useRoute } from '@react-navigation/native'
+import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native'
 import { HPStackNav } from '@utils/types'
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Alert, ScrollView, View } from 'react-native'
 import colors from 'tailwindcss/colors'
 import Daily from '@components/Daily'
 import Monthly from '@components/Monthly'
 import Weekly from '@components/Weekly'
+import type { RecurrenceData } from '@/HPScreens/RecurrenceSchedule'
+import { useRecurrenceStore } from '@/zustand/recurrenceStore'
+import popupStore from '@/zustand/popupStore'
+import { SemiBold } from '@utils/fonts'
 
 const tabLabels = ['Daily', 'Weekly', 'Monthly']
 const ContentMap = [Daily, Weekly, Monthly] as const
@@ -19,10 +23,72 @@ const HPDoctorScheduler = () => {
   const navigation = useNavigation<HPStackNav>()
   const route = useRoute<any>()
   const { doctorId, doctorName } = route.params
+  const { recurrenceData, setRecurrenceData } = useRecurrenceStore()
+  const alert = popupStore((state) => state.alert)
   const [activeTab, setActiveTab] = useState(0)
   const [dailyTimeSlots, setDailyTimeSlots] = useState<any[]>([])
   const [weeklySchedule, setWeeklySchedule] = useState<any>({})
   const [monthlySchedule, setMonthlySchedule] = useState<any>({})
+  const [pendingRecurrenceData, setPendingRecurrenceData] = useState<RecurrenceData | undefined>()
+
+  useFocusEffect(
+    useCallback(() => {
+      if (recurrenceData) {
+        setPendingRecurrenceData(recurrenceData)
+      }
+    }, [recurrenceData]),
+  )
+
+  const handleDailyScheduleChange = (schedule: any) => {
+    setDailyTimeSlots(schedule.slots)
+  }
+
+  const handleDailySlotCreated = () => {
+    setPendingRecurrenceData(undefined)
+    setRecurrenceData(undefined)
+  }
+
+  const handleWeeklyScheduleChange = (schedule: any) => {
+    setWeeklySchedule(schedule)
+  }
+
+  const handleMonthlyScheduleChange = (schedule: any) => {
+    setMonthlySchedule(schedule)
+  }
+
+  const hasSlots = (tabIndex: number): boolean => {
+    if (tabIndex === 0) {
+      return dailyTimeSlots.length > 0
+    } else if (tabIndex === 1) {
+      return Object.values(weeklySchedule).some((data: any) => data.slots && data.slots.length > 0)
+    } else if (tabIndex === 2) {
+      return Object.values(monthlySchedule).some((data: any) => data.slots && data.slots.length > 0)
+    }
+    return false
+  }
+
+  const handleTabChange = (newTabIndex: number) => {
+    if (newTabIndex === activeTab) return
+
+    if (hasSlots(activeTab)) {
+      alert(
+        'Discard Changes?',
+        `You're switching from ${tabLabels[activeTab]} to ${tabLabels[newTabIndex]}. Any unsaved slots will be discarded. Are you sure?`,
+        [
+          {
+            text: 'Cancel',
+            onPress: () => {},
+          },
+          {
+            text: 'OK',
+            onPress: () => setActiveTab(newTabIndex),
+          },
+        ],
+      )
+    } else {
+      setActiveTab(newTabIndex)
+    }
+  }
 
   const handleReview = () => {
     const scheduleType = (tabLabels[activeTab] || 'Daily').toLowerCase()
@@ -121,24 +187,24 @@ const HPDoctorScheduler = () => {
   }
 
   return (
-    <View className='bg-white flex-1 '>
+    <View className='flex-1 bg-white'>
       <HybridHead
         title={doctorName}
         showBackButton={true}
         rightElement={
-          <Press className='p-1 items-center justify-center  rounded-md bg-green-500/15' onPress={handleReview}>
-            <Tick02Icon size={28} strokeWidth={2} color={colors.green[600]} />
+          <Press className='' onPress={handleReview}>
+            <SemiBold className='text-xl text-accent'>Done</SemiBold>
           </Press>
         }
       />
-      <View className='flex-row  items-center justify-between gap-5 pb-4 bg-white px-5 py-2 dark:bg-neutral-900'>
+      <View className='flex-row items-center justify-between gap-5 bg-white px-5 py-2 pb-4 dark:bg-neutral-900'>
         {tabLabels.map((label, index) => (
           <Chip
             key={label}
             label={label}
             icon={Clock03Icon}
             isActive={activeTab === index}
-            onPress={() => setActiveTab(index)}
+            onPress={() => handleTabChange(index)}
             variant={activeTab === index ? 'transparentAccent' : 'default'}
             className='flex-1'
           />
@@ -149,8 +215,17 @@ const HPDoctorScheduler = () => {
           activeTab === index ? (
             <Component
               key={index}
-              onTimeSlotsChange={index === 0 ? setDailyTimeSlots : undefined}
-              onScheduleChange={index === 1 ? setWeeklySchedule : index === 2 ? setMonthlySchedule : undefined}
+              onScheduleChange={
+                index === 0
+                  ? handleDailyScheduleChange
+                  : index === 1
+                    ? handleWeeklyScheduleChange
+                    : index === 2
+                      ? handleMonthlyScheduleChange
+                      : undefined
+              }
+              recurrenceData={pendingRecurrenceData}
+              onSlotCreated={handleDailySlotCreated}
             />
           ) : null,
         )}

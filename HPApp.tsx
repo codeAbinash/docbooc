@@ -7,9 +7,12 @@ import HPHome from '@/HPScreens/HPHome'
 import EditHPProfileScreen from '@/HPScreens/HPProfile/EditHPProfileScreen'
 import HPSplash from '@/HPScreens/HPSplash'
 import HPDoctorScheduleDetails from '@/HPScreens/HPViewDoctors/HPDoctorScheduleDetails'
+import HPApproveBookings from '@/HPScreens/HPApproveAppointments/HPApproveAppointments'
+import RecurrenceSchedule, { RecurrenceData } from '@/HPScreens/RecurrenceSchedule'
 import { DarkTheme, DefaultTheme } from '@/themes'
 import HPDoctorScheduler from '@components/HPDoctorScheduler'
 import HPScheduleReview from '@components/HPScheduleReview'
+import BookingOTPVerification from '@components/BookingOTPVerification'
 import { Popups } from '@components/Popup'
 import { AutoStatusBar } from '@components/StatusBar'
 import { queryClient } from '@query/index'
@@ -61,7 +64,6 @@ export default function HPApp() {
           <RootStack.Screen name='HPLogin' component={HPLogin} options={SMOOTH_ANIMATION} />
           <RootStack.Screen name='HPSignup' component={HPSignup} options={SMOOTH_ANIMATION} />
           <RootStack.Screen name='HPHome' component={HPHome} options={SMOOTH_ANIMATION} />
-          {/* <RootStack.Screen name='HPOTP' component={HPOTP} options={SMOOTH_ANIMATION} /> */}
           <RootStack.Screen name='HPDoctorScheduler' component={HPDoctorScheduler} options={SMOOTH_ANIMATION} />
           <RootStack.Screen name='HPScheduleReview' component={HPScheduleReview} options={SMOOTH_ANIMATION} />
           <RootStack.Screen name='HPBookAppointment' component={HPBookAppointment} options={SMOOTH_ANIMATION} />
@@ -71,6 +73,13 @@ export default function HPApp() {
             options={SMOOTH_ANIMATION}
           />
           <RootStack.Screen name='EditHPProfile' component={EditHPProfileScreen} options={SMOOTH_ANIMATION} />
+          <RootStack.Screen name='RecurrenceSchedule' component={RecurrenceSchedule} options={SMOOTH_ANIMATION} />
+          <RootStack.Screen
+            name='BookingOTPVerification'
+            component={BookingOTPVerification}
+            options={SMOOTH_ANIMATION}
+          />
+          <RootStack.Screen name='HPApproveAppointments' component={HPApproveBookings} options={SMOOTH_ANIMATION} />
           <RootStack.Screen name='DoctorModel' component={AdminAddDoctor} options={SMOOTH_ANIMATION} />
         </RootStack.Navigator>
       </NavigationContainer>
@@ -92,6 +101,7 @@ export type HpRootStackParamList = {
   HPDoctorScheduler: {
     doctorId: string
     doctorName: string
+    recurrenceData?: RecurrenceData
   }
   HPScheduleReview: {
     doctorId: string
@@ -118,6 +128,9 @@ export type HpRootStackParamList = {
     doctorName: string
   }
   EditHPProfile: undefined
+  RecurrenceSchedule: undefined
+  BookingOTPVerification: undefined
+  HPApproveAppointments: undefined
   XAddDoctors: undefined
   DoctorModel: undefined
 }
