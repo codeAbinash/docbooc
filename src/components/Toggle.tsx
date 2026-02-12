@@ -1,4 +1,4 @@
-import { StyleSheet, useColorScheme } from 'react-native'
+import { StyleSheet, useColorScheme, View } from 'react-native'
 import Animated, { interpolateColor, useAnimatedStyle, useDerivedValue, withTiming } from 'react-native-reanimated'
 import colors from 'tailwindcss/colors'
 const TC_W = 50 // Toggle Container Width
@@ -34,16 +34,16 @@ export function Toggle({ isActive, accent }: ToggleProps) {
   const progress = useDerivedValue(() => (isActive ? AVAIL_W : 0), [isActive])
 
   const backgroundColorStyle = useAnimatedStyle(() => {
-    const backgroundColor = withTiming(
-      interpolateColor(
-        progress.value,
-        [0, AVAIL_W],
-        [scheme === 'dark' ? colors.zinc[800] : colors.zinc[200], accent || colors.blue[500]],
-      ),
-      { duration },
-    )
+    const backgroundColor = withTiming(isActive ? 'white' : scheme === 'dark' ? colors.zinc[800] : colors.zinc[200], {
+      duration,
+    })
     return { backgroundColor }
-  }, [accent, scheme, progress])
+  }, [scheme, isActive])
+
+  const toggleBackgroundStyle = useAnimatedStyle(() => {
+    const backgroundColor = withTiming(isActive ? 'white' : 'white', { duration })
+    return { backgroundColor }
+  }, [isActive])
 
   const customSpringStyle = useAnimatedStyle(() => {
     return { transform: [{ translateX: withTiming(progress.value, { duration }) }] }
@@ -51,7 +51,13 @@ export function Toggle({ isActive, accent }: ToggleProps) {
 
   return (
     <Animated.View style={[styles.toggleContainer, backgroundColorStyle]}>
-      <Animated.View style={[styles.toggle, customSpringStyle]}></Animated.View>
+      <Animated.View style={[styles.toggle, customSpringStyle, toggleBackgroundStyle]}>
+        {isActive && (
+          <View className='flex flex-1 items-center justify-center rounded-full'>
+            <View className='h-5 w-5 rounded-full bg-blue-500' />
+          </View>
+        )}
+      </Animated.View>
     </Animated.View>
   )
 }

@@ -301,7 +301,7 @@ function HPTodaysAppointmentsScreen() {
       >
         <View className='flex flex-row justify-between border-b border-t border-neutral-200 px-6 py-4'>
           <Medium className={`text-lg ${isQuickBookEnabled ? 'text-white' : 'text-neutral-800'}`}>
-            Allow quick book
+            Quick Book
           </Medium>
           <TouchableOpacity onPress={handleQuickBookToggle} activeOpacity={0.8}>
             <Toggle isActive={isQuickBookEnabled} />
