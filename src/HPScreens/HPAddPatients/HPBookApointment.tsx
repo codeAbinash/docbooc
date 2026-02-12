@@ -47,7 +47,7 @@ const HPBookAppointment = () => {
 
   return (
     <View className='flex-1 bg-white'>
-      <HybridHead title='Select Date and Location' showBackButton onBackPress={navigation.goBack}>
+      <HybridHead title='Date and Location' showBackButton onBackPress={navigation.goBack}>
         <View className=''>
           <DateCardContainer onDateChange={setSelectedDate} />
         </View>

@@ -74,7 +74,7 @@ const HPAddPatients = ({ route }: any) => {
     <View className='flex-1'>
       <HybridHead
         showMenu={true}
-        title={'Select doctor'}
+        title={'Doctors'}
         showSearch={true}
         searchPlaceholder='Search doctors, specialties...'
         chipItems={allItems}
@@ -86,7 +86,7 @@ const HPAddPatients = ({ route }: any) => {
         searchOpen={isSearchOpen}
       />
 
-      <View className='flex-1 bg-white dark:bg-neutral-900'>
+      <View className='flex-1  bg-white dark:bg-neutral-900'>
         {isLoading ? (
           <View className='flex-1 items-center justify-center'>
             <ActivityIndicator size='large' color={Colors.accent} />

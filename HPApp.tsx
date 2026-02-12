@@ -7,7 +7,6 @@ import HPHome from '@/HPScreens/HPHome'
 import EditHPProfileScreen from '@/HPScreens/HPProfile/EditHPProfileScreen'
 import HPSplash from '@/HPScreens/HPSplash'
 import HPDoctorScheduleDetails from '@/HPScreens/HPViewDoctors/HPDoctorScheduleDetails'
-import HPApproveBookings from '@/HPScreens/HPApproveAppointments/HPApproveAppointments'
 import RecurrenceSchedule, { RecurrenceData } from '@/HPScreens/RecurrenceSchedule'
 import { DarkTheme, DefaultTheme } from '@/themes'
 import HPDoctorScheduler from '@components/HPDoctorScheduler'
@@ -79,7 +78,6 @@ export default function HPApp() {
             component={BookingOTPVerification}
             options={SMOOTH_ANIMATION}
           />
-          <RootStack.Screen name='HPApproveAppointments' component={HPApproveBookings} options={SMOOTH_ANIMATION} />
           <RootStack.Screen name='DoctorModel' component={AdminAddDoctor} options={SMOOTH_ANIMATION} />
         </RootStack.Navigator>
       </NavigationContainer>
@@ -130,7 +128,6 @@ export type HpRootStackParamList = {
   EditHPProfile: undefined
   RecurrenceSchedule: undefined
   BookingOTPVerification: undefined
-  HPApproveAppointments: undefined
   XAddDoctors: undefined
   DoctorModel: undefined
 }

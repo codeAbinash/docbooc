@@ -198,7 +198,7 @@ export default function HPApproveBookings() {
 
   return (
     <View className='flex-1 bg-white dark:bg-neutral-900'>
-      <HybridHead title='Approve Bookings' showBackButton={true} />
+      <HybridHead title='Approve Bookings' showMenu={true} />
       <View className='flex-row gap-2 bg-white px-5 py-4 dark:bg-neutral-900'>
         {tabLabels.map((label, index) => {
           const isActive = activeTab === index

@@ -16,18 +16,17 @@ import { View, Text, TouchableOpacity } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Press from '../../components/Press'
 
-
 const MAIN_DRAWER_ITEMS = [
   { name: "Today's Appointments", icon: Calendar01Icon, navigationName: 'Appointments' },
   { name: 'Upcoming Appointments', icon: Calendar03Icon, navigationName: 'UpcomingAppointments' },
   { name: 'Doctors', icon: UserIcon, navigationName: 'ViewDoctors' },
   { name: 'Book Appointment', icon: PatientIcon, navigationName: 'AddPatients' },
-  { name: 'Approve Appointment', icon: PatientIcon, navigationName: 'HPApproveAppointments' },
+  { name: 'Approve Appointment', icon: PatientIcon, navigationName: 'ApproveAppointments' },
 ]
 
 const SETTINGS_DRAWER_ITEMS = [
   { name: 'Onboard Doctors', icon: TimeScheduleIcon, navigationName: 'ScheduleDoctors' },
-   { name: 'Users', icon: PatientIcon, navigationName: 'AddPatients' },
+  { name: 'Users', icon: PatientIcon, navigationName: 'AddPatients' },
   { name: 'Settings', icon: NotificationSquareIcon, navigationName: 'Settings' },
 ]
 
@@ -64,7 +63,7 @@ export default function CustomDrawer(props: any) {
         </View>
 
         <View style={{ paddingHorizontal: 8 }}>
-          <View className=' gap-2'>
+          <View className='gap-2'>
             {MAIN_DRAWER_ITEMS.map((item) => {
               const isActive = currentRoute === item.navigationName
               const Icon = item.icon
@@ -78,10 +77,15 @@ export default function CustomDrawer(props: any) {
                   }}
                 >
                   <View className='size-5 items-center justify-center'>
-                    <Icon size={20} color={isActive ? Colors.accent : colors.text} variant="duotone-rounded" strokeWidth={1.5} />
+                    <Icon
+                      size={20}
+                      color={isActive ? Colors.accent : colors.text}
+                      variant='duotone-rounded'
+                      strokeWidth={1.5}
+                    />
                   </View>
                   <Regular
-                    className='flex-1  text-lg'
+                    className='flex-1 text-lg'
                     style={{
                       color: isActive ? Colors.accent : colors.text,
                     }}
@@ -101,7 +105,7 @@ export default function CustomDrawer(props: any) {
           paddingHorizontal: 8,
         }}
       >
-        <View className='gap-2 ' style={{ paddingTop: 8, borderTopWidth: 1, borderTopColor: colors.border }}>
+        <View className='gap-2' style={{ paddingTop: 8, borderTopWidth: 1, borderTopColor: colors.border }}>
           {SETTINGS_DRAWER_ITEMS.map((item) => {
             const isActive = currentRoute === item.navigationName
             const Icon = item.icon
@@ -115,7 +119,12 @@ export default function CustomDrawer(props: any) {
                 }}
               >
                 <View className='size-5 items-center justify-center'>
-                  <Icon size={20} color={isActive ? Colors.accent : colors.text} variant="duotone-rounded" strokeWidth={1.5} />
+                  <Icon
+                    size={20}
+                    color={isActive ? Colors.accent : colors.text}
+                    variant='duotone-rounded'
+                    strokeWidth={1.5}
+                  />
                 </View>
                 <Regular
                   className='flex-1 text-lg'

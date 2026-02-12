@@ -1,6 +1,7 @@
 import CustomDrawer from '@/HPScreens/components/CustomDrawer'
 import { createDrawerNavigator } from '@react-navigation/drawer'
 import HPAddPatients from './HPAddPatients/HPAddPatients'
+import HPApproveAppointments from './HPApproveAppointments/HPApproveAppointments'
 import HPScheduleDoctors from './HpScheduleDoctors/HpScheduleDoctors'
 import HPTodaysAppointmentsScreen from './HPTodaysAppointments/HPTodaysAppointmentsScreen'
 import HPUpcomingAppointmentsScreen from './HPUpcomingAppointments/HPUpcomingAppointmentsScreen'
@@ -22,7 +23,8 @@ export default function App() {
     >
       <Drawer.Screen name='Appointments' component={HPTodaysAppointmentsScreen} />
       <Drawer.Screen name='UpcomingAppointments' component={HPUpcomingAppointmentsScreen} />
-      <Drawer.Screen name='ScheduleDoctors' component={HPScheduleDoctors}  />
+      <Drawer.Screen name='ApproveAppointments' component={HPApproveAppointments} />
+      <Drawer.Screen name='ScheduleDoctors' component={HPScheduleDoctors} />
       <Drawer.Screen name='ViewDoctors' component={HPViewDoctors} />
       <Drawer.Screen name='AddPatients' component={HPAddPatients} />
       <Drawer.Screen name='Settings' component={HPProfileScreen} />

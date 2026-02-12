@@ -12,7 +12,7 @@ import { client } from '@utils/client'
 import { Medium, SemiBold } from '@utils/fonts'
 import type { Doctor, Patient } from '@utils/types'
 import { memo, useCallback, useEffect, useState } from 'react'
-import { FlatList, RefreshControl, TouchableOpacity, View } from 'react-native'
+import { Animated, FlatList, RefreshControl, TouchableOpacity, View } from 'react-native'
 import PatientCard, { PatientCardShimmer } from '../components/PatientCard'
 
 type ActionType = 'cancel' | 'complete' | 'move-to-ongoing'
@@ -63,6 +63,8 @@ function HPTodaysAppointmentsScreen() {
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | undefined>()
   const [refreshing, setRefreshing] = useState(false)
   const [isQuickBookEnabled, setIsQuickBookEnabled] = useState(true)
+  const [showQuickBookSplash, setShowQuickBookSplash] = useState(false)
+  const [splashAnimValue] = useState(new Animated.Value(1))
 
   const handleChipSelect = useCallback((id: number | string) => {
     setActiveTab(typeof id === 'number' ? id : Number(id))
@@ -81,7 +83,11 @@ function HPTodaysAppointmentsScreen() {
             },
             {
               text: 'Yes',
-              onPress: () => setIsQuickBookEnabled(true),
+              onPress: () => {
+                setIsQuickBookEnabled(true)
+                setShowQuickBookSplash(true)
+                setTimeout(() => setShowQuickBookSplash(false), 3000)
+              },
             },
           ],
         )
@@ -108,6 +114,27 @@ function HPTodaysAppointmentsScreen() {
       setSelectedDoctor(myDoctors[0])
     }
   }, [myDoctors, selectedDoctor])
+
+  useEffect(() => {
+    if (showQuickBookSplash) {
+      Animated.loop(
+        Animated.sequence([
+          Animated.timing(splashAnimValue, {
+            toValue: 0.4,
+            duration: 800,
+            useNativeDriver: true,
+          }),
+          Animated.timing(splashAnimValue, {
+            toValue: 1,
+            duration: 800,
+            useNativeDriver: true,
+          }),
+        ]),
+      ).start()
+    } else {
+      splashAnimValue.setValue(1)
+    }
+  }, [showQuickBookSplash, splashAnimValue])
 
   const {
     data: todaysAppointments,
@@ -269,15 +296,27 @@ function HPTodaysAppointmentsScreen() {
         />
       )}
 
-      <View className='absolute bottom-0 left-0 right-0 bg-white dark:bg-neutral-900'>
+      <View
+        className={`absolute bottom-0 left-0 right-0 ${isQuickBookEnabled ? 'bg-blue-500' : 'bg-white'} dark:bg-neutral-900`}
+      >
         <View className='flex flex-row justify-between border-b border-t border-neutral-200 px-6 py-4'>
-          <Medium className='text-lg text-neutral-800'>Allow quick book</Medium>
+          <Medium className={`text-lg ${isQuickBookEnabled ? 'text-white' : 'text-neutral-800'}`}>
+            Allow quick book
+          </Medium>
           <TouchableOpacity onPress={handleQuickBookToggle} activeOpacity={0.8}>
             <Toggle isActive={isQuickBookEnabled} />
           </TouchableOpacity>
         </View>
         <PaddingBottom />
       </View>
+
+      {showQuickBookSplash && (
+        <View className='absolute inset-0 flex items-center justify-center bg-blue-500'>
+          <Animated.Text style={{ opacity: splashAnimValue }} className='text-6xl font-bold text-white'>
+            Quick Book
+          </Animated.Text>
+        </View>
+      )}
     </View>
   )
 }
