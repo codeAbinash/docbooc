@@ -8,6 +8,8 @@ const Animations = {
   homedoctor: require('./lottie/bg3.lottie'),
   empty: require('./lottie/empty.lottie'),
   cal: require('./lottie/empty3.lottie'),
+  labtest: require('./lottie/labtest.lottie'),
+  physical: require('./lottie/physical.lottie'),
 }
 
 export default Animations

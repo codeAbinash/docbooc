@@ -4,7 +4,7 @@ import InputWithLabel from '@components/InputWithLabel'
 import { queryClient } from '@query/index'
 import { useMutation } from '@tanstack/react-query'
 import { adminApi } from '@utils/client'
-import { iconList, ICONS } from '@utils/icons'
+import { iconList, ICONS, IconType } from '@utils/icons'
 import { NavProp } from '@utils/types'
 import { useState } from 'react'
 import { TouchableOpacity, View } from 'react-native'
@@ -14,7 +14,7 @@ import { DepartmentIcon } from './types'
 export default function AdminAddDepartment({ navigation }: NavProp) {
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
-  const [selectedIcon, setSelectedIcon] = useState<DepartmentIcon>('Medicine02Icon')
+  const [selectedIcon, setSelectedIcon] = useState<IconType>('Medicine02Icon')
 
   const { mutate, isPending } = useMutation({
     mutationFn: async () =>
@@ -23,7 +23,7 @@ export default function AdminAddDepartment({ navigation }: NavProp) {
           json: {
             name,
             description,
-            icon: selectedIcon,
+            icon: selectedIcon as DepartmentIcon,
           },
         })
       ).json(),
@@ -56,7 +56,7 @@ export default function AdminAddDepartment({ navigation }: NavProp) {
 
         <View className='mt-10 px-6'>
           <View className='flex-row flex-wrap items-center justify-center gap-4'>
-            {iconList.map((iconName: DepartmentIcon) => {
+            {iconList.map((iconName: IconType) => {
               const IconComponent = ICONS[iconName]
               return (
                 <TouchableOpacity

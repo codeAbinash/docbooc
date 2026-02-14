@@ -7,9 +7,12 @@ import DigestionIcon from '@hugeicons/DigestionIcon'
 import FemaleSymbolIcon from '@hugeicons/FemaleSymbolIcon'
 import Medicine02Icon from '@hugeicons/Medicine02Icon'
 import PatientIcon from '@hugeicons/PatientIcon'
+import EyeIcon from '@components/EyeIcon'
 import { ComponentType } from 'react'
 
-export const ICONS: Record<DepartmentIcon, ComponentType<HugeIconProps>> = {
+export type IconType = DepartmentIcon | 'EyeIcon'
+
+export const ICONS: Record<IconType, ComponentType<HugeIconProps>> = {
   Medicine02Icon,
   Cardiogram02Icon,
   Bone02Icon,
@@ -17,14 +20,15 @@ export const ICONS: Record<DepartmentIcon, ComponentType<HugeIconProps>> = {
   Brain01Icon,
   PatientIcon,
   FemaleSymbolIcon,
+  EyeIcon: EyeIcon as ComponentType<HugeIconProps>,
 }
 
-export const iconList = Object.keys(ICONS) as DepartmentIcon[]
-export const iconMap = new Map<DepartmentIcon, ComponentType<HugeIconProps>>(
-  Object.entries(ICONS) as [DepartmentIcon, ComponentType<HugeIconProps>][],
+export const iconList = Object.keys(ICONS) as IconType[]
+export const iconMap = new Map<IconType, ComponentType<HugeIconProps>>(
+  Object.entries(ICONS) as [IconType, ComponentType<HugeIconProps>][],
 )
 
-export function getIconByName(name: DepartmentIcon | null): ComponentType<HugeIconProps> {
+export function getIconByName(name: IconType | null): ComponentType<HugeIconProps> {
   if (!name) return Medicine02Icon
-  return iconMap.get(name) || Medicine02Icon
+  return iconMap.get(name as IconType) || Medicine02Icon
 }
