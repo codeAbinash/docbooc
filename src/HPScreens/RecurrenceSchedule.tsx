@@ -1,10 +1,10 @@
-import { useState } from 'react'
-import { View, TouchableOpacity, ScrollView, TextInput } from 'react-native'
-import { Bold, Medium, SemiBold } from '@utils/fonts'
-import DateTimePicker from '@react-native-community/datetimepicker'
-import HybridHead from '@components/HybridHead'
-import { useNavigation, useRoute } from '@react-navigation/native'
 import { useRecurrenceStore } from '@/zustand/recurrenceStore'
+import HybridHead from '@components/HybridHead'
+import DateTimePicker from '@react-native-community/datetimepicker'
+import { useNavigation } from '@react-navigation/native'
+import { Medium, SemiBold } from '@utils/fonts'
+import { useState } from 'react'
+import { ScrollView, TextInput, ToastAndroid, TouchableOpacity, View } from 'react-native'
 
 type RecurrenceType = 'never' | 'on' | 'after'
 
@@ -14,9 +14,9 @@ export type RecurrenceData = {
   endTime: Date
   maxBookings: number
   bookingWindowDays: number
+  fees: number
   endType: RecurrenceType
   endDate?: Date
-  occurrences?: number
 }
 
 export default function RecurrenceSchedule() {
@@ -33,26 +33,70 @@ export default function RecurrenceSchedule() {
     date.setHours(12, 0, 0, 0)
     return date
   })
-  const [maxBookings, setMaxBookings] = useState('20')
-  const [bookingWindowDays, setBookingWindowDays] = useState('7')
+  const [maxBookings, setMaxBookings] = useState('')
+  const [bookingWindowDays, setBookingWindowDays] = useState('')
   const [endType, setEndType] = useState<RecurrenceType>('never')
   const [endDate, setEndDate] = useState(new Date())
-  const [occurrences, setOccurrences] = useState('13')
   const [showStartDatePicker, setShowStartDatePicker] = useState(false)
   const [showStartTimePicker, setShowStartTimePicker] = useState(false)
   const [showEndTimePicker, setShowEndTimePicker] = useState(false)
   const [showEndDatePicker, setShowEndDatePicker] = useState(false)
+  const [fees, setFees] = useState('')
 
   const handleConfirm = () => {
+    const parseMaxBookings = parseInt(maxBookings) || 0
+    const parseBookingWindow = parseInt(bookingWindowDays) || 0
+    const parseFees = parseFloat(fees) || 0
+
+    if (!maxBookings.trim()) {
+      ToastAndroid.show('Please fill in Max Bookings', ToastAndroid.SHORT)
+      return
+    }
+
+    if (!bookingWindowDays.trim()) {
+      ToastAndroid.show('Please fill in Booking Window', ToastAndroid.SHORT)
+      return
+    }
+
+    if (!fees.trim()) {
+      ToastAndroid.show('Please fill in Fees', ToastAndroid.SHORT)
+      return
+    }
+
+    if (startTime >= endTime) {
+      ToastAndroid.show('End time must be after start time', ToastAndroid.SHORT)
+      return
+    }
+
+    if (endType === 'on' && startDate >= endDate) {
+      ToastAndroid.show('End date must be after start date', ToastAndroid.SHORT)
+      return
+    }
+
+    if (parseMaxBookings <= 0 || parseMaxBookings > 100) {
+      ToastAndroid.show('Max Bookings must be between 1 and 100', ToastAndroid.SHORT)
+      return
+    }
+
+    if (parseBookingWindow < 0) {
+      ToastAndroid.show('Booking Window cannot be negative', ToastAndroid.SHORT)
+      return
+    }
+
+    if (parseFees < 0) {
+      ToastAndroid.show('Fees cannot be negative', ToastAndroid.SHORT)
+      return
+    }
+
     const data: RecurrenceData = {
       startDate,
       startTime,
       endTime,
-      maxBookings: Math.max(0, Math.min(100, parseInt(maxBookings) || 0)),
-      bookingWindowDays: Math.max(0, parseInt(bookingWindowDays) || 7),
+      maxBookings: parseMaxBookings,
+      bookingWindowDays: parseBookingWindow,
       endType,
+      fees: parseFees,
       ...(endType === 'on' && { endDate }),
-      ...(endType === 'after' && { occurrences: parseInt(occurrences) || 1 }),
     }
     setRecurrenceData(data)
     navigation.goBack()
@@ -155,7 +199,7 @@ export default function RecurrenceSchedule() {
                   onChangeText={setMaxBookings}
                   keyboardType='number-pad'
                   maxLength={3}
-                  placeholder='20'
+                  placeholder='Count'
                   placeholderTextColor='#999'
                   className='text-center text-lg text-neutral-800 dark:text-neutral-200'
                 />
@@ -180,7 +224,31 @@ export default function RecurrenceSchedule() {
                   onChangeText={setBookingWindowDays}
                   keyboardType='number-pad'
                   maxLength={3}
-                  placeholder='7'
+                  placeholder='Days'
+                  placeholderTextColor='#999'
+                  className='text-center text-lg text-neutral-800 dark:text-neutral-200'
+                />
+              </View>
+            </View>
+          </View>
+
+          <View className='h-[1px] bg-neutral-200 dark:bg-neutral-700' />
+
+          <View className='px-5 py-4'>
+            <View className='flex-row items-center gap-3'>
+              <View className='flex-1'>
+                <Medium className='mb-1 text-lg text-neutral-800 dark:text-neutral-200'>Fees</Medium>
+                <Medium className='text-xs text-neutral-500 dark:text-neutral-400'>
+                  Fees for this appointment slot
+                </Medium>
+              </View>
+              <View className='w-20 rounded-lg border border-neutral-300 bg-white px-3 py-2 dark:border-neutral-600 dark:bg-neutral-700'>
+                <TextInput
+                  value={fees}
+                  onChangeText={setFees}
+                  keyboardType='number-pad'
+                  maxLength={5}
+                  placeholder='Fees'
                   placeholderTextColor='#999'
                   className='text-center text-lg text-neutral-800 dark:text-neutral-200'
                 />
