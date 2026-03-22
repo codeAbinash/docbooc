@@ -4,15 +4,14 @@ import Doctor01Icon from '@hugeicons/Doctor01Icon'
 import { useNavigation } from '@react-navigation/native'
 import { useQuery } from '@tanstack/react-query'
 import { api, client, hpApi } from '@utils/client'
-import Colors from '@utils/colors'
 import { HPStackNav } from '@utils/types'
 import { useCallback, useMemo, useRef, useState } from 'react'
-import { ActivityIndicator, FlatList, View } from 'react-native'
+import {  FlatList, View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 
 export const ALL_SPECIALTY = { id: '0', name: 'All', icon: Doctor01Icon }
 
-const HPScheduleDoctors = () => {
+const HPAllDoctors = () => {
   const navigate = useNavigation<HPStackNav>()
   const [selected, setSelected] = useState<string>('0')
   const [searchQuery, setSearchQuery] = useState('')
@@ -56,9 +55,9 @@ const HPScheduleDoctors = () => {
     <View className='flex-1'>
       <HybridHead
         showMenu={true}
-        title='Onboard Doctors'
+        title='All Doctors'
         showSearch={true}
-        searchPlaceholder='Search doctors, specialties...'
+        searchPlaceholder='Search doctors...'
         chipItems={allItems}
         selectedChipId={selected}
         onChipSelect={handleChipSelect}
@@ -104,4 +103,4 @@ const HPScheduleDoctors = () => {
   )
 }
 
-export default HPScheduleDoctors
+export default HPAllDoctors

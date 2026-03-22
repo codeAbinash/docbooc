@@ -25,7 +25,7 @@ const MAIN_DRAWER_ITEMS = [
 ]
 
 const SETTINGS_DRAWER_ITEMS = [
-  { name: 'Onboard Doctors', icon: TimeScheduleIcon, navigationName: 'ScheduleDoctors' },
+  { name: 'All Doctors', icon: TimeScheduleIcon, navigationName: 'HPAllDoctors' },
   { name: 'Users', icon: PatientIcon, navigationName: 'Users' },
   { name: 'Settings', icon: NotificationSquareIcon, navigationName: 'Settings' },
 ]

@@ -1,15 +1,15 @@
 import AdminAddDoctor from '@/AdminScreens/AdminAddDoctor'
 import HPBookAppointment from '@/HPScreens/HPAddPatients/HPBookApointment'
 import HPLogin from '@/HPScreens/HPAuthentications/Login/HPLogin'
-import HPOTP from '@/HPScreens/HPAuthentications/OTP/HPOTP'
+
 import HPSignup from '@/HPScreens/HPAuthentications/Signup/HPSignup'
 import HPHome from '@/HPScreens/HPHome'
 import EditHPProfileScreen from '@/HPScreens/HPProfile/EditHPProfileScreen'
 import HPSplash from '@/HPScreens/HPSplash'
 import HPDoctorScheduleDetails from '@/HPScreens/HPViewDoctors/HPDoctorScheduleDetails'
-import RecurrenceSchedule, { RecurrenceData } from '@/HPScreens/RecurrenceSchedule'
+
 import { DarkTheme, DefaultTheme } from '@/themes'
-import HPDoctorScheduler from '@components/HPDoctorScheduler'
+import HPDoctorScheduler from '@/HPScreens/components/HPScheduler'
 import HPScheduleReview from '@components/HPScheduleReview'
 import BookingOTPVerification from '@components/BookingOTPVerification'
 import { Popups } from '@components/Popup'
@@ -72,7 +72,7 @@ export default function HPApp() {
             options={SMOOTH_ANIMATION}
           />
           <RootStack.Screen name='EditHPProfile' component={EditHPProfileScreen} options={SMOOTH_ANIMATION} />
-          <RootStack.Screen name='RecurrenceSchedule' component={RecurrenceSchedule} options={SMOOTH_ANIMATION} />
+          
           <RootStack.Screen
             name='BookingOTPVerification'
             component={BookingOTPVerification}
@@ -99,7 +99,7 @@ export type HpRootStackParamList = {
   HPDoctorScheduler: {
     doctorId: string
     doctorName: string
-    recurrenceData?: RecurrenceData
+    
   }
   HPScheduleReview: {
     doctorId: string
@@ -126,7 +126,7 @@ export type HpRootStackParamList = {
     doctorName: string
   }
   EditHPProfile: undefined
-  RecurrenceSchedule: undefined
+
   BookingOTPVerification: undefined
   XAddDoctors: undefined
   DoctorModel: undefined

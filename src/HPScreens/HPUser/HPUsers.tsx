@@ -63,7 +63,7 @@ const HPUsers = () => {
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true)
-    await new Promise((resolve) => setTimeout(resolve, 1000))
+    await new Promise<void>((resolve) => setTimeout(resolve, 1000))
     setRefreshing(false)
   }, [])
 

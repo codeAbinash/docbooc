@@ -1,10 +1,11 @@
 {
   "cSpell.words": ["nativewind"],
-  "typescript.preferences.autoImportFileExcludePatterns": ["react-native-reanimated/lib/typescript/*"],
-  "typescript.experimental.useTsgo": false,
+  "[js][ts].preferences.autoImportFileExcludePatterns": ["react-native-reanimated/lib/typescript/*"],
+  "js/ts.experimental.useTsgo": false,
   "files.exclude": {
     "**/AdminScreens": true,
-    "**/HPScreens": true,
-    "**/UserScreens": false
-  }
+    "**/HPScreens": false,
+    "**/UserScreens": true
+  },
+  "java.compile.nullAnalysis.mode": "automatic"
 }
