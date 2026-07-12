@@ -15,6 +15,7 @@ export interface BookingAppointmentData {
     verified: boolean | null
   } | null
   location: {
+    slotId?: string
     scheduleDaysId?: string
     scheduleType?: string
     healthcareProvider?: {
@@ -34,6 +35,7 @@ export interface BookingAppointmentData {
       startTime?: string
       endTime?: string
       maxBookings?: number
+      currentBookings?: number
     }>
   } | null
   date: string

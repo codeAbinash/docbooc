@@ -8,6 +8,7 @@ import Animated, {
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
+  type SharedValue,
 } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { PaddingTop } from './SafePadding'
@@ -26,7 +27,7 @@ type PageCarouselProps = {
 
 // Memoized Dot component to prevent unnecessary re-renders
 const Dot = memo(
-  ({ index, scrollX, isActive }: { index: number; scrollX: Animated.SharedValue<number>; isActive: boolean }) => {
+  ({ index, scrollX, isActive }: { index: number; scrollX: SharedValue<number>; isActive: boolean }) => {
     const animatedStyle = useAnimatedStyle(() => {
       const scale = interpolate(
         scrollX.value,

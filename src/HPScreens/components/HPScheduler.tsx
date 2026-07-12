@@ -2,37 +2,54 @@ import HybridHead from '@components/HybridHead'
 import Chip from '@components/Chip'
 import Press from '@components/Press'
 import Clock03Icon from '@hugeicons/Clock03Icon'
-import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native'
+import { useNavigation, useRoute } from '@react-navigation/native'
 import { HPStackNav } from '@utils/types'
-import { useState, useCallback } from 'react'
+import { useState } from 'react'
 import { Alert, View } from 'react-native'
+import Daily from '@/components/Daily'
 import Monthly from '@/HPScreens/components/Monthly'
 import Weekly from '@/HPScreens/components/Weekly'
 
 import popupStore from '@/zustand/popupStore'
 import { SemiBold } from '@utils/fonts'
 
-const tabLabels = ['Weekly', 'Monthly']
-const ContentMap = [Weekly, Monthly] as const
+const tabLabels = ['Daily', 'Weekly', 'Monthly'] as const
+const ContentMap = [Daily, Weekly, Monthly] as const
+const scheduleKeys = ['daily', 'weekly', 'monthly'] as const
 
 const DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
 const hasScheduleSlots = (schedule: any, tabIndex: number): boolean => {
-  return Object.values(schedule[tabIndex === 0 ? 'weekly' : 'monthly']).some((d: any) => d?.slots?.length > 0)
+  const key = scheduleKeys[tabIndex]
+  if (!key) return false
+  if (key === 'daily') {
+    return Array.isArray(schedule.daily) && schedule.daily.length > 0
+  }
+  return Object.values(schedule[key] || {}).some((d: any) => d?.slots?.length > 0)
 }
 
 const buildScheduleData = (schedule: any, tabIndex: number, doctorId: string) => {
-  const scheduleType = (tabLabels[tabIndex] || 'weekly').toLowerCase()
+  const scheduleType = tabLabels[tabIndex]!.toLowerCase()
   const data: any = { scheduleType, doctorId }
 
-  const key = tabIndex === 0 ? 'weekDays' : 'monthDays'
-  const dateKey = tabIndex === 0 ? 'dayOfWeek' : 'dayOfMonth'
-  const schedule_ = schedule[tabIndex === 0 ? 'weekly' : 'monthly']
+  if (scheduleType === 'daily') {
+    data.timeSlots = (schedule.daily || []).map((slot: any) => ({
+      startTime: slot.startTime.toISOString(),
+      endTime: slot.endTime.toISOString(),
+      maxBookings: slot.maxBookings || 20,
+    }))
+    return data
+  }
+
+  const isWeekly = scheduleType === 'weekly'
+  const key = isWeekly ? 'weekDays' : 'monthDays'
+  const dateKey = isWeekly ? 'dayOfWeek' : 'dayOfMonth'
+  const schedule_ = schedule[isWeekly ? 'weekly' : 'monthly']
   const dates = new Set<number>()
   const timeSlots: any[] = []
 
   Object.entries(schedule_).forEach(([day, dayData]: [string, any]) => {
-    const dateNum = tabIndex === 0 ? DAY_NAMES.indexOf(day) : parseInt(day)
+    const dateNum = isWeekly ? DAY_NAMES.indexOf(day) : parseInt(day)
     if (dateNum !== -1) {
       dates.add(dateNum)
       dayData.slots.forEach((slot: any) => {
@@ -45,7 +62,7 @@ const buildScheduleData = (schedule: any, tabIndex: number, doctorId: string) =>
       })
     }
   })
-  data[key] = tabIndex === 1 ? Array.from(dates).sort((a, b) => a - b) : Array.from(dates)
+  data[key] = isWeekly ? Array.from(dates) : Array.from(dates).sort((a, b) => a - b)
   data.timeSlots = timeSlots
 
   return data
@@ -57,11 +74,10 @@ const HPScheduler = () => {
   const { doctorId, doctorName } = route.params
   const alert = popupStore((state) => state.alert)
   const [activeTab, setActiveTab] = useState(0)
-  const [schedule, setSchedule] = useState({ weekly: {}, monthly: {} })
+  const [schedule, setSchedule] = useState({ daily: [], weekly: {}, monthly: {} })
 
   const handleScheduleChange = (data: any) => {
-    const keys = ['weekly', 'monthly'] as const
-    const key = keys[activeTab] as keyof typeof schedule
+    const key = scheduleKeys[activeTab] as keyof typeof schedule
     setSchedule((prev) => ({ ...prev, [key]: data.slots || data }))
   }
 
@@ -80,7 +96,10 @@ const HPScheduler = () => {
 
   const handleReview = () => {
     if (!hasScheduleSlots(schedule, activeTab)) {
-      const msg = `Please select at least one ${activeTab === 0 ? 'day' : 'date'} and add time slots`
+      const msg =
+        activeTab === 0
+          ? 'Please add at least one time slot'
+          : `Please select at least one ${activeTab === 1 ? 'day' : 'date'} and add time slots`
       Alert.alert('Error', msg)
       return
     }

@@ -13,11 +13,11 @@ export default function HPSplash({ navigation }: HPNavProp) {
   useEffect(() => {
     setNavigation(navigation)
 
-    const timer = setTimeout(() => {
-      navigation.replace(token ? 'HPHome' : 'HPLogin')
-    }, 2000)
+    // const timer = setTimeout(() => {
+    navigation.replace(token ? 'HPHome' : 'HPLogin')
+    // }, 2000)
 
-    return () => clearTimeout(timer)
+    // return () => clearTimeout(timer)
   }, [navigation, token, setNavigation])
 
   return (

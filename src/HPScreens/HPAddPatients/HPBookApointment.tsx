@@ -82,7 +82,6 @@ const HPBookAppointment = () => {
                       : undefined
                   }
                   address={address || 'N/A'}
-                  distance={loc.distance || 'N/A'}
                   q={slot.maxBookings > 0 ? slot.maxBookings.toString() : 'N/A'}
                   selected={selectedLocationId === idx}
                   onPress={() => handleLocationPress(idx)}

@@ -8,7 +8,7 @@ export function DarkContentTransparentStatusBar() {
   return <StatusBar barStyle={'dark-content'} backgroundColor={'transparent'} />
 }
 
-export function AutoStatusBar({ scheme }: { scheme: ColorSchemeName }) {
+export function AutoStatusBar({ scheme }: { scheme: ColorSchemeName | undefined }) {
   return <StatusBar barStyle={scheme === 'dark' ? 'light-content' : 'dark-content'} backgroundColor={'transparent'} />
 }
 

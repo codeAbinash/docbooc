@@ -21,26 +21,36 @@ const VerifyBeforeBooking = () => {
 
   const timeSlot = appointment.location?.timeSlots?.[0]
   const appointmentTime = formatTimeSlot(timeSlot?.startTime)
-  const queueNumber = timeSlot?.maxBookings || 'N/A'
+  const queueNumber = timeSlot?.currentBookings != null ? timeSlot.currentBookings + 1 : 'N/A'
   const hp = appointment.location?.healthcareProvider
-
-  console.info(appointment.date, appointment.selectedMemberId, appointment.location?.scheduleDaysId)
+  const slotId = appointment.location?.slotId || timeSlot?.id || ''
 
   const { mutate, isPending } = useMutation({
     mutationKey: ['book'],
-    mutationFn: async () =>
-      await (
+    mutationFn: async () => {
+      const payload = {
+        slotId,
+        patientId: appointment.selectedMemberId,
+      }
+      console.warn('[BOOKING PAYLOAD]', payload)
+
+      if (!payload.slotId || !payload.patientId) {
+        throw new Error('Missing slotId or patientId')
+      }
+
+      return await (
         await api.users.booking.$post({
-          json: {
-            date: appointment.date,
-            patientId: appointment.selectedMemberId,
-            scheduleDaysId: appointment.location?.scheduleDaysId || '',
+          // Backend expects slotId + patientId; rpc types are stale
+          json: payload as unknown as {
+            scheduleDaysId: string
+            date: string
+            patientId: string
           },
         })
-      ).json(),
+      ).json()
+    },
 
     onSuccess: (data) => {
-      console.log(data)
       if (!data.success)
         return ToastAndroid.show(data.message || 'Failed to book appointment. Please try again.', ToastAndroid.LONG)
       if (data.data?.id) {
@@ -48,6 +58,10 @@ const VerifyBeforeBooking = () => {
       } else {
         ToastAndroid.show('Booking created but ID not found', ToastAndroid.LONG)
       }
+    },
+    onError: (error) => {
+      console.warn('[BOOKING ERROR]', error)
+      ToastAndroid.show(error instanceof Error ? error.message : 'Booking failed', ToastAndroid.LONG)
     },
   })
 

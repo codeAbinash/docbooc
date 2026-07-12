@@ -13,7 +13,6 @@ type HPCardsProps = {
   icon?: ReactNode
   image?: string
   address: string
-  distance: string
   selected?: boolean
   showSelector?: boolean
 } & TouchableOpacityProps
@@ -28,7 +27,6 @@ export function HPCards({
   icon,
   image,
   address = 'N/A',
-  distance = 'N/A',
   selected,
   showSelector = true,
   onPress,
@@ -51,7 +49,6 @@ export function HPCards({
         icon={icon}
         image={image}
         address={address}
-        distance={distance}
         selected={!!selected}
         showSelector={showSelector}
       />
@@ -69,7 +66,6 @@ function HPCardsInternal({
   icon,
   image,
   address,
-  distance,
   selected,
   showSelector,
 }: {
@@ -82,7 +78,6 @@ function HPCardsInternal({
   icon?: ReactNode
   image?: string
   address: string
-  distance: string
   selected: boolean
   showSelector: boolean
 }) {
@@ -91,7 +86,6 @@ function HPCardsInternal({
       <View className='flex-1 gap-1 rounded-lg  bg-neutral-100 p-2 dark:bg-amber-900/20'>
         <View className='flex-1  flex-row items-center gap-3'>
           <View>
-            {/* {icon && <View className='py-1 d'>{icon}</View>} */}
             <Image source={{ uri: image || DEFAULT_LP_IMAGE }} className='size-12 rounded-xl' resizeMode='cover' />
           </View>
 
@@ -99,7 +93,6 @@ function HPCardsInternal({
             <View className='flex-1 flex-row  items-start'>
               <View className='flex-1 gap-1 '>
                 <SemiBold className='text-base  text-neutral-900 dark:text-white'>{title}</SemiBold>
-                {/* {subtitle && <Medium className='text-xs text-neutral-600 dark:text-neutral-400'>{subtitle}</Medium>} */}
               </View>
 
               {showSelector && (
@@ -124,7 +117,6 @@ function HPCardsInternal({
         </View>
       </View>
 
-      {/* Info Grid - 3 Columns */}
       <View className='flex-1 flex-row gap-2'>
         {time && (
           <View className='flex-1 gap-1 rounded-lg bg-blue-50 p-2 dark:bg-blue-900/20'>
@@ -133,15 +125,9 @@ function HPCardsInternal({
           </View>
         )}
 
-        <View className='flex-1 flex-row gap-2'>
-          <View className='flex-1 gap-1 rounded-lg bg-blue-50 p-2 dark:bg-blue-900/20'>
-            <Medium className='text-xs font-semibold text-blue-700 dark:text-blue-400'>Distance</Medium>
-            <SemiBold className='text-sm text-blue-900 dark:text-blue-200'>{distance}</SemiBold>
-          </View>
-          <View className='flex-1 gap-1 rounded-lg bg-blue-50 p-2 dark:bg-blue-900/20'>
-            <Medium className='text-xs font-semibold text-blue-700 dark:text-blue-400'>Queue</Medium>
-            <SemiBold className='text-sm text-blue-900 dark:text-blue-200'>Q{q}</SemiBold>
-          </View>
+        <View className='flex-1 gap-1 rounded-lg bg-blue-50 p-2 dark:bg-blue-900/20'>
+          <Medium className='text-xs font-semibold text-blue-700 dark:text-blue-400'>Queue</Medium>
+          <SemiBold className='text-sm text-blue-900 dark:text-blue-200'>Q{q}</SemiBold>
         </View>
       </View>
     </View>
