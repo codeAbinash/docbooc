@@ -1,12 +1,14 @@
+import { useRefreshOnFocus } from '@/query'
 import { DoctorCard, DoctorCardShimmer } from '@components/DoctorCard'
 import HybridHead from '@components/HybridHead'
 import Doctor01Icon from '@hugeicons/Doctor01Icon'
 import { useNavigation } from '@react-navigation/native'
 import { useQuery } from '@tanstack/react-query'
 import { api, client, hpApi } from '@utils/client'
+import Colors from '@utils/colors'
 import { HPStackNav } from '@utils/types'
 import { useCallback, useMemo, useRef, useState } from 'react'
-import {  FlatList, View } from 'react-native'
+import { FlatList, RefreshControl, View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 
 export const ALL_SPECIALTY = { id: '0', name: 'All', icon: Doctor01Icon }
@@ -15,6 +17,7 @@ const HPAllDoctors = () => {
   const navigate = useNavigation<HPStackNav>()
   const [selected, setSelected] = useState<string>('0')
   const [searchQuery, setSearchQuery] = useState('')
+  const [refreshing, setRefreshing] = useState(false)
   const scrollViewRef = useRef<ScrollView>(null)
 
   const handleChipSelect = useCallback((id: number | string) => {
@@ -30,10 +33,18 @@ const HPAllDoctors = () => {
 
   const allItems = useMemo(() => [ALL_SPECIALTY, ...departments], [departments])
 
-  const { data: doctorsResponse, isLoading } = useQuery({
+  const { data: doctorsResponse, isLoading, refetch } = useQuery({
     queryKey: ['doctors'],
     queryFn: async () => (await hpApi.doctors.all.$get()).json(),
   })
+
+  useRefreshOnFocus(refetch)
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true)
+    await refetch()
+    setRefreshing(false)
+  }, [refetch])
 
   const doctors = useMemo(() => doctorsResponse?.data || [], [doctorsResponse])
 
@@ -96,6 +107,7 @@ const HPAllDoctors = () => {
             keyExtractor={(item) => item.id.toString()}
             ItemSeparatorComponent={() => <View className='h-4' />}
             showsVerticalScrollIndicator={false}
+            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={[Colors.accent]} />}
           />
         )}
       </View>

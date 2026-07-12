@@ -8,14 +8,44 @@ import { PaddingBottom } from '@components/SafePadding'
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import { useQuery } from '@tanstack/react-query'
 import { api } from '@utils/client'
-import { Medium, SemiBold, Regular } from '@utils/fonts'
+import { Medium, Regular } from '@utils/fonts'
 import { StackNav } from '@utils/types'
 import { useEffect, useState } from 'react'
-import { ActivityIndicator, View } from 'react-native'
+import { View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import { RootStackParamList } from '../../../App'
 import { Lottie } from '@/components/Lottie'
 import Animations from '@/assets/animations/animations'
+
+type AvailabilitySlot = {
+  slotId: string
+  date: string
+  startTime: string
+  endTime: string
+  maxBookings: number
+  currentBookings: number
+  availableBookings: number
+  scheduleId: string
+  scheduleType: string
+  scheduleDayId: string
+}
+
+type AvailabilityLocation = {
+  healthcareProvider: {
+    id: string
+    name: string | null
+    email: string | null
+    contactNumber: string | null
+    city: string | null
+    state: string | null
+    pin: string | null
+    houseNumber: string | null
+    roadName: string | null
+    landmark: string | null
+    profileImage: string | null
+  }
+  slots: AvailabilitySlot[]
+}
 
 const formatTo12Hour = (time: string): string => {
   const [hours, minutes] = time.split(':').map(Number)
@@ -36,14 +66,19 @@ const BookAppointment = () => {
     setDoctor(doctor)
   }, [doctor, setDoctor])
 
+  useEffect(() => {
+    setSelectedIndex(null)
+  }, [selectedDate])
+
   const { data: locations = [], isLoading } = useQuery({
     queryKey: ['doctor-availability', doctor.id, selectedDate],
-    queryFn: async () => {
+    queryFn: async (): Promise<AvailabilityLocation[]> => {
       const res = await api.users.doctors.availability.$post({
         json: { date: selectedDate, doctorId: doctor.id },
       })
       const data = await res.json()
-      return data.success ? data.data : []
+      if (!data.success || !data.data) return []
+      return data.data as unknown as AvailabilityLocation[]
     },
     enabled: !!selectedDate && !!doctor.id,
   })
@@ -51,16 +86,38 @@ const BookAppointment = () => {
   const selectedLocation = selectedIndex !== null ? locations[selectedIndex] : null
 
   const handleNext = () => {
-    if (selectedLocation) {
-      console.log(selectedDate)
-      setDate(selectedDate)
-      setLocation({
-        scheduleDaysId: selectedLocation.timeSlots?.[0]?.scheduleDayId,
-        scheduleType: selectedLocation.scheduleType,
-        healthcareProvider: selectedLocation.healthcareProvider,
-        timeSlots: selectedLocation.timeSlots,
-      })
+    const slot = selectedLocation?.slots?.[0]
+    if (!selectedLocation || !slot?.slotId) {
+      return
     }
+
+    setDate(selectedDate)
+    const hp = selectedLocation.healthcareProvider
+    setLocation({
+      slotId: slot.slotId,
+      scheduleDaysId: slot.scheduleDayId,
+      scheduleType: slot.scheduleType,
+      healthcareProvider: {
+        id: hp.id,
+        name: hp.name ?? undefined,
+        email: hp.email ?? undefined,
+        contactNumber: hp.contactNumber,
+        houseNumber: hp.houseNumber,
+        roadName: hp.roadName,
+        city: hp.city,
+        state: hp.state,
+        pin: hp.pin,
+        profileImage: hp.profileImage,
+      },
+      timeSlots: selectedLocation.slots.map((s) => ({
+        id: s.slotId,
+        startTime: s.startTime,
+        endTime: s.endTime,
+        maxBookings: s.maxBookings,
+        currentBookings: s.currentBookings,
+      })),
+    })
+
     if (token) navigation.navigate('FamilyMemberSelectorScreen')
     else navigation.navigate('Login')
   }
@@ -86,29 +143,27 @@ const BookAppointment = () => {
         {isLoading ? (
           <View className='flex-1 items-center justify-center py-10'>
             <Lottie source={Animations.loading} size={150} />
-
-            {/* <Medium className='text-neutral-600'>Loading available locations...</Medium> */}
           </View>
         ) : locations.length > 0 ? (
           <View className='gap-5 py-5'>
-            {locations.map((loc: any, idx: number) => {
-              const hp = loc.healthcareProvider || {}
-              const slot = loc.timeSlots?.[0] || {}
+            {locations.map((loc, idx: number) => {
+              const hp = loc.healthcareProvider
+              const slot = loc.slots?.[0]
               const address =
                 `${hp.houseNumber || ''} ${hp.roadName || ''}, ${hp.city || ''}, ${hp.state || ''}, ${hp.pin || ''}`.trim()
+              const queueNumber = slot ? slot.currentBookings + 1 : null
 
               return (
                 <HPCards
-                  key={loc.scheduleId || idx}
+                  key={slot?.scheduleId || idx}
                   title={hp.name || 'Unknown Provider'}
                   time={
-                    slot.startTime && slot.endTime
+                    slot?.startTime && slot?.endTime
                       ? `${formatTo12Hour(slot.startTime)} - ${formatTo12Hour(slot.endTime)}`
                       : undefined
                   }
                   address={address || 'N/A'}
-                  distance={loc.distance || 'N/A'}
-                  q={slot.maxBookings > 0 ? slot.maxBookings.toString() : 'N/A'}
+                  q={queueNumber != null ? String(queueNumber) : 'N/A'}
                   selected={selectedIndex === idx}
                   onPress={() => setSelectedIndex(idx)}
                 />
@@ -123,7 +178,7 @@ const BookAppointment = () => {
       </ScrollView>
 
       <View className='bg-white px-6 pb-3'>
-        <Button title='Proceed' disabled={!selectedLocation} onPress={handleNext} />
+        <Button title='Proceed' disabled={!selectedLocation?.slots?.[0]?.slotId} onPress={handleNext} />
       </View>
       <PaddingBottom />
     </View>

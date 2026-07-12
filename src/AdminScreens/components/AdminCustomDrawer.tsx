@@ -19,10 +19,10 @@ import ProfilePicture from '../../components/ProfilePicture'
 const DRAWER_ITEMS = [
   { name: 'Add Doctors', icon: PlusSignIcon, navigationName: 'AdminAddDoctors' },
   { name: 'Add Departments', icon: Building02Icon, navigationName: 'AdminAddDepartments' },
-  { name: 'Approve Schedules', icon: TaskDone01Icon, navigationName: 'AdminApproveSchedules' },
-  { name: 'Approve Bookings', icon: UserCheck01Icon, navigationName: 'AdminApproveBookings' },
-  { name: 'View HPs', icon: Doctor01Icon, navigationName: 'AdminViewHPs' },
-  { name: 'View Patients', icon: PatientIcon, navigationName: 'AdminViewPatients' },
+  // { name: 'Approve Schedules', icon: TaskDone01Icon, navigationName: 'AdminApproveSchedules' },
+  // { name: 'Approve Bookings', icon: UserCheck01Icon, navigationName: 'AdminApproveBookings' },
+  // { name: 'View HPs', icon: Doctor01Icon, navigationName: 'AdminViewHPs' },
+  // { name: 'View Patients', icon: PatientIcon, navigationName: 'AdminViewPatients' },
 ]
 
 export default function AdminCustomDrawer(props: any) {

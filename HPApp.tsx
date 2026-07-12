@@ -1,7 +1,7 @@
 import AdminAddDoctor from '@/AdminScreens/AdminAddDoctor'
 import HPBookAppointment from '@/HPScreens/HPAddPatients/HPBookApointment'
 import HPLogin from '@/HPScreens/HPAuthentications/Login/HPLogin'
-
+import HPOTP from '@/HPScreens/HPAuthentications/OTP/HPOTP'
 import HPSignup from '@/HPScreens/HPAuthentications/Signup/HPSignup'
 import HPHome from '@/HPScreens/HPHome'
 import EditHPProfileScreen from '@/HPScreens/HPProfile/EditHPProfileScreen'
@@ -62,6 +62,7 @@ export default function HPApp() {
           <RootStack.Screen name='HPSplash' component={HPSplash} options={SMOOTH_ANIMATION} />
           <RootStack.Screen name='HPLogin' component={HPLogin} options={SMOOTH_ANIMATION} />
           <RootStack.Screen name='HPSignup' component={HPSignup} options={SMOOTH_ANIMATION} />
+          <RootStack.Screen name='HPOTP' component={HPOTP} options={SMOOTH_ANIMATION} />
           <RootStack.Screen name='HPHome' component={HPHome} options={SMOOTH_ANIMATION} />
           <RootStack.Screen name='HPDoctorScheduler' component={HPDoctorScheduler} options={SMOOTH_ANIMATION} />
           <RootStack.Screen name='HPScheduleReview' component={HPScheduleReview} options={SMOOTH_ANIMATION} />
@@ -72,7 +73,7 @@ export default function HPApp() {
             options={SMOOTH_ANIMATION}
           />
           <RootStack.Screen name='EditHPProfile' component={EditHPProfileScreen} options={SMOOTH_ANIMATION} />
-          
+
           <RootStack.Screen
             name='BookingOTPVerification'
             component={BookingOTPVerification}
